@@ -1,4 +1,4 @@
-package com.oszero.deliver.server.model.dto.req;
+package com.oszero.deliver.server.model.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +12,7 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SendReqDto {
+public class SendRequestDto {
 
     /**
      * 消息模板 Id
