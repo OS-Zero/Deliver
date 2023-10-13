@@ -1,0 +1,34 @@
+# MQ 类型选择
+mq-type: rocketmq
+
+rocketmq:
+  # NameServer地址
+  name-server: 192.168.131.171:9876
+
+spring:
+  redis:
+    port: 6379
+    host: 192.168.110.234
+    password:
+    database: 0
+    timeout: 60s
+    lettuce:
+      pool:
+        max-active: 10
+        max-idle: 8
+        min-idle: 0
+        max-wait: 5s
+  datasource:
+    url: jdbc:mysql://192.168.11.122:3307/message?serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull
+    username: oss
+    password: vUBerOnm
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  # RabbitMQ 配置
+  rabbitmq:
+    addresses:
+    virtual-host:
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #开启 sql 日志
+    map-underscore-to-camel-case: true
