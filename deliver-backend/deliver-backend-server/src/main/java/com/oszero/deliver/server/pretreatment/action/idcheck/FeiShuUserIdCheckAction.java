@@ -1,4 +1,4 @@
-package com.oszero.deliver.server.pretreatment.action.send;
+package com.oszero.deliver.server.pretreatment.action.idcheck;
 
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.pipeline.BusinessProcess;
@@ -6,21 +6,9 @@ import com.oszero.deliver.server.pretreatment.pipeline.ProcessContext;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SmsSendAction extends CommonSendAction implements BusinessProcess<SendTaskDto> {
-
-
-    @Override
-    boolean send(SendTaskDto sendTaskDto) {
-        return false;
-    }
-
-    /**
-     * 真正处理逻辑
-     *
-     * @param context
-     */
+public class FeiShuUserIdCheckAction implements BusinessProcess<SendTaskDto> {
     @Override
     public void process(ProcessContext<SendTaskDto> context) {
-        sendToMq(context);
+
     }
 }

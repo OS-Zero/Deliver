@@ -14,7 +14,7 @@ import java.util.Properties;
 @Slf4j
 @Component
 public class MailUtils {
-    private static Properties pro;
+    private static final Properties pro;
 
     static {
         pro = System.getProperties(); // 下面各项缺一不可

@@ -7,7 +7,7 @@ import com.oszero.deliver.server.web.mapper.TemplateAppMapper;
 import org.springframework.stereotype.Service;
 
 /**
-* @author Administrator
+* @author oszero
 * @description 针对表【template_app】的数据库操作Service实现
 * @createDate 2023-10-13 10:06:29
 */

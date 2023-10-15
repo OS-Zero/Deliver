@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.client.producer.SendStatus;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
@@ -45,7 +44,7 @@ public class RocketMQProducer implements Producer {
                 sendResult = rocketMQUtils.sendMessage(MQConstant.DING_TOPIC, JSONUtil.toJsonStr(sendTaskDto));
                 break;
             }
-            case FEISHU: {
+            case FEI_SHU: {
                 sendResult = rocketMQUtils.sendMessage(MQConstant.FEISHU_TOPIC, JSONUtil.toJsonStr(sendTaskDto));
                 break;
             }

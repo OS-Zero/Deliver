@@ -14,7 +14,6 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Accessors(chain = true)
 public class ProcessContext<T extends ProcessModel> {
 
     /**

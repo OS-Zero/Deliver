@@ -14,7 +14,7 @@ public enum ChannelTypeEnum {
     MAIL(3, "邮件"),
     WECHAT(4, "微信"),
     DING(5, "钉钉"),
-    FEISHU(6, "飞书");
+    FEI_SHU(6, "飞书");
     private final Integer type;
     private final String name;
 

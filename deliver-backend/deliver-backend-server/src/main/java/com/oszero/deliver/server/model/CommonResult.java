@@ -27,5 +27,9 @@ public class CommonResult<T> {
         return new CommonResult<>(resultEnum.getCode(), null, resultEnum.getMessage());
     }
 
+    public static <T> CommonResult<T> fail(String errorMessage) {
+        return new CommonResult<>(ResultEnum.ERROR.getCode(), null, errorMessage);
+    }
+
 
 }

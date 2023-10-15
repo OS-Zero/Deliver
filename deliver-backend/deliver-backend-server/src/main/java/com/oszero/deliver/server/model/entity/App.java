@@ -35,6 +35,11 @@ public class App implements Serializable {
     private String appConfig;
 
     /**
+     * APP 使用数
+     */
+    private Integer useCount;
+
+    /**
      * 创建者
      */
     private String createUser;

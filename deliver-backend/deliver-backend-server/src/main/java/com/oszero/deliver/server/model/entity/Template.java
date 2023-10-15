@@ -4,13 +4,15 @@ import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
 import java.util.Date;
+
 import lombok.Data;
 
 /**
  * 消息模板
+ *
  * @TableName template
  */
-@TableName(value ="template")
+@TableName(value = "template")
 @Data
 public class Template implements Serializable {
     /**
@@ -36,12 +38,17 @@ public class Template implements Serializable {
 
     /**
      * 推送方式
-【
-channelType（1-打电话 2-发短信 3-邮件 4-企业微信 5-钉钉 6-飞书）
-messageType（1-文本 2-钉钉链接 3-钉钉卡片 4-钉钉OA 5-微信卡片 6-微信md 7-飞书md 8-飞书卡片）
-】
+     * {
+     * "channelType":（1-打电话 2-发短信 3-邮件 4-企业微信 5-钉钉 6-飞书）
+     * "messageType":（1-文本 2-钉钉链接 3-钉钉卡片 4-钉钉OA 5-微信卡片 6-微信md 7-飞书md 8-飞书卡片）
+     * }
      */
     private String pushWays;
+
+    /**
+     * 模板使用数
+     */
+    private Integer useCount;
 
     /**
      * 创建者

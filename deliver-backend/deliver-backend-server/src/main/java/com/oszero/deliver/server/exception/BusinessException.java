@@ -1,23 +1,19 @@
 package com.oszero.deliver.server.exception;
 
+import com.oszero.deliver.server.enums.ResultEnum;
+import lombok.Getter;
+
+@Getter
 public class BusinessException extends RuntimeException {
-    /**
-     * Constructs a new runtime exception with {@code null} as its
-     * detail message.  The cause is not initialized, and may subsequently be
-     * initialized by a call to {@link #initCause}.
-     */
+    private String message;
+    private final ResultEnum code = ResultEnum.ERROR;
+
     public BusinessException() {
+        super();
     }
 
-    /**
-     * Constructs a new runtime exception with the specified detail message.
-     * The cause is not initialized, and may subsequently be initialized by a
-     * call to {@link #initCause}.
-     *
-     * @param message the detail message. The detail message is saved for
-     *                later retrieval by the {@link #getMessage()} method.
-     */
     public BusinessException(String message) {
         super(message);
+        this.message = message;
     }
 }

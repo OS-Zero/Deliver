@@ -15,7 +15,7 @@ public enum PushRangeEnum {
     /**
      * 企业内部
      */
-    DH(1,"企业内部"),
+    INNER(1,"企业内部"),
 
     /**
      * 外部用户

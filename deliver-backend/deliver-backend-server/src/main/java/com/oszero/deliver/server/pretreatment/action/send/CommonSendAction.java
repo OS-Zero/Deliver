@@ -1,14 +1,11 @@
 package com.oszero.deliver.server.pretreatment.action.send;
 
-import com.oszero.deliver.server.enums.ChannelTypeEnum;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.pipeline.ProcessContext;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-
 @Slf4j
-@AllArgsConstructor
 public abstract class CommonSendAction {
 
     public void sendToMq(ProcessContext<SendTaskDto> context) {

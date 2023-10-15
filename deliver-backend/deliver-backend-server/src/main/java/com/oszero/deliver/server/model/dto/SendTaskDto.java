@@ -27,9 +27,8 @@ public class SendTaskDto extends ProcessModel {
      */
     private Map<String, String> paramMap;
 
-    private Integer appId;
-    private Long logId;
-    private Integer sendRange;
+    private Long appId;
+    private Integer pushRange;
     private Integer usersType;
     private Integer channelType;
     private Integer messageType;
