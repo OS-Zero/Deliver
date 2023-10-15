@@ -20,7 +20,7 @@ public class WeChatSendAction extends CommonSendAction implements BusinessProces
      * @param context
      */
     @Override
-    public void process(ProcessContext<SendTaskDto> context) {
+    public void process(ProcessContext<?> context) {
         sendToMq(context);
     }
 }

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class PhoneCheckAction implements BusinessProcess<SendTaskDto> {
     @Override
-    public void process(ProcessContext<SendTaskDto> context) {
+    public void process(ProcessContext<?> context) {
         for (String phone : context.getProcessModel().getUsers()) {
             if (!Validator.isMobile(phone)) {
                 throw new PipelineProcessException("消息接收者中有非[电话号码]用户！");

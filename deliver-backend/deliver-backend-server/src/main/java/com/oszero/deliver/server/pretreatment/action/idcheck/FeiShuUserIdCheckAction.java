@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class FeiShuUserIdCheckAction implements BusinessProcess<SendTaskDto> {
     @Override
-    public void process(ProcessContext<SendTaskDto> context) {
+    public void process(ProcessContext<?> context) {
 
     }
 }

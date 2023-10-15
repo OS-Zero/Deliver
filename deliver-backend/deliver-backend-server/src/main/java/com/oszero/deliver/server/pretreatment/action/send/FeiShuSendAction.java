@@ -1,4 +1,4 @@
-package com.oszero.deliver.server.pretreatment.action.idcheck;
+package com.oszero.deliver.server.pretreatment.action.send;
 
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.pipeline.BusinessProcess;
@@ -6,9 +6,9 @@ import com.oszero.deliver.server.pretreatment.pipeline.ProcessContext;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CompanyAccountCheckAction implements BusinessProcess<SendTaskDto> {
+public class FeiShuSendAction implements BusinessProcess<SendTaskDto> {
     @Override
-    public void process(ProcessContext<?> context) {
+    public void process(ProcessContext<SendTaskDto> context) {
 
     }
 }

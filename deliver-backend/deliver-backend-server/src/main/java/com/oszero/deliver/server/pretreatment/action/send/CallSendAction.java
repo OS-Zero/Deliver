@@ -27,7 +27,7 @@ public class CallSendAction extends CommonSendAction implements BusinessProcess<
      * @param context
      */
     @Override
-    public void process(ProcessContext<SendTaskDto> context) {
+    public void process(ProcessContext<?> context) {
         sendToMq(context);
     }
 }

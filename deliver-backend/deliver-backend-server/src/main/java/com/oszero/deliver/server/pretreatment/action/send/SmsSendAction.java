@@ -20,7 +20,7 @@ public class SmsSendAction extends CommonSendAction implements BusinessProcess<S
      * @param context
      */
     @Override
-    public void process(ProcessContext<SendTaskDto> context) {
+    public void process(ProcessContext<?> context) {
         sendToMq(context);
     }
 }

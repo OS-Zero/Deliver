@@ -3,6 +3,7 @@ package com.oszero.deliver.server.pretreatment.pipeline;
 import cn.hutool.core.collection.CollUtil;
 import com.oszero.deliver.server.exception.PipelineProcessException;
 import lombok.Data;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -15,13 +16,14 @@ import java.util.Objects;
  */
 @Slf4j
 @Data
+@Accessors(chain = true)
+@SuppressWarnings("all")
 public class ProcessHandler {
 
     /**
      * 模板映射
      */
     private Map<String, ProcessTemplate> templateConfig = null;
-
 
     /**
      * 执行责任链
@@ -31,14 +33,10 @@ public class ProcessHandler {
      */
     public ProcessContext process(ProcessContext context) {
 
-        /**
-         * 前置检查
-         */
+        //1. 前置检查
         preCheck(context);
 
-        /**
-         * 遍历流程节点
-         */
+        //2. 遍历流程节点
         List<BusinessProcess> processList = templateConfig.get(context.getCode()).getProcessList();
         for (BusinessProcess businessProcess : processList) {
             businessProcess.process(context);
