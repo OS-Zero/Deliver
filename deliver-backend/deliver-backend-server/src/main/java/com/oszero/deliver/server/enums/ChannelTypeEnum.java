@@ -9,28 +9,19 @@ import lombok.ToString;
 @AllArgsConstructor
 public enum ChannelTypeEnum {
 
-    CALL(1, "打电话"),
-    SMS(2, "发短信"),
+    CALL(1, "电话"),
+    SMS(2, "短信"),
     MAIL(3, "邮件"),
-    WECHAT(4, "微信"),
-    DING(5, "钉钉"),
+    DING(4, "钉钉"),
+    WECHAT(5, "企微"),
     FEI_SHU(6, "飞书");
-    private final Integer type;
+    private final Integer code;
     private final String name;
 
-    public static ChannelTypeEnum getByType(Integer type) {
+    public static ChannelTypeEnum getInstanceByCode(Integer code) {
         for (ChannelTypeEnum v : values()) {
-            if (v.getType().equals(type)) {
+            if (v.getCode().equals(code)) {
                 return v;
-            }
-        }
-        return null;
-    }
-
-    public static String getNameByType(Integer type) {
-        for (ChannelTypeEnum v : values()) {
-            if (v.getType().equals(type)) {
-                return v.getName();
             }
         }
         return null;

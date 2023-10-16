@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PushWayDto {
     private Integer channelType;
-    private Integer messageType;
+    private String messageType;
 }

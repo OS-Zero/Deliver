@@ -20,7 +20,7 @@ public class RabbitMQConfig {
 
     @Bean
     public Queue getFeiShuQueue() {
-        return QueueBuilder.durable(MQConstant.FEISHU_QUEUE).build();
+        return QueueBuilder.durable(MQConstant.FEI_SHU_QUEUE).build();
     }
 
     @Bean
@@ -50,7 +50,7 @@ public class RabbitMQConfig {
 
     @Bean
     public Binding getFeiShuBinding() {
-        return BindingBuilder.bind(getFeiShuQueue()).to(getExchange()).with(MQConstant.FEISHU_KEY_NAME).noargs();
+        return BindingBuilder.bind(getFeiShuQueue()).to(getExchange()).with(MQConstant.FEI_SHU_KEY_NAME).noargs();
     }
 
     @Bean

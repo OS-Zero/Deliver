@@ -16,7 +16,7 @@ public class CallSendAction extends CommonSendAction implements BusinessProcess<
 
     @Override
     boolean send(SendTaskDto sendTaskDto) {
-        ChannelTypeEnum channelTypeEnum = ChannelTypeEnum.getByType(sendTaskDto.getChannelType());
+        ChannelTypeEnum channelTypeEnum = ChannelTypeEnum.getInstanceByCode(sendTaskDto.getChannelType());
         producer.sendMessage(channelTypeEnum, sendTaskDto);
         return false;
     }
@@ -27,7 +27,7 @@ public class CallSendAction extends CommonSendAction implements BusinessProcess<
      * @param context
      */
     @Override
-    public void process(ProcessContext<?> context) {
+    public void process(ProcessContext<SendTaskDto> context) {
         sendToMq(context);
     }
 }

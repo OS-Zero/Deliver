@@ -20,7 +20,7 @@ public class DingSendAction extends CommonSendAction implements BusinessProcess<
      * @param context
      */
     @Override
-    public void process(ProcessContext<?> context) {
+    public void process(ProcessContext<SendTaskDto> context) {
         sendToMq(context);
     }
 }

@@ -30,6 +30,10 @@
         <hutool.version>5.8.9</hutool.version>
         <mybatis.plus.version>3.5.1</mybatis.plus.version>
         <rocketmq.client.java.version>2.0.4</rocketmq.client.java.version>
+        <ding.sdk.old.version>2.0.0</ding.sdk.old.version>
+        <ding.sdk.new.version>2.0.14</ding.sdk.new.version>
+<!--        <wechat.sdk.version></wechat.sdk.version>-->
+        <feishi.sdk.version>2.0.16</feishi.sdk.version>
     </properties>
 
     <dependencies>

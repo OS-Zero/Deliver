@@ -41,7 +41,7 @@ public class RabbitMQProducer implements Producer {
                 break;
             }
             case FEI_SHU: {
-                rabbitMQUtils.sendMessage(MQConstant.DELIVER_EXCHANGE, MQConstant.FEISHU_KEY_NAME, JSONUtil.toJsonStr(sendTaskDto));
+                rabbitMQUtils.sendMessage(MQConstant.DELIVER_EXCHANGE, MQConstant.FEI_SHU_KEY_NAME, JSONUtil.toJsonStr(sendTaskDto));
                 break;
             }
         }

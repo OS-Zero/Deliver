@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-@RocketMQMessageListener(topic = MQConstant.FEISHU_TOPIC, consumerGroup = MQConstant.FEISHU_CONSUMER_GROUP)
+@RocketMQMessageListener(topic = MQConstant.FEI_SHU_TOPIC, consumerGroup = MQConstant.FEI_SHU_CONSUMER_GROUP)
 public class FeiShuConsumer implements RocketMQListener<MessageExt> {
 
     private final FeiShuHandler feiShuHandler;

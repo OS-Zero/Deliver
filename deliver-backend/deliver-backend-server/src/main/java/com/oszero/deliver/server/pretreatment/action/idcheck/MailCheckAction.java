@@ -9,11 +9,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MailCheckAction implements BusinessProcess<SendTaskDto> {
+
     @Override
-    public void process(ProcessContext<?> context) {
+    public void process(ProcessContext<SendTaskDto> context) {
         for (String email : context.getProcessModel().getUsers()) {
             if (!Validator.isEmail(email)) {
-                throw new PipelineProcessException("消息接收者中有非[邮箱地址]用户！");
+                throw new PipelineProcessException("[MailCheckAction#process]错误：消息接收者中有非[邮箱地址]用户！");
             }
         }
     }

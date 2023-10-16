@@ -39,8 +39,8 @@ public class Template implements Serializable {
     /**
      * 推送方式
      * {
-     * "channelType":（1-打电话 2-发短信 3-邮件 4-企业微信 5-钉钉 6-飞书）
-     * "messageType":（1-文本 2-钉钉链接 3-钉钉卡片 4-钉钉OA 5-微信卡片 6-微信md 7-飞书md 8-飞书卡片）
+     * "channelType":（1-打电话 2-发短信 3-邮件 4-钉钉 5-企业微信 6-飞书）
+     * "messageType": 所见 MessageTypeEnum
      * }
      */
     private String pushWays;

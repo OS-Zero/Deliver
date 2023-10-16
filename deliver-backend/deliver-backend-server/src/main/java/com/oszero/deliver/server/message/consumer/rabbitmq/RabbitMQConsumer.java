@@ -32,7 +32,7 @@ public class RabbitMQConsumer {
 
     }
 
-    @RabbitListener(queues = MQConstant.FEISHU_QUEUE)
+    @RabbitListener(queues = MQConstant.FEI_SHU_QUEUE)
     public void onFeiShuMessage(String message) {
 
     }

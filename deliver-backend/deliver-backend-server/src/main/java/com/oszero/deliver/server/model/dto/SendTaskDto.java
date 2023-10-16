@@ -31,7 +31,7 @@ public class SendTaskDto extends ProcessModel {
     private Integer pushRange;
     private Integer usersType;
     private Integer channelType;
-    private Integer messageType;
+    private String messageType;
     private Integer retry;
 
 }

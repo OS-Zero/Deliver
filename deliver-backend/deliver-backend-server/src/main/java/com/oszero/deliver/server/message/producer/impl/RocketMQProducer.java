@@ -45,7 +45,7 @@ public class RocketMQProducer implements Producer {
                 break;
             }
             case FEI_SHU: {
-                sendResult = rocketMQUtils.sendMessage(MQConstant.FEISHU_TOPIC, JSONUtil.toJsonStr(sendTaskDto));
+                sendResult = rocketMQUtils.sendMessage(MQConstant.FEI_SHU_TOPIC, JSONUtil.toJsonStr(sendTaskDto));
                 break;
             }
         }
