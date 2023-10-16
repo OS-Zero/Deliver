@@ -14,7 +14,7 @@ create table if not exists deliver.template
     push_ways     varchar(200)                                                   not null comment '推送方式
 {
 "channelType":（1-打电话 2-发短信 3-邮件 4-企业微信 5-钉钉 6-飞书）
-"messageType":（1-文本 2-钉钉链接 3-钉钉卡片 4-钉钉OA 5-微信卡片 6-微信md 7-飞书md 8-飞书卡片）
+"messageType": 参考
 }',
     use_count     int      default 0                                             not null comment '模板使用数',
     create_user   varchar(50)                                                    null comment '创建者',

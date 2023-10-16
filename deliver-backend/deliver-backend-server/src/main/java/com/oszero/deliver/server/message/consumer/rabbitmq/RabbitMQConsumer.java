@@ -2,9 +2,11 @@ package com.oszero.deliver.server.message.consumer.rabbitmq;
 
 import com.oszero.deliver.server.constant.MQConstant;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
+@ConditionalOnProperty(value = "mq-type", havingValue = "rabbitmq")
 public class RabbitMQConsumer {
 
     @RabbitListener(queues = MQConstant.CALL_QUEUE)
