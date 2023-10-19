@@ -29,7 +29,7 @@ public class SendRequestDto {
     /**
      * 不同消息的不同参数
      */
-    private Map<String, String> paramMap;
+    private Map<String, Object> paramMap;
 
     /**
      * 重试次数
