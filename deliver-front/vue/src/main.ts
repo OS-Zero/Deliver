@@ -8,8 +8,6 @@ import 'virtual:svg-icons-register';
 import setupDefaultSetting from '@/utils/setupDefaultSetting'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
-
-
 import Antd from 'ant-design-vue';
 // 用来切换主题
 import 'ant-design-vue/dist/antd.variable.min.css'
