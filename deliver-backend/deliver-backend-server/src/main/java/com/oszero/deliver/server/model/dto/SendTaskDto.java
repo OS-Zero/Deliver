@@ -25,7 +25,7 @@ public class SendTaskDto extends ProcessModel {
     /**
      * 不同消息的不同参数
      */
-    private Map<String, String> paramMap;
+    private Map<String, Object> paramMap;
 
     private Long appId;
     private Integer pushRange;
