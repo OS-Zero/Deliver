@@ -1,5 +1,6 @@
 package com.oszero.deliver.server.util.channel;
 
+import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.message.param.mail.MailParam;
 import com.oszero.deliver.server.model.app.MailApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
@@ -26,7 +27,8 @@ public class MailUtils {
 
     @SneakyThrows
     public void sendMail(MailApp mailApp, SendTaskDto sendTaskDto) {
-        MailParam mailParam = (MailParam) sendTaskDto.getParam();
+        String paramJson = sendTaskDto.getParamJson();
+        MailParam mailParam = JSONUtil.toBean(paramJson, MailParam.class);
         // 创建
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
         javaMailSender.setUsername(mailApp.getUsername());
@@ -38,13 +40,13 @@ public class MailUtils {
 
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setFrom(mailParam.getFrom());
-        helper.setTo(mailParam.getTo().toArray(new String[0]));
+        helper.setFrom(mailApp.getUsername());
+        helper.setTo(sendTaskDto.getUsers().toArray(new String[0]));
         helper.setCc(mailParam.getToCC().toArray(new String[0]));
         helper.setBcc(mailParam.getToBCC().toArray(new String[0]));
         helper.setSubject(mailParam.getTitle());
         helper.setText(mailParam.getContent(), mailParam.isHtmlFlag());
-        log.info("[email request] subject={} content={} to={}", mailParam.getTitle(), mailParam.getContent(), mailParam.getTo());
+        log.info("[email request] subject={} content={} to={}", mailParam.getTitle(), mailParam.getContent(), sendTaskDto.getUsers());
         javaMailSender.send(message);
     }
 

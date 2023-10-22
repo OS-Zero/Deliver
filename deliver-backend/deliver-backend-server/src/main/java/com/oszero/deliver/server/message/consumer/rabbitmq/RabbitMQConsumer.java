@@ -27,8 +27,9 @@ public class RabbitMQConsumer {
     }
 
     @RabbitListener(queues = MQConstant.MAIL_QUEUE)
-    public void onMailMessage(String message) {
-
+    public void onMailMessage(String message) throws Exception {
+        SendTaskDto sendTaskDto = JSONUtil.toBean(message, SendTaskDto.class);
+        mailHandler.doHandle(sendTaskDto);
     }
 
     @RabbitListener(queues = MQConstant.SMS_QUEUE)
