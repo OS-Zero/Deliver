@@ -2,7 +2,7 @@ package com.oszero.deliver.server.util;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
-import com.oszero.deliver.server.exception.PipelineProcessException;
+import com.oszero.deliver.server.exception.LinkProcessException;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,7 +26,7 @@ public class CommonUtil {
 
     public static void paramCheckAndThrow(Map<String, String> map, String key) {
         if (!map.containsKey(key) || StrUtil.isBlank(map.get(key))) {
-            throw new PipelineProcessException("参数[" + key + "]不存在");
+            throw new LinkProcessException("参数[" + key + "]不存在");
         }
     }
 
@@ -38,7 +38,7 @@ public class CommonUtil {
 
     public static void isJsonArrayAndThrow(Map<String, String> map, String key) {
         if (!isJsonArray(map.get(key))) {
-            throw new PipelineProcessException("参数[" + key + "]不符合JsonArray定义");
+            throw new LinkProcessException("参数[" + key + "]不符合JsonArray定义");
         }
     }
 

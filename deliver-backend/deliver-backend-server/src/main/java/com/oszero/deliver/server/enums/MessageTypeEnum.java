@@ -59,7 +59,6 @@ public enum MessageTypeEnum {
     private final String msgType;
     private final String name;
 
-
     public static MessageTypeEnum getInstanceByCode(String code) {
         for (MessageTypeEnum v : values()) {
             if (v.getCode().equals(code)) {

@@ -2,17 +2,17 @@ package com.oszero.deliver.server.web.service.impl;
 
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.oszero.deliver.server.enums.PushRangeEnum;
 import com.oszero.deliver.server.enums.ResultEnum;
 import com.oszero.deliver.server.exception.BusinessException;
 import com.oszero.deliver.server.model.dto.PushWayDto;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.model.dto.request.SendRequestDto;
+import com.oszero.deliver.server.model.entity.App;
 import com.oszero.deliver.server.model.entity.Template;
 import com.oszero.deliver.server.model.entity.TemplateApp;
-import com.oszero.deliver.server.pretreatment.pipeline.ProcessContext;
-import com.oszero.deliver.server.pretreatment.pipeline.ProcessHandler;
-import com.oszero.deliver.server.pretreatment.pipeline.ProcessModel;
+import com.oszero.deliver.server.pretreatment.link.LinkContext;
+import com.oszero.deliver.server.pretreatment.link.LinkHandler;
+import com.oszero.deliver.server.pretreatment.link.LinkModel;
 import com.oszero.deliver.server.web.service.AppService;
 import com.oszero.deliver.server.web.service.SendService;
 import com.oszero.deliver.server.web.service.TemplateAppService;
@@ -32,7 +32,8 @@ public class SendServiceImpl implements SendService {
 
     private final TemplateService templateService;
     private final TemplateAppService templateAppService;
-    private final ProcessHandler processHandler;
+    private final AppService appService;
+    private final LinkHandler linkHandler;
 
     @Override
     public Integer send(SendRequestDto sendRequestDto) {
@@ -53,9 +54,13 @@ public class SendServiceImpl implements SendService {
         }
         Long appId = templateApp.getAppId();
 
-        // 3.得到各级参数
+        // 3.得到 appConfig
+        App app = appService.getById(appId);
+        String appConfigJson = app.getAppConfig();
+
+        // 4.得到各级参数
         List<String> users = sendRequestDto.getUsers();
-        Map<String, String> paramMap = sendRequestDto.getParamMap();
+        Map<String, Object> paramMap = sendRequestDto.getParamMap();
         Integer retry = sendRequestDto.getRetry();
         Integer pushRange = template.getPushRange();
         Integer usersType = template.getUsersType();
@@ -63,22 +68,23 @@ public class SendServiceImpl implements SendService {
         Integer channelType = pushWayDto.getChannelType();
         String messageType = pushWayDto.getMessageType();
 
-        // 4.组装 sendTaskDto
+        // 5.组装 sendTaskDto
         SendTaskDto sendTaskDto = SendTaskDto.builder()
                 .users(users)
                 .usersType(usersType)
                 .pushRange(pushRange)
                 .appId(appId)
+                .appConfigJson(appConfigJson)
                 .paramMap(paramMap)
                 .channelType(channelType)
                 .messageType(messageType)
                 .retry(retry).build();
 
-        // 5.处理相关责任链
-        ProcessContext<ProcessModel> context = ProcessContext.builder()
+        // 6.处理相关责任链
+        LinkContext<LinkModel> context = LinkContext.builder()
                 .processModel(sendTaskDto)
                 .code(usersType + "-" + channelType).build();
-        processHandler.process(context);
+        linkHandler.process(context);
         return null;
     }
 }
