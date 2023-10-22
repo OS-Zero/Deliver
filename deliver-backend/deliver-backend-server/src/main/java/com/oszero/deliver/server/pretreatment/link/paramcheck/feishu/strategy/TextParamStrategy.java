@@ -13,14 +13,10 @@ import java.util.Map;
 public class TextParamStrategy implements ParamStrategy {
 
     @Override
-    public void paramCheck(SendTaskDto sendTaskDto) {
-        try {
-            Map<String, Object> paramMap = sendTaskDto.getParamMap();
-            String json = JSONUtil.toJsonStr(paramMap);
-            FeiShuTextParam feiShuTextParam = JSONUtil.toBean(json, FeiShuTextParam.class);
-            sendTaskDto.setParam(feiShuTextParam);
-        } catch (Exception exception) {
-            throw new LinkProcessException("飞书 text 类型消息校验失败");
-        }
+    public void paramCheck(SendTaskDto sendTaskDto) throws Exception {
+        Map<String, Object> paramMap = sendTaskDto.getParamMap();
+        String json = JSONUtil.toJsonStr(paramMap);
+        FeiShuTextParam feiShuTextParam = JSONUtil.toBean(json, FeiShuTextParam.class);
+        sendTaskDto.setParam(feiShuTextParam);
     }
 }

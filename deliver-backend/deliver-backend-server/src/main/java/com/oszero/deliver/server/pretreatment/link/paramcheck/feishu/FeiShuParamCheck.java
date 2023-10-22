@@ -1,5 +1,6 @@
 package com.oszero.deliver.server.pretreatment.link.paramcheck.feishu;
 
+import com.oszero.deliver.server.exception.LinkProcessException;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.BusinessLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
@@ -22,6 +23,10 @@ public class FeiShuParamCheck implements BusinessLink<SendTaskDto> {
         sendTaskDto.getParamMap().put("user_ids", sendTaskDto.getUsers());
         String strategyBeanName = ParamStrategy.FEI_SHU_STRATEGY_BEAN_PRE_NAME + sendTaskDto.getMessageType();
         ParamStrategy paramStrategy = feiShuParamStrategyMap.get(strategyBeanName);
-        paramStrategy.paramCheck(sendTaskDto);
+        try {
+            paramStrategy.paramCheck(sendTaskDto);
+        } catch (Exception exception) {
+            throw new LinkProcessException("飞书 text 类型消息校验失败");
+        }
     }
 }

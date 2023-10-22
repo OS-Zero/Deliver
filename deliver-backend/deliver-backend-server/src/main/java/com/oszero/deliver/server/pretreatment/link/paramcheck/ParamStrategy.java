@@ -10,5 +10,5 @@ public interface ParamStrategy {
     String WECHAT_STRATEGY_BEAN_PRE_NAME = "wechat-";
     String FEI_SHU_STRATEGY_BEAN_PRE_NAME = "feiShu-";
 
-    void paramCheck(SendTaskDto sendTaskDto);
+    void paramCheck(SendTaskDto sendTaskDto) throws Exception;
 }
