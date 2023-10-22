@@ -19,8 +19,8 @@ public class MailParamCheck implements BusinessLink<SendTaskDto> {
             SendTaskDto sendTaskDto = context.getProcessModel();
             Map<String, Object> paramMap = sendTaskDto.getParamMap();
             String json = JSONUtil.toJsonStr(paramMap);
-            MailParam mailParam = JSONUtil.toBean(json, MailParam.class);
-            sendTaskDto.setParam(mailParam);
+            JSONUtil.toBean(json, MailParam.class);
+            sendTaskDto.setParamJson(json);
         } catch (Exception exception) {
             throw new LinkProcessException("飞书 text 类型消息校验失败");
         }

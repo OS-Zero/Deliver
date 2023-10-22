@@ -14,11 +14,9 @@ import java.util.List;
 public class MailParam {
     private String title;
     private String content;
-    private String from;
-    private List<String> to;
     // 抄送人列表
     private List<String> toCC;
     // 密送人列表
     private List<String> toBCC;
-    private boolean htmlFlag;
+    private boolean htmlFlag = true;
 }

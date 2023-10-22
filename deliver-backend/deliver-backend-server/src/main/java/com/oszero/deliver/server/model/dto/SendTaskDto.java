@@ -32,7 +32,7 @@ public class SendTaskDto extends LinkModel {
     /**
      * 转换后具体的参数
      */
-    private Object param;
+    private String paramJson;
 
     private Long appId;
     private AppConfig appConfig;
