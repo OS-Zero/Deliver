@@ -1,10 +1,8 @@
 package com.oszero.deliver.server.model.dto;
 
-import com.oszero.deliver.server.model.app.AppConfig;
 import com.oszero.deliver.server.pretreatment.link.LinkModel;
 import lombok.*;
 
-import javax.security.auth.login.AppConfigurationEntry;
 import java.util.List;
 import java.util.Map;
 
@@ -30,19 +28,39 @@ public class SendTaskDto extends LinkModel {
     private Map<String, Object> paramMap;
 
     /**
-     * 转换后具体的参数
+     * 转换后的参数 JSON 便于后续直接转换为对应参数
      */
     private String paramJson;
 
-    private Long appId;
-    private AppConfig appConfig;
+    /**
+     * appConfig 数据库的 JSON 数据
+     */
     private String appConfigJson;
-    private Integer pushRange;
-    private Integer usersType;
-    private Integer channelType;
-    private String messageType;
-    private Integer retry;
 
+    /**
+     * 发送范围
+     */
+    private Integer pushRange;
+
+    /**
+     * 发送用户类型
+     */
+    private Integer usersType;
+
+    /**
+     * 渠道类型
+     */
+    private Integer channelType;
+
+    /**
+     * 消息类型
+     */
+    private String messageType;
+
+    /**
+     * 失败重试次数，默认为 0
+     */
+    private Integer retry = 0;
 }
 
 

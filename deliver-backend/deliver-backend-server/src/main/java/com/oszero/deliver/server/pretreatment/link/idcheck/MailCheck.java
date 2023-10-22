@@ -12,7 +12,8 @@ public class MailCheck implements BusinessLink<SendTaskDto> {
 
     @Override
     public void process(LinkContext<SendTaskDto> context) {
-        for (String email : context.getProcessModel().getUsers()) {
+        SendTaskDto sendTaskDto = context.getProcessModel();
+        for (String email : sendTaskDto.getUsers()) {
             if (!Validator.isEmail(email)) {
                 throw new LinkProcessException("[MailCheck#process]错误：消息接收者中有非[邮箱地址]用户！");
             }

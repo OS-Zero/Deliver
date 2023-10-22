@@ -73,7 +73,6 @@ public class SendServiceImpl implements SendService {
                 .users(users)
                 .usersType(usersType)
                 .pushRange(pushRange)
-                .appId(appId)
                 .appConfigJson(appConfigJson)
                 .paramMap(paramMap)
                 .channelType(channelType)

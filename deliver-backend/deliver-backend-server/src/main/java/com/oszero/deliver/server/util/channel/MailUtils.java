@@ -13,6 +13,12 @@ import org.springframework.stereotype.Component;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
+/**
+ * 邮箱工具类
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Slf4j
 @Component
 public class MailUtils {
@@ -29,7 +35,8 @@ public class MailUtils {
     public void sendMail(MailApp mailApp, SendTaskDto sendTaskDto) {
         String paramJson = sendTaskDto.getParamJson();
         MailParam mailParam = JSONUtil.toBean(paramJson, MailParam.class);
-        // 创建
+
+        //1. 创建 JavaMailSender
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
         javaMailSender.setUsername(mailApp.getUsername());
         javaMailSender.setPassword(mailApp.getPassword());
@@ -38,6 +45,7 @@ public class MailUtils {
         javaMailSender.setProtocol("smtp");
         javaMailSender.setJavaMailProperties(pro);
 
+        //2. 创建 message 对象
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setFrom(mailApp.getUsername());
@@ -47,6 +55,8 @@ public class MailUtils {
         helper.setSubject(mailParam.getTitle());
         helper.setText(mailParam.getContent(), mailParam.isHtmlFlag());
         log.info("[email request] subject={} content={} to={}", mailParam.getTitle(), mailParam.getContent(), sendTaskDto.getUsers());
+
+        // 3. 发送邮件
         javaMailSender.send(message);
     }
 
