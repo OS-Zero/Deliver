@@ -2,6 +2,7 @@ package com.oszero.deliver.server.util.channel;
 
 import com.oszero.deliver.server.message.param.mail.MailParam;
 import com.oszero.deliver.server.model.app.MailApp;
+import com.oszero.deliver.server.model.dto.SendTaskDto;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -24,7 +25,8 @@ public class MailUtils {
     }
 
     @SneakyThrows
-    public void sendMail(MailApp mailApp, MailParam mailParam) {
+    public void sendMail(MailApp mailApp, SendTaskDto sendTaskDto) {
+        MailParam mailParam = (MailParam) sendTaskDto.getParam();
         // 创建
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
         javaMailSender.setUsername(mailApp.getUsername());
