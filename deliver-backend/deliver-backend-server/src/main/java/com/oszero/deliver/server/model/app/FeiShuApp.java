@@ -1,9 +1,13 @@
 package com.oszero.deliver.server.model.app;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
-public class FeiShuApp {
+@AllArgsConstructor
+@NoArgsConstructor
+public class FeiShuApp extends AppConfig {
+    private String appId;
+    private String appSecret;
 }

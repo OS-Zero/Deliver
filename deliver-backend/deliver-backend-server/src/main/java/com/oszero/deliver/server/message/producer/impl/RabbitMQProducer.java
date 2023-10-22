@@ -18,7 +18,7 @@ public class RabbitMQProducer implements Producer {
     private final RabbitMQUtils rabbitMQUtils;
 
     @Override
-    public boolean sendMessage(ChannelTypeEnum channelTypeEnum, SendTaskDto sendTaskDto) {
+    public void sendMessage(ChannelTypeEnum channelTypeEnum, SendTaskDto sendTaskDto) {
         switch (channelTypeEnum) {
             case CALL: {
                 rabbitMQUtils.sendMessage(MQConstant.DELIVER_EXCHANGE, MQConstant.CALL_KEY_NAME, JSONUtil.toJsonStr(sendTaskDto));
@@ -45,6 +45,5 @@ public class RabbitMQProducer implements Producer {
                 break;
             }
         }
-        return true;
     }
 }

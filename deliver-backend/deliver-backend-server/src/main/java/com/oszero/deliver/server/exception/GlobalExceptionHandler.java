@@ -3,15 +3,10 @@ package com.oszero.deliver.server.exception;
 import com.oszero.deliver.server.enums.ResultEnum;
 import com.oszero.deliver.server.model.CommonResult;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
-import org.springframework.web.HttpMediaTypeNotSupportedException;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -40,20 +35,20 @@ public class GlobalExceptionHandler {
      * @param request 请求
      * @return ResultVO
      */
-    @ExceptionHandler(PipelineProcessException.class)
-    public CommonResult<?> handlePipelineProcessException(PipelineProcessException e, HttpServletRequest request) {
-        log.error("[PipelineProcessException] ", e);
+    @ExceptionHandler(LinkProcessException.class)
+    public CommonResult<?> handlePipelineProcessException(LinkProcessException e, HttpServletRequest request) {
+        log.error("[LinkProcessException] ", e);
         return CommonResult.fail(e.getMessage());
     }
 
     /**
-     * 系统异常时的错误处理
+     * 业务异常时的错误处理
      *
      * @param e       异常信息
      * @param request 请求
      * @return ResultVO
      */
-    @ExceptionHandler(SystemException.class)
+    @ExceptionHandler(BusinessException.class)
     public CommonResult<?> handleBusinessException(BusinessException e, HttpServletRequest request) {
         log.error("[BusinessException] ", e);
         return CommonResult.fail(e.getMessage());

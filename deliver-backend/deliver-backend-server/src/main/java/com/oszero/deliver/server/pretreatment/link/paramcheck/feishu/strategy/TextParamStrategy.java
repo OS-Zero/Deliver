@@ -1,0 +1,26 @@
+package com.oszero.deliver.server.pretreatment.link.paramcheck.feishu.strategy;
+
+import cn.hutool.json.JSONUtil;
+import com.oszero.deliver.server.exception.LinkProcessException;
+import com.oszero.deliver.server.message.param.feishu.FeiShuTextParam;
+import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.pretreatment.link.paramcheck.ParamStrategy;
+import org.springframework.stereotype.Component;
+
+import java.util.Map;
+
+@Component(ParamStrategy.FEI_SHU_STRATEGY_BEAN_PRE_NAME + "1")
+public class TextParamStrategy implements ParamStrategy {
+
+    @Override
+    public void paramCheck(SendTaskDto sendTaskDto) {
+        try {
+            Map<String, Object> paramMap = sendTaskDto.getParamMap();
+            String json = JSONUtil.toJsonStr(paramMap);
+            FeiShuTextParam feiShuTextParam = JSONUtil.toBean(json, FeiShuTextParam.class);
+            sendTaskDto.setParam(feiShuTextParam);
+        } catch (Exception exception) {
+            throw new LinkProcessException("飞书 text 类型消息校验失败");
+        }
+    }
+}

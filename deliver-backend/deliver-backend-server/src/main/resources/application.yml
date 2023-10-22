@@ -4,4 +4,4 @@ spring:
   application:
     name: deliver-server
   profiles:
-    active: dev
+    active: local
