@@ -52,6 +52,11 @@ public class Template implements Serializable {
     private Integer useCount;
 
     /**
+     * 模板状态
+     */
+    private Integer templateStatus;
+
+    /**
      * 创建者
      */
     private String createUser;
