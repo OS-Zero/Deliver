@@ -1,5 +1,6 @@
 package com.oszero.deliver.admin.service;
 
+import com.oszero.deliver.admin.model.dto.request.AppSearchRequestDto;
 import com.oszero.deliver.admin.model.entity.App;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -10,4 +11,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface AppService extends IService<App> {
 
+    void getAppPagesByCondition(AppSearchRequestDto appSearchRequestDto);
 }
