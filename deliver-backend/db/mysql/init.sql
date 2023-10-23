@@ -28,15 +28,16 @@ create table if not exists deliver.template
 drop table if exists deliver.app;
 create table if not exists deliver.app
 (
-    app_id      bigint auto_increment primary key comment 'appId',
-    name        varchar(100)                                                   not null comment '应用名称',
-    app_config  text                                                           not null comment '应用信息配置 json',
-    use_count   int      default 0                                             not null comment 'APP 使用数',
-    create_user varchar(50)                                                    null comment '创建者',
-    update_user varchar(50)                                                    null comment '更新者',
-    create_time datetime default CURRENT_TIMESTAMP                             not null comment '创建时间',
-    update_time datetime default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null comment '更新时间',
-    deleted     tinyint  default 0                                             not null comment '是否删除：0-不删除 1-删除'
+    app_id       bigint auto_increment primary key comment 'appId',
+    name         varchar(100)                                                   not null comment '应用名称',
+    channel_type tinyint                                                        not null comment '消息发送渠道类型 （1-打电话 2-发短信 3-邮件 4-企业微信 5-钉钉 6-飞书）',
+    app_config   text                                                           not null comment '应用信息配置 json',
+    use_count    int      default 0                                             not null comment 'APP 使用数',
+    create_user  varchar(50)                                                    null comment '创建者',
+    update_user  varchar(50)                                                    null comment '更新者',
+    create_time  datetime default CURRENT_TIMESTAMP                             not null comment '创建时间',
+    update_time  datetime default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null comment '更新时间',
+    deleted      tinyint  default 0                                             not null comment '是否删除：0-不删除 1-删除'
 ) comment '渠道应用信息';
 
 -- 模板与应用关联表

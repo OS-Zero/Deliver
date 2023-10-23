@@ -32,15 +32,16 @@ CREATE TABLE deliver.template
 DROP TABLE deliver.app;
 CREATE TABLE deliver.app
 (
-    app_id      NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- appId
-    name        VARCHAR2(100)                        NOT NULL,   -- 应用名称
-    app_config  CLOB                                 NOT NULL,   -- 应用信息配置 json
-    use_count   NUMBER(10) DEFAULT 0                 NOT NULL,   -- APP 使用数
-    create_user VARCHAR2(50),                                    -- 创建者
-    update_user VARCHAR2(50),                                    -- 更新者
-    create_time TIMESTAMP  DEFAULT CURRENT_TIMESTAMP NOT NULL,   -- 创建时间
-    update_time TIMESTAMP  DEFAULT CURRENT_TIMESTAMP NOT NULL,   -- 更新时间
-    deleted     NUMBER(1)  DEFAULT 0                 NOT NULL    -- 是否删除：0-不删除 1-删除
+    app_id       NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- appId
+    name         VARCHAR2(100)                        NOT NULL,   -- 应用名称
+    channel_type NUMBER(1)                            not null,   -- 消息发送渠道类型 （1-打电话 2-发短信 3-邮件 4-企业微信 5-钉钉 6-飞书）
+    app_config   CLOB                                 NOT NULL,   -- 应用信息配置 json
+    use_count    NUMBER(10) DEFAULT 0                 NOT NULL,   -- APP 使用数
+    create_user  VARCHAR2(50),                                    -- 创建者
+    update_user  VARCHAR2(50),                                    -- 更新者
+    create_time  TIMESTAMP  DEFAULT CURRENT_TIMESTAMP NOT NULL,   -- 创建时间
+    update_time  TIMESTAMP  DEFAULT CURRENT_TIMESTAMP NOT NULL,   -- 更新时间
+    deleted      NUMBER(1)  DEFAULT 0                 NOT NULL    -- 是否删除：0-不删除 1-删除
 );
 
 -- 模板与应用关联表
