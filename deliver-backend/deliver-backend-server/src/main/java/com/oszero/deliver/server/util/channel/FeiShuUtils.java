@@ -17,6 +17,12 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+/**
+ * 渠道-飞书工具类
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Slf4j
 @Component
 public class FeiShuUtils {

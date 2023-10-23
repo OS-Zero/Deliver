@@ -6,11 +6,17 @@ import lombok.*;
 import java.util.List;
 import java.util.Map;
 
-@EqualsAndHashCode(callSuper = true)
+/**
+ * 发送消息任务 DTO
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@EqualsAndHashCode(callSuper = true)
 public class SendTaskDto extends LinkModel {
 
     /**

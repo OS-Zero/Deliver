@@ -25,6 +25,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * 发送消息操作 Service 实现
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor

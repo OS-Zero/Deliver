@@ -14,7 +14,7 @@ import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
 /**
- * 邮箱工具类
+ * 渠道-邮箱工具类
  *
  * @author oszero
  * @version 1.0.0

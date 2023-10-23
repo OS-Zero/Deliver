@@ -6,6 +6,12 @@ import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
+/**
+ * RocketMQ 工具类
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Component
 @RequiredArgsConstructor
 @ConditionalOnProperty(value = "mq-type", havingValue = "rocketmq")

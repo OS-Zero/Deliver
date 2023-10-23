@@ -18,6 +18,12 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Arrays;
 import java.util.HashMap;
 
+/**
+ * 前置责任链配置
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Configuration
 @RequiredArgsConstructor
 public class LinkConfig {

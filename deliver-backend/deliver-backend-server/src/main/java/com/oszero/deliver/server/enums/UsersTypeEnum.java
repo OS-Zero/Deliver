@@ -4,14 +4,20 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * 发送用户类型枚举
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Getter
 @ToString
 @AllArgsConstructor
 public enum UsersTypeEnum {
 
-    PHONE(1, "电话"),
-    MAIL(2, "邮箱"),
-    COMPANY_ACCOUNT(3, "企业账号"),
+    COMPANY_ACCOUNT(1, "企业账号"),
+    PHONE(2, "电话"),
+    MAIL(3, "邮箱"),
     PLATFORM_USER_ID(4, "平台userId");
 
     private final Integer code;

@@ -4,6 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * 推送范围枚举
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Getter
 @ToString
 @AllArgsConstructor

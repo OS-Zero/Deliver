@@ -7,10 +7,11 @@ import com.oszero.deliver.server.web.mapper.AppMapper;
 import org.springframework.stereotype.Service;
 
 /**
-* @author oszero
-* @description 针对表【app(渠道应用信息)】的数据库操作Service实现
-* @createDate 2023-10-13 10:02:47
-*/
+ * 针对表【app(渠道应用信息)】的数据库操作 Service 实现
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Service
 public class AppServiceImpl extends ServiceImpl<AppMapper, App>
     implements AppService{

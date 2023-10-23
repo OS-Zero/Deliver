@@ -5,10 +5,13 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * 业务执行模板（把责任链的逻辑串起来）
+ * 责任链模板（把链接起来）
+ *
+ * @author oszero
+ * @version 1.0.0
  */
-@SuppressWarnings("all")
 @Data
+@SuppressWarnings("all")
 public class LinkTemplate {
 
     private List<BusinessLink> processList;

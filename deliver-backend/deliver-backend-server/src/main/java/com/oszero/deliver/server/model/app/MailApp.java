@@ -2,11 +2,17 @@ package com.oszero.deliver.server.model.app;
 
 import lombok.*;
 
-@EqualsAndHashCode(callSuper = true)
+/**
+ * 邮箱 APP 配置
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class MailApp extends AppConfig {
     private String host;
     private String username;

@@ -10,6 +10,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 开放接口
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @RestController
 @RequestMapping("/open")
 @RequiredArgsConstructor

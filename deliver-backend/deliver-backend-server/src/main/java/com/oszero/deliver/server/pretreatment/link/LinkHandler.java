@@ -11,8 +11,10 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * 流程控制器
+ * 责任链处理器
  *
+ * @author oszero
+ * @version 1.0.0
  */
 @Slf4j
 @Data
@@ -41,6 +43,7 @@ public class LinkHandler {
         for (BusinessLink businessLink : processList) {
             businessLink.process(context);
         }
+
         return context;
     }
 

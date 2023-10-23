@@ -7,11 +7,13 @@ import java.util.Date;
 import lombok.Data;
 
 /**
- * 
- * @TableName template_app
+ * 消息模板与 APP 关联
+ *
+ * @author oszero
+ * @version 1.0.0
  */
-@TableName(value ="template_app")
 @Data
+@TableName(value ="template_app")
 public class TemplateApp implements Serializable {
     /**
      * 主键

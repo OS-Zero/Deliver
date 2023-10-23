@@ -7,10 +7,11 @@ import com.oszero.deliver.server.web.mapper.TemplateAppMapper;
 import org.springframework.stereotype.Service;
 
 /**
-* @author oszero
-* @description 针对表【template_app】的数据库操作Service实现
-* @createDate 2023-10-13 10:06:29
-*/
+ * 针对表【template_app】的数据库操作 Service 实现
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Service
 public class TemplateAppServiceImpl extends ServiceImpl<TemplateAppMapper, TemplateApp>
     implements TemplateAppService{

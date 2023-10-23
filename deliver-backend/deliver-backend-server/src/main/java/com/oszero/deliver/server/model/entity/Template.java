@@ -10,10 +10,11 @@ import lombok.Data;
 /**
  * 消息模板
  *
- * @TableName template
+ * @author oszero
+ * @version 1.0.0
  */
-@TableName(value = "template")
 @Data
+@TableName(value = "template")
 public class Template implements Serializable {
     /**
      * 模板id
