@@ -11,17 +11,18 @@ CREATE DATABASE deliver;
 drop table if exists deliver.template;
 create table if not exists deliver.template
 (
-    template_id   bigserial primary key,
-    template_name varchar(50)                         not null,
-    push_range    smallint                            not null,
-    users_type    smallint                            not null,
-    push_ways     jsonb                               not null,
-    use_count     integer   default 0                 not null,
-    create_user   varchar(50)                         null,
-    update_user   varchar(50)                         null,
-    create_time   timestamp default CURRENT_TIMESTAMP not null,
-    update_time   timestamp default CURRENT_TIMESTAMP not null,
-    deleted       smallint  default 0                 not null
+    template_id     bigserial primary key,
+    template_name   varchar(50)                         not null,
+    push_range      smallint                            not null,
+    users_type      smallint                            not null,
+    push_ways       jsonb                               not null,
+    use_count       integer   default 0                 not null,
+    template_status smallint  default 1                 not null,
+    create_user     varchar(50)                         null,
+    update_user     varchar(50)                         null,
+    create_time     timestamp default CURRENT_TIMESTAMP not null,
+    update_time     timestamp default CURRENT_TIMESTAMP not null,
+    deleted         smallint  default 0                 not null
 );
 
 -- 添加注释到表
@@ -38,6 +39,7 @@ COMMENT ON COLUMN deliver.template.push_ways IS '推送方式
 "messageType": 参考 MessageTypeEnum 的 code
 }';
 COMMENT ON COLUMN deliver.template.use_count IS '模板使用数';
+COMMENT ON COLUMN deliver.template.template_status IS '渠道状态（1-启用 0-禁用）';
 COMMENT ON COLUMN deliver.template.create_user IS '创建者';
 COMMENT ON COLUMN deliver.template.update_user IS '更新者';
 COMMENT ON COLUMN deliver.template.create_time IS '创建时间';
@@ -53,6 +55,7 @@ create table if not exists deliver.app
     channel_type smallint                            not null,
     app_config   jsonb                               not null,
     use_count    integer   default 0                 not null,
+    app_status   smallint  default 1                 not null,
     create_user  varchar(50)                         null,
     update_user  varchar(50)                         null,
     create_time  timestamp default CURRENT_TIMESTAMP not null,
@@ -69,6 +72,7 @@ COMMENT ON COLUMN deliver.app.name IS '应用名称';
 COMMENT ON COLUMN deliver.app.channel_type IS '消息发送渠道类型 （1-打电话 2-发短信 3-邮件 4-企业微信 5-钉钉 6-飞书）';
 COMMENT ON COLUMN deliver.app.app_config IS '应用信息配置 json';
 COMMENT ON COLUMN deliver.app.use_count IS 'APP 使用数';
+COMMENT ON COLUMN deliver.app.app_status IS '应用状态（1-启用 0-禁用）';
 COMMENT ON COLUMN deliver.app.create_user IS '创建者';
 COMMENT ON COLUMN deliver.app.update_user IS '更新者';
 COMMENT ON COLUMN deliver.app.create_time IS '创建时间';

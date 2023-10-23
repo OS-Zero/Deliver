@@ -15,17 +15,18 @@
 DROP TABLE deliver.template;
 CREATE TABLE deliver.template
 (
-    template_id   NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- 模板id
-    template_name VARCHAR2(50)                         NOT NULL,   -- 模板名称
-    push_range    NUMBER(1)                            NOT NULL,   -- 推送范围（0-不限 1-企业内部 2-外部）
-    users_type    NUMBER(1)                            NOT NULL,   -- 用户类型（1-企业账号 2-电话 3-邮箱 4-平台userId）
-    push_ways     VARCHAR2(200)                        NOT NULL,   -- 推送方式
-    use_count     NUMBER(10) DEFAULT 0                 NOT NULL,   -- 模板使用数
-    create_user   VARCHAR2(50),                                    -- 创建者
-    update_user   VARCHAR2(50),                                    -- 更新者
-    create_time   TIMESTAMP  DEFAULT CURRENT_TIMESTAMP NOT NULL,   -- 创建时间
-    update_time   TIMESTAMP  DEFAULT CURRENT_TIMESTAMP NOT NULL,   -- 更新时间
-    deleted       NUMBER(1)  DEFAULT 0                 NOT NULL    -- 是否删除：0-不删除 1-删除
+    template_id     NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- 模板id
+    template_name   VARCHAR2(50)                         NOT NULL,   -- 模板名称
+    push_range      NUMBER(1)                            NOT NULL,   -- 推送范围（0-不限 1-企业内部 2-外部）
+    users_type      NUMBER(1)                            NOT NULL,   -- 用户类型（1-企业账号 2-电话 3-邮箱 4-平台userId）
+    push_ways       VARCHAR2(200)                        NOT NULL,   -- 推送方式
+    use_count       NUMBER(10) DEFAULT 0                 NOT NULL,   -- 模板使用数
+    template_status number(1)  default 1                 not null,   -- 应用状态（1-启用 0-禁用）
+    create_user     VARCHAR2(50),                                    -- 创建者
+    update_user     VARCHAR2(50),                                    -- 更新者
+    create_time     TIMESTAMP  DEFAULT CURRENT_TIMESTAMP NOT NULL,   -- 创建时间
+    update_time     TIMESTAMP  DEFAULT CURRENT_TIMESTAMP NOT NULL,   -- 更新时间
+    deleted         NUMBER(1)  DEFAULT 0                 NOT NULL    -- 是否删除：0-不删除 1-删除
 );
 
 -- 渠道应用信息表（宽表）
@@ -37,6 +38,7 @@ CREATE TABLE deliver.app
     channel_type NUMBER(1)                            not null,   -- 消息发送渠道类型 （1-打电话 2-发短信 3-邮件 4-企业微信 5-钉钉 6-飞书）
     app_config   CLOB                                 NOT NULL,   -- 应用信息配置 json
     use_count    NUMBER(10) DEFAULT 0                 NOT NULL,   -- APP 使用数
+    app_status   number(1)  default 1                 not null,   -- 应用状态（1-启用 0-禁用）
     create_user  VARCHAR2(50),                                    -- 创建者
     update_user  VARCHAR2(50),                                    -- 更新者
     create_time  TIMESTAMP  DEFAULT CURRENT_TIMESTAMP NOT NULL,   -- 创建时间

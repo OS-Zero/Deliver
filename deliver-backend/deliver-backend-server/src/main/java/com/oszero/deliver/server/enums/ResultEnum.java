@@ -15,7 +15,7 @@ public enum ResultEnum {
     private final Integer code;
     private final String message;
 
-    private ResultEnum(Integer code, String message) {
+    ResultEnum(Integer code, String message) {
         this.code = code;
         this.message = message;
     }

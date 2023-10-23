@@ -3,6 +3,7 @@ package com.oszero.deliver.server.web.service.impl;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.oszero.deliver.server.enums.ResultEnum;
+import com.oszero.deliver.server.enums.StatusEnum;
 import com.oszero.deliver.server.exception.BusinessException;
 import com.oszero.deliver.server.model.dto.PushWayDto;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
@@ -50,6 +51,10 @@ public class SendServiceImpl implements SendService {
         if (Objects.isNull(template)) {
             throw new BusinessException(ResultEnum.CLIENT_ERROR.getMessage()); // todo: 后续统一设计系统所有异常
         }
+        // 关闭状态直接返回
+        if (StatusEnum.OFF.getStatus().equals(template.getTemplateStatus())) {
+            throw new BusinessException(ResultEnum.CLIENT_ERROR.getMessage()); // todo: 后续统一设计系统所有异常
+        }
 
         // 2.通过 templateId 获取 appId
         LambdaQueryWrapper<TemplateApp> wrapper = new LambdaQueryWrapper<>();
@@ -62,6 +67,10 @@ public class SendServiceImpl implements SendService {
 
         // 3.得到 appConfig
         App app = appService.getById(appId);
+        // 关闭状态直接返回
+        if (StatusEnum.OFF.getStatus().equals(app.getAppStatus())) {
+            throw new BusinessException(ResultEnum.CLIENT_ERROR.getMessage()); // todo: 后续统一设计系统所有异常
+        }
         String appConfigJson = app.getAppConfig();
 
         // 4.得到各级参数
