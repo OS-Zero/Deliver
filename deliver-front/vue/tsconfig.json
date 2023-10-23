@@ -1,67 +1,25 @@
 {
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "types/**/*.d.ts",
-    "types/**/*.ts",
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ],
   "compilerOptions": {
-    "jsx": "preserve",
-    "target": "esnext",
-    "module": "esnext",
-    "sourceMap": true,
-    "outDir": "./dist",
-    "lib": [
-      "esnext",
-      "dom"
-    ],
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
-    "types": [
-      "vite/client",
-      "node"
-    ],
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "preserve",
+
+    /* Linting */
     "strict": true,
-    "noUnusedLocals": false,
-    "noImplicitReturns": true,
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "noImplicitAny": false,
-    "plugins": [
-      {
-        "name": "@vuedx/typescript-plugin-vue"
-      }
-    ],
-    // "composite": true,
-    "baseUrl": ".",
-    "typeRoots": [
-      "./node_modules/@types/",
-      "./types"
-    ],
-    "paths": {
-      "@/*": [
-        "src/*"
-      ],
-      "#/*": [
-        "types/*"
-      ]
-    }
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
   },
-  // "files": [],
-  // "references": [
-  //   {
-  //     "path": "./tsconfig.node.json"
-  //   },
-  //   {
-  //     "path": "./tsconfig.app.json"
-  //   },
-  //   {
-  //     "path": "./tsconfig.vitest.json"
-  //   }
-  // ]
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue",".eslintrc.cjs","./*.ts"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }
