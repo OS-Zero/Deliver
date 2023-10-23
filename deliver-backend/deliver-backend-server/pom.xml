@@ -13,7 +13,7 @@
     <packaging>jar</packaging>
 
     <dependencies>
-<!--        MVC-->
+        <!--        MVC-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -29,7 +29,7 @@
             <artifactId>spring-boot-starter-undertow</artifactId>
         </dependency>
 
-<!--        MySQL-->
+        <!--        MySQL-->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -41,7 +41,7 @@
             <version>${mybatis.plus.version}</version>
         </dependency>
 
-<!--        Redis-->
+        <!--        Redis-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
@@ -63,20 +63,20 @@
             <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
 
-<!--        邮件-->
+        <!--        邮件-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
-<!--        common-->
+        <!--        common-->
         <dependency>
             <groupId>com.oszero</groupId>
             <artifactId>deliver-backend-common</artifactId>
             <version>${project.version}</version>
         </dependency>
 
-<!--        钉钉-->
+        <!--        钉钉-->
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>alibaba-dingtalk-service-sdk</artifactId>
@@ -87,9 +87,9 @@
             <artifactId>dingtalk</artifactId>
             <version>${ding.sdk.new.version}</version>
         </dependency>
-<!--        企业微信-->
+        <!--        企业微信-->
 
-<!--        飞书-->
+        <!--        飞书-->
         <dependency>
             <groupId>com.larksuite.oapi</groupId>
             <artifactId>oapi-sdk</artifactId>
@@ -97,4 +97,25 @@
         </dependency>
 
     </dependencies>
+
+    <build>
+        <plugins>
+            <!-- 使用spring-boot-maven-plugin -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <!-- 指定生成的jar文件名 -->
+                    <finalName>deliver-backend-server</finalName>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
