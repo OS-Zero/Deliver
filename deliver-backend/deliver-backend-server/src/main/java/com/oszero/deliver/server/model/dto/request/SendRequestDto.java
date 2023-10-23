@@ -9,6 +9,12 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 发送请求 DTO
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,7 +39,7 @@ public class SendRequestDto {
 
     /**
      * 重试次数
-     * 默认为0
+     * 默认为 0
      */
-    private Integer retry;
+    private Integer retry = 0;
 }

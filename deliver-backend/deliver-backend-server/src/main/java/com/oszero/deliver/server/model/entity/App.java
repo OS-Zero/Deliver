@@ -8,10 +8,12 @@ import lombok.Data;
 
 /**
  * 渠道应用信息
- * @TableName app
+ *
+ * @author oszero
+ * @version 1.0.0
  */
-@TableName(value ="app")
 @Data
+@TableName(value ="app")
 public class App implements Serializable {
     /**
      * appId

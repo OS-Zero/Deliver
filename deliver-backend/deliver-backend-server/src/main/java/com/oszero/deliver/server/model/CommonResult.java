@@ -4,11 +4,29 @@ import com.oszero.deliver.server.enums.ResultEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * 通用响应
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Data
 @AllArgsConstructor
 public class CommonResult<T> {
+
+    /**
+     * 响应状态码
+     */
     private Integer code;
+
+    /**
+     * 成功响应数据
+     */
     private T data;
+
+    /**
+     * 错误响应信息
+     */
     private String errorMessage;
 
     public static <T> CommonResult<T> success() {

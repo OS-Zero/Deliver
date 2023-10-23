@@ -8,11 +8,13 @@ import lombok.NoArgsConstructor;
 /**
  * 责任链上下文
  *
+ * @author oszero
+ * @version 1.0.0
  */
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class LinkContext<T extends LinkModel> {
 
     /**

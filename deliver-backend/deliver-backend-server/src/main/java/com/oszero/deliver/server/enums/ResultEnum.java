@@ -1,5 +1,11 @@
 package com.oszero.deliver.server.enums;
 
+/**
+ * 响应状态枚举
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 public enum ResultEnum {
     SUCCESS(200, "success"),
     CLIENT_ERROR(400, "client_error"),
