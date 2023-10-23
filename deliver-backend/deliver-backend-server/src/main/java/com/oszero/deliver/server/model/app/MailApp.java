@@ -1,13 +1,14 @@
 package com.oszero.deliver.server.model.app;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
-public class MailApp {
+@AllArgsConstructor
+@NoArgsConstructor
+public class MailApp extends AppConfig {
     private String host;
-    private Integer port;
     private String username;
     private String password;
 }

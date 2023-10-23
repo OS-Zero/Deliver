@@ -19,9 +19,9 @@ spring:
         min-idle: 0
         max-wait: 5s
   datasource:
-    url: jdbc:mysql://192.168.11.122:3307/message?serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull
-    username: oss
-    password: vUBerOnm
+    url: jdbc:mysql://192.160.11.100:3307/message?serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull
+    username:
+    password:
     driver-class-name: com.mysql.cj.jdbc.Driver
   # RabbitMQ 配置
   rabbitmq:
