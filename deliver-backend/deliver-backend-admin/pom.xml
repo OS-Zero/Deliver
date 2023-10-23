@@ -53,4 +53,24 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <!-- 使用spring-boot-maven-plugin -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <!-- 指定生成的jar文件名 -->
+                    <finalName>deliver-backend-admin</finalName>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
