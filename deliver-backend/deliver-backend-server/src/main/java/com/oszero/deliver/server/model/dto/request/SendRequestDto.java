@@ -23,18 +23,19 @@ public class SendRequestDto {
     /**
      * 消息模板 Id
      */
-    @NotNull
+    @NotNull(message = "消息模板 ID 不能为 NULL")
     private Integer templateId;
 
     /**
      * 发送用户列表
      */
-    @NotEmpty
+    @NotEmpty(message = "发送用户列表不能为空")
     private List<String> users;
 
     /**
      * 不同消息的不同参数
      */
+    @NotNull(message = "消息参数不能为 NULL")
     private Map<String, Object> paramMap;
 
     /**
