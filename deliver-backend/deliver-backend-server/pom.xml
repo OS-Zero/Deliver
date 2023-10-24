@@ -96,6 +96,12 @@
             <version>${feishi.sdk.version}</version>
         </dependency>
 
+<!--        参数校验-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
