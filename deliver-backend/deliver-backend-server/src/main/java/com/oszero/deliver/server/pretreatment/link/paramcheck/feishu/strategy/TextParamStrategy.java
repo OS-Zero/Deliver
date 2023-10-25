@@ -13,7 +13,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class TextParamStrategy implements ParamStrategy {
 
-
     @Override
     public void paramCheck(SendTaskDto sendTaskDto) throws Exception {
         Map<String, Object> paramMap = sendTaskDto.getParamMap();
