@@ -3,6 +3,7 @@ package com.oszero.deliver.server.message.producer.impl;
 import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.constant.MQConstant;
 import com.oszero.deliver.server.enums.ChannelTypeEnum;
+import com.oszero.deliver.server.exception.BusinessException;
 import com.oszero.deliver.server.message.producer.Producer;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.util.RocketMQUtils;
@@ -20,7 +21,11 @@ public class RocketMQProducer implements Producer {
     private final RocketMQUtils rocketMQUtils;
 
     @Override
-    public void sendMessage(ChannelTypeEnum channelTypeEnum, SendTaskDto sendTaskDto) {
+    public void sendMessage(SendTaskDto sendTaskDto) {
+        ChannelTypeEnum channelTypeEnum = ChannelTypeEnum.getInstanceByCode(sendTaskDto.getChannelType());
+        if (Objects.isNull(channelTypeEnum)) {
+            throw new BusinessException("");
+        }
         SendResult sendResult = null;
         switch (channelTypeEnum) {
             case CALL: {

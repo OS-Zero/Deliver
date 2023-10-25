@@ -26,7 +26,6 @@ public class CallSend extends CommonSend implements BusinessLink<SendTaskDto> {
 
     @Override
     void send(SendTaskDto sendTaskDto) {
-        ChannelTypeEnum channelTypeEnum = ChannelTypeEnum.getInstanceByCode(sendTaskDto.getChannelType());
-        producer.sendMessage(channelTypeEnum, sendTaskDto);
+        producer.sendMessage(sendTaskDto);
     }
 }

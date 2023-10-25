@@ -86,7 +86,7 @@ public class FeiShuUtils {
         }
         FeiShuUserInfoRespBody feiShuUserInfoRespBody = JSONUtil.toBean(execute.body(), FeiShuUserInfoRespBody.class);
         if (feiShuUserInfoRespBody.getCode() != 0) {
-            throw new LinkProcessException("用户 userId 检验失败");
+            throw new LinkProcessException("用户: " + userId + " userId 检验失败");
         }
     }
 }

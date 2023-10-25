@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 /**
  * 开放接口
  *
@@ -19,12 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/open")
 @RequiredArgsConstructor
+@Validated
 public class OpenController {
 
     private final SendService sendService;
 
     @PostMapping("/sendMessage")
-    public CommonResult<?> sendMessage(@Validated @RequestBody SendRequestDto sendRequestDto) {
+    public CommonResult<?> sendMessage(@Valid @RequestBody SendRequestDto sendRequestDto) {
         Integer send = sendService.send(sendRequestDto);
         return CommonResult.success(send);
     }

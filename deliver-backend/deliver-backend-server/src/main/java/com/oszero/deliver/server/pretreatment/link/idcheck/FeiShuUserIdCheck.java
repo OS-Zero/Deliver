@@ -1,9 +1,6 @@
 package com.oszero.deliver.server.pretreatment.link.idcheck;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.json.JSONUtil;
-import com.oszero.deliver.server.exception.LinkProcessException;
 import com.oszero.deliver.server.model.app.FeiShuApp;
 import com.oszero.deliver.server.util.channel.FeiShuUtils;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
@@ -12,7 +9,6 @@ import com.oszero.deliver.server.pretreatment.link.LinkContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -27,9 +23,6 @@ public class FeiShuUserIdCheck implements BusinessLink<SendTaskDto> {
         String appConfigJson = sendTaskDto.getAppConfigJson();
         FeiShuApp feiShuApp = JSONUtil.toBean(appConfigJson, FeiShuApp.class);
         List<String> users = sendTaskDto.getUsers();
-        if (CollUtil.isEmpty(users)) {
-            throw new LinkProcessException("飞书用户 userId 检测失败");
-        }
         users.forEach(userId -> {
             String tenantAccessToken = feiShuUtils.getTenantAccessToken(feiShuApp);
             feiShuUtils.checkUserId(tenantAccessToken, userId);
