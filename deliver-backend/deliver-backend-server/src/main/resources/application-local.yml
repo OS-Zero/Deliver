@@ -1,0 +1,43 @@
+# MQ 类型选择
+mq-type: rabbitmq
+#mq-type: rocketmq
+
+#rocketmq:
+rocketmq:
+  name-server: 120.79.234.137:9876 # 访问地址
+  producer:
+    group: Pro_Group # 必须指定group
+    send-message-timeout: 10000 # 消息发送超时时长，默认3s
+    retry-times-when-send-failed: 3 # 同步发送消息失败重试次数，默认2
+    retry-times-when-send-async-failed: 3 # 异步发送消息失败重试次数，默认2
+
+spring:
+  redis:
+    port: 6379
+    host: 106.55.231.147
+    password: 2308850421
+    database: 0
+    timeout: 60s
+    lettuce:
+      pool:
+        max-active: 10
+        max-idle: 8
+        min-idle: 0
+        max-wait: 5s
+  datasource:
+    url: jdbc:mysql://106.55.231.147:3306/deliver?serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: 2308850421
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  # RabbitMQ 配置
+  rabbitmq:
+    host: 106.55.231.147
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: deliver
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #开启 sql 日志
+    map-underscore-to-camel-case: true

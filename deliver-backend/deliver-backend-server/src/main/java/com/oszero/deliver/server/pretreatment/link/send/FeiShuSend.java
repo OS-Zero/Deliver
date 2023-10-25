@@ -1,6 +1,5 @@
 package com.oszero.deliver.server.pretreatment.link.send;
 
-import com.oszero.deliver.server.enums.ChannelTypeEnum;
 import com.oszero.deliver.server.message.producer.Producer;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.BusinessLink;
@@ -21,8 +20,7 @@ public class FeiShuSend extends CommonSend implements BusinessLink<SendTaskDto> 
 
     @Override
     void send(SendTaskDto sendTaskDto) {
-        ChannelTypeEnum channelTypeEnum = ChannelTypeEnum.getInstanceByCode(sendTaskDto.getChannelType());
-        producer.sendMessage(channelTypeEnum, sendTaskDto);
+        producer.sendMessage(sendTaskDto);
     }
 
 }
