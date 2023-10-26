@@ -2,6 +2,7 @@ package com.oszero.deliver.server.pretreatment.link;
 
 import cn.hutool.core.collection.CollUtil;
 import com.oszero.deliver.server.exception.LinkProcessException;
+import com.taobao.api.ApiException;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;

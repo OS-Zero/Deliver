@@ -18,6 +18,7 @@ import com.oszero.deliver.server.web.service.AppService;
 import com.oszero.deliver.server.web.service.SendService;
 import com.oszero.deliver.server.web.service.TemplateAppService;
 import com.oszero.deliver.server.web.service.TemplateService;
+import com.taobao.api.ApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
