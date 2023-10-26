@@ -9,11 +9,11 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 /**
- * @author  oszero
+ * @author oszero
  * @Date 2023/10/25
- * @Description  文本消息参数校验策略
+ * @Description 文本消息参数校验策略
  */
-@Component(ParamStrategy.DING_STRATEGY_BEAN_PRE_NAME+"1")
+@Component(ParamStrategy.DING_STRATEGY_BEAN_PRE_NAME + "1")
 public class TextParamStrategy implements ParamStrategy {
 
     @Override

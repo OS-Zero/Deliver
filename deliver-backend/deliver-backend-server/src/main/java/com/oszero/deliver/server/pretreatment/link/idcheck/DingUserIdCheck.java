@@ -25,17 +25,10 @@ public class DingUserIdCheck implements BusinessLink<SendTaskDto> {
     public void process(LinkContext<SendTaskDto> context) {
         SendTaskDto sendTaskDto = context.getProcessModel();
         List<String> users = sendTaskDto.getUsers();
-        if (CollUtil.isEmpty(users)) {
-            throw new LinkProcessException("钉钉用户 userId 校验异常,用户列表为空");
-        }
 
         String appConfigJson = sendTaskDto.getAppConfigJson();
         DingApp dingApp = JSONUtil.toBean(appConfigJson, DingApp.class);
         String accessToken = dingUtils.getAccessToken(dingApp);
-
-
-        users.stream().forEach(userId -> {
-            dingUtils.checkId(accessToken, userId);
-        });
+        users.forEach(userId -> dingUtils.checkId(accessToken, userId));
     }
 }
