@@ -1,6 +1,7 @@
 package com.oszero.deliver.server.web.service;
 
 import com.oszero.deliver.server.model.dto.request.SendRequestDto;
+import com.taobao.api.ApiException;
 
 /**
  * 发送消息操作 Service
@@ -9,5 +10,5 @@ import com.oszero.deliver.server.model.dto.request.SendRequestDto;
  * @version 1.0.0
  */
 public interface SendService {
-    Integer send(SendRequestDto sendRequestDto);
+    Integer send(SendRequestDto sendRequestDto) ;
 }
