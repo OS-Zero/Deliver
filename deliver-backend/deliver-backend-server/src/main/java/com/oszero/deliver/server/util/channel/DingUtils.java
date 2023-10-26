@@ -2,15 +2,12 @@ package com.oszero.deliver.server.util.channel;
 
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
-import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.dingtalk.api.DefaultDingTalkClient;
 import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.OapiGettokenRequest;
-import com.dingtalk.api.request.OapiMessageCorpconversationAsyncsendV2Request;
 import com.dingtalk.api.request.OapiV2UserGetRequest;
 import com.dingtalk.api.response.OapiGettokenResponse;
-import com.dingtalk.api.response.OapiMessageCorpconversationAsyncsendV2Response;
 import com.dingtalk.api.response.OapiV2UserGetResponse;
 import com.oszero.deliver.server.exception.LinkProcessException;
 import com.oszero.deliver.server.model.app.DingApp;
@@ -22,6 +19,12 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+/**
+ * 渠道-钉钉工具类
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Slf4j
 @Component
 public class DingUtils {
@@ -32,12 +35,10 @@ public class DingUtils {
      * @param dingApp 钉钉App配置
      * @return access_token
      */
-
     public String getAccessToken(DingApp dingApp) {
 
-
         @Data
-        class DingDingAccessTokenBody {
+        class DingAccessTokenBody {
 
             private String errcode;
             private String accessToken;
@@ -56,11 +57,11 @@ public class DingUtils {
             response = client.execute(request);
         } catch (ApiException apiException) {
             // XHYTODO:2023/10/23  后续日志记录
-            throw new LinkProcessException("获取 tenantAccessTokens失败");
+            throw new LinkProcessException("获取 tenantAccessTokens 失败");
         }
 
-        DingDingAccessTokenBody dingDingAccessTokenBody = JSONUtil.toBean(response.getBody(), DingDingAccessTokenBody.class);
-        return dingDingAccessTokenBody.getAccessToken();
+        DingAccessTokenBody dingAccessTokenBody = JSONUtil.toBean(response.getBody(), DingAccessTokenBody.class);
+        return dingAccessTokenBody.getAccessToken();
     }
 
 
@@ -70,13 +71,10 @@ public class DingUtils {
      * @param accessToken 钉钉accessToken
      * @param sendTaskDto 钉钉DTO
      */
-
-
     public void sendMessage(String accessToken, SendTaskDto sendTaskDto) {
 
-
         @Data
-        class DingDingSendInfoBody {
+        class DingSendInfoBody {
 
             private Integer errcode;
             private String errmsg;
@@ -91,8 +89,8 @@ public class DingUtils {
                 .body(body)
                 .execute();
 
-        DingDingSendInfoBody dingDingSendInfoBody = JSONUtil.toBean(response.body(), DingDingSendInfoBody.class);
-        if (dingDingSendInfoBody.errcode != 0) {
+        DingSendInfoBody dingSendInfoBody = JSONUtil.toBean(response.body(), DingSendInfoBody.class);
+        if (dingSendInfoBody.errcode != 0) {
             throw new LinkProcessException("DingDing消息发送失败!!!");
         }
 
@@ -104,12 +102,10 @@ public class DingUtils {
      * @param accessToken 钉钉accessToken
      * @param userId      userId
      */
-
     public void checkId(String accessToken, String userId) {
 
-
         @Data
-        class DingDingUserInfoBody {
+        class DingUserInfoBody {
             private Integer errcode;
             private String errmsg;
             private Object result;
@@ -126,12 +122,12 @@ public class DingUtils {
             rsp = client.execute(req, accessToken);
         } catch (ApiException apiException) {
             // XHYTODO:2023/10/23  后续日志记录
-            throw new LinkProcessException("DingDing用户 userId 校验失败！！！");
+            throw new LinkProcessException("钉钉用户 userId 校验失败！！！");
         }
 
-        DingDingUserInfoBody dingDingUserInfoBody = JSONUtil.toBean(rsp.getBody(), DingDingUserInfoBody.class);
-        if (dingDingUserInfoBody.getErrcode() != 0) {
-            throw new LinkProcessException("DingDing用户 userId 校验失败！！！");
+        DingUserInfoBody dingUserInfoBody = JSONUtil.toBean(rsp.getBody(), DingUserInfoBody.class);
+        if (dingUserInfoBody.getErrcode() != 0) {
+            throw new LinkProcessException("钉钉用户 userId 校验失败！！！");
         }
     }
 }

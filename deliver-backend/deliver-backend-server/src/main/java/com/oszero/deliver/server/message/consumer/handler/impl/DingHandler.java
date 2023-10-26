@@ -18,6 +18,6 @@ public class DingHandler extends BaseHandler {
     protected void handle(SendTaskDto sendTaskDto) throws Exception {
         DingApp dingApp = JSONUtil.toBean(sendTaskDto.getAppConfigJson(), DingApp.class);
         String accessToken = dingUtils.getAccessToken(dingApp);
-        dingUtils.sendMessage(accessToken,sendTaskDto);
+        dingUtils.sendMessage(accessToken, sendTaskDto);
     }
 }
