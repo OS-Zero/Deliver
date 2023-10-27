@@ -2,9 +2,11 @@
 import Header from './components/Header/index.vue'
 import SideBar from './components/SideBar/index.vue'
 // import Breadcrumb from './components/Breadcrumb/index.vue'
+import Banner from '../views/Banner/index.vue'
 </script>
 
 <template>
+  <Banner></Banner>
   <a-layout style="height: 100%">
     <Header></Header>
     <a-layout>
