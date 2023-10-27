@@ -1,6 +1,6 @@
 package com.oszero.deliver.server.model.dto;
 
-import com.oszero.deliver.server.pretreatment.pipeline.ProcessModel;
+import com.oszero.deliver.server.pretreatment.link.LinkModel;
 import lombok.*;
 
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SendTaskDto extends ProcessModel {
+public class SendTaskDto extends LinkModel {
 
     /**
      * 消息模板 Id
@@ -27,13 +27,40 @@ public class SendTaskDto extends ProcessModel {
      */
     private Map<String, Object> paramMap;
 
-    private Long appId;
-    private Integer pushRange;
-    private Integer usersType;
-    private Integer channelType;
-    private String messageType;
-    private Integer retry;
+    /**
+     * 转换后的参数 JSON 便于后续直接转换为对应参数
+     */
+    private String paramJson;
 
+    /**
+     * appConfig 数据库的 JSON 数据
+     */
+    private String appConfigJson;
+
+    /**
+     * 发送范围
+     */
+    private Integer pushRange;
+
+    /**
+     * 发送用户类型
+     */
+    private Integer usersType;
+
+    /**
+     * 渠道类型
+     */
+    private Integer channelType;
+
+    /**
+     * 消息类型
+     */
+    private String messageType;
+
+    /**
+     * 失败重试次数，默认为 0
+     */
+    private Integer retry = 0;
 }
 
 

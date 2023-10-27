@@ -7,12 +7,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 @RocketMQMessageListener(topic = MQConstant.CALL_TOPIC, consumerGroup = MQConstant.CALL_CONSUMER_GROUP)
+@ConditionalOnProperty(value = "mq-type", havingValue = "rocketmq")
 public class CallConsumer implements RocketMQListener<MessageExt> {
 
     private final CallHandler callHandler;
