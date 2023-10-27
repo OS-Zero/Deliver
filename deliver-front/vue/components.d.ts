@@ -23,6 +23,7 @@ declare module 'vue' {
     ARow: typeof import('ant-design-vue/es')['Row']
     AStatistic: typeof import('ant-design-vue/es')['Statistic']
     ASubMenu: typeof import('ant-design-vue/es')['SubMenu']
+    Echarts: typeof import('./src/components/Echarts/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }
