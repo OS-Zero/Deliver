@@ -1,18 +1,13 @@
 package com.oszero.deliver.server.pretreatment.link.idcheck;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONUtil;
-import com.oszero.deliver.server.exception.LinkProcessException;
 import com.oszero.deliver.server.model.app.DingApp;
 import com.oszero.deliver.server.util.channel.DingUtils;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.BusinessLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
-import com.taobao.api.ApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import javax.naming.LinkException;
 import java.util.List;
 
 @Service

@@ -15,7 +15,9 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 渠道-飞书工具类
@@ -74,6 +76,12 @@ public class FeiShuUtils {
                 .execute();
     }
 
+    /**
+     * 检查 userId 是否正确
+     *
+     * @param tenantAccessToken token
+     * @param userId            id
+     */
     public void checkUserId(String tenantAccessToken, String userId) {
         HttpResponse execute = HttpRequest.get("https://open.feishu.cn/open-apis/contact/v3/users/" + userId + "?user_id_type=user_id")
                 .header("Authorization", tenantAccessToken)
@@ -88,5 +96,47 @@ public class FeiShuUtils {
         if (feiShuUserInfoRespBody.getCode() != 0) {
             throw new LinkProcessException("用户: " + userId + " userId 检验失败");
         }
+    }
+
+    /**
+     * 通过手机号获取用户id
+     *
+     * @param tenantAccessToken token
+     * @param phones            手机号列表
+     * @return 用户id列表
+     */
+    public List<String> getUserIdsByPhones(String tenantAccessToken, List<String> phones) {
+        @Data
+        class PhoneRequestBody {
+            private List<String> mobiles;
+        }
+        PhoneRequestBody phoneRequestBody = new PhoneRequestBody();
+        phoneRequestBody.setMobiles(phones);
+        String body = JSONUtil.toJsonStr(phoneRequestBody);
+        HttpResponse execute = HttpRequest.get("https://open.feishu.cn/open-apis/contact/v3/users/batch_get_id" + "?user_id_type=user_id")
+                .header("Content-Type", "application/json; charset=utf-8")
+                .header("Authorization", tenantAccessToken)
+                .body(body)
+                .execute();
+        @Data
+        class UserIdAndPhone {
+            private String user_id;
+            private String mobile;
+        }
+        @Data
+        class DataResp {
+            List<UserIdAndPhone> user_list;
+        }
+        @Data
+        class FeiShuUserIdRespBody {
+            private Integer code;
+            private String msg;
+            private DataResp data;
+        }
+        FeiShuUserIdRespBody feiShuUserIdRespBody = JSONUtil.toBean(execute.body(), FeiShuUserIdRespBody.class);
+        if (feiShuUserIdRespBody.code != 0) {
+            throw new LinkProcessException("转换 userId 失败！！！");
+        }
+        return feiShuUserIdRespBody.data.user_list.stream().map(UserIdAndPhone::getMobile).collect(Collectors.toList());
     }
 }

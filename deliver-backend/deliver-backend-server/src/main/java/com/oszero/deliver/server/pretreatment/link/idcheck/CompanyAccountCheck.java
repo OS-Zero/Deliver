@@ -17,8 +17,8 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class CompanyAccountCheck implements BusinessLink<SendTaskDto> {
 
-    private CompanyAccount2Phone companyAccount2Phone;
-    private CheckCompanyAccount checkCompanyAccount;
+    private final CompanyAccount2Phone companyAccount2Phone;
+    private final CheckCompanyAccount checkCompanyAccount;
 
     @Override
     public void process(LinkContext<SendTaskDto> context) {
@@ -28,9 +28,9 @@ public class CompanyAccountCheck implements BusinessLink<SendTaskDto> {
         SendTaskDto sendTaskDto = context.getProcessModel();
         Stream<String> stream = sendTaskDto.getUsers().stream();
         // 企业自定义检查
-        stream.forEach(companyAccount -> checkCompanyAccount.check(companyAccount));
+        stream.forEach(checkCompanyAccount::check);
         // 企业自定义转换为手机号
-        sendTaskDto.setUsers(stream.map(companyAccount -> companyAccount2Phone.convert(companyAccount)).collect(Collectors.toList()));
+        sendTaskDto.setUsers(stream.map(companyAccount2Phone::convert).collect(Collectors.toList()));
     }
 
     public interface CheckCompanyAccount {
