@@ -1,4 +1,4 @@
-package com.oszero.deliver.server.message.param.dingding;
+package com.oszero.deliver.server.message.param.ding;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

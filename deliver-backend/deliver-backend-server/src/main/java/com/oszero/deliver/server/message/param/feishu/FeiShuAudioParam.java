@@ -7,11 +7,11 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class FeiShuTextParam extends FeiShuMessageParam {
+public class FeiShuAudioParam extends FeiShuMessageParam {
 
     private Content content;
 
     public static class Content {
-        private String text;
+        private String file_key;
     }
 }
