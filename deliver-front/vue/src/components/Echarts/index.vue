@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { getCurrentInstance, onMounted, defineProps, onBeforeUnmount, ref } from 'vue'
+import { getCurrentInstance, onMounted, onBeforeUnmount, ref } from 'vue'
 import { type ECharts, init } from 'echarts'
 const props = defineProps(['name', 'option'])
 const value1 = ref<string>('a')
