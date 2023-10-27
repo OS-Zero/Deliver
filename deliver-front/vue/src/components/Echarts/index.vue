@@ -25,8 +25,6 @@ const debounce = (fun: () => void, delay: number): (() => void) => {
 const cancalDebounce = debounce(resizeHandler, 500)
 const initChart = (): void => {
   const instance = getCurrentInstance()
-  console.log(instance)
-
   myChart = init(instance?.refs[props.name] as HTMLElement)
   myChart.setOption(props.option)
   window.addEventListener('resize', cancalDebounce)
