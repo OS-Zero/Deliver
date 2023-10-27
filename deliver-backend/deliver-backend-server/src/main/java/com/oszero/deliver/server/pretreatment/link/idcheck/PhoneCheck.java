@@ -1,7 +1,9 @@
 package com.oszero.deliver.server.pretreatment.link.idcheck;
 
 import cn.hutool.core.lang.Validator;
+import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.exception.LinkProcessException;
+import com.oszero.deliver.server.model.app.FeiShuApp;
 import com.oszero.deliver.server.util.channel.DingUtils;
 import com.oszero.deliver.server.util.channel.FeiShuUtils;
 import com.oszero.deliver.server.util.channel.WeChatUtils;
@@ -15,15 +17,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class PhoneCheck implements BusinessLink<SendTaskDto> {
-
-    private final DingUtils dingUtils;
-    private final WeChatUtils weChatUtils;
-    private final FeiShuUtils feiShuUtils;
 
     private final Map<String, Phone2UserId> strategyMap;
 
@@ -36,48 +33,72 @@ public class PhoneCheck implements BusinessLink<SendTaskDto> {
                 throw new LinkProcessException("[PhoneCheck#process]错误：消息接收者中有非[电话号码]用户！");
             }
         });
+        // 获取 appConfig
+        String appConfigJson = sendTaskDto.getAppConfigJson();
         // 策略模式实现 phone 转换平台 userId
         Phone2UserId phone2UserId = strategyMap.get(context.getCode());
-        sendTaskDto.setUsers(users.stream().map(phone2UserId::convert).collect(Collectors.toList()));
+        sendTaskDto.setUsers(phone2UserId.convert(appConfigJson, users));
     }
 
-    private interface Phone2UserId {
-        String convert(String phone);
+    /**
+     * 手机号转 userId 接口
+     */
+    public interface Phone2UserId {
+        List<String> convert(String appConfigJson, List<String> phones);
     }
 
+    /**
+     * 无策略
+     */
     @Component(PretreatmentCodeConstant.PHONE_CALL)
     public static class NoStrategy implements Phone2UserId {
 
         @Override
-        public String convert(String phone) {
-            return phone;
+        public List<String> convert(String appConfigJson, List<String> phones) {
+            return phones;
         }
     }
 
+    /**
+     * 钉钉
+     */
     @Component(PretreatmentCodeConstant.PHONE_DING)
+    @RequiredArgsConstructor
     public static class DingStrategy implements Phone2UserId {
+        private final DingUtils dingUtils;
 
         @Override
-        public String convert(String phone) {
+        public List<String> convert(String appConfigJson, List<String> phones) {
             return null;
         }
     }
 
+    /**
+     * 企业微信
+     */
     @Component(PretreatmentCodeConstant.PHONE_WECHAT)
+    @RequiredArgsConstructor
     public static class WeChatStrategy implements Phone2UserId {
+        private final WeChatUtils weChatUtils;
 
         @Override
-        public String convert(String phone) {
+        public List<String> convert(String appConfigJson, List<String> phones) {
             return null;
         }
     }
 
+    /**
+     * 飞书
+     */
     @Component(PretreatmentCodeConstant.PHONE_FEI_SHU)
+    @RequiredArgsConstructor
     public static class FeiShuStrategy implements Phone2UserId {
+        private final FeiShuUtils feiShuUtils;
 
         @Override
-        public String convert(String phone) {
-            return null;
+        public List<String> convert(String appConfigJson, List<String> phones) {
+            String tenantAccessToken = feiShuUtils.getTenantAccessToken(JSONUtil.toBean(appConfigJson, FeiShuApp.class));
+            return feiShuUtils.getUserIdsByPhones(tenantAccessToken, phones);
         }
     }
 }

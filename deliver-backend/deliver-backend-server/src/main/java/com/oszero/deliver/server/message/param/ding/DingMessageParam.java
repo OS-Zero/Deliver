@@ -5,15 +5,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * @author  oszero
- * @Date 2023/10/25
- * @Description
+ * 钉钉消息内容通用类
+ *
+ * @author oszero
+ * @version 1.0.0
  */
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DingDingMessageParam {
+public class DingMessageParam {
 
     private Long agentId;
     private String useridList;
