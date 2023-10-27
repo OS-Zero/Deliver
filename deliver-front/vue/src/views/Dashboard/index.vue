@@ -141,7 +141,7 @@ const chartsAccountOption: EChartsOption = {
           <a-card>
             <a-statistic title="模板数" :value="100">
               <template #prefix>
-                <FunnelPlotOutlined />
+                <FileTextOutlined />
               </template>
             </a-statistic>
           </a-card>
@@ -150,7 +150,7 @@ const chartsAccountOption: EChartsOption = {
           <a-card>
             <a-statistic title="渠道APP数" :value="100">
               <template #prefix>
-                <FileTextOutlined />
+                <FunnelPlotOutlined />
               </template>
             </a-statistic>
           </a-card>
