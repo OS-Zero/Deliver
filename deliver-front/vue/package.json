@@ -7,11 +7,13 @@
     "dev": "vite",
     "build": "vue-tsc && vite build",
     "preview": "vite preview",
-    "format": "prettier --write src/"
+    "lint": "eslint ./src",
+    "fix": "eslint ./src --fix"
   },
   "dependencies": {
     "ant-design-vue": "^4.0.6",
     "axios": "^1.5.1",
+    "echarts": "^5.4.3",
     "pinia": "^2.1.7",
     "vue": "^3.3.4",
     "vue-router": "^4.2.5"
