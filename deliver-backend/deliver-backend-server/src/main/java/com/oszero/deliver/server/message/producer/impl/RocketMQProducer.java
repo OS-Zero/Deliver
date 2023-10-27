@@ -8,7 +8,6 @@ import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.util.RocketMQUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.rocketmq.client.producer.SendResult;
-import org.apache.rocketmq.client.producer.SendStatus;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +20,7 @@ public class RocketMQProducer implements Producer {
     private final RocketMQUtils rocketMQUtils;
 
     @Override
-    public boolean sendMessage(ChannelTypeEnum channelTypeEnum, SendTaskDto sendTaskDto) {
+    public void sendMessage(ChannelTypeEnum channelTypeEnum, SendTaskDto sendTaskDto) {
         SendResult sendResult = null;
         switch (channelTypeEnum) {
             case CALL: {
@@ -49,6 +48,8 @@ public class RocketMQProducer implements Producer {
                 break;
             }
         }
-        return !Objects.isNull(sendResult) && SendStatus.SEND_OK.equals(sendResult.getSendStatus());
+        if (!Objects.isNull(sendResult)) {
+            sendResult.getSendStatus();
+        }
     }
 }
