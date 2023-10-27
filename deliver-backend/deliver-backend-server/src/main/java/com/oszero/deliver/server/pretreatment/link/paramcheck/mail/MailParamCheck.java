@@ -22,7 +22,7 @@ public class MailParamCheck implements BusinessLink<SendTaskDto> {
             JSONUtil.toBean(json, MailParam.class);
             sendTaskDto.setParamJson(json);
         } catch (Exception exception) {
-            throw new LinkProcessException("飞书 text 类型消息校验失败");
+            throw new LinkProcessException("飞书 content 类型消息校验失败");
         }
     }
 }

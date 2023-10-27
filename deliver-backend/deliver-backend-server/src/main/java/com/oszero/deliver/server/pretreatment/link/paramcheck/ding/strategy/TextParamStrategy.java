@@ -1,7 +1,7 @@
 package com.oszero.deliver.server.pretreatment.link.paramcheck.ding.strategy;
 
 import cn.hutool.json.JSONUtil;
-import com.oszero.deliver.server.message.param.dingding.DingDingTextParam;
+import com.oszero.deliver.server.message.param.ding.DingDingTextParam;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.paramcheck.ParamStrategy;
 import org.springframework.stereotype.Component;
