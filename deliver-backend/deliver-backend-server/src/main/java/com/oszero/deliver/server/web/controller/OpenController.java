@@ -19,10 +19,10 @@ import javax.validation.Valid;
  * @author oszero
  * @version 1.0.0
  */
+@Validated
 @RestController
 @RequestMapping("/open")
 @RequiredArgsConstructor
-@Validated
 public class OpenController {
 
     private final SendService sendService;
