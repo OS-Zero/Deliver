@@ -4,6 +4,7 @@ import lombok.*;
 
 /**
  * 钉钉图片消息内容
+ *
  * @author oszero
  * @version 1.0.0
  */

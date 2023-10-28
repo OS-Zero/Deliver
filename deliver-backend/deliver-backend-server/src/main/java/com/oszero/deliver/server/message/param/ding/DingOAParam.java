@@ -1,7 +1,5 @@
 package com.oszero.deliver.server.message.param.ding;
 
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.util.List;

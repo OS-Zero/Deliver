@@ -1,7 +1,6 @@
 package com.oszero.deliver.server.pretreatment.link.paramcheck.ding.strategy;
 
 import cn.hutool.json.JSONUtil;
-import com.oszero.deliver.server.message.param.ding.DingFileparam;
 import com.oszero.deliver.server.message.param.ding.DingOAParam;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.paramcheck.ParamStrategy;
@@ -17,6 +16,7 @@ import java.util.Map;
  */
 @Component(ParamStrategy.DING_STRATEGY_BEAN_PRE_NAME + "4-5")
 public class OAParamStartegy implements ParamStrategy {
+
     @Override
     public void paramCheck(SendTaskDto sendTaskDto) throws Exception {
         Map<String, Object> paramMap = sendTaskDto.getParamMap();
