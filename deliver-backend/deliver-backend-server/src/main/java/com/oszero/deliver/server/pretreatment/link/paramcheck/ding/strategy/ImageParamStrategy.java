@@ -5,6 +5,7 @@ import com.oszero.deliver.server.message.param.ding.DingFileparam;
 import com.oszero.deliver.server.message.param.ding.DingImageParam;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.paramcheck.ParamStrategy;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import java.util.Map;
  * @author oszero
  * @version 1.0.0
  */
+@Component(ParamStrategy.DING_STRATEGY_BEAN_PRE_NAME + "4-1")
 public class ImageParamStrategy implements ParamStrategy {
     @Override
     public void paramCheck(SendTaskDto sendTaskDto) throws Exception {
