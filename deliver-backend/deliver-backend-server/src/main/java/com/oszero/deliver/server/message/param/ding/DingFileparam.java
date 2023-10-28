@@ -1,8 +1,6 @@
 package com.oszero.deliver.server.message.param.ding;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * 钉钉文件消息
@@ -10,8 +8,10 @@ import lombok.NoArgsConstructor;
  * @@version 1.0.0
  */
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class DingFileparam extends DingMessageParam{
     private FileMessage msg;
 
