@@ -37,7 +37,7 @@ public class DingParamCheck implements BusinessLink<SendTaskDto> {
         try {
             paramStrategy.paramCheck(sendTaskDto);
         } catch (Exception e) {
-            throw new LinkProcessException("钉钉 文本消息 校验异常！！！");
+            throw new LinkProcessException("钉钉 消息 校验异常！！！");
         }
 
     }
