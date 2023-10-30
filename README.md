@@ -28,6 +28,7 @@
 - 支持钉钉、企业微信、飞书，消息文件上传功能，统一进行文件管理。
 - 轻量级部署，仅依赖 MySQL、MQ、Redis（最轻量级只需依赖 MySQL、Redis）。
 - 支持多种  MQ，包括 RabbitMQ、RocketMQ、Kafka 等，后续支持 Apache Pulsar 等。
+- 支持各语言 SDK，轻松接入系统（Java、Go、Python、Cpp 等）。  
 - 管理端前端支持 Vue3、React 两种版本可供选择，UI 设计采用 Ant-Design Pro，界面美观。
 - 支持 jar 包 shell、docker 镜像等多种部署方式。
 
