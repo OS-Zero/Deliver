@@ -127,8 +127,8 @@ const chartsAccountOption: EChartsOption = {
 <template>
   <div id="dashboard-container">
     <div class="dashboard-info">
-      <a-row justify="space-around" align="middle">
-        <a-col :span="4">
+      <a-row justify="space-between" align="middle">
+        <a-col :span="5">
           <a-card>
             <a-statistic title="今日消息数" :value="100">
               <template #prefix>
@@ -137,7 +137,7 @@ const chartsAccountOption: EChartsOption = {
             </a-statistic>
           </a-card>
         </a-col>
-        <a-col :span="4">
+        <a-col :span="5">
           <a-card>
             <a-statistic title="模板数" :value="100">
               <template #prefix>
@@ -146,7 +146,7 @@ const chartsAccountOption: EChartsOption = {
             </a-statistic>
           </a-card>
         </a-col>
-        <a-col :span="4">
+        <a-col :span="5">
           <a-card>
             <a-statistic title="渠道APP数" :value="100">
               <template #prefix>
@@ -155,7 +155,7 @@ const chartsAccountOption: EChartsOption = {
             </a-statistic>
           </a-card>
         </a-col>
-        <a-col :span="4">
+        <a-col :span="5">
           <a-card>
             <a-statistic title="账号数" :value="100">
               <template #prefix>
