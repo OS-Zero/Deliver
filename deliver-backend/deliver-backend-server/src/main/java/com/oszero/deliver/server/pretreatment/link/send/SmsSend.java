@@ -5,6 +5,12 @@ import com.oszero.deliver.server.pretreatment.link.BusinessLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
 import org.springframework.stereotype.Service;
 
+/**
+ * 短信 send
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Service
 public class SmsSend extends CommonSend implements BusinessLink<SendTaskDto> {
 

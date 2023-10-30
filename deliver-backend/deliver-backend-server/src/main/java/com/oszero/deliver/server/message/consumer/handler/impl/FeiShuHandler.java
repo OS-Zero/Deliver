@@ -9,6 +9,12 @@ import com.oszero.deliver.server.util.channel.FeiShuUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+/**
+ * 飞书消费者处理器
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Component
 @RequiredArgsConstructor
 public class FeiShuHandler extends BaseHandler {

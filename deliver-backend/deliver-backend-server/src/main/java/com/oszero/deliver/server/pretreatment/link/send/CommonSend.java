@@ -1,9 +1,14 @@
 package com.oszero.deliver.server.pretreatment.link.send;
 
 import com.oszero.deliver.server.model.dto.SendTaskDto;
-import com.oszero.deliver.server.pretreatment.link.LinkContext;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 抽象类 send
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Slf4j
 public abstract class CommonSend {
 

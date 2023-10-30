@@ -10,6 +10,12 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+/**
+ * 飞书表情包消息参数校验策略
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Component(ParamStrategy.FEI_SHU_STRATEGY_BEAN_PRE_NAME + "6-9")
 public class StickerParamStrategy implements ParamStrategy {
 

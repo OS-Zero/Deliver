@@ -10,6 +10,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+/**
+ * 邮件消息参数校验
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Service
 public class MailParamCheck implements BusinessLink<SendTaskDto> {
 

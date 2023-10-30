@@ -5,6 +5,12 @@ import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
 
+/**
+ * app 查询 dto
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class AppSearchRequestDto extends PageRequest {

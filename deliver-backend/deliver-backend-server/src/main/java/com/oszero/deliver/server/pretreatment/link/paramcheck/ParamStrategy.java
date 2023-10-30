@@ -2,6 +2,12 @@ package com.oszero.deliver.server.pretreatment.link.paramcheck;
 
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 
+/**
+ * 消息参数校验
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 public interface ParamStrategy {
     String CALL_STRATEGY_BEAN_PRE_NAME = "call-";
     String SMS_STRATEGY_BEAN_PRE_NAME = "sms-";

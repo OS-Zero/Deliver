@@ -4,10 +4,11 @@ import com.oszero.deliver.admin.model.entity.Template;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
-* @author 23088
-* @description 针对表【template(消息模板)】的数据库操作Service
-* @createDate 2023-10-13 21:53:14
-*/
+ * 模板 service
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 public interface TemplateService extends IService<Template> {
 
 }

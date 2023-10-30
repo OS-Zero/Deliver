@@ -17,6 +17,12 @@ import org.springframework.stereotype.Component;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
+/**
+ * 飞书 RocketMQConsumer
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor

@@ -1,5 +1,11 @@
 package com.oszero.deliver.server.constant;
 
+/**
+ * MQ 常量接口
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 public interface MQConstant {
     /**
      * RocketMQ

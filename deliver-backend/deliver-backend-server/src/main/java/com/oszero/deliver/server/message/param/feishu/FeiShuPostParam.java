@@ -4,6 +4,12 @@ import lombok.*;
 
 import java.util.List;
 
+/**
+ * 飞书富文本消息内容
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Data
 @Builder
 @AllArgsConstructor

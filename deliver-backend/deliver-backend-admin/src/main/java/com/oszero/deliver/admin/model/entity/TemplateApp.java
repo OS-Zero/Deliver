@@ -9,8 +9,10 @@ import java.util.Date;
 import lombok.Data;
 
 /**
- * 
- * @TableName template_app
+ * 模板 app
+ *
+ * @author oszero
+ * @version 1.0.0
  */
 @TableName(value ="template_app")
 @Data

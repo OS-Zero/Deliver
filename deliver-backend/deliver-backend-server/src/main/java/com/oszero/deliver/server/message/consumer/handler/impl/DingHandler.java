@@ -8,6 +8,12 @@ import com.oszero.deliver.server.util.channel.DingUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+/**
+ * 钉钉消费者处理器
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Component
 @RequiredArgsConstructor
 public class DingHandler extends BaseHandler {

@@ -15,6 +15,12 @@ import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
+/**
+ * RabbitMQConsumer
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Component
 @ConditionalOnProperty(value = "mq-type", havingValue = "rabbitmq")
 @RequiredArgsConstructor

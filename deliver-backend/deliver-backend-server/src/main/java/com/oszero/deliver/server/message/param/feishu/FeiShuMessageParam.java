@@ -6,6 +6,12 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * 飞书通用消息内容
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

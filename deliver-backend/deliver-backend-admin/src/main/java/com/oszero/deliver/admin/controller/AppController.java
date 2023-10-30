@@ -12,6 +12,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * app 控制器
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @RestController
 @RequestMapping("/app")
 @RequiredArgsConstructor

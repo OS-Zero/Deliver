@@ -19,7 +19,6 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = true)
 public class DingApp extends AppConfig{
 
-
     private Long agentId;
     private String appKey;
     private String appSecret;

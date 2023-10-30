@@ -10,6 +10,12 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+/**
+ * 飞书音频消息参数校验策略
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Component(ParamStrategy.FEI_SHU_STRATEGY_BEAN_PRE_NAME + "6-6")
 public class AudioParamStrategy implements ParamStrategy {
 

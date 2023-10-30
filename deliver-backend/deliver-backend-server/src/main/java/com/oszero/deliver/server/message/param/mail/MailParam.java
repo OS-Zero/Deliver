@@ -7,6 +7,12 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * 邮件消息内容
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Data
 @Builder
 @AllArgsConstructor

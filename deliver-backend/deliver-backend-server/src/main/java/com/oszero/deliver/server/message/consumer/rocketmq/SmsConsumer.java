@@ -10,6 +10,12 @@ import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
+/**
+ * 短信 RocketMQConsumer
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor
