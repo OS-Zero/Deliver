@@ -3,12 +3,12 @@ mq-type: rocketmq
 
 rocketmq:
   # NameServer地址
-  name-server: 192.168.131.171:9876
+  name-server: localhost:8080
 
 spring:
   redis:
     port: 6379
-    host: 192.168.110.234
+    host: localhost
     password:
     database: 0
     timeout: 60s
@@ -19,14 +19,17 @@ spring:
         min-idle: 0
         max-wait: 5s
   datasource:
-    url: jdbc:mysql://192.160.11.100:3307/message?serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull
+    url: jdbc:mysql://localhost:3306/deliver?serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull
     username:
     password:
     driver-class-name: com.mysql.cj.jdbc.Driver
   # RabbitMQ 配置
   rabbitmq:
-    addresses:
     virtual-host:
+    host:
+    port:
+    username:
+    password:
 
 mybatis-plus:
   configuration:
