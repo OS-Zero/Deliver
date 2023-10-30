@@ -11,6 +11,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * 飞书 userId 检查
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Service
 @RequiredArgsConstructor
 public class FeiShuUserIdCheck implements BusinessLink<SendTaskDto> {

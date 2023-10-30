@@ -8,6 +8,12 @@ import com.oszero.deliver.server.util.channel.MailUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+/**
+ * 邮箱消费者处理器
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Component
 @RequiredArgsConstructor
 public class MailHandler extends BaseHandler {

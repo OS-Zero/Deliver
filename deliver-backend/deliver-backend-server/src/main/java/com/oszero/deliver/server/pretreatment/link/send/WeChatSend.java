@@ -5,6 +5,12 @@ import com.oszero.deliver.server.pretreatment.link.BusinessLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
 import org.springframework.stereotype.Service;
 
+/**
+ * 企业微信 send
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Service
 public class WeChatSend extends CommonSend implements BusinessLink<SendTaskDto> {
 
@@ -12,7 +18,7 @@ public class WeChatSend extends CommonSend implements BusinessLink<SendTaskDto> 
     /**
      * 真正处理逻辑
      *
-     * @param context
+     * @param context 上下文
      */
     @Override
     public void process(LinkContext<SendTaskDto> context) {

@@ -10,6 +10,12 @@ import com.oszero.deliver.server.pretreatment.link.LinkContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+/**
+ * 推送范围检测
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Service
 @RequiredArgsConstructor
 public class PushRangeCheck implements BusinessLink<SendTaskDto> {

@@ -5,13 +5,17 @@ import com.oszero.deliver.server.enums.MessageTypeEnum;
 import com.oszero.deliver.server.message.param.feishu.FeiShuTextParam;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.paramcheck.ParamStrategy;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+/**
+ * 飞书文本消息参数校验策略
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Component(ParamStrategy.FEI_SHU_STRATEGY_BEAN_PRE_NAME + "1")
-@RequiredArgsConstructor
 public class TextParamStrategy implements ParamStrategy {
 
     @Override

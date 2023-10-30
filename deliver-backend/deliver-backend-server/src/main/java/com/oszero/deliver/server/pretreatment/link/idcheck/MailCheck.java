@@ -7,6 +7,12 @@ import com.oszero.deliver.server.pretreatment.link.BusinessLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
 import org.springframework.stereotype.Service;
 
+/**
+ * 邮箱账号检查
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Service
 public class MailCheck implements BusinessLink<SendTaskDto> {
 

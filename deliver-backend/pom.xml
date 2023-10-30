@@ -56,12 +56,6 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.yomahub</groupId>
-            <artifactId>tlog-all-spring-boot-starter</artifactId>
-            <version>${tlog.version}</version>
-        </dependency>
-
     </dependencies>
 
 </project>

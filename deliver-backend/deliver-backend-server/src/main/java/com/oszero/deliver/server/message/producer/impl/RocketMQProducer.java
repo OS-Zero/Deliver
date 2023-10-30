@@ -14,6 +14,12 @@ import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
+/**
+ * RocketMQ 生产者
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Component
 @RequiredArgsConstructor
 @ConditionalOnProperty(value = "mq-type", havingValue = "rocketmq")

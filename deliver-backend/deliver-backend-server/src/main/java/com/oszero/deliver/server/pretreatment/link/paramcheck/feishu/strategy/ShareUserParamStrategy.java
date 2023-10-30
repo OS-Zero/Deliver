@@ -10,6 +10,12 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+/**
+ * 飞书分享个人消息参数校验策略
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Component(ParamStrategy.FEI_SHU_STRATEGY_BEAN_PRE_NAME + "6-5")
 public class ShareUserParamStrategy implements ParamStrategy {
 

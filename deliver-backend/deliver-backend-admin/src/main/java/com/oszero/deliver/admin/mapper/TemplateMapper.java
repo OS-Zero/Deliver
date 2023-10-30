@@ -4,11 +4,11 @@ import com.oszero.deliver.admin.model.entity.Template;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
-* @author 23088
-* @description 针对表【template(消息模板)】的数据库操作Mapper
-* @createDate 2023-10-13 21:53:14
-* @Entity com.oszero.deliver.admin.model.entity.Template
-*/
+ * 模板 mapper
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 public interface TemplateMapper extends BaseMapper<Template> {
 
 }

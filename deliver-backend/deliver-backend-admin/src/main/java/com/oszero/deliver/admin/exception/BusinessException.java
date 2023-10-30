@@ -1,5 +1,11 @@
 package com.oszero.deliver.admin.exception;
 
+/**
+ * 业务异常
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 public class BusinessException extends RuntimeException {
     /**
      * Constructs a new runtime exception with {@code null} as its

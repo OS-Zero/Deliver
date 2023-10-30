@@ -64,6 +64,11 @@ public class SendTaskDto extends LinkModel {
     private String messageType;
 
     /**
+     * 消息链路追踪 id
+     */
+    private String traceId;
+
+    /**
      * 失败重试次数，默认为 0
      */
     private Integer retry = 0;

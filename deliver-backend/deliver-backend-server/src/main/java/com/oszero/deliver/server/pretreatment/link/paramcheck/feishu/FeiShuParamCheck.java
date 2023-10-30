@@ -11,6 +11,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+/**
+ * 飞书消息参数校验
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Service
 @RequiredArgsConstructor
 public class FeiShuParamCheck implements BusinessLink<SendTaskDto> {

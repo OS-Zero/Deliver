@@ -10,6 +10,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
+/**
+ * 钉钉 userId 检查
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Service
 @RequiredArgsConstructor
 public class DingUserIdCheck implements BusinessLink<SendTaskDto> {

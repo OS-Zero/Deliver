@@ -7,6 +7,12 @@ import com.oszero.deliver.server.pretreatment.link.LinkContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+/**
+ * 飞书 send
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Service
 @RequiredArgsConstructor
 public class FeiShuSend extends CommonSend implements BusinessLink<SendTaskDto> {

@@ -12,6 +12,12 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * 企业账号检查
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor

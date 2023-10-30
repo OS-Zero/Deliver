@@ -12,6 +12,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+/**
+ * 钉钉参数校验
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Service
 @RequiredArgsConstructor
 public class DingParamCheck implements BusinessLink<SendTaskDto> {
