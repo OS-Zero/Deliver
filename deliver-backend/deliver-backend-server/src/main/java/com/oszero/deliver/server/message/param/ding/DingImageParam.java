@@ -13,15 +13,15 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class DingImageParam extends DingMessageParam{
-    private  ImageMessage   msg;
+public class DingImageParam extends DingMessageParam {
+    private ImageMessage msg;
 
-    public static class ImageMessage{
+    public static class ImageMessage {
         private String msgtype;
         private Image image;
     }
 
-    public static class Image{
+    public static class Image {
         private String media_id;
     }
 

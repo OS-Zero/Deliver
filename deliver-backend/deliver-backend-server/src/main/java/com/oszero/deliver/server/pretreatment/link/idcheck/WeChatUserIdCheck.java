@@ -22,7 +22,7 @@ public class WeChatUserIdCheck implements BusinessLink<SendTaskDto> {
     @Override
     public void process(LinkContext<SendTaskDto> context) {
         SendTaskDto sendTaskDto = context.getProcessModel();
-        sendTaskDto.getUsers().stream().forEach(userId -> {
+        sendTaskDto.getUsers().forEach(userId -> {
 
         });
     }

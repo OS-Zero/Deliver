@@ -14,8 +14,8 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class DingFileParam extends DingMessageParam {
-    private FileMessage msg;
 
+    private FileMessage msg;
 
     public static class FileMessage {
         private String msgtype;

@@ -54,10 +54,22 @@ public class PhoneCheck implements BusinessLink<SendTaskDto> {
     }
 
     /**
-     * 无策略
+     * 电话策略
      */
     @Component(PretreatmentCodeConstant.PHONE_CALL)
-    public static class NoStrategy implements Phone2UserId {
+    public static class PhoneStrategy implements Phone2UserId {
+
+        @Override
+        public List<String> convert(String appConfigJson, List<String> phones) {
+            return phones;
+        }
+    }
+
+    /**
+     * 短信策略
+     */
+    @Component(PretreatmentCodeConstant.PHONE_SMS)
+    public static class SmsStrategy implements Phone2UserId {
 
         @Override
         public List<String> convert(String appConfigJson, List<String> phones) {

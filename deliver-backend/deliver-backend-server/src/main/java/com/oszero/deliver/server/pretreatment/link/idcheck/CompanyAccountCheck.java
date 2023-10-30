@@ -23,8 +23,8 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class CompanyAccountCheck implements BusinessLink<SendTaskDto> {
 
-    private final CompanyAccount2Phone companyAccount2Phone;
-    private final CheckCompanyAccount checkCompanyAccount;
+    private CompanyAccount2Phone companyAccount2Phone;
+    private CheckCompanyAccount checkCompanyAccount;
 
     @Override
     public void process(LinkContext<SendTaskDto> context) {

@@ -23,6 +23,7 @@ public class SendTaskDto extends LinkModel {
      * 消息模板 Id
      */
     private Long templateId;
+
     /**
      * 发送用户列表
      */

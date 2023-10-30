@@ -1,5 +1,6 @@
 package com.oszero.deliver.server.web.service.impl;
 
+import cn.hutool.core.lang.UUID;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.oszero.deliver.server.enums.ResultEnum;
@@ -93,6 +94,7 @@ public class SendServiceImpl implements SendService {
                 .paramMap(paramMap)
                 .channelType(channelType)
                 .messageType(messageType)
+                .traceId(UUID.randomUUID().toString()) // 全局链路 id
                 .retry(retry).build();
 
         // 6.处理相关责任链
