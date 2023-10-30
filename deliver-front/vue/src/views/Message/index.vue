@@ -407,7 +407,7 @@ const data = ref([
 }
 .message-section {
   height: 100%;
-
+  border-radius: 6px;
   margin-top: 12px;
   background: #ffffff;
   padding: 12px;
