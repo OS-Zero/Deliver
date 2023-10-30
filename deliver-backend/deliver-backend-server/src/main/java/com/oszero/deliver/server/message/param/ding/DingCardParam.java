@@ -11,7 +11,7 @@ import lombok.*;
 @Data
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
+//@NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class DingCardParam extends DingMessageParam{
 
