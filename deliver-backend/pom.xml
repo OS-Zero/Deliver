@@ -32,8 +32,9 @@
         <rocketmq.client.java.version>2.0.4</rocketmq.client.java.version>
         <ding.sdk.old.version>2.0.0</ding.sdk.old.version>
         <ding.sdk.new.version>2.0.14</ding.sdk.new.version>
-<!--        <wechat.sdk.version></wechat.sdk.version>-->
+        <!--        <wechat.sdk.version></wechat.sdk.version>-->
         <feishi.sdk.version>2.0.16</feishi.sdk.version>
+        <tlog.version>1.5.1</tlog.version>
     </properties>
 
     <dependencies>
@@ -55,6 +56,12 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.yomahub</groupId>
+            <artifactId>tlog-all-spring-boot-starter</artifactId>
+            <version>${tlog.version}</version>
+        </dependency>
+
     </dependencies>
 
 </project>
