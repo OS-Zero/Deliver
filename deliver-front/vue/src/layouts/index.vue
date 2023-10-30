@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import Header from './components/Header/index.vue'
 import SideBar from './components/SideBar/index.vue'
-// import Breadcrumb from './components/Breadcrumb/index.vue'
+import Breadcrumb from './components/Breadcrumb/index.vue'
 import Banner from '../views/Banner/index.vue'
 </script>
 
@@ -11,9 +11,9 @@ import Banner from '../views/Banner/index.vue'
     <Header></Header>
     <a-layout>
       <SideBar></SideBar>
-      <a-layout style="padding: 0 12px 12px">
-        <!-- <Breadcrumb></Breadcrumb> -->
-        <a-layout-content :style="{ background: '#fff', padding: '24px' }">
+      <a-layout style="padding: 0 12px 12px; background: #f8f8f8">
+        <Breadcrumb></Breadcrumb>
+        <a-layout-content :style="{ padding: '24px' }">
           <RouterView></RouterView>
         </a-layout-content>
       </a-layout>
