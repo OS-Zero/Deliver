@@ -39,9 +39,11 @@ public class CompanyAccountCheck implements BusinessLink<SendTaskDto> {
         sendTaskDto.setUsers(stream.map(companyAccount2Phone::convert).collect(Collectors.toList()));
     }
 
+
     public interface CheckCompanyAccount {
         void check(String companyAccount);
     }
+
 
     public interface CompanyAccount2Phone {
         String convert(String companyAccount);
