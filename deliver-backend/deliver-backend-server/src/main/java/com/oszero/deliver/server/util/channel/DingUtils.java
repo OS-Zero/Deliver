@@ -7,14 +7,17 @@ import com.dingtalk.api.DefaultDingTalkClient;
 import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.OapiGettokenRequest;
 import com.dingtalk.api.request.OapiV2UserGetRequest;
+import com.dingtalk.api.request.OapiV2UserGetbymobileRequest;
 import com.dingtalk.api.response.OapiGettokenResponse;
 import com.dingtalk.api.response.OapiV2UserGetResponse;
+import com.dingtalk.api.response.OapiV2UserGetbymobileResponse;
 import com.oszero.deliver.server.exception.LinkProcessException;
 import com.oszero.deliver.server.model.app.DingApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.taobao.api.ApiException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -129,5 +132,48 @@ public class DingUtils {
         if (dingUserInfoBody.getErrcode() != 0) {
             throw new LinkProcessException("钉钉用户 userId 校验失败！！！");
         }
+    }
+
+
+    /**
+     * 根据电话号码获取userId
+     *
+     * @param accessToken    钉钉accessToken
+     * @param phone          电话号码
+     * @return
+     */
+
+    public String getUserIdByPhone(String accessToken, String phone) {
+
+        @Data
+        class Result {
+            private String userid;
+            private String[] exclusiveAccountUseridList;
+        }
+        @Data
+        class DingResponseBody {
+            private Integer errcode;
+            private String requestId;
+            private Result result;
+            private String errmsg;
+        }
+        DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/topapi/v2/user/getbymobile");
+        OapiV2UserGetbymobileRequest req = new OapiV2UserGetbymobileRequest();
+        req.setMobile(phone);
+        req.setSupportExclusiveAccountSearch(true);
+        OapiV2UserGetbymobileResponse rsp;
+        try {
+            rsp = client.execute(req, accessToken);
+        } catch (ApiException e) {
+            throw new LinkProcessException("转换 userId 失败 ！！！");
+        }
+        DingResponseBody dingResponseBody = JSONUtil.toBean(rsp.getBody(), DingResponseBody.class);
+        if (dingResponseBody.getErrcode() != 0) {
+            throw new LinkProcessException("转换 userId 失败 ！！！");
+        }
+
+
+        return dingResponseBody.getResult().getUserid();
+
     }
 }
