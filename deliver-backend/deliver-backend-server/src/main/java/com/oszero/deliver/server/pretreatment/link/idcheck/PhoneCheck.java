@@ -3,6 +3,7 @@ package com.oszero.deliver.server.pretreatment.link.idcheck;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.exception.LinkProcessException;
+import com.oszero.deliver.server.model.app.DingApp;
 import com.oszero.deliver.server.model.app.FeiShuApp;
 import com.oszero.deliver.server.util.channel.DingUtils;
 import com.oszero.deliver.server.util.channel.FeiShuUtils;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 手机号检查
@@ -87,7 +89,9 @@ public class PhoneCheck implements BusinessLink<SendTaskDto> {
 
         @Override
         public List<String> convert(String appConfigJson, List<String> phones) {
-            return null;
+            String accessToken = dingUtils.getAccessToken(JSONUtil.toBean(appConfigJson, DingApp.class));
+            List<String> relPhones = phones.stream().map(phone -> dingUtils.getUserIdByPhone(accessToken, phone)).collect(Collectors.toList());
+            return relPhones;
         }
     }
 
