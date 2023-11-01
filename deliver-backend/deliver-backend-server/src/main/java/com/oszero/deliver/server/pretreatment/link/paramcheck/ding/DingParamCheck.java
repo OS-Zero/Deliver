@@ -10,6 +10,7 @@ import com.oszero.deliver.server.pretreatment.link.paramcheck.ParamStrategy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -37,6 +38,7 @@ public class DingParamCheck implements BusinessLink<SendTaskDto> {
         // 钉钉 userid_list、agent_id 在请求参数里
         paramMap.put("userid_list", substring);
         paramMap.put("agent_id", dingApp.getAgentId());
+
 
         ParamStrategy paramStrategy = dingParamStrategyMap.get(ParamStrategy.DING_STRATEGY_BEAN_PRE_NAME + sendTaskDto.getMessageType());
 
