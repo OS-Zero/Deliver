@@ -16,11 +16,13 @@ import lombok.*;
 public class DingImageParam extends DingMessageParam {
     private ImageMessage msg;
 
+    @Data
     public static class ImageMessage {
         private String msgtype;
         private Image image;
     }
 
+    @Data
     public static class Image {
         private String media_id;
     }
