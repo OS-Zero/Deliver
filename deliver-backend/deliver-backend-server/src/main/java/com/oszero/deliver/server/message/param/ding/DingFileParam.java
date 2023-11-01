@@ -17,12 +17,14 @@ public class DingFileParam extends DingMessageParam {
 
     private FileMessage msg;
 
+    @Data
     public static class FileMessage {
         private String msgtype;
         private FileContent file;
 
     }
 
+    @Data
     public static class FileContent {
         private String media_id;
     }
