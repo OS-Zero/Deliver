@@ -1,7 +1,8 @@
 <script lang="ts" setup>
+import dayjs, { type Dayjs } from 'dayjs'
 import { getCurrentInstance, onMounted, onBeforeUnmount, ref } from 'vue'
 import { type ECharts, init } from 'echarts'
-const props = defineProps(['name', 'option'])
+const props = defineProps(['name', 'option', 'cardName'])
 const value1 = ref<string>('a')
 let myChart: ECharts
 // 重绘图表函数
@@ -25,7 +26,7 @@ const debounce = (fun: () => void, delay: number): (() => void) => {
 const cancalDebounce = debounce(resizeHandler, 500)
 const initChart = (): void => {
   const instance = getCurrentInstance()
-  myChart = init(instance?.refs[props.name] as HTMLElement)
+  myChart = init(instance?.refs[props.name] as HTMLElement, null, { renderer: 'svg' })
   myChart.setOption(props.option)
   window.addEventListener('resize', cancalDebounce)
 }
@@ -38,15 +39,21 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', cancalDebounce)
   myChart.dispose()
 })
+const dateFormat = 'YYYY/MM/DD'
+const dataValue = ref<[Dayjs, Dayjs]>([dayjs('2015/01/01', dateFormat), dayjs('2015/01/01', dateFormat)])
 </script>
 <template>
   <div class="echart-card">
-    <a-radio-group v-model:value="value1" button-style="solid" style="position: absolute; right: 20px; top: 10px">
-      <a-radio-button value="a">今日</a-radio-button>
-      <a-radio-button value="b">本周</a-radio-button>
-      <a-radio-button value="c">本月</a-radio-button>
-      <a-radio-button value="d">本年</a-radio-button>
-    </a-radio-group>
+    <div class="echart-header">
+      <span class="card-name">{{ cardName }}</span>
+      <a-radio-group v-model:value="value1" button-style="solid" style="height: 25px">
+        <a-radio-button value="a">今日</a-radio-button>
+        <a-radio-button value="b">本周</a-radio-button>
+        <a-radio-button value="c">本月</a-radio-button>
+        <a-radio-button value="d">本年</a-radio-button>
+      </a-radio-group>
+      <a-range-picker v-model:value="dataValue" :format="dateFormat" style="width: 210px" />
+    </div>
     <div class="echart" :ref="name"></div>
   </div>
 </template>
@@ -55,15 +62,24 @@ onBeforeUnmount(() => {
 .echart-card {
   width: 100%;
   height: 100%;
-  border: 1px solid #f0f0f0;
-  border-radius: 8px;
-  position: relative;
-  .a-radio-group {
-    width: 100%;
+  .echart-header {
+    display: flex;
+    justify-content: space-between;
+    height: 32px;
+    .card-name {
+      font-weight: 500;
+      font-size: 16px;
+    }
   }
   .echart {
     width: 100%;
-    height: 100%;
+    height: 290px;
+  }
+}
+
+@media screen and (max-width: 1600px) {
+  .ant-picker-range {
+    display: none;
   }
 }
 </style>
