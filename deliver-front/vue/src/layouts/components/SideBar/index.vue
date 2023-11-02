@@ -1,30 +1,41 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
 import {
-  DashboardOutlined,
   MessageOutlined,
   FunnelPlotOutlined,
   FileTextOutlined,
-  SettingOutlined
+  SettingOutlined,
+  DashboardOutlined,
+  LeftOutlined,
+  RightOutlined
 } from '@ant-design/icons-vue'
+import { ref } from 'vue'
+
 import ItemLink from '../ItemLink/index.vue'
 const selectedKeys2 = ref<string[]>(['1'])
 const openKeys = ref<string[]>(['sub1'])
+const collapsed = ref(false)
+const toggleCollapsed = (): void => {
+  collapsed.value = !collapsed.value
+}
 </script>
 
 <template>
-  <a-layout-sider width="200" style="background: #fff; overflow: auto">
-    <a-menu
-      v-model:selectedKeys="selectedKeys2"
-      v-model:openKeys="openKeys"
-      mode="inline"
-      :style="{ height: '100%', borderRight: 0 }"
+  <a-layout-sider width="200" style="background: #fff; position: relative" :collapsed="collapsed">
+    <a-button
+      shape="circle"
+      size="small"
+      style="margin-bottom: 16px; position: absolute; right: -12px; top: 20px"
+      @click="toggleCollapsed"
     >
+      <RightOutlined v-if="collapsed" />
+      <LeftOutlined v-else />
+    </a-button>
+    <a-menu v-model:selectedKeys="selectedKeys2" v-model:openKeys="openKeys" mode="inline">
       <a-sub-menu key="sub1">
         <template #title>
           <span>
             <DashboardOutlined />
-            系统监控看板
+            <span>系统监控看板</span>
           </span>
         </template>
         <ItemLink itemKey="1" info="平台数据看板" to="dashboard" />
@@ -33,7 +44,7 @@ const openKeys = ref<string[]>(['sub1'])
         <template #title>
           <span>
             <MessageOutlined />
-            消息模板配置
+            <span>消息模板配置</span>
           </span>
         </template>
         <ItemLink itemKey="2" info="消息模板" to="message" />
@@ -42,7 +53,7 @@ const openKeys = ref<string[]>(['sub1'])
         <template #title>
           <span>
             <FunnelPlotOutlined />
-            渠道APP配置
+            <span>渠道APP配置</span>
           </span>
         </template>
         <ItemLink itemKey="3" info="APP配置" to="channel" />
@@ -51,7 +62,7 @@ const openKeys = ref<string[]>(['sub1'])
         <template #title>
           <span>
             <FileTextOutlined />
-            后台操作日志
+            <span>后台操作日志</span>
           </span>
         </template>
         <ItemLink itemKey="4" info="操作日志" to="log" />
@@ -60,7 +71,7 @@ const openKeys = ref<string[]>(['sub1'])
         <template #title>
           <span>
             <SettingOutlined />
-            系统日志
+            <span>系统日志</span>
           </span>
         </template>
       </a-sub-menu>

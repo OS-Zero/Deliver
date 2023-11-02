@@ -1,13 +1,14 @@
 <script lang="ts" setup>
-import { MessageOutlined, FunnelPlotOutlined, FileTextOutlined, UserOutlined } from '@ant-design/icons-vue'
+import {
+  MessageOutlined,
+  FunnelPlotOutlined,
+  FileTextOutlined,
+  UserOutlined,
+  QuestionCircleTwoTone
+} from '@ant-design/icons-vue'
 import Echarts from '@/components/Echarts/index.vue'
 import { type EChartsOption } from 'echarts'
 const chartsMessageOption: EChartsOption = {
-  title: {
-    text: '消息量',
-    top: 10,
-    left: 10
-  },
   legend: {
     top: '20%'
   },
@@ -35,11 +36,6 @@ const chartsMessageOption: EChartsOption = {
   ]
 }
 const chartsTemplateOption: EChartsOption = {
-  title: {
-    text: '模板使用TOP5',
-    left: '10',
-    top: '10'
-  },
   tooltip: {
     trigger: 'item'
   },
@@ -60,11 +56,6 @@ const chartsTemplateOption: EChartsOption = {
   ]
 }
 const chartsChannelOption: EChartsOption = {
-  title: {
-    text: '渠道APP使用TOP5',
-    left: '10',
-    top: '10'
-  },
   tooltip: {
     trigger: 'item'
   },
@@ -92,11 +83,6 @@ const chartsChannelOption: EChartsOption = {
   ]
 }
 const chartsAccountOption: EChartsOption = {
-  title: {
-    text: '发送账号TOP10',
-    left: '10',
-    top: '10'
-  },
   tooltip: {
     trigger: 'item'
   },
@@ -127,68 +113,123 @@ const chartsAccountOption: EChartsOption = {
 <template>
   <div id="dashboard-container">
     <div class="dashboard-info">
-      <a-row justify="space-between" align="middle">
-        <a-col :span="5">
-          <a-card>
-            <a-statistic title="今日消息数" :value="100">
-              <template #prefix>
-                <MessageOutlined />
-              </template>
-            </a-statistic>
+      <a-row justify="space-between" align="middle" :gutter="24">
+        <a-col :span="6">
+          <a-card style="height: 96px">
+            <div class="card-statistic">
+              <span class="icon"><MessageOutlined /></span>
+              <a-statistic :value="100">
+                <template #title>
+                  <span>消息量</span>
+                  <a-tooltip placement="right">
+                    <template #title>
+                      <span>消息量</span>
+                    </template>
+                    <question-circle-two-tone style="margin-left: 5px" />
+                  </a-tooltip>
+                </template>
+              </a-statistic>
+            </div>
           </a-card>
         </a-col>
-        <a-col :span="5">
-          <a-card>
-            <a-statistic title="模板数" :value="100">
-              <template #prefix>
-                <FileTextOutlined />
-              </template>
-            </a-statistic>
+        <a-col :span="6">
+          <a-card style="height: 96px">
+            <div class="card-statistic">
+              <span class="icon"><FileTextOutlined /></span>
+              <a-statistic :value="100">
+                <template #title>
+                  <span>模板数</span>
+                  <a-tooltip placement="right">
+                    <template #title>
+                      <span>模板数</span>
+                    </template>
+                    <question-circle-two-tone style="margin-left: 5px" />
+                  </a-tooltip>
+                </template>
+              </a-statistic>
+            </div>
           </a-card>
         </a-col>
-        <a-col :span="5">
-          <a-card>
-            <a-statistic title="渠道APP数" :value="100">
-              <template #prefix>
-                <FunnelPlotOutlined />
-              </template>
-            </a-statistic>
+        <a-col :span="6">
+          <a-card style="height: 96px">
+            <div class="card-statistic">
+              <span class="icon"><FunnelPlotOutlined /></span>
+              <a-statistic :value="100">
+                <template #title>
+                  <span>渠道APP数</span>
+                  <a-tooltip placement="right">
+                    <template #title>
+                      <span>渠道APP数</span>
+                    </template>
+                    <question-circle-two-tone style="margin-left: 5px" />
+                  </a-tooltip>
+                </template>
+              </a-statistic>
+            </div>
           </a-card>
         </a-col>
-        <a-col :span="5">
-          <a-card>
-            <a-statistic title="账号数" :value="100">
-              <template #prefix>
-                <UserOutlined />
-              </template>
-            </a-statistic>
+        <a-col :span="6">
+          <a-card style="height: 96px">
+            <div class="card-statistic">
+              <span class="icon"><UserOutlined /></span>
+              <a-statistic :value="100">
+                <template #title>
+                  <span>账号数</span>
+                  <a-tooltip placement="right">
+                    <template #title>
+                      <span>账号数</span>
+                    </template>
+                    <question-circle-two-tone style="margin-left: 5px" />
+                  </a-tooltip>
+                </template>
+              </a-statistic>
+            </div>
           </a-card>
         </a-col>
       </a-row>
     </div>
     <div class="dashboard-charts">
-      <Echarts name="chartsMessage" :option="chartsMessageOption"></Echarts>
-      <Echarts name="chartsTemplate" :option="chartsTemplateOption"></Echarts>
-      <Echarts name="chartsChannel" :option="chartsChannelOption"></Echarts>
-      <Echarts name="chartsAccount" :option="chartsAccountOption"></Echarts>
+      <a-row justify="space-between" align="middle" :gutter="[24, 24]">
+        <a-col :span="12">
+          <a-card>
+            <Echarts cardName="消息量" name="chartsMessage" :option="chartsMessageOption"></Echarts>
+          </a-card>
+        </a-col>
+        <a-col :span="12">
+          <a-card>
+            <Echarts cardName="模板使用Top5" name="chartsTemplate" :option="chartsTemplateOption"></Echarts>
+          </a-card>
+        </a-col>
+        <a-col :span="12">
+          <a-card>
+            <Echarts cardName="渠道使用Top5" name="chartsChannel" :option="chartsChannelOption"></Echarts>
+          </a-card>
+        </a-col>
+        <a-col :span="12">
+          <a-card>
+            <Echarts cardName="用户数" name="chartsAccount" :option="chartsAccountOption"></Echarts>
+          </a-card>
+        </a-col>
+      </a-row>
     </div>
   </div>
 </template>
 <style lang="scss" scoped>
-#dashboard-container {
-  height: 100%;
+.card-statistic {
+  display: flex;
 }
-.dashboard-info {
-  height: 20%;
+.icon {
+  height: 50px;
+  width: 50px;
+  border-radius: 25px;
+  line-height: 50px;
+  text-align: center;
+  font-size: 24px;
+  margin-right: 15px;
+  color: #1890ff;
+  background: #e5f4ff;
 }
 .dashboard-charts {
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  height: 80%;
-  div {
-    width: 42%;
-    height: 45%;
-  }
+  margin-top: 12px;
 }
 </style>
