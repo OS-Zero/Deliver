@@ -4,7 +4,16 @@ const routes: RouteRecordRaw[] = [
     path: '/',
     name: 'home',
     component: async () => await import('@/layouts/index.vue'),
+    redirect: 'welcome',
     children: [
+      {
+        path: 'welcome',
+        name: 'welcome',
+        component: async () => await import('@/views/Welcome/index.vue'),
+        meta: {
+          parent: 'welcome'
+        }
+      },
       {
         path: 'dashboard',
         name: 'dashboard',
