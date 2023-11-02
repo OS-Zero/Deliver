@@ -34,8 +34,7 @@
 </template>
 <style lang="scss" scoped>
 .banner {
-  margin: 0 auto;
-  height: 25;
+  height: 25px;
   background-color: #b3ebff;
 }
 p {
