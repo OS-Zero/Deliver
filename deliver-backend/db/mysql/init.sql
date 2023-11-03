@@ -65,9 +65,12 @@ create table deliver.message_record
     push_user      varchar(100)                       null comment '消息推送人',
     channel_type   tinyint                            not null comment '发送渠道类型',
     message_type   varchar(10)                        not null comment '消息类型（见 MessageTypeEnum）',
+    push_range     tinyint  default 0                 not null comment '推送范围（0-不限1-企业内部2-外部）',
     retried        tinyint  default 0                 not null comment '是否重试消息（1-是 0-首次发送）',
     create_time    datetime default CURRENT_TIMESTAMP not null
 ) comment '消息记录';
+
+
 
 
 

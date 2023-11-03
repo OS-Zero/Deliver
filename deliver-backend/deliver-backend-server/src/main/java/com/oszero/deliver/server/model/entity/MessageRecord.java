@@ -54,6 +54,11 @@ public class MessageRecord implements Serializable {
     private String pushUser;
 
     /**
+     * 发送范围
+     */
+    private Integer pushRange;
+
+    /**
      * 发送渠道类型
      */
     private Integer channelType;
@@ -69,7 +74,7 @@ public class MessageRecord implements Serializable {
     private Integer retried;
 
     /**
-     *
+     * 创建时间
      */
     private Date createTime;
 

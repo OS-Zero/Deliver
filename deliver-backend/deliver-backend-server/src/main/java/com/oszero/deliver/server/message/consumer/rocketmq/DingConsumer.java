@@ -1,9 +1,7 @@
 package com.oszero.deliver.server.message.consumer.rocketmq;
 
-import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.constant.MQConstant;
 import com.oszero.deliver.server.message.consumer.handler.impl.DingHandler;
-import com.oszero.deliver.server.model.dto.SendTaskDto;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -12,8 +10,6 @@ import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
-
-import java.nio.charset.StandardCharsets;
 
 /**
  * 钉钉 RocketMQConsumer
@@ -29,6 +25,7 @@ import java.nio.charset.StandardCharsets;
 public class DingConsumer implements RocketMQListener<MessageExt> {
 
     private final DingHandler dingHandler;
+    private final CommonConsumer commonConsumer;
 
     /**
      * 没有报错，就签收
@@ -39,9 +36,8 @@ public class DingConsumer implements RocketMQListener<MessageExt> {
     @SneakyThrows
     @Override
     public void onMessage(MessageExt messageExt) {
-        log.info("[MailConsumer 接收到消息] {}", messageExt);
-        SendTaskDto sendTaskDto = JSONUtil.toBean(new String(messageExt.getBody(), StandardCharsets.UTF_8), SendTaskDto.class);
-        dingHandler.doHandle(sendTaskDto);
+        log.info("[DingConsumer 接收到消息] {}", messageExt);
+        commonConsumer.omMessageAck(messageExt, dingHandler);
     }
 
 }

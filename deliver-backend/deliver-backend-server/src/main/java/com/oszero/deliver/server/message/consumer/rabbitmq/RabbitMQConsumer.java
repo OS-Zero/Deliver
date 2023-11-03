@@ -2,10 +2,12 @@ package com.oszero.deliver.server.message.consumer.rabbitmq;
 
 import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.constant.MQConstant;
+import com.oszero.deliver.server.enums.StatusEnum;
 import com.oszero.deliver.server.message.consumer.handler.BaseHandler;
 import com.oszero.deliver.server.message.consumer.handler.impl.*;
 import com.oszero.deliver.server.message.producer.Producer;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.web.service.MessageRecordService;
 import com.rabbitmq.client.Channel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +31,9 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class RabbitMQConsumer {
 
+    /**
+     * 各处理器
+     */
     private final CallHandler callHandler;
     private final SmsHandler smsHandler;
     private final MailHandler mailHandler;
@@ -36,6 +41,14 @@ public class RabbitMQConsumer {
     private final WeChatHandler weChatHandler;
     private final FeiShuHandler feiShuHandler;
 
+    /**
+     * 消息记录服务
+     */
+    private final MessageRecordService messageRecordService;
+
+    /**
+     * 生产者
+     */
     private final Producer producer;
 
     /**
@@ -134,7 +147,16 @@ public class RabbitMQConsumer {
             channel.basicAck(deliveryTag, false);
             // 报错重试
             if (!Objects.isNull(sendTaskDto) && sendTaskDto.getRetry() > 0) {
+                // 记录消息消费失败
+                SendTaskDto finalSendTaskDto = sendTaskDto;
+                sendTaskDto.getUsers()
+                        .forEach(
+                                user -> messageRecordService.saveMessageRecord(finalSendTaskDto, StatusEnum.OFF, user)
+                        );
+
+                // 重新发送
                 sendTaskDto.setRetry(sendTaskDto.getRetry() - 1);
+                sendTaskDto.setRetried(StatusEnum.ON.getStatus());
                 producer.sendMessage(sendTaskDto);
             }
         }

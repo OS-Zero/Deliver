@@ -24,6 +24,7 @@ import org.springframework.stereotype.Component;
 public class CallConsumer implements RocketMQListener<MessageExt> {
 
     private final CallHandler callHandler;
+    private final CommonConsumer commonConsumer;
 
     /**
      * 没有报错，就签收
@@ -33,7 +34,7 @@ public class CallConsumer implements RocketMQListener<MessageExt> {
      */
     @Override
     public void onMessage(MessageExt messageExt) {
-        log.info("[MailConsumer 接收到消息] {}", messageExt);
-
+        log.info("[CallConsumer 接收到消息] {}", messageExt);
+        commonConsumer.omMessageAck(messageExt, callHandler);
     }
 }

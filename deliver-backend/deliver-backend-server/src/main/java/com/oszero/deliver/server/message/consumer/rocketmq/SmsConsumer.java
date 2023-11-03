@@ -23,8 +23,9 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(value = "mq-type", havingValue = "rocketmq")
 public class SmsConsumer implements RocketMQListener<MessageExt> {
 
-
     private final SmsHandler smsHandler;
+    private final CommonConsumer commonConsumer;
+
     /**
      * 没有报错，就签收
      * 如果没有报错，就是拒收 就会重试
@@ -33,7 +34,7 @@ public class SmsConsumer implements RocketMQListener<MessageExt> {
      */
     @Override
     public void onMessage(MessageExt messageExt) {
-        log.info("[MailConsumer 接收到消息] {}", messageExt);
-
+        log.info("[SmsConsumer 接收到消息] {}", messageExt);
+        commonConsumer.omMessageAck(messageExt, smsHandler);
     }
 }

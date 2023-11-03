@@ -26,7 +26,7 @@ public enum PushRangeEnum {
     /**
      * 外部用户
      */
-    EXTERNAL(3, "外部用户");
+    EXTERNAL(2, "外部用户");
 
     private final Integer code;
     private final String name;
