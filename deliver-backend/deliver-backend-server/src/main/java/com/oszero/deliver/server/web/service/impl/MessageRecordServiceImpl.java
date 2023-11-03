@@ -29,6 +29,7 @@ public class MessageRecordServiceImpl extends ServiceImpl<MessageRecordMapper, M
                 .messageType(sendTaskDto.getMessageType())
                 .userType(sendTaskDto.getUsersType())
                 .pushUser(user)
+                .pushRange(sendTaskDto.getPushRange())
                 .retried(sendTaskDto.getRetried())
                 .messageStatus(messageStatus.getStatus())
                 .build();

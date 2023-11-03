@@ -3,6 +3,7 @@ package com.oszero.deliver.server.message.consumer.handler;
 import com.oszero.deliver.server.enums.StatusEnum;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.web.service.MessageRecordService;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 消费者处理器抽象类
@@ -10,6 +11,7 @@ import com.oszero.deliver.server.web.service.MessageRecordService;
  * @author oszero
  * @version 1.0.0
  */
+@Slf4j
 public abstract class BaseHandler {
 
     protected MessageRecordService messageRecordService;
@@ -20,6 +22,7 @@ public abstract class BaseHandler {
         handle(sendTaskDto);
 
         // 3. 后置处理 记录消息，消息发送成功
+        log.info("消息消费成功，记录消息");
         sendTaskDto.getUsers()
                 .forEach(user ->
                         messageRecordService.saveMessageRecord(
