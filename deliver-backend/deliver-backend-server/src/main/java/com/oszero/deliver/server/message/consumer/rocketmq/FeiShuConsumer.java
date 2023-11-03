@@ -39,7 +39,7 @@ public class FeiShuConsumer implements RocketMQListener<MessageExt> {
 
     /**
      * 没有报错，就签收
-     * 如果没有报错，就是拒收 就会重试
+     * 如果有报错，就是拒收 就会重试
      *
      * @param messageExt 消息对象
      */
