@@ -27,7 +27,7 @@ public class VoiceParamStrategy implements ParamStrategy {
         voiceMessage.setMsgtype(MessageTypeEnum.DING_VOICE.getMsgType());
         paramMap.put("msg", voiceMessage);
         String json = JSONUtil.toJsonStr(paramMap);
-        JSONUtil.toBean(json, DingTextParam.class);
+        JSONUtil.toBean(json, DingVoiceParam.class);
         sendTaskDto.setParamJson(json);
     }
 }

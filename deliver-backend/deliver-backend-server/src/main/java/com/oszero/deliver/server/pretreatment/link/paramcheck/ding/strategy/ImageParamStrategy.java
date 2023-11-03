@@ -28,7 +28,7 @@ public class ImageParamStrategy implements ParamStrategy {
         imageMessage.setMsgtype(MessageTypeEnum.DING_IMAGE.getMsgType());
         paramMap.put("msg", imageMessage);
         String json = JSONUtil.toJsonStr(paramMap);
-        JSONUtil.toBean(json, DingTextParam.class);
+        JSONUtil.toBean(json, DingImageParam.class);
         sendTaskDto.setParamJson(json);
     }
 }

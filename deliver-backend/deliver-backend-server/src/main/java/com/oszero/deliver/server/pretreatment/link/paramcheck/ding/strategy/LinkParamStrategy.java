@@ -28,7 +28,7 @@ public class LinkParamStrategy implements ParamStrategy {
         linkMessage.setMsgtype(MessageTypeEnum.DING_LINK.getMsgType());
         paramMap.put("msg", linkMessage);
         String json = JSONUtil.toJsonStr(paramMap);
-        JSONUtil.toBean(json, DingTextParam.class);
+        JSONUtil.toBean(json, DingLinkParam.class);
         sendTaskDto.setParamJson(json);
     }
 }
