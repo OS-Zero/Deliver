@@ -18,11 +18,13 @@ public class DingLinkParam extends DingMessageParam {
 
     private LinkMessage msg;
 
+    @Data
     public static class LinkMessage {
         private String msgtype;
         private Link link;
     }
 
+    @Data
     public static class Link {
         private String messageUrl;
         private String picUrl;
