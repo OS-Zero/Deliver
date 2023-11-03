@@ -4,7 +4,9 @@ import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.message.consumer.handler.BaseHandler;
 import com.oszero.deliver.server.model.app.DingApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.util.channel.CallUtils;
 import com.oszero.deliver.server.util.channel.DingUtils;
+import com.oszero.deliver.server.web.service.MessageRecordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -15,10 +17,14 @@ import org.springframework.stereotype.Component;
  * @version 1.0.0
  */
 @Component
-@RequiredArgsConstructor
 public class DingHandler extends BaseHandler {
 
     private final DingUtils dingUtils;
+
+    public DingHandler(DingUtils dingUtils, MessageRecordService messageRecordService) {
+        this.dingUtils = dingUtils;
+        this.messageRecordService = messageRecordService;
+    }
 
     @Override
     protected void handle(SendTaskDto sendTaskDto) throws Exception {

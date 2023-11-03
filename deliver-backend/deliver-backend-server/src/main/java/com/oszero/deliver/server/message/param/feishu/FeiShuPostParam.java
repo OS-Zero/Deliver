@@ -19,12 +19,20 @@ public class FeiShuPostParam extends FeiShuMessageParam {
 
     private Content content;
 
+    @Data
     public static class Content {
-        private ZhCn zh_cn;
+        private Post post;
     }
 
+    @Data
+    public static class Post {
+        private ZhCn zh_cn;
+        private ZhCn en_us;
+    }
+
+    @Data
     public static class ZhCn {
         private String title;
-        private List<List<Object>> content;
+        private List<Object> content;
     }
 }

@@ -24,6 +24,8 @@ import org.springframework.stereotype.Component;
 public class WeChatConsumer implements RocketMQListener<MessageExt> {
 
     private final WeChatHandler weChatHandler;
+    private final CommonConsumer commonConsumer;
+
     /**
      * 没有报错，就签收
      * 如果没有报错，就是拒收 就会重试
@@ -32,7 +34,7 @@ public class WeChatConsumer implements RocketMQListener<MessageExt> {
      */
     @Override
     public void onMessage(MessageExt messageExt) {
-        log.info("[MailConsumer 接收到消息] {}", messageExt);
-
+        log.info("[WeChatConsumer 接收到消息] {}", messageExt);
+        commonConsumer.omMessageAck(messageExt, weChatHandler);
     }
 }

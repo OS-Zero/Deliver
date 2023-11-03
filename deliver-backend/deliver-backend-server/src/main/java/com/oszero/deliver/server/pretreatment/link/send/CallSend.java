@@ -22,7 +22,7 @@ public class CallSend extends CommonSend implements BusinessLink<SendTaskDto> {
     /**
      * 真正处理逻辑
      *
-     * @param context
+     * @param context 上下文
      */
     @Override
     public void process(LinkContext<SendTaskDto> context) {

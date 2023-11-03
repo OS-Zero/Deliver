@@ -17,6 +17,7 @@ public class FeiShuTextParam extends FeiShuMessageParam {
 
     private Content content;
 
+    @Data
     public static class Content {
         private String text;
     }
