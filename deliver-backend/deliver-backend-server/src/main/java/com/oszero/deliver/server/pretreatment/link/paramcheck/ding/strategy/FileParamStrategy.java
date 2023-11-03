@@ -29,7 +29,7 @@ public class FileParamStrategy implements ParamStrategy {
         fileMessage.setMsgtype(MessageTypeEnum.DING_FILE.getMsgType());
         paramMap.put("msg", fileMessage);
         String json = JSONUtil.toJsonStr(paramMap);
-        JSONUtil.toBean(json, DingTextParam.class);
+        JSONUtil.toBean(json, DingFileParam.class);
         sendTaskDto.setParamJson(json);
     }
 }
