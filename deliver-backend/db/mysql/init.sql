@@ -54,5 +54,20 @@ create table if not exists deliver.template_app
     deleted     tinyint  default 0                                             not null comment '是否删除：0-不删除 1-删除'
 ) comment '模板与应用关联表';
 
--- 消息处理日志表
+-- 消息记录表
+create table deliver.message_record
+(
+    trace_id       varchar(100)                       not null comment '消息链路 id',
+    template_id    bigint                             not null comment '模板 id',
+    app_id         bigint                             not null comment 'appId',
+    message_status tinyint  default 1                 not null comment '消息状态（1-发送成功0-发送失败）',
+    user_type      tinyint                            null comment '用户类型（1-企业账号2-手机3-邮箱4-平台userId）',
+    push_user      varchar(100)                       null comment '消息推送人',
+    channel_type   tinyint                            not null comment '发送渠道类型',
+    message_type   varchar(10)                        not null comment '消息类型（见 MessageTypeEnum）',
+    retried        tinyint  default 0                 not null comment '是否重试消息（1-是 0-首次发送）',
+    create_time    datetime default CURRENT_TIMESTAMP not null
+) comment '消息记录';
+
+
 
