@@ -71,8 +71,21 @@ public class RabbitMQConsumer {
     @RabbitListener(queues = MQConstant.MAIL_QUEUE, ackMode = "MANUAL")
     public void onMailMessage(String message,
                               @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel channel) throws Exception {
-        SendTaskDto sendTaskDto = JSONUtil.toBean(message, SendTaskDto.class);
-        mailHandler.doHandle(sendTaskDto);
+        SendTaskDto sendTaskDto = null;
+        try {
+            sendTaskDto = JSONUtil.toBean(message, SendTaskDto.class);
+            mailHandler.doHandle(sendTaskDto);
+            // RabbitMQ的ack机制中，第二个参数返回true，表示需要将这条消息投递给其他的消费者重新消费
+            channel.basicAck(deliveryTag, false);
+        } catch (Exception exception) {
+            // 第三个参数true，表示这个消息会重新进入队列
+            if (!Objects.isNull(sendTaskDto) && sendTaskDto.getRetry() > 0) {
+                sendTaskDto.setRetry(sendTaskDto.getRetry() - 1);
+                producer.sendMessage(sendTaskDto);
+            }
+            // RabbitMQ的ack机制中，第二个参数返回true，表示需要将这条消息投递给其他的消费者重新消费
+            channel.basicAck(deliveryTag, false);
+        }
     }
 
     /**

@@ -74,6 +74,7 @@ public class FeiShuUtils {
                 .header("Authorization", tenantAccessToken)
                 .body(body)
                 .execute();
+        log.info("飞书消息发送响应为：{}", response.body());
     }
 
     /**
@@ -113,7 +114,7 @@ public class FeiShuUtils {
         PhoneRequestBody phoneRequestBody = new PhoneRequestBody();
         phoneRequestBody.setMobiles(phones);
         String body = JSONUtil.toJsonStr(phoneRequestBody);
-        HttpResponse execute = HttpRequest.get("https://open.feishu.cn/open-apis/contact/v3/users/batch_get_id" + "?user_id_type=user_id")
+        HttpResponse execute = HttpRequest.post("https://open.feishu.cn/open-apis/contact/v3/users/batch_get_id" + "?user_id_type=user_id")
                 .header("Content-Type", "application/json; charset=utf-8")
                 .header("Authorization", tenantAccessToken)
                 .body(body)
@@ -133,10 +134,12 @@ public class FeiShuUtils {
             private String msg;
             private DataResp data;
         }
-        FeiShuUserIdRespBody feiShuUserIdRespBody = JSONUtil.toBean(execute.body(), FeiShuUserIdRespBody.class);
+        String respBody = execute.body();
+        log.info("飞书电话转userId，响应为：{}", respBody);
+        FeiShuUserIdRespBody feiShuUserIdRespBody = JSONUtil.toBean(respBody, FeiShuUserIdRespBody.class);
         if (feiShuUserIdRespBody.code != 0) {
             throw new LinkProcessException("转换 userId 失败！！！");
         }
-        return feiShuUserIdRespBody.data.user_list.stream().map(UserIdAndPhone::getMobile).collect(Collectors.toList());
+        return feiShuUserIdRespBody.data.user_list.stream().map(UserIdAndPhone::getUser_id).collect(Collectors.toList());
     }
 }

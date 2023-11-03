@@ -7,6 +7,7 @@ import com.oszero.deliver.server.pretreatment.link.LinkContext;
 import com.oszero.deliver.server.pretreatment.link.paramcheck.ParamStrategy;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -17,6 +18,7 @@ import java.util.Map;
  * @author oszero
  * @version 1.0.0
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FeiShuParamCheck implements BusinessLink<SendTaskDto> {
@@ -33,6 +35,7 @@ public class FeiShuParamCheck implements BusinessLink<SendTaskDto> {
         try {
             paramStrategy.paramCheck(sendTaskDto);
         } catch (Exception exception) {
+            log.error("[FeiShuParamCheck#process]异常：{}", exception.toString());
             throw new LinkProcessException("飞书 content 类型消息校验失败");
         }
     }
