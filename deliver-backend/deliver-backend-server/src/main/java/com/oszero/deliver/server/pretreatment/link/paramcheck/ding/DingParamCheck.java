@@ -8,6 +8,7 @@ import com.oszero.deliver.server.pretreatment.link.BusinessLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
 import com.oszero.deliver.server.pretreatment.link.paramcheck.ParamStrategy;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -19,6 +20,7 @@ import java.util.Map;
  * @author oszero
  * @version 1.0.0
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DingParamCheck implements BusinessLink<SendTaskDto> {
@@ -39,13 +41,13 @@ public class DingParamCheck implements BusinessLink<SendTaskDto> {
         paramMap.put("userid_list", substring);
         paramMap.put("agent_id", dingApp.getAgentId());
 
-
         ParamStrategy paramStrategy = dingParamStrategyMap.get(ParamStrategy.DING_STRATEGY_BEAN_PRE_NAME + sendTaskDto.getMessageType());
 
         try {
             paramStrategy.paramCheck(sendTaskDto);
         } catch (Exception e) {
-            throw new LinkProcessException("钉钉 消息 校验异常！！！");
+            log.error("[DingParamCheck#process]异常：{}", e.toString());
+            throw new LinkProcessException("钉钉消息校验异常！！！");
         }
 
     }

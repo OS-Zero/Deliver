@@ -24,7 +24,7 @@ public class SendRequestDto {
      * 消息模板 Id
      */
     @NotNull(message = "消息模板 ID 不能为 NULL")
-    private Integer templateId;
+    private Long templateId;
 
     /**
      * 发送用户列表

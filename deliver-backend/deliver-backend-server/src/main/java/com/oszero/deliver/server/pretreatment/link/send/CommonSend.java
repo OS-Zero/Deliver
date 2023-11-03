@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 public abstract class CommonSend {
 
     public void sendToMq(SendTaskDto sendTaskDto) {
-        log.info("[CommonSend#sendToMq],{}", "发送消息");
+        log.info("[CommonSend#sendToMq], {}", "发送消息");
         send(sendTaskDto);
     }
 

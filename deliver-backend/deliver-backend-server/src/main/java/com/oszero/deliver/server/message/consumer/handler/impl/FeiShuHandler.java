@@ -6,6 +6,7 @@ import com.oszero.deliver.server.model.app.AppConfig;
 import com.oszero.deliver.server.model.app.FeiShuApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.util.channel.FeiShuUtils;
+import com.oszero.deliver.server.web.service.MessageRecordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -16,10 +17,14 @@ import org.springframework.stereotype.Component;
  * @version 1.0.0
  */
 @Component
-@RequiredArgsConstructor
 public class FeiShuHandler extends BaseHandler {
 
     private final FeiShuUtils feiShuUtils;
+
+    public FeiShuHandler(FeiShuUtils feiShuUtils, MessageRecordService messageRecordService) {
+        this.feiShuUtils = feiShuUtils;
+        this.messageRecordService = messageRecordService;
+    }
 
     @Override
     protected void handle(SendTaskDto sendTaskDto) {
