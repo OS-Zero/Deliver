@@ -2,11 +2,15 @@ package com.oszero.deliver.server.message.consumer.rabbitmq;
 
 import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.constant.MQConstant;
+import com.oszero.deliver.server.enums.StatusEnum;
+import com.oszero.deliver.server.message.consumer.handler.BaseHandler;
 import com.oszero.deliver.server.message.consumer.handler.impl.*;
 import com.oszero.deliver.server.message.producer.Producer;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.web.service.MessageRecordService;
 import com.rabbitmq.client.Channel;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -21,11 +25,15 @@ import java.util.Objects;
  * @author oszero
  * @version 1.0.0
  */
+@Slf4j
 @Component
 @ConditionalOnProperty(value = "mq-type", havingValue = "rabbitmq")
 @RequiredArgsConstructor
 public class RabbitMQConsumer {
 
+    /**
+     * 各处理器
+     */
     private final CallHandler callHandler;
     private final SmsHandler smsHandler;
     private final MailHandler mailHandler;
@@ -33,6 +41,14 @@ public class RabbitMQConsumer {
     private final WeChatHandler weChatHandler;
     private final FeiShuHandler feiShuHandler;
 
+    /**
+     * 消息记录服务
+     */
+    private final MessageRecordService messageRecordService;
+
+    /**
+     * 生产者
+     */
     private final Producer producer;
 
     /**
@@ -44,8 +60,9 @@ public class RabbitMQConsumer {
      */
     @RabbitListener(queues = MQConstant.CALL_QUEUE, ackMode = "MANUAL")
     public void onCallMessage(String message,
-                              @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel channel) {
-
+                              @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel channel) throws Exception {
+        log.info("[RabbitMQConsumer#onCallMessage 接收到消息] {}", message);
+        onMessageAck(deliveryTag, channel, message, callHandler);
     }
 
     /**
@@ -57,8 +74,9 @@ public class RabbitMQConsumer {
      */
     @RabbitListener(queues = MQConstant.SMS_QUEUE, ackMode = "MANUAL")
     public void onSmsMessage(String message,
-                             @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel channel) {
-
+                             @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel channel) throws Exception {
+        log.info("[RabbitMQConsumer#onSmsMessage 接收到消息] {}", message);
+        onMessageAck(deliveryTag, channel, message, smsHandler);
     }
 
     /**
@@ -71,8 +89,8 @@ public class RabbitMQConsumer {
     @RabbitListener(queues = MQConstant.MAIL_QUEUE, ackMode = "MANUAL")
     public void onMailMessage(String message,
                               @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel channel) throws Exception {
-        SendTaskDto sendTaskDto = JSONUtil.toBean(message, SendTaskDto.class);
-        mailHandler.doHandle(sendTaskDto);
+        log.info("[RabbitMQConsumer#onMailMessage 接收到消息] {}", message);
+        onMessageAck(deliveryTag, channel, message, mailHandler);
     }
 
     /**
@@ -85,8 +103,8 @@ public class RabbitMQConsumer {
     @RabbitListener(queues = MQConstant.DING_QUEUE, ackMode = "MANUAL")
     public void onDingMessage(String message,
                               @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel channel) throws Exception {
-        SendTaskDto sendTaskDto = JSONUtil.toBean(message, SendTaskDto.class);
-        dingHandler.doHandle(sendTaskDto);
+        log.info("[RabbitMQConsumer#onDingMessage 接收到消息] {}", message);
+        onMessageAck(deliveryTag, channel, message, dingHandler);
     }
 
     /**
@@ -98,8 +116,9 @@ public class RabbitMQConsumer {
      */
     @RabbitListener(queues = MQConstant.WECHAT_QUEUE, ackMode = "MANUAL")
     public void onWeChatMessage(String message,
-                                @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel channel) {
-
+                                @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel channel) throws Exception {
+        log.info("[RabbitMQConsumer#onWeChatMessage 接收到消息] {}", message);
+        onMessageAck(deliveryTag, channel, message, weChatHandler);
     }
 
     /**
@@ -112,20 +131,35 @@ public class RabbitMQConsumer {
     @RabbitListener(queues = MQConstant.FEI_SHU_QUEUE, ackMode = "MANUAL")
     public void onFeiShuMessage(String message,
                                 @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel channel) throws Exception {
+        log.info("[RabbitMQConsumer#onFeiShuMessage 接收到消息] {}", message);
+        onMessageAck(deliveryTag, channel, message, feiShuHandler);
+    }
+
+    private void onMessageAck(long deliveryTag, Channel channel, String message, BaseHandler handler) throws Exception {
+
         SendTaskDto sendTaskDto = null;
         try {
             sendTaskDto = JSONUtil.toBean(message, SendTaskDto.class);
-            feiShuHandler.doHandle(sendTaskDto);
-            // RabbitMQ的ack机制中，第二个参数返回true，表示需要将这条消息投递给其他的消费者重新消费
+            handler.doHandle(sendTaskDto);
+            // RabbitMQ 的 ack 机制中，第二个参数返回 true，表示需要将这条消息投递给其他的消费者重新消费
             channel.basicAck(deliveryTag, false);
         } catch (Exception exception) {
-            // 第三个参数true，表示这个消息会重新进入队列
+            channel.basicAck(deliveryTag, false);
+            // 报错重试
             if (!Objects.isNull(sendTaskDto) && sendTaskDto.getRetry() > 0) {
+                // 记录消息消费失败
+                SendTaskDto finalSendTaskDto = sendTaskDto;
+                sendTaskDto.getUsers()
+                        .forEach(
+                                user -> messageRecordService.saveMessageRecord(finalSendTaskDto, StatusEnum.OFF, user)
+                        );
+
+                // 重新发送
                 sendTaskDto.setRetry(sendTaskDto.getRetry() - 1);
+                sendTaskDto.setRetried(StatusEnum.ON.getStatus());
                 producer.sendMessage(sendTaskDto);
             }
-            // RabbitMQ的ack机制中，第二个参数返回true，表示需要将这条消息投递给其他的消费者重新消费
-            channel.basicAck(deliveryTag, false);
         }
     }
+
 }

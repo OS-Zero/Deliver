@@ -2,6 +2,9 @@ package com.oszero.deliver.server.message.consumer.handler.impl;
 
 import com.oszero.deliver.server.message.consumer.handler.BaseHandler;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.util.channel.CallUtils;
+import com.oszero.deliver.server.util.channel.FeiShuUtils;
+import com.oszero.deliver.server.web.service.MessageRecordService;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,6 +15,14 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class CallHandler extends BaseHandler {
+
+    private final CallUtils callUtils;
+
+    public CallHandler(CallUtils callUtils, MessageRecordService messageRecordService) {
+        this.callUtils = callUtils;
+        this.messageRecordService = messageRecordService;
+    }
+
     @Override
     protected void handle(SendTaskDto sendTaskDto) throws Exception {
 

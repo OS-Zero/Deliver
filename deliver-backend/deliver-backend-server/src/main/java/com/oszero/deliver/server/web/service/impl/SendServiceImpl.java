@@ -19,7 +19,6 @@ import com.oszero.deliver.server.web.service.AppService;
 import com.oszero.deliver.server.web.service.SendService;
 import com.oszero.deliver.server.web.service.TemplateAppService;
 import com.oszero.deliver.server.web.service.TemplateService;
-import com.taobao.api.ApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -48,7 +47,7 @@ public class SendServiceImpl implements SendService {
     public Integer send(SendRequestDto sendRequestDto) {
 
         // 1.通过 templateId 获取 template
-        Integer templateId = sendRequestDto.getTemplateId();
+        Long templateId = sendRequestDto.getTemplateId();
         Template template = templateService.getById(templateId);
         if (Objects.isNull(template)) {
             throw new BusinessException(ResultEnum.CLIENT_ERROR.getMessage()); // todo: 后续统一设计系统所有异常
@@ -87,6 +86,8 @@ public class SendServiceImpl implements SendService {
 
         // 5.组装 sendTaskDto
         SendTaskDto sendTaskDto = SendTaskDto.builder()
+                .templateId(templateId)
+                .appId(appId)
                 .users(users)
                 .usersType(usersType)
                 .pushRange(pushRange)

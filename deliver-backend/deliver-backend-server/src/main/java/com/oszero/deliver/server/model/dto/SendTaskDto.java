@@ -25,6 +25,11 @@ public class SendTaskDto extends LinkModel {
     private Long templateId;
 
     /**
+     * appId
+     */
+    private Long appId;
+
+    /**
      * 发送用户列表
      */
     private List<String> users;
@@ -68,6 +73,11 @@ public class SendTaskDto extends LinkModel {
      * 消息链路追踪 id
      */
     private String traceId;
+
+    /**
+     * 是否重试消息（1-是 0-首次发送）
+     */
+    private Integer retried = 0;
 
     /**
      * 失败重试次数，默认为 0

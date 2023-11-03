@@ -9,6 +9,7 @@ import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.util.RocketMQUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.rocketmq.client.producer.SendResult;
+import org.apache.rocketmq.client.producer.SendStatus;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
@@ -60,7 +61,10 @@ public class RocketMQProducer implements Producer {
             }
         }
         if (!Objects.isNull(sendResult)) {
-            sendResult.getSendStatus();
+            SendStatus sendStatus = sendResult.getSendStatus();
+            if (!SendStatus.SEND_OK.equals(sendStatus)) {
+                throw new BusinessException("RocketMQ 消息发送失败！！！");
+            }
         }
     }
 }
