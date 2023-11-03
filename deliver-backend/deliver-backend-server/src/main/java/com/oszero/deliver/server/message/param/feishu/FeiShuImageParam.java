@@ -17,6 +17,7 @@ public class FeiShuImageParam extends FeiShuMessageParam {
 
     private Content content;
 
+    @Data
     public static class Content {
         private String image_key;
     }

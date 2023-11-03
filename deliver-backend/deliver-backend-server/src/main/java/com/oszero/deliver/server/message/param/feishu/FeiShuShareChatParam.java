@@ -17,6 +17,7 @@ public class FeiShuShareChatParam extends FeiShuMessageParam {
 
     private Content content;
 
+    @Data
     public static class Content {
         private String chat_id;
     }
