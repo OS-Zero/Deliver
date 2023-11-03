@@ -17,6 +17,7 @@ public class FeiShuAudioParam extends FeiShuMessageParam {
 
     private Content content;
 
+    @Data
     public static class Content {
         private String file_key;
     }
