@@ -17,14 +17,16 @@ public class DingVoiceParam extends DingMessageParam {
 
     private VoiceMessage msg;
 
+
+    @Data
     public static class VoiceMessage {
         private String msgtype;
         private Voice voice;
     }
 
+    @Data
     public static class Voice {
         private String media_id;
         private String duration;
-
     }
 }
