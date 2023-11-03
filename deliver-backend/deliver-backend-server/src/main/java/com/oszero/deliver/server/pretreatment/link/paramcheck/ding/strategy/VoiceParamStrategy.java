@@ -1,6 +1,8 @@
 package com.oszero.deliver.server.pretreatment.link.paramcheck.ding.strategy;
 
 import cn.hutool.json.JSONUtil;
+import com.oszero.deliver.server.enums.MessageTypeEnum;
+import com.oszero.deliver.server.message.param.ding.DingTextParam;
 import com.oszero.deliver.server.message.param.ding.DingVoiceParam;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.paramcheck.ParamStrategy;
@@ -20,8 +22,12 @@ public class VoiceParamStrategy implements ParamStrategy {
     @Override
     public void paramCheck(SendTaskDto sendTaskDto) throws Exception {
         Map<String, Object> paramMap = sendTaskDto.getParamMap();
+        String msg = JSONUtil.toJsonStr(paramMap.get("msg"));
+        DingVoiceParam.VoiceMessage voiceMessage = JSONUtil.toBean(msg, DingVoiceParam.VoiceMessage.class);
+        voiceMessage.setMsgtype(MessageTypeEnum.DING_VOICE.getMsgType());
+        paramMap.put("msg", voiceMessage);
         String json = JSONUtil.toJsonStr(paramMap);
-        JSONUtil.toBean(json, DingVoiceParam.class);
+        JSONUtil.toBean(json, DingTextParam.class);
         sendTaskDto.setParamJson(json);
     }
 }
