@@ -20,7 +20,7 @@ const toggleCollapsed = (): void => {
 </script>
 
 <template>
-  <a-layout-sider width="200" style="background: #fff; position: relative" :collapsed="collapsed">
+  <a-layout-sider width="190" style="background: #fff; position: relative" :collapsed="collapsed">
     <a-button
       shape="circle"
       size="small"
@@ -67,11 +67,11 @@ const toggleCollapsed = (): void => {
         </template>
         <ItemLink itemKey="4" info="操作日志" to="log" />
       </a-sub-menu>
-      <a-sub-menu key="sub4">
+      <a-sub-menu key="sub5">
         <template #title>
           <span>
             <SettingOutlined />
-            <span>系统日志</span>
+            <span>系统设置</span>
           </span>
         </template>
       </a-sub-menu>
