@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
+
 /**
  * 模板控制器
  *
@@ -31,19 +33,19 @@ public class TemplateController {
     }
 
     @PostMapping("/saveTemplate")
-    public CommonResult<?> saveTemplate(@RequestBody TemplateSaveAndUpdateRequestDto dto) {
+    public CommonResult<?> saveTemplate(@Valid @RequestBody TemplateSaveAndUpdateRequestDto dto) {
         templateService.save(dto);
         return CommonResult.success();
     }
 
     @PostMapping("/updateById")
-    public CommonResult<?> updateById(@RequestBody TemplateSaveAndUpdateRequestDto dto) {
+    public CommonResult<?> updateById(@Valid @RequestBody TemplateSaveAndUpdateRequestDto dto) {
         templateService.updateById(dto);
         return CommonResult.success();
     }
 
     @PostMapping("/deleteByIds")
-    public CommonResult<?> deleteByIds(@RequestBody DeleteIdsRequestDto dto) {
+    public CommonResult<?> deleteByIds(@Valid @RequestBody DeleteIdsRequestDto dto) {
         templateService.deleteByIds(dto);
         return CommonResult.success();
     }

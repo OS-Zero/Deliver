@@ -12,6 +12,7 @@ import com.oszero.deliver.admin.model.dto.request.AppSearchRequestDto;
 import com.oszero.deliver.admin.model.dto.request.DeleteIdsRequestDto;
 import com.oszero.deliver.admin.model.dto.response.AppSearchResponseDto;
 import com.oszero.deliver.admin.model.entity.App;
+import com.oszero.deliver.admin.model.entity.Template;
 import com.oszero.deliver.admin.model.entity.TemplateApp;
 import com.oszero.deliver.admin.service.AppService;
 import com.oszero.deliver.admin.mapper.AppMapper;
@@ -98,7 +99,29 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>
         if (!save) {
             throw new BusinessException("app 保存失败！！！");
         }
+    }
 
+    private void checkAppNameIsDuplicate(AppSaveAndUpdateRequestDto dto) {
+        String appName = dto.getAppName();
+        Long appId = dto.getAppId();
+
+        LambdaQueryWrapper<App> wrapper = new LambdaQueryWrapper<>();
+
+        // 为 null 表示新增
+        if (Objects.isNull(appId)) {
+            wrapper.eq(App::getAppName, appName);
+            App one = this.getOne(wrapper);
+            if (!Objects.isNull(one)) {
+                throw new BusinessException("此模板名(" + appName + ")已存在！！！");
+            }
+        } else {
+            wrapper.eq(App::getAppName, appName)
+                    .or().eq(App::getAppId, appId);
+            List<App> list = this.list(wrapper);
+            if (list.size() > 1) {
+                throw new BusinessException("此模板名(" + appName + ")已存在！！！");
+            }
+        }
     }
 }
 

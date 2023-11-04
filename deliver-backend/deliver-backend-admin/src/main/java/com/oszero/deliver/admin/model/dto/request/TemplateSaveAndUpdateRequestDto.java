@@ -2,6 +2,9 @@ package com.oszero.deliver.admin.model.dto.request;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 @Data
 public class TemplateSaveAndUpdateRequestDto {
 
@@ -13,16 +16,19 @@ public class TemplateSaveAndUpdateRequestDto {
     /**
      * 模板名称
      */
+    @NotBlank
     private String templateName;
 
     /**
      * 推送范围（0-不限 1-企业内部 2-外部）
      */
+    @NotNull
     private Integer pushRange;
 
     /**
      * 用户类型（1-企业账号 2-电话 3-平台ID 4-邮箱）
      */
+    @NotNull
     private Integer usersType;
 
     /**
@@ -32,15 +38,18 @@ public class TemplateSaveAndUpdateRequestDto {
      * "messageType": 所见 MessageTypeEnum
      * }
      */
+    @NotBlank
     private String pushWays;
 
     /**
      * 模板状态
      */
+    @NotNull
     private Integer templateStatus;
 
     /**
      * appId
      */
+    @NotNull
     private Long appId;
 }
