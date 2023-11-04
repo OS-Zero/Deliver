@@ -92,16 +92,19 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template>
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateById(TemplateSaveAndUpdateRequestDto dto) {
+        checkTemplateNameIsDuplicate(dto);
+
         Template template = new Template();
         BeanUtil.copyProperties(dto, template);
         boolean b = this.updateById(template);
         if (!b) {
             throw new BusinessException("更新模板失败！！！");
         }
+
         LambdaQueryWrapper<TemplateApp> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(TemplateApp::getTemplateId, dto.getTemplateId());
+
         TemplateApp templateApp = new TemplateApp();
-        templateApp.setTemplateId(dto.getTemplateId());
         templateApp.setAppId(dto.getAppId());
         boolean update = templateAppService.update(templateApp, wrapper);
         if (!update) {
@@ -112,12 +115,15 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template>
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void save(TemplateSaveAndUpdateRequestDto dto) {
+        checkTemplateNameIsDuplicate(dto);
+
         Template template = new Template();
         BeanUtil.copyProperties(dto, template);
         boolean save = this.save(template);
         if (!save) {
             throw new BusinessException("保存模板失败！！！");
         }
+
         TemplateApp templateApp = new TemplateApp();
         templateApp.setTemplateId(template.getTemplateId());
         templateApp.setAppId(dto.getAppId());
@@ -127,6 +133,28 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template>
         }
     }
 
+    private void checkTemplateNameIsDuplicate(TemplateSaveAndUpdateRequestDto dto) {
+        String templateName = dto.getTemplateName();
+        Long templateId = dto.getTemplateId();
+
+        LambdaQueryWrapper<Template> wrapper = new LambdaQueryWrapper<>();
+
+        // 为 null 表示新增
+        if (Objects.isNull(templateId)) {
+            wrapper.eq(Template::getTemplateName, templateName);
+            Template one = this.getOne(wrapper);
+            if (!Objects.isNull(one)) {
+                throw new BusinessException("此模板名(" + templateName + ")已存在！！！");
+            }
+        } else {
+            wrapper.eq(Template::getTemplateName, templateName)
+                    .or().eq(Template::getTemplateId, templateId);
+            List<Template> list = this.list(wrapper);
+            if (list.size() > 1) {
+                throw new BusinessException("此模板名(" + templateName + ")已存在！！！");
+            }
+        }
+    }
 
 }
 
