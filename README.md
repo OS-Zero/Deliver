@@ -15,7 +15,7 @@
 
 ## 系统架构
 
-![]()
+![](image/architecture_diagram.png)
 
 ## 核心特性
 
