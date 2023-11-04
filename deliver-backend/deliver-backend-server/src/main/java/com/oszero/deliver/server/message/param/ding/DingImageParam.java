@@ -1,5 +1,6 @@
 package com.oszero.deliver.server.message.param.ding;
 
+import cn.hutool.core.annotation.Alias;
 import lombok.*;
 
 /**
@@ -24,7 +25,8 @@ public class DingImageParam extends DingMessageParam {
 
     @Data
     public static class Image {
-        private String media_id;
+        @Alias("media_id")
+        private String mediaId;
     }
 
 }
