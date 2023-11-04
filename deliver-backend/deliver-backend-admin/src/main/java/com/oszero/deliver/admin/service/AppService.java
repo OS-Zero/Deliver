@@ -1,6 +1,10 @@
 package com.oszero.deliver.admin.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.oszero.deliver.admin.model.dto.request.AppSaveAndUpdateRequestDto;
 import com.oszero.deliver.admin.model.dto.request.AppSearchRequestDto;
+import com.oszero.deliver.admin.model.dto.request.DeleteIdsRequestDto;
+import com.oszero.deliver.admin.model.dto.response.AppSearchResponseDto;
 import com.oszero.deliver.admin.model.entity.App;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -12,5 +16,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface AppService extends IService<App> {
 
-    void getAppPagesByCondition(AppSearchRequestDto appSearchRequestDto);
+    Page<AppSearchResponseDto> getAppPagesByCondition(AppSearchRequestDto appSearchRequestDto);
+
+    void deleteByIds(DeleteIdsRequestDto dto);
+
+    void updateById(AppSaveAndUpdateRequestDto dto);
+
+    void save(AppSaveAndUpdateRequestDto dto);
 }

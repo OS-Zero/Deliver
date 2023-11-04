@@ -1,11 +1,10 @@
 package com.oszero.deliver.admin.model.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import java.util.Date;
+
 import lombok.Data;
 
 /**
@@ -14,7 +13,7 @@ import lombok.Data;
  * @author oszero
  * @version 1.0.0
  */
-@TableName(value ="app")
+@TableName(value = "app")
 @Data
 public class App implements Serializable {
     /**
@@ -26,7 +25,7 @@ public class App implements Serializable {
     /**
      * 应用名称
      */
-    private String name;
+    private String appName;
 
     /**
      * 消息发送渠道类型 （1-打电话 2-发短信 3-邮件 4-企业微信 5-钉钉 6-飞书）
@@ -37,6 +36,16 @@ public class App implements Serializable {
      * 应用信息配置 json
      */
     private String appConfig;
+
+    /**
+     * APP 使用数
+     */
+    private Integer useCount;
+
+    /**
+     * APP 状态
+     */
+    private Integer appStatus;
 
     /**
      * 创建者
@@ -61,6 +70,7 @@ public class App implements Serializable {
     /**
      * 是否删除：0-不删除 1-删除
      */
+    @TableLogic
     private Integer deleted;
 
     @TableField(exist = false)

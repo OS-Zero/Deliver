@@ -1,24 +1,20 @@
-package com.oszero.deliver.admin.model.entity;
+package com.oszero.deliver.admin.model.dto.response;
 
-import com.baomidou.mybatisplus.annotation.*;
-
-import java.io.Serializable;
-import java.util.Date;
 import lombok.Data;
 
+import java.util.Date;
+
 /**
- * 消息模板
+ * 模板查询响应 dto
  *
  * @author oszero
  * @version 1.0.0
  */
-@TableName(value ="template")
 @Data
-public class Template implements Serializable {
+public class TemplateSearchResponseDto {
     /**
      * 模板id
      */
-    @TableId(type = IdType.AUTO)
     private Long templateId;
 
     /**
@@ -39,8 +35,8 @@ public class Template implements Serializable {
     /**
      * 推送方式
      * {
-     * "channelType":（1-打电话 2-发短信 3-邮件 4-钉钉 5-企业微信 6-飞书）
-     * "messageType": 所见 MessageTypeEnum
+     * channelType（1-打电话 2-发短信 3-邮件 4-企业微信 5-钉钉 6-飞书）
+     * messageType（1-文本 2-钉钉链接 3-钉钉卡片 4-钉钉OA 5-微信卡片 6-微信md 7-飞书md 8-飞书卡片）
      * }
      */
     private String pushWays;
@@ -61,26 +57,17 @@ public class Template implements Serializable {
     private String createUser;
 
     /**
-     * 更新者
-     */
-    private String updateUser;
-
-    /**
      * 创建时间
      */
     private Date createTime;
 
     /**
-     * 更新时间
+     * 应用 id
      */
-    private Date updateTime;
+    private Long appId;
 
     /**
-     * 是否删除：0-不删除 1-删除
+     * 应用名称
      */
-    @TableLogic
-    private Integer deleted;
-
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
+    private String appName;
 }

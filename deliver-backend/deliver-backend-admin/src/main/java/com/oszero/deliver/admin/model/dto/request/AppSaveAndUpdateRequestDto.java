@@ -1,17 +1,10 @@
-package com.oszero.deliver.admin.model.dto.response;
+package com.oszero.deliver.admin.model.dto.request;
 
 import lombok.Data;
 
-import java.util.Date;
-
-/**
- * app 查询响应 dto
- *
- * @author oszero
- * @version 1.0.0
- */
 @Data
-public class AppSearchResponseDto {
+public class AppSaveAndUpdateRequestDto {
+
     /**
      * appId
      */
@@ -33,22 +26,7 @@ public class AppSearchResponseDto {
     private String appConfig;
 
     /**
-     * APP 使用数
-     */
-    private Integer useCount;
-
-    /**
      * APP 状态
      */
     private Integer appStatus;
-
-    /**
-     * 创建者
-     */
-    private String createUser;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
 }

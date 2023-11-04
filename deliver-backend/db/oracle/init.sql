@@ -34,7 +34,7 @@ DROP TABLE deliver.app;
 CREATE TABLE deliver.app
 (
     app_id       NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- appId
-    name         VARCHAR2(100)                        NOT NULL,   -- 应用名称
+    app_name         VARCHAR2(100)                        NOT NULL,   -- 应用名称
     channel_type NUMBER(1)                            not null,   -- 消息发送渠道类型 （1-打电话 2-发短信 3-邮件 4-企业微信 5-钉钉 6-飞书）
     app_config   CLOB                                 NOT NULL,   -- 应用信息配置 json
     use_count    NUMBER(10) DEFAULT 0                 NOT NULL,   -- APP 使用数
