@@ -6,7 +6,7 @@
 
     <resultMap id="BaseResultMap" type="com.oszero.deliver.server.model.entity.App">
             <id property="appId" column="app_id" jdbcType="BIGINT"/>
-            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="name" column="app_name" jdbcType="VARCHAR"/>
             <result property="channelType" column="channel_type" jdbcType="TINYINT"/>
             <result property="appConfig" column="app_config" jdbcType="VARCHAR"/>
             <result property="createUser" column="create_user" jdbcType="VARCHAR"/>
@@ -17,7 +17,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        app_id,name,channel_type,
+        app_id,app_name,channel_type,
         app_config,create_user,update_user,
         create_time,update_time,deleted
     </sql>
