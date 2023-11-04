@@ -25,7 +25,7 @@ public class App implements Serializable {
      * 应用名称
      */
     @TableField(value = "app_name")
-    private String name;
+    private String appName;
 
     /**
      * 消息发送渠道类型 （1-打电话 2-发短信 3-邮件 4-企业微信 5-钉钉 6-飞书）

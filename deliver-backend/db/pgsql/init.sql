@@ -51,7 +51,7 @@ drop table if exists deliver.app;
 create table if not exists deliver.app
 (
     app_id       bigserial primary key,
-    name         varchar(100)                        not null,
+    app_name         varchar(100)                        not null,
     channel_type smallint                            not null,
     app_config   jsonb                               not null,
     use_count    integer   default 0                 not null,
@@ -68,7 +68,7 @@ COMMENT ON TABLE deliver.app IS '渠道应用信息表（宽表）';
 
 -- 添加注释到列
 COMMENT ON COLUMN deliver.app.app_id IS 'appId';
-COMMENT ON COLUMN deliver.app.name IS '应用名称';
+COMMENT ON COLUMN deliver.app.app_name IS '应用名称';
 COMMENT ON COLUMN deliver.app.channel_type IS '消息发送渠道类型 （1-打电话 2-发短信 3-邮件 4-企业微信 5-钉钉 6-飞书）';
 COMMENT ON COLUMN deliver.app.app_config IS '应用信息配置 json';
 COMMENT ON COLUMN deliver.app.use_count IS 'APP 使用数';
