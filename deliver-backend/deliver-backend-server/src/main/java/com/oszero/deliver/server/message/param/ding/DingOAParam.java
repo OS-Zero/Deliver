@@ -17,12 +17,17 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class DingOAParam extends DingMessageParam {
 
+    private OAMessageDTO msg;
 
-    private String msgtype;
+    @Data
+    public static class OAMessageDTO {
 
-    private OaDTO oa;
+        private String msgtype;
 
+        private OaDTO oa;
+    }
 
+    @Data
     public static class OaDTO {
 
         private String message_url;
@@ -31,7 +36,7 @@ public class DingOAParam extends DingMessageParam {
 
         private BodyDTO body;
 
-
+        @Data
         public static class HeadDTO {
 
             private String bgcolor;
@@ -39,7 +44,7 @@ public class DingOAParam extends DingMessageParam {
             private String text;
         }
 
-
+        @Data
         public static class BodyDTO {
 
             private String title;
@@ -56,7 +61,7 @@ public class DingOAParam extends DingMessageParam {
 
             private String author;
 
-
+            @Data
             public static class RichDTO {
 
                 private String num;
@@ -64,7 +69,7 @@ public class DingOAParam extends DingMessageParam {
                 private String unit;
             }
 
-
+            @Data
             public static class FormDTO {
 
                 private String key;
