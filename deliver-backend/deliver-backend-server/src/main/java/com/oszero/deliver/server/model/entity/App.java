@@ -24,6 +24,7 @@ public class App implements Serializable {
     /**
      * 应用名称
      */
+    @TableField(value = "app_name")
     private String name;
 
     /**
