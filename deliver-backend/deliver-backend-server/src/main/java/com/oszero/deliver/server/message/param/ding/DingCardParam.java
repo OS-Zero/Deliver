@@ -1,5 +1,6 @@
 package com.oszero.deliver.server.message.param.ding;
 
+import cn.hutool.core.annotation.Alias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
@@ -20,21 +21,21 @@ public class DingCardParam extends DingMessageParam {
 
     @Data
     public static class DingCardMessage {
-
-        private ActionCardDTO action_card;
+        @Alias("action_card")
+        private ActionCardDTO actionCard;
         private String msgtype;
     }
 
     @Data
     public static class ActionCardDTO {
-
-        private BtnJsonListDTO btn_json_list;
-
-        private String single_url;
-
-        private String btn_orientation;
-
-        private String single_title;
+        @Alias("btn_json_list")
+        private BtnJsonListDTO btnJsonList;
+        @Alias("single_url")
+        private String singleUrl;
+        @Alias("btn_orientation")
+        private String btnOrientation;
+        @Alias("single_title")
+        private String singleTitle;
 
         private String markdown;
 
@@ -43,8 +44,8 @@ public class DingCardParam extends DingMessageParam {
 
         @Data
         public static class BtnJsonListDTO {
-
-            private String action_url;
+            @Alias("action_url")
+            private String actionUrl;
 
             private String title;
         }
