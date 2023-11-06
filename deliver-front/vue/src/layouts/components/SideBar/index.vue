@@ -11,8 +11,8 @@ import {
 import { ref } from 'vue'
 
 import ItemLink from '../ItemLink/index.vue'
-const selectedKeys2 = ref<string[]>(['1'])
-const openKeys = ref<string[]>(['sub1'])
+const selectedKeys2 = ref<string[]>([])
+const openKeys = ref<string[]>([])
 const collapsed = ref(false)
 const toggleCollapsed = (): void => {
   collapsed.value = !collapsed.value

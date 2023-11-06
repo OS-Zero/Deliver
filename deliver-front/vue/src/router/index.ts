@@ -11,7 +11,8 @@ const routes: RouteRecordRaw[] = [
         name: 'welcome',
         component: async () => await import('@/views/Welcome/index.vue'),
         meta: {
-          parent: 'welcome'
+          parent: 'welcome',
+          title: '我是登录'
         }
       },
       {
