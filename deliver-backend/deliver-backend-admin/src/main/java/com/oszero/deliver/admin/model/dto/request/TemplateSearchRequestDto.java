@@ -1,5 +1,6 @@
 package com.oszero.deliver.admin.model.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -18,6 +19,8 @@ public class TemplateSearchRequestDto extends PageRequest {
     private Integer pushRange;
     private Integer usersType;
     private Integer templateStatus;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endTime;
 }
