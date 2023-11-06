@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const service = axios.create({
-  baseURL: '',
+  baseURL: '/admin',
   timeout: 5000
 })
 
@@ -16,7 +16,7 @@ service.interceptors.request.use(
 
 service.interceptors.response.use(
   async res => {
-    if (res?.data.code === 200) return res
+    if (res?.data.code === 200) return res.data.data
     else {
       return await Promise.reject(res?.data.errorMessage)
     }

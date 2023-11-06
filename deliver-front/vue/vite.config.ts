@@ -10,12 +10,11 @@ export default defineConfig({
     host: 'localhost',
     port: 8080, // 端口
     proxy: {
-      '/api': {
+      '/admin': {
         // 请求接口中要替换的标识
-        target: '10.90.2.179', // 代理地址
+        target: 'http://localhost:9090', // 代理地址
         changeOrigin: true, // 是否允许跨域
-        secure: true,
-        rewrite: path => path.replace(/^\/api/, '') // api标志替换为''
+        secure: true
       }
     }
   },
