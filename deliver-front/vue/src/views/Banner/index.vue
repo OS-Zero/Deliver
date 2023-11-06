@@ -1,11 +1,10 @@
 <script lang="ts" setup></script>
 <template>
   <div
-    data-v-05bfc04b=""
-    class="ant-alert ant-alert-info ant-alert-no-icon ant-alert-banner css-190m0jy"
     data-show="true"
     role="alert"
     style="
+      height: 25px;
       padding: 0px;
       background: repeating-linear-gradient(
         35deg,
@@ -34,11 +33,7 @@
   </div>
 </template>
 <style lang="scss" scoped>
-.banner {
-  height: 25px;
-  background-color: #b3ebff;
-}
-p {
+span {
   text-align: center;
   font-size: 14px;
   line-height: 25px;
