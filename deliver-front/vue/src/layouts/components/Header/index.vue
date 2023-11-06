@@ -29,13 +29,13 @@ const setShowAbout = (open: boolean): void => {
           </div>
           <div style="margin-left: 60px">
             <p>产品：Deliver 企业消息推送平台</p>
-            <p>版本：1.0.0</p>
+            <p>版本：v1.0.0</p>
             <p>http://localhost:8080</p>
           </div>
         </div>
       </a-modal>
       <RouterLink to="" style="color: #6c6c6c"><QuestionCircleOutlined /></RouterLink>
-      <RouterLink to="" style="color: #6c6c6c"><GithubOutlined /></RouterLink>
+      <a href="https://gitee.com/OS-Zero/deliver" target="_blank" style="color: #6c6c6c"><GithubOutlined /></a>
       <span class="avatar">
         <a-avatar style="width: 35px; height: 35px">
           <template #icon><UserOutlined /></template>

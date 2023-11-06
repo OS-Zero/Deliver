@@ -112,7 +112,6 @@ const chartsAccountOption: EChartsOption = {
   ]
 }
 const dashboardHeadData = await getDashboardHeadData()
-console.log(dashboardHeadData)
 </script>
 
 <template>
@@ -123,7 +122,7 @@ console.log(dashboardHeadData)
           <a-card style="height: 96px">
             <div class="card-statistic">
               <span class="icon"><MessageOutlined /></span>
-              <a-statistic :value="100">
+              <a-statistic :value="dashboardHeadData.numberOfMessagesToday">
                 <template #title>
                   <span>今日消息量</span>
                   <a-tooltip placement="right">
@@ -141,7 +140,7 @@ console.log(dashboardHeadData)
           <a-card style="height: 96px">
             <div class="card-statistic">
               <span class="icon"><FileTextOutlined /></span>
-              <a-statistic :value="100">
+              <a-statistic :value="dashboardHeadData.numberOfPlatformFiles">
                 <template #title>
                   <span>平台文件数</span>
                   <a-tooltip placement="right">
@@ -159,7 +158,7 @@ console.log(dashboardHeadData)
           <a-card style="height: 96px">
             <div class="card-statistic">
               <span class="icon"><FunnelPlotOutlined /></span>
-              <a-statistic :value="100">
+              <a-statistic :value="dashboardHeadData.accumulatedTemplateOwnership">
                 <template #title>
                   <span>累计模板数</span>
                   <a-tooltip placement="right">
@@ -177,12 +176,12 @@ console.log(dashboardHeadData)
           <a-card style="height: 96px">
             <div class="card-statistic">
               <span class="icon"><UserOutlined /></span>
-              <a-statistic :value="100">
+              <a-statistic :value="dashboardHeadData.numberOfApps">
                 <template #title>
-                  <span>渠道APP数</span>
+                  <span>渠道 APP 数</span>
                   <a-tooltip placement="right">
                     <template #title>
-                      <span>渠道APP数</span>
+                      <span>渠道 APP 数</span>
                     </template>
                     <question-circle-two-tone style="margin-left: 5px" />
                   </a-tooltip>
