@@ -1,5 +1,6 @@
 package com.oszero.deliver.admin.model.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -17,6 +18,8 @@ public class AppSearchRequestDto extends PageRequest {
 
     private String appName;
     private Integer channelType;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endTime;
 }
