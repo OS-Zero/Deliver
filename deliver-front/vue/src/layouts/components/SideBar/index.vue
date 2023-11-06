@@ -62,10 +62,10 @@ const toggleCollapsed = (): void => {
         <template #title>
           <span>
             <FileTextOutlined />
-            <span>后台操作日志</span>
+            <span>平台文件管理</span>
           </span>
         </template>
-        <ItemLink itemKey="4" info="操作日志" to="log" />
+        <ItemLink itemKey="4" info="文件管理" to="log" />
       </a-sub-menu>
       <a-sub-menu key="sub5">
         <template #title>
