@@ -16,10 +16,12 @@ const chartsMessageOption: EChartsOption = {
   dataset: {
     source: [
       ['product', '成功', '失败'],
-      ['Matcha Latte', 650, 20],
-      ['Milk Tea', 140, 100],
-      ['Cheese Cocoa', 86.4, 65.2],
-      ['Walnut Brownie', 72.4, 53.9]
+      ['0-4', 650, 20],
+      ['4-8', 650, 20],
+      ['8-12', 140, 100],
+      ['12-16', 86.4, 65.2],
+      ['16-20', 72.4, 53.9],
+      ['20-24', 650, 20]
     ]
   },
   grid: {
@@ -120,10 +122,10 @@ const chartsAccountOption: EChartsOption = {
               <span class="icon"><MessageOutlined /></span>
               <a-statistic :value="100">
                 <template #title>
-                  <span>消息量</span>
+                  <span>今日消息量</span>
                   <a-tooltip placement="right">
                     <template #title>
-                      <span>消息量</span>
+                      <span>今日消息量</span>
                     </template>
                     <question-circle-two-tone style="margin-left: 5px" />
                   </a-tooltip>
@@ -138,10 +140,10 @@ const chartsAccountOption: EChartsOption = {
               <span class="icon"><FileTextOutlined /></span>
               <a-statistic :value="100">
                 <template #title>
-                  <span>模板数</span>
+                  <span>平台文件数</span>
                   <a-tooltip placement="right">
                     <template #title>
-                      <span>模板数</span>
+                      <span>平台文件数</span>
                     </template>
                     <question-circle-two-tone style="margin-left: 5px" />
                   </a-tooltip>
@@ -156,10 +158,10 @@ const chartsAccountOption: EChartsOption = {
               <span class="icon"><FunnelPlotOutlined /></span>
               <a-statistic :value="100">
                 <template #title>
-                  <span>渠道APP数</span>
+                  <span>累计模板数</span>
                   <a-tooltip placement="right">
                     <template #title>
-                      <span>渠道APP数</span>
+                      <span>累计模板数</span>
                     </template>
                     <question-circle-two-tone style="margin-left: 5px" />
                   </a-tooltip>
@@ -174,10 +176,10 @@ const chartsAccountOption: EChartsOption = {
               <span class="icon"><UserOutlined /></span>
               <a-statistic :value="100">
                 <template #title>
-                  <span>账号数</span>
+                  <span>渠道APP数</span>
                   <a-tooltip placement="right">
                     <template #title>
-                      <span>账号数</span>
+                      <span>渠道APP数</span>
                     </template>
                     <question-circle-two-tone style="margin-left: 5px" />
                   </a-tooltip>

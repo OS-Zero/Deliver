@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import dayjs, { type Dayjs } from 'dayjs'
 import { getCurrentInstance, onMounted, onBeforeUnmount, ref } from 'vue'
 import { type ECharts, init } from 'echarts'
 const props = defineProps(['name', 'option', 'cardName'])
@@ -39,8 +38,6 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', cancalDebounce)
   myChart.dispose()
 })
-const dateFormat = 'YYYY/MM/DD'
-const dataValue = ref<[Dayjs, Dayjs]>([dayjs('2015/01/01', dateFormat), dayjs('2015/01/01', dateFormat)])
 </script>
 <template>
   <div class="echart-card">
@@ -52,7 +49,6 @@ const dataValue = ref<[Dayjs, Dayjs]>([dayjs('2015/01/01', dateFormat), dayjs('2
         <a-radio-button value="c">本月</a-radio-button>
         <a-radio-button value="d">本年</a-radio-button>
       </a-radio-group>
-      <a-range-picker v-model:value="dataValue" :format="dateFormat" style="width: 210px" />
     </div>
     <div class="echart" :ref="name"></div>
   </div>

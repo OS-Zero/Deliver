@@ -6,39 +6,37 @@ interface Card {
 }
 const cards = ref<Card[]>([
   {
-    title: '入门文档',
-    desc: '入门文档'
+    title: '社区官网',
+    desc: '社区官网'
   },
   {
-    title: '绑定现有账户系统',
-    desc: '快速导入账户，并复用现有的登录方式。'
+    title: '快速开始',
+    desc: '快速开始'
   },
   {
-    title: '集成身份提供商',
-    desc: '集成身份提供商，快速纳入三方平台登录。'
+    title: '开发者文档',
+    desc: '开发者文档'
   },
   {
-    title: '实现应用单点登录',
-    desc: '创建配置应用，实现应用单点登录。'
+    title: '用户指南',
+    desc: '用户指南'
   },
   {
-    title: '系统配置',
-    desc: '进行系统基础配置，如文件存储、地理位置、邮件短信服务。'
+    title: '运维部署',
+    desc: '运维部署'
   },
   {
-    title: '安全配置',
-    desc: '进行系统安全配置，如密码策略、会话策略，完善系统安全。'
+    title: '交流讨论',
+    desc: '交流讨论'
   }
 ])
 </script>
 <template>
   <div id="welcome-container">
-    <h1>欢迎使用Deliver 企业消息推送平台</h1>
+    <h1>欢迎使用 Deliver 企业消息推送平台</h1>
     <p>
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur obcaecati dicta illo, dolor natus nulla sunt
-      sapiente cumque distinctio fuga officiis harum rerum unde modi nisi deserunt dignissimos aliquid odio, recusandae,
-      iusto itaque aperiam voluptatem. Culpa suscipit pariatur ut, dolores unde aperiam accusantium nulla cum nostrum,
-      debitis reiciendis, sequi labore.
+      Deliver
+      是一个面向企业的全面消息推送平台，旨在提供企业内部沟通和协作的便捷解决方案。它以轻量级部署、简单易用、支持多种通信渠道为特点，为企业提供高效的消息传递和通知功能。
     </p>
     <a-row :gutter="[16, 16]">
       <a-col class="gutter-row" :span="8" v-for="item in cards" :key="item">
