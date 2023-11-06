@@ -3,7 +3,7 @@ import { UserOutlined } from '@ant-design/icons-vue'
 </script>
 <template>
   <a-layout-header class="header">
-    <a href="/"> <i class="ico"></i></a>
+    <router-link to="/"> <i class="ico"></i></router-link>
     <h1>Deliver 企业消息推送平台</h1>
     <div class="user">
       <a-avatar :size="40" src="tx.jpg" :style="{ marginRight: '3px' }">
