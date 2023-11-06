@@ -20,13 +20,13 @@ module.exports = {
   parserOptions: {
     tsconfigRootDir: __dirname,
     parser: '@typescript-eslint/parser', // 新增
-    project: ['tsconfig.json'],
     extraFileExtensions: ['.vue'],
     ecmaVersion: 'latest',
     sourceType: 'module'
   },
   plugins: ['vue', 'prettier'],
   rules: {
-    'prettier/prettier': 'error'
+    'prettier/prettier': 'error',
+    'vue/multi-word-component-names': 'off'
   }
 }
