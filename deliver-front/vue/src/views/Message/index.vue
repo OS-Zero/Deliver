@@ -1,45 +1,14 @@
 <script lang="ts" setup>
-import { DownOutlined, UpOutlined, ReloadOutlined } from '@ant-design/icons-vue'
-import { ref, reactive, h } from 'vue'
+import { ReloadOutlined } from '@ant-design/icons-vue'
+import { ref, reactive, h, watch, computed } from 'vue'
 import type { UnwrapRef } from 'vue'
-import type { FormInstance } from 'ant-design-vue'
+import type { TableColumnsType } from 'ant-design-vue'
 import type { Rule } from 'ant-design-vue/es/form'
+import type { messageTemplate } from './type'
+import searchForm from './components/searchForm.vue'
 // import { message } from 'ant-design-vue'
 
-interface messageTemplate {
-  templateName: string
-  pushRange: string
-  userType: string
-  channel: string[]
-  messageType: string[]
-  channelApp: string
-}
-
-// 搜索部分
-const expand = ref(false)
-
-const formRef = ref<FormInstance>()
-
-const searchForm: messageTemplate = reactive({
-  templateName: '',
-  pushRange: '',
-  userType: '',
-  channel: [],
-  messageType: [],
-  channelApp: ''
-})
-
-const onFinish = (): void => {
-  console.log('searchForm: ', searchForm)
-}
-
-// 等接口出来在该
-const searchMessage = (): void => {
-  console.log('查询成功')
-}
-
 /// 表格部分
-///
 // 新增
 const open = ref<boolean>(false)
 const addModules = (): void => {
@@ -54,8 +23,8 @@ const addTemplate: UnwrapRef<messageTemplate> = reactive({
   templateName: '',
   pushRange: '',
   userType: '',
-  channel: [],
-  messageType: [],
+  channel: '',
+  messageType: '',
   channelApp: ''
 })
 
@@ -68,17 +37,15 @@ const rules: Record<string, Rule[]> = {
   userType: [{ required: true, message: '请选择用户类型', trigger: 'change' }],
   messageType: [
     {
-      type: 'array',
       required: true,
-      message: '请选择至少一个消息类型',
+      message: '请选择消息类型',
       trigger: 'change'
     }
   ],
   channel: [
     {
-      type: 'array',
       required: true,
-      message: '请选择至少一个渠道',
+      message: '请选择渠道',
       trigger: 'change'
     }
   ],
@@ -100,10 +67,50 @@ const handleOk = (): void => {
 const handleCancel = (): void => {
   templateForm.value.resetFields()
 }
-const rangeOptions = [{ value: '默认标签1' }, { value: '默认标签2' }, { value: '默认标签3' }]
-const qudaoOptions = [{ value: '默认标签1' }, { value: '默认标签2' }, { value: '默认标签3' }]
 
-const columns = [
+const channelData = ['默认标签1', '默认标签2', '默认标签3']
+
+const messageData = {
+  默认标签1: ['Online'],
+  默认标签2: ['Promotion'],
+  默认标签3: ['Offline']
+}
+
+const appData = {
+  默认标签1: ['IOS'],
+  默认标签2: ['安卓'],
+  默认标签3: ['MAC']
+}
+
+const mesType = computed(() => {
+  return messageData[addTemplate.channel] === undefined ? [] : messageData[addTemplate.channel]
+})
+
+const appType = computed(() => {
+  return appData[addTemplate.channel] === undefined ? [] : appData[addTemplate.channel]
+})
+
+watch(
+  () => addTemplate.channel,
+  newVal => {
+    if (messageData[newVal] !== undefined) {
+      addTemplate.messageType = messageData[newVal][0]
+    } else {
+      // 未定义或空数组的情况
+      addTemplate.messageType = ''
+      messageData[newVal] = []
+    }
+    if (appData[newVal] !== undefined) {
+      addTemplate.channelApp = appData[newVal][0]
+    } else {
+      // 处理未定义或空数组的情况
+      addTemplate.channelApp = ''
+      appData[newVal] = []
+    }
+  }
+)
+
+const columns: TableColumnsType = [
   {
     title: '模版 ID',
     dataIndex: 'projectName',
@@ -136,7 +143,9 @@ const columns = [
   },
   {
     title: '操作',
-    key: 'control'
+    key: 'operation',
+    fixed: 'right',
+    width: 180
   }
 ]
 // data到时候肯定是需要去接口获取到res然后渲染的
@@ -152,78 +161,9 @@ const data = ref([
 
 <template>
   <!-- 搜索部分 -->
+  <searchForm />
+  <!-- 表格部分 -->
   <div id="message-container">
-    <a-form ref="formRef" name="advanced_search" class="search" :model="searchForm" @finish="onFinish">
-      <a-row :gutter="24">
-        <a-col :span="8">
-          <a-form-item name="templateName" label="模板名">
-            <a-input v-model:value="searchForm.templateName" placeholder="请输入模板名"></a-input>
-          </a-form-item>
-        </a-col>
-        <a-col :span="8">
-          <a-form-item name="pushRange" label="推送范围">
-            <a-select v-model:value="searchForm.pushRange" placeholder="请选择推送范围">
-              <a-select-option :value="0">不限</a-select-option>
-              <a-select-option :value="1">企业内部</a-select-option>
-              <a-select-option :value="2">企业外部</a-select-option>
-            </a-select>
-          </a-form-item>
-        </a-col>
-        <a-col :span="8" v-if="expand">
-          <a-form-item name="userType" label="用户类型">
-            <a-select v-model:value="searchForm.userType" placeholder="请选择用户类型">
-              <a-select-option :value="1">企业账号</a-select-option>
-              <a-select-option :value="2">电话</a-select-option>
-              <a-select-option :value="3">邮箱</a-select-option>
-              <a-select-option :value="4">平台 UserId</a-select-option>
-            </a-select>
-          </a-form-item>
-        </a-col>
-        <a-col :span="8" v-if="expand">
-          <a-form-item name="messageType" label="消息类型">
-            <a-select
-              v-model:value="searchForm.messageType"
-              mode="tags"
-              placeholder="请选择消息类型"
-              :options="rangeOptions"
-            />
-          </a-form-item>
-        </a-col>
-        <a-col :span="8" v-if="expand">
-          <a-form-item name="channel" label="渠道选择">
-            <a-select v-model:value="searchForm.channel" mode="tags" placeholder="请选择渠道" :options="qudaoOptions" />
-          </a-form-item>
-        </a-col>
-        <a-col :span="8" v-if="expand">
-          <a-form-item name="channelApp" label="渠道App">
-            <a-select v-model:value="searchForm.channelApp" placeholder="请选择渠道App">
-              <a-select-option value="类型1">类型1</a-select-option>
-              <a-select-option value="类型2">类型2</a-select-option>
-            </a-select>
-          </a-form-item>
-        </a-col>
-        <a-col
-          :span="expand === true ? 24 : 8"
-          :style="{
-            'text-align': expand === true ? 'right' : 'right',
-            'margin-bottom': expand === true ? '24px' : '0'
-          }"
-        >
-          <a-button type="primary" html-type="submit" @click="searchMessage">查询</a-button>
-          <a-button style="margin: 0 8px" @click="() => formRef.resetFields()">清空</a-button>
-          <a style="font-size: 14px" @click="expand = !expand">
-            <template v-if="expand">
-              <UpOutlined />
-              收起
-            </template>
-            <template v-else>
-              <DownOutlined />
-              展开
-            </template>
-          </a>
-        </a-col>
-      </a-row>
-    </a-form>
     <div class="message-section">
       <div class="splitter">
         <a-tooltip title="刷新">
@@ -261,27 +201,26 @@ const data = ref([
                 <a-radio-button :value="4">平台 UserId</a-radio-button>
               </a-radio-group>
             </a-form-item>
-            <a-form-item label="消息类型" name="messageType" class="tem-item">
-              <a-checkbox-group v-model:value="addTemplate.messageType">
-                <a-checkbox value="1" name="type">Online</a-checkbox>
-                <a-checkbox value="2" name="type">Promotion</a-checkbox>
-                <a-checkbox value="3" name="type">Offline</a-checkbox>
-              </a-checkbox-group>
-            </a-form-item>
             <a-form-item label="渠道选择" name="channel" class="tem-item">
               <a-select
                 v-model:value="addTemplate.channel"
-                mode="tags"
-                placeholder="请选择渠道"
-                :options="rangeOptions"
+                :options="channelData.map(pro => ({ value: pro }))"
+                style="width: 70%"
+              />
+            </a-form-item>
+            <a-form-item label="消息类型" name="messageType" class="tem-item">
+              <a-select
+                v-model:value="addTemplate.messageType"
+                :options="mesType.map((pro: any) => ({ value: pro }))"
                 style="width: 70%"
               />
             </a-form-item>
             <a-form-item label="渠道App" name="channelApp" class="tem-item">
-              <a-select v-model:value="addTemplate.channelApp" style="width: 50%">
-                <a-select-option value="shanghai">渠道one</a-select-option>
-                <a-select-option value="beijing">渠道two</a-select-option>
-              </a-select>
+              <a-select
+                v-model:value="addTemplate.channelApp"
+                :options="appType.map((pro: any) => ({ value: pro }))"
+                style="width: 70%"
+              />
             </a-form-item>
             <a-form-item :wrapper-col="{ span: 14, offset: 4 }" class="tem-item">
               <a-button type="primary" @click="handleOk">确认新建</a-button>
@@ -292,25 +231,11 @@ const data = ref([
       </div>
 
       <!-- 表格部分 -->
-      <a-table :columns="columns" :data-source="data" bordered>
-        <template #headerCell="{ column }">
-          <template v-if="column.key === 'projectName'">
-            <span>{{ column.title }}</span>
-          </template>
-        </template>
-
-        <template #bodyCell="{ column, record }">
-          <template v-if="column.key === 'projectName'">
-            <a>
-              {{ record.name }}
-            </a>
-          </template>
-          <template v-else-if="column.key === 'control'">
-            <span>
-              <a>编辑</a>
-              <a-divider type="vertical" />
-              <a>删除</a>
-            </span>
+      <a-table :columns="columns" :data-source="data" :scroll="{ x: 1200, y: 300 }" bordered>
+        <template #bodyCell="{ column }">
+          <template v-if="column.key === 'operation'">
+            <a-button type="primary" class="btn-manager">编辑</a-button>
+            <a-button type="primary" danger>删除</a-button>
           </template>
         </template>
       </a-table>
@@ -320,14 +245,6 @@ const data = ref([
 </template>
 
 <style lang="scss" scoped>
-// 表格斑马纹设置
-:deep(.ant-table-tbody tr:nth-child(2n)) {
-  background-color: #fafafa;
-}
-
-:deep(.ant-layout-content) {
-  background-color: aqua;
-}
 #message-container {
   height: 100%;
   overflow: auto;
@@ -342,28 +259,6 @@ const data = ref([
   .search-item:nth-child(2) {
     margin-left: 30px;
   }
-}
-#components-form-demo-advanced-search .ant-form {
-  max-width: none;
-}
-#components-form-demo-advanced-search .search-result-list {
-  margin-top: 16px;
-  border: 1px dashed #e9e9e9;
-  border-radius: 2px;
-  background-color: #fafafa;
-  min-height: 200px;
-  text-align: center;
-  padding-top: 80px;
-}
-[data-theme='dark'] .ant-advanced-search-form {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid #434343;
-  padding: 24px;
-  border-radius: 2px;
-}
-[data-theme='dark'] #components-form-demo-advanced-search .search-result-list {
-  border: 1px dashed #434343;
-  background: rgba(255, 255, 255, 0.04);
 }
 
 .splitter {
@@ -392,5 +287,8 @@ const data = ref([
   margin-top: 12px;
   background: #ffffff;
   padding: 12px;
+  .btn-manager {
+    margin-right: 10px;
+  }
 }
 </style>
