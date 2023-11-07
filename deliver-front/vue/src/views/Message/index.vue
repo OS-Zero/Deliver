@@ -100,36 +100,38 @@ const handleOk = (): void => {
 const handleCancel = (): void => {
   templateForm.value.resetFields()
 }
-
 const rangeOptions = [{ value: '默认标签1' }, { value: '默认标签2' }, { value: '默认标签3' }]
 const qudaoOptions = [{ value: '默认标签1' }, { value: '默认标签2' }, { value: '默认标签3' }]
 
 const columns = [
   {
-    title: '项目名称',
+    title: '模版 ID',
     dataIndex: 'projectName',
-    sorter: {
-      compare: (a: any, b: any) => a.projectName.localeCompare(b.projectName),
-      multiple: 3
-    },
     key: 'projectname'
   },
   {
-    title: '管理员1',
+    title: '模板名',
     dataIndex: 'admin1',
-    sorter: {
-      compare: (a: any, b: any) => a.admin1.localeCompare(b.admin1),
-      multiple: 2
-    },
     key: 'admin1'
   },
   {
-    title: '管理员2',
+    title: '推送范围',
     dataIndex: 'admin2',
-    sorter: {
-      compare: (a: any, b: any) => a.admin2.localeCompare(b.admin2),
-      multiple: 1
-    },
+    key: 'admin2'
+  },
+  {
+    title: '用户类型',
+    dataIndex: 'admin2',
+    key: 'admin2'
+  },
+  {
+    title: '模板累计使用数',
+    dataIndex: 'admin2',
+    key: 'admin2'
+  },
+  {
+    title: '模板状态',
+    dataIndex: 'admin2',
     key: 'admin2'
   },
   {
@@ -144,24 +146,6 @@ const data = ref([
     projectName: '1.txt',
     admin1: 'a',
     admin2: 'b'
-  },
-  {
-    key: '2',
-    projectName: '2.txt',
-    admin1: 'c',
-    admin2: 'd'
-  },
-  {
-    key: '3',
-    projectName: '3.txt',
-    admin1: 'e',
-    admin2: 'f'
-  },
-  {
-    key: '4',
-    projectName: '4.txt',
-    admin1: 'g',
-    admin2: 'h'
   }
 ])
 </script>
@@ -179,16 +163,19 @@ const data = ref([
         <a-col :span="8">
           <a-form-item name="pushRange" label="推送范围">
             <a-select v-model:value="searchForm.pushRange" placeholder="请选择推送范围">
-              <a-select-option value="范围1">范围1</a-select-option>
-              <a-select-option value="范围2">范围2</a-select-option>
+              <a-select-option :value="0">不限</a-select-option>
+              <a-select-option :value="1">企业内部</a-select-option>
+              <a-select-option :value="2">企业外部</a-select-option>
             </a-select>
           </a-form-item>
         </a-col>
         <a-col :span="8" v-if="expand">
           <a-form-item name="userType" label="用户类型">
             <a-select v-model:value="searchForm.userType" placeholder="请选择用户类型">
-              <a-select-option value="类型1">类型1</a-select-option>
-              <a-select-option value="类型2">类型2</a-select-option>
+              <a-select-option :value="1">企业账号</a-select-option>
+              <a-select-option :value="2">电话</a-select-option>
+              <a-select-option :value="3">邮箱</a-select-option>
+              <a-select-option :value="4">平台 UserId</a-select-option>
             </a-select>
           </a-form-item>
         </a-col>
@@ -261,18 +248,17 @@ const data = ref([
             </a-form-item>
             <a-form-item label="推送范围" name="pushRange" class="tem-item">
               <a-radio-group v-model:value="addTemplate.pushRange" button-style="solid">
-                <a-radio-button value="杭州">杭州</a-radio-button>
-                <a-radio-button value="上海">上海</a-radio-button>
-                <a-radio-button value="北京">北京</a-radio-button>
-                <a-radio-button value="成都">成都</a-radio-button>
+                <a-radio-button :value="0">不限</a-radio-button>
+                <a-radio-button :value="1">企业内部</a-radio-button>
+                <a-radio-button :value="2">企业外部</a-radio-button>
               </a-radio-group>
             </a-form-item>
             <a-form-item label="用户类型" name="userType" class="tem-item">
               <a-radio-group v-model:value="addTemplate.userType" button-style="solid">
-                <a-radio-button value="类型1">类型1</a-radio-button>
-                <a-radio-button value="类型2">类型2</a-radio-button>
-                <a-radio-button value="类型3">类型3</a-radio-button>
-                <a-radio-button value="类型4">类型4</a-radio-button>
+                <a-radio-button :value="1">企业账号</a-radio-button>
+                <a-radio-button :value="2">电话</a-radio-button>
+                <a-radio-button :value="3">邮箱</a-radio-button>
+                <a-radio-button :value="4">平台 UserId</a-radio-button>
               </a-radio-group>
             </a-form-item>
             <a-form-item label="消息类型" name="messageType" class="tem-item">
@@ -321,14 +307,9 @@ const data = ref([
           </template>
           <template v-else-if="column.key === 'control'">
             <span>
-              <a>Invite 一 {{ record.name }}</a>
+              <a>编辑</a>
               <a-divider type="vertical" />
-              <a>Delete</a>
-              <a-divider type="vertical" />
-              <a class="ant-dropdown-link">
-                More actions
-                <down-outlined />
-              </a>
+              <a>删除</a>
             </span>
           </template>
         </template>
