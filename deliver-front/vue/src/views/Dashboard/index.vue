@@ -8,7 +8,9 @@ import {
 } from '@ant-design/icons-vue'
 import Echarts from '@/components/Echarts/index.vue'
 import { type EChartsOption } from 'echarts'
-import { getDashboardHeadData } from '@/api/dashboard'
+import { useDashboardStore } from '@/store/modules/dashboard'
+import { type DashboardHeadData } from '@/api/dashboard'
+import { onMounted, ref } from 'vue'
 const chartsMessageOption: EChartsOption = {
   legend: {
     top: '20%'
@@ -111,7 +113,15 @@ const chartsAccountOption: EChartsOption = {
     }
   ]
 }
-const dashboardHeadData = await getDashboardHeadData()
+const dashboardHeadData = ref<DashboardHeadData>({})
+const getDashboardHeadData = async (): Promise<void> => {
+  const dashboardStore = useDashboardStore()
+  dashboardHeadData.value = await dashboardStore.getDashboardHeadData()
+}
+
+onMounted(async () => {
+  await getDashboardHeadData()
+})
 </script>
 
 <template>
