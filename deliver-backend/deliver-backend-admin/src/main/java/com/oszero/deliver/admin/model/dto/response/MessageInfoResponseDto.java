@@ -5,9 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
-//@NoArgsConstructor
+@NoArgsConstructor
 public class MessageInfoResponseDto {
+
+    List<List<String>> MessageInfoList;
 }
