@@ -38,20 +38,20 @@ public class DashboardController {
     }
 
     @PostMapping("/getTemplateInfo")
-    public CommonResult<TemplateInfoResponseDto> getTemplateInfo(@Valid @RequestBody DashboardDateSelectRequestDto dto) {
-        TemplateInfoResponseDto templateInfoResponseDto = dashboardService.getTemplateInfo(dto);
-        return CommonResult.success(templateInfoResponseDto);
+    public CommonResult<DashboardInfoResponseDto> getTemplateInfo(@Valid @RequestBody DashboardDateSelectRequestDto dto) {
+        DashboardInfoResponseDto dashboardInfoResponseDto = dashboardService.getTemplateInfo(dto);
+        return CommonResult.success(dashboardInfoResponseDto);
     }
 
     @PostMapping("/getAppInfo")
-    public CommonResult<AppInfoResponseDto> getAppInfo(@Valid @RequestBody DashboardDateSelectRequestDto dto) {
-        AppInfoResponseDto appInfoResponseDto = dashboardService.getAppInfo(dto);
+    public CommonResult<DashboardInfoResponseDto> getAppInfo(@Valid @RequestBody DashboardDateSelectRequestDto dto) {
+        DashboardInfoResponseDto appInfoResponseDto = dashboardService.getAppInfo(dto);
         return CommonResult.success(appInfoResponseDto);
     }
 
     @PostMapping("/getPushUserInfo")
-    public CommonResult<PushUserInfoResponseDto> getPushUserInfo(@Valid @RequestBody DashboardDateSelectRequestDto dto) {
-        PushUserInfoResponseDto pushUserInfoResponseDto = dashboardService.getPushUserInfo(dto);
+    public CommonResult<DashboardInfoResponseDto> getPushUserInfo(@Valid @RequestBody DashboardDateSelectRequestDto dto) {
+        DashboardInfoResponseDto pushUserInfoResponseDto = dashboardService.getPushUserInfo(dto);
         return CommonResult.success(pushUserInfoResponseDto);
     }
 }
