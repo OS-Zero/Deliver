@@ -5,6 +5,12 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+/**
+ * APP 保存和更新 DTO
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Data
 public class AppSaveAndUpdateRequestDto {
 
