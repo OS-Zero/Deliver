@@ -13,7 +13,7 @@ const setShowAbout = (open: boolean): void => {
       <h1>Deliver 企业消息推送平台</h1>
     </div>
     <div class="right">
-      <RouterLink to="" style="color: #6c6c6c" @click="showAbout = true"><ExclamationCircleOutlined /></RouterLink>
+      <a style="color: #6c6c6c" @click="showAbout = true"><ExclamationCircleOutlined /></a>
       <a-modal
         v-model:open="showAbout"
         title="关于"
@@ -34,7 +34,7 @@ const setShowAbout = (open: boolean): void => {
           </div>
         </div>
       </a-modal>
-      <RouterLink to="" style="color: #6c6c6c"><QuestionCircleOutlined /></RouterLink>
+      <a href="" style="color: #6c6c6c"><QuestionCircleOutlined /></a>
       <a href="https://gitee.com/OS-Zero/deliver" target="_blank" style="color: #6c6c6c"><GithubOutlined /></a>
       <span class="avatar">
         <a-avatar style="width: 35px; height: 35px">
@@ -62,7 +62,7 @@ const setShowAbout = (open: boolean): void => {
   .right {
     font-size: 20px;
     color: #6c6c6c;
-    .router-link-active {
+    a {
       margin-right: 10px;
     }
     .avatar {

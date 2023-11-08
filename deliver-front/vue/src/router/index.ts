@@ -12,7 +12,7 @@ const routes: RouteRecordRaw[] = [
         component: async () => await import('@/views/Welcome/index.vue'),
         meta: {
           parent: 'welcome',
-          title: '我是登录'
+          title: '欢迎使用 Deliver'
         }
       },
       {
@@ -20,7 +20,8 @@ const routes: RouteRecordRaw[] = [
         name: 'dashboard',
         component: async () => await import('@/views/Dashboard/index.vue'),
         meta: {
-          parent: 'home'
+          parent: 'home',
+          title: '控制面板'
         }
       },
       {
@@ -28,7 +29,8 @@ const routes: RouteRecordRaw[] = [
         name: 'message',
         component: async () => await import('@/views/Message/index.vue'),
         meta: {
-          parent: 'home'
+          parent: 'home',
+          title: '消息配置'
         }
       },
       {
@@ -36,7 +38,8 @@ const routes: RouteRecordRaw[] = [
         name: 'channel',
         component: async () => await import('@/views/Channel/index.vue'),
         meta: {
-          parent: 'home'
+          parent: 'home',
+          title: '渠道 APP 配置'
         }
       },
       {
@@ -44,7 +47,8 @@ const routes: RouteRecordRaw[] = [
         name: 'log',
         component: async () => await import('@/views/Log/index.vue'),
         meta: {
-          parent: 'home'
+          parent: 'home',
+          name: '平台文件管理'
         }
       },
       {
@@ -52,7 +56,8 @@ const routes: RouteRecordRaw[] = [
         name: 'setting',
         component: async () => await import('@/views/Setting/index.vue'),
         meta: {
-          parent: 'home'
+          parent: 'home',
+          name: '系统设置'
         }
       }
     ]
