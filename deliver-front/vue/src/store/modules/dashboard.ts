@@ -1,7 +1,13 @@
 import { defineStore } from 'pinia'
-import { getDashboardHeadData, getMessageInfo, type DashboardHeadData } from '@/api/dashboard'
+import {
+  getDashboardHeadData,
+  getMessageInfo,
+  getTemplateInfo,
+  getAppInfo,
+  getPushUserInfo,
+  type DashboardHeadData
+} from '@/api/dashboard'
 import { type EChartsOption } from 'echarts'
-
 const chartsMessageOption: EChartsOption = {
   legend: {
     top: '20%'
@@ -9,14 +15,7 @@ const chartsMessageOption: EChartsOption = {
   tooltip: {},
   dataset: {
     dimensions: ['product', '成功', '失败'],
-    source: [
-      ['0-4', 650, 20],
-      ['4-8', 650, 20],
-      ['8-12', 140, 100],
-      ['12-16', 86.4, 65.2],
-      ['16-20', 72.4, 53.9],
-      ['20-24', 650, 20]
-    ]
+    source: []
   },
   grid: {
     top: '30%',
@@ -29,79 +28,97 @@ const chartsMessageOption: EChartsOption = {
     { type: 'bar', color: '#a90000' }
   ]
 }
-// const chartsTemplateOption = {
-//   tooltip: {
-//     trigger: 'item'
-//   },
-//   series: [
-//     {
-//       name: 'Access From',
-//       type: 'pie',
-//       radius: '50%',
-//       center: ['50%', '60%'],
-//       data: [
-//         { value: 1048, name: 'Search Engine' },
-//         { value: 735, name: 'Direct' },
-//         { value: 580, name: 'Email' },
-//         { value: 484, name: 'Union Ads' },
-//         { value: 300, name: 'Video Ads' }
-//       ]
-//     }
-//   ]
-// }
-// const chartsChannelOption = {
-//   tooltip: {
-//     trigger: 'item'
-//   },
-//   series: [
-//     {
-//       name: 'Access From',
-//       type: 'pie',
-//       radius: '50%',
-//       center: ['50%', '60%'],
-//       data: [
-//         { value: 1048, name: 'Search Engine' },
-//         { value: 735, name: 'Direct' },
-//         { value: 580, name: 'Email' },
-//         { value: 484, name: 'Union Ads' },
-//         { value: 300, name: 'Video Ads' }
-//       ],
-//       emphasis: {
-//         itemStyle: {
-//           shadowBlur: 10,
-//           shadowOffsetX: 0,
-//           shadowColor: 'rgba(0, 0, 0, 0.5)'
-//         }
-//       }
-//     }
-//   ]
-// }
-// const chartsAccountOption = {
-//   tooltip: {
-//     trigger: 'item'
-//   },
-//   series: [
-//     {
-//       name: 'Access From',
-//       type: 'pie',
-//       radius: ['50%', '60%'],
-//       center: ['50%', '60%'],
-//       avoidLabelOverlap: false,
-//       itemStyle: {
-//         borderRadius: 10,
-//         borderColor: '#fff',
-//         borderWidth: 2
-//       },
-//       data: [
-//         { value: 1048, name: 'Search Engine' },
-//         { value: 735, name: 'Direct' },
-//         { value: 580, name: 'Email' },
-//         { value: 484, name: 'Union Ads' },
-//         { value: 300, name: 'Video Ads' }
-//       ]
-//     }
-//   ]
-// }
+const chartsTemplateOption: EChartsOption = {
+  tooltip: {
+    trigger: 'item'
+  },
+  series: [
+    {
+      name: 'TemplateId',
+      type: 'pie',
+      radius: '50%',
+      center: ['50%', '60%'],
+      label: {
+        alignTo: 'edge',
+        formatter: '{name|{b}}\n{value|计数:{c}}',
+        minMargin: 5,
+        lineHeight: 15,
+        rich: {
+          time: {
+            fontSize: 10,
+            color: '#999'
+          }
+        }
+      },
+      data: []
+    }
+  ]
+}
+const chartsChannelOption: EChartsOption = {
+  tooltip: {
+    trigger: 'item'
+  },
+  series: [
+    {
+      name: 'AppId',
+      type: 'pie',
+      radius: '50%',
+      center: ['50%', '60%'],
+      label: {
+        alignTo: 'edge',
+        formatter: '{name|{b}}\n{value|计数:{c}}',
+        minMargin: 5,
+        lineHeight: 15,
+        rich: {
+          time: {
+            fontSize: 10,
+            color: '#999'
+          }
+        }
+      },
+      data: [],
+      emphasis: {
+        itemStyle: {
+          shadowBlur: 10,
+          shadowOffsetX: 0,
+          shadowColor: 'rgba(0, 0, 0, 0.5)'
+        }
+      }
+    }
+  ]
+}
+const chartsAccountOption: EChartsOption = {
+  tooltip: {
+    trigger: 'item'
+  },
+  series: [
+    {
+      name: 'UserId',
+      type: 'pie',
+      radius: ['50%', '60%'],
+      center: ['50%', '60%'],
+      avoidLabelOverlap: false,
+      label: {
+        alignTo: 'edge',
+        formatter: '{name|{b}}\n{value|计数:{c}}',
+        minMargin: 5,
+        lineHeight: 15,
+        rich: {
+          time: {
+            fontSize: 10,
+            color: '#999'
+          }
+        }
+      },
+      itemStyle: {
+        borderRadius: 10,
+        borderColor: '#fff',
+        borderWidth: 2
+      },
+      data: []
+    }
+  ]
+}
 
 export const useDashboardStore = defineStore('dashboard', {
   state: () => {
@@ -112,15 +129,36 @@ export const useDashboardStore = defineStore('dashboard', {
   actions: {
     async getDashboardHeadData() {
       const dashboardHeadData: DashboardHeadData = await getDashboardHeadData()
-      console.log(dashboardHeadData)
       return dashboardHeadData
     },
     async getMessageInfo(dateSelect: number): Promise<EChartsOption> {
-      const messageData: messageDataSource = await getMessageInfo({ dateSelect })
+      const messageData = await getMessageInfo({ dateSelect })
       if (chartsMessageOption.dataset !== undefined) {
-        chartsMessageOption.dataset.source = messageData
+        chartsMessageOption.dataset.source = messageData.messageInfoList
+        console.log(chartsMessageOption)
       }
       return chartsMessageOption
+    },
+    async getTemplateInfo(dateSelect: number): Promise<EChartsOption> {
+      const messageData = await getTemplateInfo({ dateSelect })
+      if (chartsTemplateOption.series !== undefined) {
+        chartsTemplateOption.series[0].data = messageData?.dashboardInfoList
+      }
+      return chartsTemplateOption
+    },
+    async getAppInfo(dateSelect: number): Promise<EChartsOption> {
+      const messageData = await getAppInfo({ dateSelect })
+      if (chartsChannelOption.series !== undefined) {
+        chartsChannelOption.series[0].data = messageData?.dashboardInfoList
+      }
+      return chartsChannelOption
+    },
+    async getPushUserInfo(dateSelect: number): Promise<EChartsOption> {
+      const messageData = await getPushUserInfo({ dateSelect })
+      if (chartsAccountOption.series !== undefined) {
+        chartsAccountOption.series[0].data = messageData?.dashboardInfoList
+      }
+      return chartsAccountOption
     }
   },
   getters: {}
