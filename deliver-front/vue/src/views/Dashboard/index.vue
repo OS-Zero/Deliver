@@ -14,16 +14,30 @@ import { type EChartsOption } from 'echarts'
 const dashboardStore = useDashboardStore()
 const dashboardHeadData = ref<DashboardHeadData>({})
 const chartsMessageOption = ref<EChartsOption>({})
+const chartsTemplateOption = ref<EChartsOption>({})
+const chartsApplOption = ref<EChartsOption>({})
+const chartsUserOption = ref<EChartsOption>({})
 const getDashboardHeadData = async (): Promise<void> => {
   dashboardHeadData.value = await dashboardStore.getDashboardHeadData()
 }
 const getMessageInfo = async (dataselect: number): Promise<void> => {
   chartsMessageOption.value = await dashboardStore.getMessageInfo(dataselect)
-  console.log(chartsMessageOption.value)
+}
+const getTemplateInfo = async (dataselect: number): Promise<void> => {
+  chartsTemplateOption.value = await dashboardStore.getTemplateInfo(dataselect)
+}
+const getAppInfo = async (dataselect: number): Promise<void> => {
+  chartsApplOption.value = await dashboardStore.getAppInfo(dataselect)
+}
+const getPushUserInfo = async (dataselect: number): Promise<void> => {
+  chartsUserOption.value = await dashboardStore.getPushUserInfo(dataselect)
 }
 onMounted(async () => {
   await getDashboardHeadData()
   await getMessageInfo(1)
+  await getTemplateInfo(1)
+  await getAppInfo(1)
+  await getPushUserInfo(1)
 })
 </script>
 
@@ -112,21 +126,21 @@ onMounted(async () => {
             <Echarts cardName="消息详情" name="chartsMessage" :option="chartsMessageOption"></Echarts>
           </a-card>
         </a-col>
-        <!-- <a-col :span="12">
+        <a-col :span="12">
           <a-card>
             <Echarts cardName="模板使用 TOP5" name="chartsTemplate" :option="chartsTemplateOption"></Echarts>
           </a-card>
         </a-col>
         <a-col :span="12">
           <a-card>
-            <Echarts cardName="渠道使用 TOP5" name="chartsChannel" :option="chartsChannelOption"></Echarts>
+            <Echarts cardName="渠道 APP 使用 TOP5" name="chartsChannel" :option="chartsApplOption"></Echarts>
           </a-card>
         </a-col>
         <a-col :span="12">
           <a-card>
-            <Echarts cardName="推送用户 TOP5" name="chartsAccount" :option="chartsAccountOption"></Echarts>
+            <Echarts cardName="推送用户 TOP5" name="chartsAccount" :option="chartsUserOption"></Echarts>
           </a-card>
-        </a-col> -->
+        </a-col>
       </a-row>
     </div>
   </div>

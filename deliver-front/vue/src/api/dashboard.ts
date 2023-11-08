@@ -24,9 +24,30 @@ export async function getDashboardHeadData(): Promise<DashboardHeadData> {
     method: 'post'
   })
 }
-export async function getMessageInfo(data: { dateSelect: number }): Promise<messageDataSource> {
+export async function getMessageInfo(data: { dateSelect: number }): Promise<any> {
   return await request({
     url: '/dashboard/getMessageInfo',
+    method: 'post',
+    data
+  })
+}
+export async function getTemplateInfo(data: { dateSelect: number }): Promise<any> {
+  return await request({
+    url: '/dashboard/getTemplateInfo',
+    method: 'post',
+    data
+  })
+}
+export async function getAppInfo(data: { dateSelect: number }): Promise<any> {
+  return await request({
+    url: '/dashboard/getAppInfo',
+    method: 'post',
+    data
+  })
+}
+export async function getPushUserInfo(data: { dateSelect: number }): Promise<any> {
+  return await request({
+    url: '/dashboard/getPushUserInfo',
     method: 'post',
     data
   })

@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { getCurrentInstance, onMounted, onBeforeUnmount, ref, watch } from 'vue'
 import { type ECharts, init } from 'echarts'
+import { useDashboardStore } from '@/store/modules/dashboard'
 const props = defineProps(['name', 'option', 'cardName'])
-const value1 = ref<string>('a')
+const selectValue = ref<number>(1)
 let myChart: ECharts
 // 重绘图表函数
 const resizeHandler = (): void => {
@@ -29,6 +30,27 @@ const initChart = (): void => {
   myChart.setOption(props.option, { notMerge: true })
   window.addEventListener('resize', cancalDebounce)
 }
+
+const dashboardStore = useDashboardStore()
+const selectChange = async (e: any): Promise<void> => {
+  switch (e.target.name) {
+    case 'chartsMessage':
+      myChart.setOption(await dashboardStore.getMessageInfo(e.target.value), { notMerge: true })
+      break
+    case 'chartsTemplate':
+      myChart.setOption(await dashboardStore.getTemplateInfo(e.target.value), { notMerge: true })
+      break
+    case 'chartsChannel':
+      myChart.setOption(await dashboardStore.getAppInfo(e.target.value), { notMerge: true })
+      break
+    case 'chartsAccount':
+      myChart.setOption(await dashboardStore.getPushUserInfo(e.target.value), { notMerge: true })
+      break
+    default:
+      break
+  }
+}
+
 onMounted(() => {
   initChart()
 })
@@ -47,11 +69,17 @@ watch(props, () => {
   <div class="echart-card">
     <div class="echart-header">
       <span class="card-name">{{ cardName }}</span>
-      <a-radio-group v-model:value="value1" button-style="solid" style="height: 25px">
-        <a-radio-button value="a">今日</a-radio-button>
-        <a-radio-button value="b">本周</a-radio-button>
-        <a-radio-button value="c">本月</a-radio-button>
-        <a-radio-button value="d">本年</a-radio-button>
+      <a-radio-group
+        :name="name"
+        v-model:value="selectValue"
+        button-style="solid"
+        style="height: 25px"
+        @change="selectChange"
+      >
+        <a-radio-button :value="1">今日</a-radio-button>
+        <a-radio-button :value="2">本周</a-radio-button>
+        <a-radio-button :value="3">本月</a-radio-button>
+        <a-radio-button :value="4">本年</a-radio-button>
       </a-radio-group>
     </div>
     <div class="echart" :ref="name"></div>
