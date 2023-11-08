@@ -1,4 +1,8 @@
-import { useRouter } from 'vue-router'
-const router = useRouter()
+import router from './router'
 
-router.beforeEach(async (from, to, next) => {})
+router.beforeEach(async (to, _from, next) => {
+  document.title = to.meta.title as string
+  console.log(to.meta.title)
+
+  next()
+})

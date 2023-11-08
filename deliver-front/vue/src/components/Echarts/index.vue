@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { getCurrentInstance, onMounted, onBeforeUnmount, ref } from 'vue'
+import { getCurrentInstance, onMounted, onBeforeUnmount, ref, watch } from 'vue'
 import { type ECharts, init } from 'echarts'
 const props = defineProps(['name', 'option', 'cardName'])
 const value1 = ref<string>('a')
@@ -26,7 +26,7 @@ const cancalDebounce = debounce(resizeHandler, 500)
 const initChart = (): void => {
   const instance = getCurrentInstance()
   myChart = init(instance?.refs[props.name] as HTMLElement, null, { renderer: 'svg' })
-  myChart.setOption(props.option)
+  myChart.setOption(props.option, { notMerge: true })
   window.addEventListener('resize', cancalDebounce)
 }
 onMounted(() => {
@@ -37,6 +37,10 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener('resize', cancalDebounce)
   myChart.dispose()
+})
+
+watch(props, () => {
+  myChart.setOption(props.option, { notMerge: true })
 })
 </script>
 <template>
