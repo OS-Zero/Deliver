@@ -14,9 +14,9 @@ public interface DashboardService {
 
     MessageInfoResponseDto getMessageInfo(DashboardDateSelectRequestDto dto);
 
-    TemplateInfoResponseDto getTemplateInfo(DashboardDateSelectRequestDto dto);
+    DashboardInfoResponseDto getTemplateInfo(DashboardDateSelectRequestDto dto);
 
-    AppInfoResponseDto getAppInfo(DashboardDateSelectRequestDto dto);
+    DashboardInfoResponseDto getAppInfo(DashboardDateSelectRequestDto dto);
 
-    PushUserInfoResponseDto getPushUserInfo(DashboardDateSelectRequestDto dto);
+    DashboardInfoResponseDto getPushUserInfo(DashboardDateSelectRequestDto dto);
 }

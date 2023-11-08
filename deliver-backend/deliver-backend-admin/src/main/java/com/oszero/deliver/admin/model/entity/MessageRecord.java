@@ -77,6 +77,8 @@ public class MessageRecord implements Serializable {
      */
     private Date createTime;
 
+    private Long value;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

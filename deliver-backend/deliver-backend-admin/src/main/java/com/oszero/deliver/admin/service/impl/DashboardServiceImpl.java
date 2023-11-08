@@ -18,6 +18,7 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 仪表盘 serviceImpl
@@ -76,7 +77,7 @@ public class DashboardServiceImpl implements DashboardService {
         }
         // 进行具体处理
         switch (instanceByCode) {
-            case DAY:
+            case DAY: {
                 // 初始化一个基础时间，当日凌晨
                 LocalDateTime baseTime = LocalDateTime.now().with(LocalTime.MIDNIGHT);
                 for (int i = 0; i < 6; i++) {
@@ -95,15 +96,18 @@ public class DashboardServiceImpl implements DashboardService {
                     messageInfoList.add(ans);
                 }
                 break;
-            case WEEK:
+            }
+            case WEEK: {
+                // 得到这周开始日
+                LocalDateTime weekStart = LocalDateTime.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).toLocalDate().atTime(0, 0, 0, 0);
                 for (int i = 0; i < 7; i++) {
                     // 获取开始结束时间
-                    LocalDateTime weekStart = LocalDateTime.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).plusDays(i * 7);
-                    LocalDateTime weekEnd = weekStart.plusDays(7);
+                    LocalDateTime startTime = weekStart.plusDays(i);
+                    LocalDateTime endTime = startTime.plusDays(1);
 
                     // 获取消息数量
-                    long successCount = getMessageCountByTime(weekStart, weekEnd, 1);
-                    long failCount = getMessageCountByTime(weekStart, weekEnd, 0);
+                    long successCount = getMessageCountByTime(startTime, endTime, 1);
+                    long failCount = getMessageCountByTime(startTime, endTime, 0);
 
                     // 组装返回值
                     List<String> ans = new ArrayList<>();
@@ -113,7 +117,8 @@ public class DashboardServiceImpl implements DashboardService {
                     messageInfoList.add(ans);
                 }
                 break;
-            case MONTH:
+            }
+            case MONTH: {
                 // 初始化一个基础时间，当月的第一天与最后一天
                 LocalDate baseDate = LocalDate.now().withDayOfMonth(1);
                 LocalDate lastDate = LocalDate.now().with(TemporalAdjusters.lastDayOfMonth());
@@ -155,7 +160,8 @@ public class DashboardServiceImpl implements DashboardService {
                     messageInfoList.add(ans);
                 }
                 break;
-            case YEAR:
+            }
+            case YEAR: {
                 // 初始化一个基础时间，当年的第一个月的第一天
                 LocalDate baseMDate = LocalDate.now().withMonth(1).withDayOfMonth(1);
                 LocalDate lastMDate = baseMDate.plusYears(1);
@@ -180,6 +186,7 @@ public class DashboardServiceImpl implements DashboardService {
                     messageInfoList.add(ans);
                 }
                 break;
+            }
         }
         messageInfoResponseDto.setMessageInfoList(messageInfoList);
         return messageInfoResponseDto;
@@ -194,17 +201,93 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
     @Override
-    public TemplateInfoResponseDto getTemplateInfo(DashboardDateSelectRequestDto dto) {
-        return null;
+    public DashboardInfoResponseDto getTemplateInfo(DashboardDateSelectRequestDto dto) {
+        return getDashboardInfo(dto, 1);
     }
 
     @Override
-    public AppInfoResponseDto getAppInfo(DashboardDateSelectRequestDto dto) {
-        return null;
+    public DashboardInfoResponseDto getAppInfo(DashboardDateSelectRequestDto dto) {
+        return getDashboardInfo(dto, 2);
     }
 
     @Override
-    public PushUserInfoResponseDto getPushUserInfo(DashboardDateSelectRequestDto dto) {
-        return null;
+    public DashboardInfoResponseDto getPushUserInfo(DashboardDateSelectRequestDto dto) {
+        return getDashboardInfo(dto, 3);
+    }
+
+    private DashboardInfoResponseDto getDashboardInfo(DashboardDateSelectRequestDto dto, Integer type) {
+        Integer dateSelect = dto.getDateSelect();
+        DateSelectEnum instanceByCode = DateSelectEnum.getInstanceByCode(dateSelect);
+        if (Objects.isNull(instanceByCode)) {
+            throw new BusinessException("传递的日期选择错误，在 1-4！！！");
+        }
+        DashboardInfoResponseDto dashboardInfoResponseDto = new DashboardInfoResponseDto();
+        switch (instanceByCode) {
+            case DAY: {
+                // 获取当日的本地日期
+                LocalDate today = LocalDate.now();
+                // 获取当日的开始时间（凌晨）
+                LocalDateTime startOfDay = today.atStartOfDay();
+                // 获取当日的结束时间（最后一刻）
+                LocalDateTime endOfDay = today.atTime(23, 59, 59, 999999999);
+                getInfo(dashboardInfoResponseDto, startOfDay, endOfDay, 5, type);
+                break;
+            }
+            case WEEK: {
+                // 获取开始结束时间
+                LocalDateTime weekStart = LocalDateTime.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).toLocalDate().atTime(0, 0, 0, 0);
+                LocalDateTime weekEnd = weekStart.plusDays(7).toLocalDate().atTime(23, 59, 59, 999);
+                getInfo(dashboardInfoResponseDto, weekStart, weekEnd, 5, type);
+                break;
+            }
+            case MONTH: {
+                // 初始化一个基础时间，当月的第一天与最后一天
+                LocalDateTime baseDate = LocalDate.now().withDayOfMonth(1).atTime(0, 0, 0, 0);
+                LocalDateTime lastDate = LocalDate.now().with(TemporalAdjusters.lastDayOfMonth()).atTime(23, 59, 59, 999999999);
+                getInfo(dashboardInfoResponseDto, baseDate, lastDate, 5, type);
+                break;
+            }
+            case YEAR: {
+                // 初始化一个基础时间，当年的第一个月的第一天
+                LocalDateTime baseMDate = LocalDate.now().withMonth(1).withDayOfMonth(1).atTime(0, 0, 0, 0);
+                LocalDateTime lastMDate = baseMDate.with(TemporalAdjusters.lastDayOfYear()).toLocalDate().atTime(23, 59, 59, 999999999);
+                getInfo(dashboardInfoResponseDto, baseMDate, lastMDate, 5, type);
+                break;
+            }
+        }
+        // 进行具体处理
+        return dashboardInfoResponseDto;
+    }
+
+    private void getInfo(DashboardInfoResponseDto dashboardInfoResponseDto, LocalDateTime startTime, LocalDateTime endTime, Integer size, Integer type) {
+        List<MessageRecord> messageRecordList;
+        List<DashboardInfoResponseDto.DashboardInfo> collect = new ArrayList<>();
+        if (1 == type) {
+            messageRecordList = messageRecordService.getTemplateInfo(startTime, endTime, size);
+            collect = messageRecordList.stream().map(messageRecord -> {
+                DashboardInfoResponseDto.DashboardInfo dashboardInfo = new DashboardInfoResponseDto.DashboardInfo();
+                dashboardInfo.setName(String.valueOf(messageRecord.getTemplateId()));
+                dashboardInfo.setValue(messageRecord.getValue());
+                return dashboardInfo;
+            }).collect(Collectors.toList());
+        } else if (2 == type) {
+            messageRecordList = messageRecordService.getAppInfo(startTime, endTime, size);
+            collect = messageRecordList.stream().map(messageRecord -> {
+                DashboardInfoResponseDto.DashboardInfo dashboardInfo = new DashboardInfoResponseDto.DashboardInfo();
+                dashboardInfo.setName(String.valueOf(messageRecord.getAppId()));
+                dashboardInfo.setValue(messageRecord.getValue());
+                return dashboardInfo;
+            }).collect(Collectors.toList());
+        } else if (3 == type) {
+            messageRecordList = messageRecordService.getPushUserInfo(startTime, endTime, size);
+            collect = messageRecordList.stream().map(messageRecord -> {
+                DashboardInfoResponseDto.DashboardInfo dashboardInfo = new DashboardInfoResponseDto.DashboardInfo();
+                dashboardInfo.setName(String.valueOf(messageRecord.getPushUser()));
+                dashboardInfo.setValue(messageRecord.getValue());
+                return dashboardInfo;
+            }).collect(Collectors.toList());
+        }
+
+        dashboardInfoResponseDto.setDashboardInfoList(collect);
     }
 }
