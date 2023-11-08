@@ -15,17 +15,13 @@
       );
     "
   >
-    <div data-v-05bfc04b="" class="ant-alert-content">
-      <div data-v-05bfc04b="" class="ant-alert-message">
-        <div
-          data-v-05bfc04b=""
-          style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; color: black"
-        >
-          <span data-v-05bfc04b="">⭐️ 如果你喜欢 Deliver 消息推送平台，请给它一个 Star </span
-          ><a data-v-05bfc04b="" target="_blank" rel="noopener noreferrer" href="https://gitee.com/OS-Zero/deliver"
-            >Gitee</a
-          ><span data-v-05bfc04b=""
-            >,你的支持将是我们前行的动力，项目正在积极开发，欢迎大家提交 PR、提供建设,共建社区生态。👏🏻</span
+    <div>
+      <div>
+        <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; color: black">
+          <span
+            >⭐️ 如果你喜欢 Deliver 消息推送平台，请给它一个 Star
+            <a target="_blank" rel="noopener noreferrer" href="https://gitee.com/OS-Zero/deliver">Gitee</a>
+            ,你的支持将是我们前行的动力，项目正在积极开发，欢迎大家提交 PR、提供建设,共建社区生态。👏🏻</span
           >
         </div>
       </div>
