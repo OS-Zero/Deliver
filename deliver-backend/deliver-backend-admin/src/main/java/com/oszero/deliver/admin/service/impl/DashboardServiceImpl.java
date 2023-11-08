@@ -34,6 +34,11 @@ public class DashboardServiceImpl implements DashboardService {
     private final TemplateService templateService;
     private final AppService appService;
 
+    /**
+     * 获取数据面板头数据
+     *
+     * @return dto
+     */
     @Override
     public DashboardHeadDataResponseDto getDashboardHeadData() {
 
@@ -66,6 +71,12 @@ public class DashboardServiceImpl implements DashboardService {
                 .numberOfApps(String.valueOf(appCount)).build();
     }
 
+    /**
+     * 获取消息柱状图
+     *
+     * @param dto 日期选择
+     * @return 柱状图信息
+     */
     @Override
     public MessageInfoResponseDto getMessageInfo(DashboardDateSelectRequestDto dto) {
         Integer dateSelect = dto.getDateSelect();
@@ -192,6 +203,14 @@ public class DashboardServiceImpl implements DashboardService {
         return messageInfoResponseDto;
     }
 
+    /**
+     * 通获取消息柱状图用操作
+     *
+     * @param startTime 开始时间
+     * @param endTime   结束时间
+     * @param status    状态
+     * @return 数值
+     */
     private Long getMessageCountByTime(LocalDateTime startTime, LocalDateTime endTime, Integer status) {
         LambdaQueryWrapper<MessageRecord> wrapper = new LambdaQueryWrapper<>();
         wrapper.ge(MessageRecord::getCreateTime, startTime)
@@ -200,21 +219,46 @@ public class DashboardServiceImpl implements DashboardService {
         return messageRecordService.count(wrapper);
     }
 
+    /**
+     * 获取模板饼状图信息
+     *
+     * @param dto 日期选择
+     * @return 饼状图信息
+     */
     @Override
     public DashboardInfoResponseDto getTemplateInfo(DashboardDateSelectRequestDto dto) {
         return getDashboardInfo(dto, 1);
     }
 
+    /**
+     * 获取 APP 饼状图信息
+     *
+     * @param dto 日期选择
+     * @return 饼状图信息
+     */
     @Override
     public DashboardInfoResponseDto getAppInfo(DashboardDateSelectRequestDto dto) {
         return getDashboardInfo(dto, 2);
     }
 
+    /**
+     * 获取推送用户饼状图信息
+     *
+     * @param dto 日期选择
+     * @return 饼状图信息
+     */
     @Override
     public DashboardInfoResponseDto getPushUserInfo(DashboardDateSelectRequestDto dto) {
         return getDashboardInfo(dto, 3);
     }
 
+    /**
+     * 获取饼状图通用方法 1
+     *
+     * @param dto  日期选择
+     * @param type 什么饼状图 1-模板 2-APP 3-推送用户
+     * @return 饼状图信息
+     */
     private DashboardInfoResponseDto getDashboardInfo(DashboardDateSelectRequestDto dto, Integer type) {
         Integer dateSelect = dto.getDateSelect();
         DateSelectEnum instanceByCode = DateSelectEnum.getInstanceByCode(dateSelect);
@@ -259,6 +303,15 @@ public class DashboardServiceImpl implements DashboardService {
         return dashboardInfoResponseDto;
     }
 
+    /**
+     * 获取饼状图通用方法 2
+     *
+     * @param dashboardInfoResponseDto 饼状图信息类
+     * @param startTime                开始时间
+     * @param endTime                  结束时间
+     * @param size                     TOP 几 大小
+     * @param type                     类型 什么饼状图 1-模板 2-APP 3-推送用户
+     */
     private void getInfo(DashboardInfoResponseDto dashboardInfoResponseDto, LocalDateTime startTime, LocalDateTime endTime, Integer size, Integer type) {
         List<MessageRecord> messageRecordList;
         List<DashboardInfoResponseDto.DashboardInfo> collect = new ArrayList<>();
