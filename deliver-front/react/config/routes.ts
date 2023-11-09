@@ -26,30 +26,77 @@ export default [
     path: '/welcome',
     name: 'welcome',
     icon: 'smile',
-    component: './Welcome',
-  },
-  {
-    path: '/admin',
-    name: 'admin',
-    icon: 'crown',
-    access: 'canAdmin',
     routes: [
       {
-        path: '/admin',
-        redirect: '/admin/sub-page',
+        name: '欢迎页',
+        path: '/welcome',
+        component: './Welcome',
+      }
+    ],
+  },
+  {
+    path: '/dashboard',
+    name: '系统监控看板',
+    icon: 'crown',
+    routes: [
+      {
+        path: '/dashboard',
+        redirect: '/dashboard/info',
       },
       {
-        path: '/admin/sub-page',
-        name: 'sub-page',
-        component: './Admin',
+        path: '/dashboard/info',
+        name: '平台数据看板',
+        component: './Dashboard',
       },
     ],
   },
   {
-    name: 'list.table-list',
-    icon: 'table',
-    path: '/list',
-    component: './TableList',
+    path: '/template',
+    name: '消息模板配置',
+    icon: 'crown',
+    routes: [
+      {
+        path: '/template',
+        redirect: '/template/info',
+      },
+      {
+        path: '/template/info',
+        name: '消息模板',
+        component: './Template',
+      },
+    ],
+  },
+  {
+    path: '/app',
+    name: '渠道 APP 配置',
+    icon: 'crown',
+    routes: [
+      {
+        path: '/app',
+        redirect: '/app/info',
+      },
+      {
+        path: '/app/info',
+        name: 'APP 配置',
+        component: './App',
+      },
+    ],
+  },
+  {
+    path: '/file',
+    name: '平台文件管理',
+    icon: 'crown',
+    routes: [
+      {
+        path: '/file',
+        redirect: '/file/info',
+      },
+      {
+        path: '/file/info',
+        name: '文件管理',
+        component: './FileManage',
+      },
+    ],
   },
   {
     path: '/',

@@ -126,8 +126,7 @@ const Welcome: React.FC = () => {
               width: '65%',
             }}
           >
-            Ant Design Pro 是一个整合了 umi，Ant Design 和 ProComponents
-            的脚手架方案。致力于在设计规范和基础组件的基础上，继续向上构建，提炼出典型模板/业务组件/配套设计资源，进一步提升企业级中后台产品设计研发过程中的『用户』和『设计者』的体验。
+            Deliver 是一个面向企业的全面消息推送平台，旨在提供企业内部沟通和协作的便捷解决方案。它以轻量级部署、简单易用、支持多种通信渠道为特点，为企业提供高效的消息传递和通知功能。
           </p>
           <div
             style={{
@@ -139,20 +138,38 @@ const Welcome: React.FC = () => {
             <InfoCard
               index={1}
               href="https://umijs.org/docs/introduce/introduce"
-              title="了解 umi"
-              desc="umi 是一个可扩展的企业级前端应用框架,umi 以路由为基础的，同时支持配置式路由和约定式路由，保证路由的功能完备，并以此进行功能扩展。"
+              title="社区官网"
+              desc="欢迎访问 OSZero 官方网站，Open Source Zero（零号开源）由一群充满技术热情的开发者创建。加入我们，一同探索开源世界！"
             />
             <InfoCard
               index={2}
-              title="了解 ant design"
+              title="快速开始"
               href="https://ant.design"
-              desc="antd 是基于 Ant Design 设计体系的 React UI 组件库，主要用于研发企业级中后台产品。"
+              desc="立即启动 Deliver 企业消息推送平台，发送属于您的首条消息~"
             />
             <InfoCard
               index={3}
-              title="了解 Pro Components"
+              title="开发者文档"
               href="https://procomponents.ant.design"
-              desc="ProComponents 是一个基于 Ant Design 做了更高抽象的模板组件，以 一个组件就是一个页面为开发理念，为中后台开发带来更好的体验。"
+              desc="探索开发者专属的设计和二次开发文档，创建您独一无二的企业消息推送平台！"
+            />
+            <InfoCard
+              index={4}
+              title="用户指南"
+              href="https://procomponents.ant.design"
+              desc="在这里，您将学会如何创建消息模板、配置必要信息以及发送各种类型的消息。现在就开始吧~"
+            />
+            <InfoCard
+              index={5}
+              title="运维部署"
+              href="https://procomponents.ant.design"
+              desc="支持多种部署方式（本地、Docker、Linux Shell），简单快捷的部署方式，让我们开始搭建吧！"
+            />
+            <InfoCard
+              index={6}
+              title="交流讨论"
+              href="https://procomponents.ant.design"
+              desc="欢迎加入我们的社区官方交流讨论群，快速获得答疑解惑，赶紧一起加入吧~"
             />
           </div>
         </div>
