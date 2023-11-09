@@ -75,4 +75,12 @@ export interface searchMessage {
    * 页面大小
    */
   pageSize: number
+  /**
+   * 起始日期
+   */
+  startTime?: string
+  /**
+   * 结束日期
+   */
+  endTime?: string
 }
