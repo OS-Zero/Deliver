@@ -319,7 +319,7 @@ public class DashboardServiceImpl implements DashboardService {
             messageRecordList = messageRecordService.getTemplateInfo(startTime, endTime, size);
             collect = messageRecordList.stream().map(messageRecord -> {
                 DashboardInfoResponseDto.DashboardInfo dashboardInfo = new DashboardInfoResponseDto.DashboardInfo();
-                dashboardInfo.setName(String.valueOf(messageRecord.getTemplateId()));
+                dashboardInfo.setName("templateId:" + messageRecord.getTemplateId());
                 dashboardInfo.setValue(messageRecord.getValue());
                 return dashboardInfo;
             }).collect(Collectors.toList());
@@ -327,7 +327,7 @@ public class DashboardServiceImpl implements DashboardService {
             messageRecordList = messageRecordService.getAppInfo(startTime, endTime, size);
             collect = messageRecordList.stream().map(messageRecord -> {
                 DashboardInfoResponseDto.DashboardInfo dashboardInfo = new DashboardInfoResponseDto.DashboardInfo();
-                dashboardInfo.setName(String.valueOf(messageRecord.getAppId()));
+                dashboardInfo.setName("appId:" + messageRecord.getAppId());
                 dashboardInfo.setValue(messageRecord.getValue());
                 return dashboardInfo;
             }).collect(Collectors.toList());
@@ -335,7 +335,7 @@ public class DashboardServiceImpl implements DashboardService {
             messageRecordList = messageRecordService.getPushUserInfo(startTime, endTime, size);
             collect = messageRecordList.stream().map(messageRecord -> {
                 DashboardInfoResponseDto.DashboardInfo dashboardInfo = new DashboardInfoResponseDto.DashboardInfo();
-                dashboardInfo.setName(String.valueOf(messageRecord.getPushUser()));
+                dashboardInfo.setName("userId:" + messageRecord.getPushUser());
                 dashboardInfo.setValue(messageRecord.getValue());
                 return dashboardInfo;
             }).collect(Collectors.toList());
