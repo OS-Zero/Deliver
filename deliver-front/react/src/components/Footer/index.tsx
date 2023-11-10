@@ -17,12 +17,12 @@ const Footer: React.FC = () => {
       style={{
         background: 'none',
       }}
-      copyright={`${currentYear} ${defaultMessage}`}
+      copyright={`${currentYear} ${'OSZero 开源社区出品'}`}
       links={[
         {
           key: 'Deliver 消息推送平台',
           title: 'Deliver 消息推送平台',
-          href: 'https://pro.ant.design',
+          href: 'https://gitee.com/OS-Zero/deliver',
           blankTarget: true,
         },
         {
@@ -34,7 +34,7 @@ const Footer: React.FC = () => {
         {
           key: 'OSZero',
           title: 'OSZero',
-          href: 'https://gitee.com/OS-Zero',
+          href: 'https://os-zero.gitee.io/website/',
           blankTarget: true,
         },
       ]}
