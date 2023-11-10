@@ -3,9 +3,11 @@ defineProps(['itemKey', 'info', 'to'])
 </script>
 <template>
   <div class="item-link">
-    <a-menu-item :key="itemKey">
-      <RouterLink :to="to">{{ info }}</RouterLink>
-    </a-menu-item>
+    <RouterLink :to="to">
+      <KeepAlive
+        ><a-menu-item :key="itemKey">{{ info }} </a-menu-item>
+      </KeepAlive>
+    </RouterLink>
   </div>
 </template>
 <style lang="scss" scoped></style>
