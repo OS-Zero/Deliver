@@ -30,7 +30,7 @@ drop table if exists deliver.app;
 create table if not exists deliver.app
 (
     app_id       bigint auto_increment primary key comment 'appId',
-    name         varchar(100)                                                   not null comment '应用名称',
+    app_name         varchar(100)                                                   not null comment '应用名称',
     channel_type tinyint                                                        not null comment '消息发送渠道类型 （1-打电话 2-发短信 3-邮件 4-企业微信 5-钉钉 6-飞书）',
     app_config   text                                                           not null comment '应用信息配置 json',
     use_count    int      default 0                                             not null comment 'APP 使用数',

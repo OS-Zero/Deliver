@@ -4,16 +4,22 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "vue-tsc && vite build",
     "preview": "vite preview",
-    "format": "prettier --write src/"
+    "lint": "eslint ./src",
+    "fix": "eslint ./src --fix"
   },
   "dependencies": {
     "ant-design-vue": "^4.0.6",
-    "vue": "^3.3.4"
+    "axios": "^1.5.1",
+    "echarts": "^5.4.3",
+    "pinia": "^2.1.7",
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.5"
   },
   "devDependencies": {
+    "@types/node": "^20.8.7",
     "@typescript-eslint/eslint-plugin": "^6.8.0",
     "@vitejs/plugin-vue": "^4.2.3",
     "eslint": "^8.52.0",
@@ -25,6 +31,7 @@
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-vue": "^9.17.0",
     "prettier": "^3.0.3",
+    "sass": "^1.69.4",
     "typescript": "^5.2.2",
     "unplugin-vue-components": "^0.25.2",
     "vite": "^4.4.5",

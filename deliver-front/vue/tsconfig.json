@@ -1,5 +1,11 @@
 {
   "compilerOptions": {
+
+    /* config path*/
+    "baseUrl": ".",
+    "paths": {
+      "@/*":["src/*"]
+    },
     "target": "ES2020",
     "useDefineForClassFields": true,
     "module": "ESNext",
@@ -18,7 +24,8 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny":false
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue",".eslintrc.cjs","./*.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
