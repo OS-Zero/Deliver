@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.oszero.deliver.admin.enums.DateSelectEnum;
 import com.oszero.deliver.admin.exception.BusinessException;
 import com.oszero.deliver.admin.model.dto.request.DashboardDateSelectRequestDto;
-import com.oszero.deliver.admin.model.dto.response.*;
+import com.oszero.deliver.admin.model.dto.response.DashboardHeadDataResponseDto;
+import com.oszero.deliver.admin.model.dto.response.DashboardInfoResponseDto;
+import com.oszero.deliver.admin.model.dto.response.MessageInfoResponseDto;
 import com.oszero.deliver.admin.model.entity.MessageRecord;
 import com.oszero.deliver.admin.service.AppService;
 import com.oszero.deliver.admin.service.DashboardService;
@@ -82,7 +84,7 @@ public class DashboardServiceImpl implements DashboardService {
         Integer dateSelect = dto.getDateSelect();
         DateSelectEnum instanceByCode = DateSelectEnum.getInstanceByCode(dateSelect);
         MessageInfoResponseDto messageInfoResponseDto = new MessageInfoResponseDto();
-        List<List<String>> messageInfoList = new ArrayList<>();
+        List<List<Object>> messageInfoList = new ArrayList<>();
         if (Objects.isNull(instanceByCode)) {
             throw new BusinessException("传递的日期选择错误，在 1-4！！！");
         }
@@ -96,14 +98,14 @@ public class DashboardServiceImpl implements DashboardService {
                     LocalDateTime endTime = baseTime.plusHours((i + 1) * 4); // 结束时间
 
                     // 获取消息数量
-                    long successCount = getMessageCountByTime(startTime, endTime, 1);
-                    long failCount = getMessageCountByTime(startTime, endTime, 0);
+                    Long successCount = getMessageCountByTime(startTime, endTime, 1);
+                    Long failCount = getMessageCountByTime(startTime, endTime, 0);
 
                     // 组装返回值
-                    List<String> ans = new ArrayList<>();
+                    List<Object> ans = new ArrayList<>();
                     ans.add(i * 4 + "-" + (1 + i) * 4 + "h");
-                    ans.add(String.valueOf(successCount));
-                    ans.add(String.valueOf(failCount));
+                    ans.add(successCount);
+                    ans.add(failCount);
                     messageInfoList.add(ans);
                 }
                 break;
@@ -117,14 +119,14 @@ public class DashboardServiceImpl implements DashboardService {
                     LocalDateTime endTime = startTime.plusDays(1);
 
                     // 获取消息数量
-                    long successCount = getMessageCountByTime(startTime, endTime, 1);
-                    long failCount = getMessageCountByTime(startTime, endTime, 0);
+                    Long successCount = getMessageCountByTime(startTime, endTime, 1);
+                    Long failCount = getMessageCountByTime(startTime, endTime, 0);
 
                     // 组装返回值
-                    List<String> ans = new ArrayList<>();
+                    List<Object> ans = new ArrayList<>();
                     ans.add("Week " + (i + 1));
-                    ans.add(String.valueOf(successCount));
-                    ans.add(String.valueOf(failCount));
+                    ans.add(successCount);
+                    ans.add(failCount);
                     messageInfoList.add(ans);
                 }
                 break;
@@ -143,14 +145,14 @@ public class DashboardServiceImpl implements DashboardService {
                     LocalDateTime endTime = periodEnd.atStartOfDay();
 
                     // 获取消息数量
-                    long successCount = getMessageCountByTime(startTime, endTime, 1);
-                    long failCount = getMessageCountByTime(startTime, endTime, 0);
+                    Long successCount = getMessageCountByTime(startTime, endTime, 1);
+                    Long failCount = getMessageCountByTime(startTime, endTime, 0);
 
                     // 组装返回值
-                    List<String> ans = new ArrayList<>();
+                    List<Object> ans = new ArrayList<>();
                     ans.add((i * 7 + 1) + "-" + (i + 1) * 7 + "日");
-                    ans.add(String.valueOf(successCount));
-                    ans.add(String.valueOf(failCount));
+                    ans.add(successCount);
+                    ans.add(failCount);
                     messageInfoList.add(ans);
                 }
                 // 处理不足 7 天的剩余部分
@@ -160,14 +162,14 @@ public class DashboardServiceImpl implements DashboardService {
                     LocalDateTime startTime = remainingStart.atStartOfDay();
                     LocalDateTime endTime = lastDate.atStartOfDay();
 
-                    long successCount = getMessageCountByTime(startTime, endTime, 1);
-                    long failCount = getMessageCountByTime(startTime, endTime, 0);
+                    Long successCount = getMessageCountByTime(startTime, endTime, 1);
+                    Long failCount = getMessageCountByTime(startTime, endTime, 0);
 
                     // 组装返回值
-                    List<String> ans = new ArrayList<>();
+                    List<Object> ans = new ArrayList<>();
                     ans.add(((4 * 7) + 1) + "-" + lastDate.getDayOfMonth() + "日");
-                    ans.add(String.valueOf(successCount));
-                    ans.add(String.valueOf(failCount));
+                    ans.add(successCount);
+                    ans.add(failCount);
                     messageInfoList.add(ans);
                 }
                 break;
@@ -186,14 +188,14 @@ public class DashboardServiceImpl implements DashboardService {
                     LocalDateTime endTime = periodEnd.atStartOfDay();
 
                     // 获取消息数量
-                    long successCount = getMessageCountByTime(startTime, endTime, 1);
-                    long failCount = getMessageCountByTime(startTime, endTime, 0);
+                    Long successCount = getMessageCountByTime(startTime, endTime, 1);
+                    Long failCount = getMessageCountByTime(startTime, endTime, 0);
 
                     // 组装返回值
-                    List<String> ans = new ArrayList<>();
+                    List<Object> ans = new ArrayList<>();
                     ans.add(Month.of((i * 2) + 1).getValue() + "-" + Month.of((i + 1) * 2).getValue() + "月");
-                    ans.add(String.valueOf(successCount));
-                    ans.add(String.valueOf(failCount));
+                    ans.add(successCount);
+                    ans.add(failCount);
                     messageInfoList.add(ans);
                 }
                 break;

@@ -19,5 +19,5 @@ import java.util.List;
 @NoArgsConstructor
 public class MessageInfoResponseDto {
 
-    List<List<String>> MessageInfoList;
+    List<List<Object>> MessageInfoList;
 }
