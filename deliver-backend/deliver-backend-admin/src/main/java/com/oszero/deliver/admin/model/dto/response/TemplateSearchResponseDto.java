@@ -27,12 +27,12 @@ public class TemplateSearchResponseDto {
     /**
      * 推送范围（0-不限 1-企业内部 2-外部）
      */
-    private Integer pushRange;
+    private String pushRange;
 
     /**
      * 用户类型（1-企业账号 2-电话 3-平台ID 4-邮箱）
      */
-    private Integer usersType;
+    private String usersType;
 
     /**
      * 推送方式
