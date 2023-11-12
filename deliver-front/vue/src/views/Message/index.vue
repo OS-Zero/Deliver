@@ -232,9 +232,11 @@ const locale = {
   next_page: '下一页' // 下一页按钮文字描述
 }
 
+// 条件查询
 const searchTemplate = (page?: number, pageSize?: number): void => {
   // 对象解构
-  const searchNeedMes = { ...searchform.value.searchPage }
+  const { perid, ...rest } = searchform.value.searchPage
+  const searchNeedMes = { ...rest }
   console.warn(searchNeedMes)
   searchNeedMes.currentPage = page
   searchNeedMes.pageSize = pageSize
@@ -247,15 +249,21 @@ const searchTemplate = (page?: number, pageSize?: number): void => {
           item.channelType = JSON.parse(item.pushWays).channelType
           item.messageType = JSON.parse(item.pushWays).messageType
           item.createTime = getDate(item.createTime)
-          // item.templateStatus = item.templateStatus === 1 ? true : false
+          // eslint-disable-next-line
+          item.templateStatus = item.templateStatus === 1 ? true : false
           item.key = index
           templateTable.push(item)
         })
-        void message.success('查询成功~ (*^_^*)')
+        void message.success('查询成功~ (*^▽^*)')
+        console.warn('查询数据', templateTable)
+      } else {
+        void message.success('未查询到任何数据   ≧ ﹏ ≦')
         console.warn('查询数据', templateTable)
       }
+      searchform.value.iconLoading = false
     })
     .catch(err => {
+      searchform.value.iconLoading = false
       void message.error('查询失败~ (＞︿＜)')
       console.error('An error occurred:', err)
     })
@@ -270,6 +278,8 @@ onMounted(() => {
           item.channelType = JSON.parse(item.pushWays).channelType
           item.messageType = JSON.parse(item.pushWays).messageType
           item.createTime = getDate(item.createTime)
+          // eslint-disable-next-line
+          item.templateStatus = item.templateStatus === 1 ? true : false
           item.key = index
           templateTable.push(item)
         })
@@ -351,8 +361,8 @@ onMounted(() => {
             </span>
           </template>
           <template v-if="column.key === 'operation'">
-            <a-button type="primary" class="btn-manager" size="small">编辑</a-button>
-            <a-button type="primary" danger size="small">删除</a-button>
+            <a-button type="primary" class="btn-manager" size="small" style="font-size: 13px">编辑</a-button>
+            <a-button type="primary" danger size="small" style="font-size: 13px">删除</a-button>
           </template>
         </template>
         <template #expandedRowRender>
