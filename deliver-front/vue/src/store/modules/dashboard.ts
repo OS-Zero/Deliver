@@ -13,10 +13,7 @@ const chartsMessageOption: EChartsOption = {
     top: '20%'
   },
   tooltip: {},
-  dataset: {
-    dimensions: ['product', '成功', '失败'],
-    source: []
-  },
+  dataset: {},
   grid: {
     top: '30%',
     bottom: '10%'
@@ -133,9 +130,12 @@ export const useDashboardStore = defineStore('dashboard', {
     },
     async getMessageInfo(dateSelect: number): Promise<EChartsOption> {
       const messageData = await getMessageInfo({ dateSelect })
+
       if (chartsMessageOption.dataset !== undefined) {
-        chartsMessageOption.dataset.source = messageData.messageInfoList
-        console.log(chartsMessageOption)
+        chartsMessageOption.dataset = {
+          dimensions: ['product', '成功', '失败'],
+          source: messageData.messageInfoList
+        }
       }
       return chartsMessageOption
     },

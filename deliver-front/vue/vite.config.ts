@@ -12,7 +12,7 @@ export default defineConfig({
     proxy: {
       '/admin': {
         // 请求接口中要替换的标识
-        target: 'http://10.100.127.154:9090', // 代理地址
+        target: 'http://10.90.118.84:9090', // 代理地址
         changeOrigin: true, // 是否允许跨域
         secure: true
       }
