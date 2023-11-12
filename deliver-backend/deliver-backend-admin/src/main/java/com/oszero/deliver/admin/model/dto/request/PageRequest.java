@@ -14,10 +14,10 @@ public abstract class PageRequest {
     /**
      * 当前页 默认值 1
      */
-    private Integer currentPage = 1;
+    protected Integer currentPage = 1;
 
     /**
      * 页大小 默认值 10
      */
-    private Integer pageSize = 10;
+    protected Integer pageSize = 10;
 }
