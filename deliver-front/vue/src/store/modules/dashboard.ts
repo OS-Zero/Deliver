@@ -130,7 +130,6 @@ export const useDashboardStore = defineStore('dashboard', {
     },
     async getMessageInfo(dateSelect: number): Promise<EChartsOption> {
       const messageData = await getMessageInfo({ dateSelect })
-
       if (chartsMessageOption.dataset !== undefined) {
         chartsMessageOption.dataset = {
           dimensions: ['product', '成功', '失败'],
