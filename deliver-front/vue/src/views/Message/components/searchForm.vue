@@ -84,7 +84,7 @@ defineExpose({
         </a-form-item>
       </a-col>
       <a-col :span="16" v-if="expand">
-        <a-form-item name="perid" label="起始日期-结束日期">
+        <a-form-item name="perid" label="创建时间">
           <a-range-picker
             :locale="locale"
             v-model:value="searchPage.perid"
