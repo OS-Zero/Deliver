@@ -7,111 +7,38 @@ import {
   QuestionCircleTwoTone
 } from '@ant-design/icons-vue'
 import Echarts from '@/components/Echarts/index.vue'
+import { useDashboardStore } from '@/store/modules/dashboard'
+import { type DashboardHeadData } from '@/api/dashboard'
+import { onMounted, ref } from 'vue'
 import { type EChartsOption } from 'echarts'
-import { getDashboardHeadData } from '@/api/dashboard'
-const chartsMessageOption: EChartsOption = {
-  legend: {
-    top: '20%'
-  },
-  tooltip: {},
-  dataset: {
-    source: [
-      ['product', '成功', '失败'],
-      ['0-4', 650, 20],
-      ['4-8', 650, 20],
-      ['8-12', 140, 100],
-      ['12-16', 86.4, 65.2],
-      ['16-20', 72.4, 53.9],
-      ['20-24', 650, 20]
-    ]
-  },
-  grid: {
-    top: '30%',
-    bottom: '10%'
-  },
-  xAxis: { type: 'category' },
-  yAxis: {},
-  // Declare several bar series, each will be mapped
-  // to a column of dataset.source by default.
-  series: [
-    { type: 'bar', color: '#5470C6' },
-    { type: 'bar', color: '#a90000' }
-  ]
+const dashboardStore = useDashboardStore()
+const dashboardHeadData = ref<DashboardHeadData>({})
+const chartsMessageOption = ref<EChartsOption>({})
+const chartsTemplateOption = ref<EChartsOption>({})
+const chartsApplOption = ref<EChartsOption>({})
+const chartsUserOption = ref<EChartsOption>({})
+const getDashboardHeadData = async (): Promise<void> => {
+  dashboardHeadData.value = await dashboardStore.getDashboardHeadData()
 }
-const chartsTemplateOption: EChartsOption = {
-  tooltip: {
-    trigger: 'item'
-  },
-  series: [
-    {
-      name: 'Access From',
-      type: 'pie',
-      radius: '50%',
-      center: ['50%', '60%'],
-      data: [
-        { value: 1048, name: 'Search Engine' },
-        { value: 735, name: 'Direct' },
-        { value: 580, name: 'Email' },
-        { value: 484, name: 'Union Ads' },
-        { value: 300, name: 'Video Ads' }
-      ]
-    }
-  ]
+const getMessageInfo = async (dataselect: number): Promise<void> => {
+  chartsMessageOption.value = await dashboardStore.getMessageInfo(dataselect)
 }
-const chartsChannelOption: EChartsOption = {
-  tooltip: {
-    trigger: 'item'
-  },
-  series: [
-    {
-      name: 'Access From',
-      type: 'pie',
-      radius: '50%',
-      center: ['50%', '60%'],
-      data: [
-        { value: 1048, name: 'Search Engine' },
-        { value: 735, name: 'Direct' },
-        { value: 580, name: 'Email' },
-        { value: 484, name: 'Union Ads' },
-        { value: 300, name: 'Video Ads' }
-      ],
-      emphasis: {
-        itemStyle: {
-          shadowBlur: 10,
-          shadowOffsetX: 0,
-          shadowColor: 'rgba(0, 0, 0, 0.5)'
-        }
-      }
-    }
-  ]
+const getTemplateInfo = async (dataselect: number): Promise<void> => {
+  chartsTemplateOption.value = await dashboardStore.getTemplateInfo(dataselect)
 }
-const chartsAccountOption: EChartsOption = {
-  tooltip: {
-    trigger: 'item'
-  },
-  series: [
-    {
-      name: 'Access From',
-      type: 'pie',
-      radius: ['50%', '60%'],
-      center: ['50%', '60%'],
-      avoidLabelOverlap: false,
-      itemStyle: {
-        borderRadius: 10,
-        borderColor: '#fff',
-        borderWidth: 2
-      },
-      data: [
-        { value: 1048, name: 'Search Engine' },
-        { value: 735, name: 'Direct' },
-        { value: 580, name: 'Email' },
-        { value: 484, name: 'Union Ads' },
-        { value: 300, name: 'Video Ads' }
-      ]
-    }
-  ]
+const getAppInfo = async (dataselect: number): Promise<void> => {
+  chartsApplOption.value = await dashboardStore.getAppInfo(dataselect)
 }
-const dashboardHeadData = await getDashboardHeadData()
+const getPushUserInfo = async (dataselect: number): Promise<void> => {
+  chartsUserOption.value = await dashboardStore.getPushUserInfo(dataselect)
+}
+onMounted(async () => {
+  await getDashboardHeadData()
+  await getMessageInfo(1)
+  await getTemplateInfo(1)
+  await getAppInfo(1)
+  await getPushUserInfo(1)
+})
 </script>
 
 <template>
@@ -196,22 +123,22 @@ const dashboardHeadData = await getDashboardHeadData()
       <a-row justify="space-between" align="middle" :gutter="[24, 24]">
         <a-col :span="12">
           <a-card>
-            <Echarts cardName="消息量" name="chartsMessage" :option="chartsMessageOption"></Echarts>
+            <Echarts cardName="消息详情" name="chartsMessage" :option="chartsMessageOption"></Echarts>
           </a-card>
         </a-col>
         <a-col :span="12">
           <a-card>
-            <Echarts cardName="模板使用Top5" name="chartsTemplate" :option="chartsTemplateOption"></Echarts>
+            <Echarts cardName="模板使用 TOP5" name="chartsTemplate" :option="chartsTemplateOption"></Echarts>
           </a-card>
         </a-col>
         <a-col :span="12">
           <a-card>
-            <Echarts cardName="渠道使用Top5" name="chartsChannel" :option="chartsChannelOption"></Echarts>
+            <Echarts cardName="渠道 APP 使用 TOP5" name="chartsChannel" :option="chartsApplOption"></Echarts>
           </a-card>
         </a-col>
         <a-col :span="12">
           <a-card>
-            <Echarts cardName="用户数" name="chartsAccount" :option="chartsAccountOption"></Echarts>
+            <Echarts cardName="推送用户 TOP5" name="chartsAccount" :option="chartsUserOption"></Echarts>
           </a-card>
         </a-col>
       </a-row>

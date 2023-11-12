@@ -39,7 +39,7 @@ const cards = ref<Card[]>([
       是一个面向企业的全面消息推送平台，旨在提供企业内部沟通和协作的便捷解决方案。它以轻量级部署、简单易用、支持多种通信渠道为特点，为企业提供高效的消息传递和通知功能。
     </p>
     <a-row :gutter="[16, 16]">
-      <a-col class="gutter-row" :span="8" v-for="item in cards" :key="item">
+      <a-col class="gutter-row" :span="8" v-for="item in cards" :key="item.title">
         <a-card style="height: 100%">
           <a-card-meta :title="item.title" :description="item.desc" style="height: 100px">
             <template #avatar>
