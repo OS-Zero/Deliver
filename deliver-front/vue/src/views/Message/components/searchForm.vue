@@ -7,48 +7,52 @@ import type { searchMessage } from '../type'
 import type { FormInstance } from 'ant-design-vue'
 import type { Dayjs } from 'dayjs'
 
+interface DelayLoading {
+  delay: number
+}
+
 const expand = ref(false)
 
 const formRef = ref<FormInstance>()
 
-const searchPage: searchMessage = reactive({
+const searchPage = reactive<searchMessage>({
   templateName: undefined,
   pushRange: undefined,
   usersType: undefined,
   currentPage: 1,
   pageSize: 10,
   startTime: undefined,
-  endTime: undefined
+  endTime: undefined,
+  perid: undefined
 })
 
 const selectedRange = ref<Array<Dayjs | null>>([null, null])
 
-// 在 setup 函数中定义 clearForm 函数
+const iconLoading = ref<boolean | DelayLoading>(false)
+
 const clearForm = (): void => {
-  // 重置日期选择框的内容为null
   selectedRange.value = [null, null]
-  // 使用 ant-design-vue 提供的方法重置其他表单项的内容
   formRef.value?.resetFields()
 }
 
 const onRangeChange = (value: [Dayjs, Dayjs] | [string, string], dateString: [string, string]): void => {
   if (Array.isArray(value)) {
-    console.log('Selected Time: ', value)
-  } else {
-    console.log('Formatted Selected Time: ', value)
+    searchPage.startTime = dateString[0] + ' 00:00:00'
+    searchPage.endTime = dateString[1] + ' 23:59:59'
   }
-  console.log('Formatted Selected Time: ', dateString)
 }
 
 // 新增自定义事件，当查询按钮被点击时，可以立即告知父组件
 const $emit = defineEmits(['mes'])
 
 const searchMes = (): void => {
+  iconLoading.value = true
   $emit('mes')
 }
 
 defineExpose({
-  searchPage
+  searchPage,
+  iconLoading
 })
 </script>
 
@@ -79,10 +83,10 @@ defineExpose({
         </a-form-item>
       </a-col>
       <a-col :span="16" v-if="expand">
-        <a-form-item name="useType" label="起始日期-结束日期">
+        <a-form-item name="perid" label="起始日期-结束日期">
           <a-range-picker
             :locale="locale"
-            v-model:value="selectedRange"
+            v-model:value="searchPage.perid"
             @change="onRangeChange"
             format="YYYY-MM-DD"
             :placeholder="['起始日期', '结束日期']"
@@ -96,7 +100,7 @@ defineExpose({
           'margin-bottom': expand === true ? '24px' : '0'
         }"
       >
-        <a-button type="primary" html-type="submit" @click="searchMes">查询</a-button>
+        <a-button type="primary" html-type="submit" @click="searchMes" :loading="iconLoading">查询</a-button>
         <a-button style="margin: 0 8px" @click="clearForm">清空</a-button>
         <a style="font-size: 14px" @click="expand = !expand">
           <template v-if="expand">

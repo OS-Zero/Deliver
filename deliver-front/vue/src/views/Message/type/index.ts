@@ -1,3 +1,4 @@
+import type { Dayjs } from 'dayjs'
 export interface messageTemplate {
   /**
    * 模板id
@@ -34,7 +35,7 @@ export interface messageTemplate {
   /**
    * 模板状态
    */
-  templateStatus: number
+  templateStatus: number | boolean
   /**
    * 创建用户
    */
@@ -83,4 +84,8 @@ export interface searchMessage {
    * 结束日期
    */
   endTime?: string
+  /**
+   * 时间段
+   */
+  perid?: [Dayjs, Dayjs]
 }
