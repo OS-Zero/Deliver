@@ -58,7 +58,7 @@ const cards = ref<Card[]>([
             </template>
           </a-card-meta>
           <template #actions>
-            <a style="color: #1677ff" :href="item.link" target="_blank">了解更多></a>
+            <a style="color: #1677ff" :href="item.link" target="_blank">了解更多 ></a>
           </template>
         </a-card>
       </a-col>
