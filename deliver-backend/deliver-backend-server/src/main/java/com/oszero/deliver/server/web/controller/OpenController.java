@@ -5,6 +5,7 @@ import com.oszero.deliver.server.model.dto.request.SendRequestDto;
 import com.oszero.deliver.server.web.service.SendService;
 import com.taobao.api.ApiException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
