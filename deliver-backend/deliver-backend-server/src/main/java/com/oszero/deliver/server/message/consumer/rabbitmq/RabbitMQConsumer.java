@@ -1,12 +1,16 @@
 package com.oszero.deliver.server.message.consumer.rabbitmq;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.constant.MQConstant;
+import com.oszero.deliver.server.constant.TraceIdConstant;
 import com.oszero.deliver.server.enums.StatusEnum;
+import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.message.consumer.handler.BaseHandler;
 import com.oszero.deliver.server.message.consumer.handler.impl.*;
 import com.oszero.deliver.server.message.producer.Producer;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.util.MDCUtils;
 import com.oszero.deliver.server.web.service.MessageRecordService;
 import com.rabbitmq.client.Channel;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +21,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 
+import javax.mail.MessagingException;
 import java.util.Objects;
 
 /**
@@ -61,7 +66,6 @@ public class RabbitMQConsumer {
     @RabbitListener(queues = MQConstant.CALL_QUEUE, ackMode = "MANUAL")
     public void onCallMessage(String message,
                               @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel channel) throws Exception {
-        log.info("[RabbitMQConsumer#onCallMessage 接收到消息] {}", message);
         onMessageAck(deliveryTag, channel, message, callHandler);
     }
 
@@ -75,7 +79,6 @@ public class RabbitMQConsumer {
     @RabbitListener(queues = MQConstant.SMS_QUEUE, ackMode = "MANUAL")
     public void onSmsMessage(String message,
                              @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel channel) throws Exception {
-        log.info("[RabbitMQConsumer#onSmsMessage 接收到消息] {}", message);
         onMessageAck(deliveryTag, channel, message, smsHandler);
     }
 
@@ -89,7 +92,6 @@ public class RabbitMQConsumer {
     @RabbitListener(queues = MQConstant.MAIL_QUEUE, ackMode = "MANUAL")
     public void onMailMessage(String message,
                               @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel channel) throws Exception {
-        log.info("[RabbitMQConsumer#onMailMessage 接收到消息] {}", message);
         onMessageAck(deliveryTag, channel, message, mailHandler);
     }
 
@@ -103,7 +105,6 @@ public class RabbitMQConsumer {
     @RabbitListener(queues = MQConstant.DING_QUEUE, ackMode = "MANUAL")
     public void onDingMessage(String message,
                               @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel channel) throws Exception {
-        log.info("[RabbitMQConsumer#onDingMessage 接收到消息] {}", message);
         onMessageAck(deliveryTag, channel, message, dingHandler);
     }
 
@@ -117,7 +118,6 @@ public class RabbitMQConsumer {
     @RabbitListener(queues = MQConstant.WECHAT_QUEUE, ackMode = "MANUAL")
     public void onWeChatMessage(String message,
                                 @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel channel) throws Exception {
-        log.info("[RabbitMQConsumer#onWeChatMessage 接收到消息] {}", message);
         onMessageAck(deliveryTag, channel, message, weChatHandler);
     }
 
@@ -131,7 +131,6 @@ public class RabbitMQConsumer {
     @RabbitListener(queues = MQConstant.FEI_SHU_QUEUE, ackMode = "MANUAL")
     public void onFeiShuMessage(String message,
                                 @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel channel) throws Exception {
-        log.info("[RabbitMQConsumer#onFeiShuMessage 接收到消息] {}", message);
         onMessageAck(deliveryTag, channel, message, feiShuHandler);
     }
 
@@ -140,6 +139,22 @@ public class RabbitMQConsumer {
         SendTaskDto sendTaskDto = null;
         try {
             sendTaskDto = JSONUtil.toBean(message, SendTaskDto.class);
+
+            // 记录链路追踪 id
+            String traceId = sendTaskDto.getTraceId();
+            if (StrUtil.isBlank(traceId)) {
+                throw new MessageException("traceId 为空！！！");
+            }
+            MDCUtils.put(TraceIdConstant.TRACE_ID, traceId);
+
+            // 获取整个调用栈
+            StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+
+            // 获取类名和方法名
+            String className = this.getClass().getName();
+            String methodName = stackTrace[2].getMethodName();
+            log.info("[{}#{} 接收到消息] {}", className, methodName, message);
+
             handler.doHandle(sendTaskDto);
             // RabbitMQ 的 ack 机制中，第二个参数返回 true，表示需要将这条消息投递给其他的消费者重新消费
             channel.basicAck(deliveryTag, false);

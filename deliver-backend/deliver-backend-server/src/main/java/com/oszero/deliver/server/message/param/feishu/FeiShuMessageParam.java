@@ -16,6 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FeiShuMessageParam {
-    private String msg_type;
-    private List<String> user_ids;
+    protected String msg_type;
+    protected List<String> user_ids;
 }
