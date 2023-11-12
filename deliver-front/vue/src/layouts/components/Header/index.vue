@@ -9,7 +9,7 @@ const setShowAbout = (open: boolean): void => {
 <template>
   <a-layout-header class="header">
     <div class="left">
-      <RouterLink to="/"><img src="vite.svg" alt="空" /></RouterLink>
+      <RouterLink to="/"><img src="logo.png" style="height: 100%" alt="空" /></RouterLink>
       <h1>Deliver 企业消息推送平台</h1>
     </div>
     <div class="right">
@@ -52,11 +52,10 @@ const setShowAbout = (open: boolean): void => {
   height: 60px;
   background-color: #ffffff;
   .left {
-    height: 100%;
+    display: flex;
     h1 {
       height: 60px;
       line-height: 60px;
-      display: inline-block;
     }
   }
   .right {
