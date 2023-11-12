@@ -3,6 +3,7 @@ package com.oszero.deliver.server.web.service.impl;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.oszero.deliver.server.constant.TraceIdConstant;
 import com.oszero.deliver.server.enums.ResultEnum;
 import com.oszero.deliver.server.enums.StatusEnum;
 import com.oszero.deliver.server.exception.BusinessException;
@@ -21,6 +22,7 @@ import com.oszero.deliver.server.web.service.TemplateAppService;
 import com.oszero.deliver.server.web.service.TemplateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -95,7 +97,7 @@ public class SendServiceImpl implements SendService {
                 .paramMap(paramMap)
                 .channelType(channelType)
                 .messageType(messageType)
-                .traceId(UUID.randomUUID().toString()) // 全局链路 id
+                .traceId(MDC.get(TraceIdConstant.TRACE_ID)) // 全局链路 id
                 .retry(retry).build();
 
         // 6.处理相关责任链
