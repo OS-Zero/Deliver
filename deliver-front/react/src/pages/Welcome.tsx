@@ -137,38 +137,38 @@ const Welcome: React.FC = () => {
           >
             <InfoCard
               index={1}
-              href="https://umijs.org/docs/introduce/introduce"
+              href="https://os-zero.gitee.io/website/"
               title="社区官网"
               desc="欢迎访问 OSZero 官方网站，Open Source Zero（零号开源）由一群充满技术热情的开发者创建。加入我们，一同探索开源世界！"
             />
             <InfoCard
               index={2}
               title="快速开始"
-              href="https://ant.design"
+              href="https://os-zero.gitee.io/website/project/deliver/start.html"
               desc="立即启动 Deliver 企业消息推送平台，发送属于您的首条消息~"
             />
             <InfoCard
               index={3}
               title="开发者文档"
-              href="https://procomponents.ant.design"
+              href="https://os-zero.gitee.io/website/project/deliver/developer.html"
               desc="探索开发者专属的设计和二次开发文档，创建您独一无二的企业消息推送平台！"
             />
             <InfoCard
               index={4}
               title="用户指南"
-              href="https://procomponents.ant.design"
+              href="https://os-zero.gitee.io/website/project/deliver/guide.html"
               desc="在这里，您将学会如何创建消息模板、配置必要信息以及发送各种类型的消息。现在就开始吧~"
             />
             <InfoCard
               index={5}
               title="运维部署"
-              href="https://procomponents.ant.design"
+              href="https://os-zero.gitee.io/website/project/deliver/deploy.html"
               desc="支持多种部署方式（本地、Docker、Linux Shell），简单快捷的部署方式，让我们开始搭建吧！"
             />
             <InfoCard
               index={6}
               title="交流讨论"
-              href="https://procomponents.ant.design"
+              href="https://os-zero.gitee.io/website/community/communicate.html"
               desc="欢迎加入我们的社区官方交流讨论群，快速获得答疑解惑，赶紧一起加入吧~"
             />
           </div>
