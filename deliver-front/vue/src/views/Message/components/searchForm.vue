@@ -67,18 +67,19 @@ defineExpose({
       <a-col :span="8">
         <a-form-item name="pushRange" label="推送范围">
           <a-select v-model:value="searchPage.pushRange" placeholder="请选择推送范围">
-            <a-select-option value="0">范围0</a-select-option>
-            <a-select-option value="1">范围1</a-select-option>
+            <a-select-option value="0">不限</a-select-option>
+            <a-select-option value="1">企业内部</a-select-option>
+            <a-select-option value="2">企业外部</a-select-option>
           </a-select>
         </a-form-item>
       </a-col>
       <a-col :span="8" v-if="expand">
         <a-form-item name="usersType" label="用户类型">
           <a-select v-model:value="searchPage.usersType" placeholder="请选择用户类型">
-            <a-select-option value="1">类型1</a-select-option>
-            <a-select-option value="2">类型2</a-select-option>
-            <a-select-option value="3">类型3</a-select-option>
-            <a-select-option value="4">类型4</a-select-option>
+            <a-select-option value="1">企业账号</a-select-option>
+            <a-select-option value="2">电话</a-select-option>
+            <a-select-option value="3">邮箱</a-select-option>
+            <a-select-option value="4">平台 UserId</a-select-option>
           </a-select>
         </a-form-item>
       </a-col>

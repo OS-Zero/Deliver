@@ -17,7 +17,7 @@ const templateTable: UnwrapRef<messageTemplate[]> = reactive([])
 // 表格数据
 const columns: TableColumnsType = [
   {
-    title: '模版 ID',
+    title: 'TemplateId',
     dataIndex: 'templateId',
     key: 'templateId'
   },
@@ -76,12 +76,12 @@ const innerColumns = [
     key: 'createTime'
   },
   {
-    title: '渠道App ID',
+    title: '渠道 AppId',
     dataIndex: 'appId',
     key: 'appId'
   },
   {
-    title: '渠道App名称',
+    title: '渠道 App 名',
     dataIndex: 'appName',
     key: 'appName'
   }
@@ -252,7 +252,8 @@ const searchTemplate = (page?: number, pageSize?: number): void => {
           // eslint-disable-next-line
           item.templateStatus = item.templateStatus === 1 ? true : false
           item.key = index
-          templateTable.push(item)
+          const i = item
+          templateTable.push(i)
         })
         void message.success('查询成功~ (*^▽^*)')
         console.warn('查询数据', templateTable)
@@ -352,6 +353,7 @@ onMounted(() => {
         bordered
         class="components-table-demo-nested"
         @expand="getInnerData"
+        :pagination="false"
         :expandedRowKeys="expandedRowKeys"
       >
         <template #bodyCell="{ column, record }">
