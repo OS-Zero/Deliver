@@ -81,7 +81,7 @@ const innerColumns = [
     key: 'appId'
   },
   {
-    title: '渠道 App 名',
+    title: '渠道 APP 名',
     dataIndex: 'appName',
     key: 'appName'
   }
