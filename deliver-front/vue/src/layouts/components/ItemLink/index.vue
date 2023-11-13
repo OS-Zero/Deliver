@@ -5,7 +5,7 @@ defineProps(['itemKey', 'info', 'to'])
   <div class="item-link">
     <RouterLink :to="to">
       <KeepAlive
-        ><a-menu-item :key="itemKey">{{ info }} </a-menu-item>
+        ><a-menu-item style="color: #656464" :key="itemKey">{{ info }} </a-menu-item>
       </KeepAlive>
     </RouterLink>
   </div>

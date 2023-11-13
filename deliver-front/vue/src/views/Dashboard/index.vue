@@ -3,7 +3,7 @@ import {
   MessageOutlined,
   FunnelPlotOutlined,
   FileTextOutlined,
-  UserOutlined,
+  AppstoreOutlined,
   QuestionCircleTwoTone
 } from '@ant-design/icons-vue'
 import Echarts from '@/components/Echarts/index.vue'
@@ -102,7 +102,7 @@ onMounted(async () => {
         <a-col :span="6">
           <a-card style="height: 96px">
             <div class="card-statistic">
-              <span class="icon"><UserOutlined /></span>
+              <span class="icon"><AppstoreOutlined /></span>
               <a-statistic :value="dashboardHeadData.numberOfApps">
                 <template #title>
                   <span>渠道 APP 数</span>

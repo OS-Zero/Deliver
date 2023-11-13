@@ -6,7 +6,8 @@ import {
   SettingOutlined,
   DashboardOutlined,
   LeftOutlined,
-  RightOutlined
+  RightOutlined,
+  SmileOutlined
 } from '@ant-design/icons-vue'
 import { ref } from 'vue'
 
@@ -31,6 +32,15 @@ const toggleCollapsed = (): void => {
       <LeftOutlined v-else />
     </a-button>
     <a-menu v-model:selectedKeys="selectedKeys2" v-model:openKeys="openKeys" mode="inline">
+      <a-sub-menu key="sub6">
+        <template #title>
+          <span>
+            <SmileOutlined />
+            <span>欢迎</span>
+          </span>
+        </template>
+        <ItemLink itemKey="6" info="欢迎" to="welcome" />
+      </a-sub-menu>
       <a-sub-menu key="sub1">
         <template #title>
           <span>
@@ -53,10 +63,10 @@ const toggleCollapsed = (): void => {
         <template #title>
           <span>
             <FunnelPlotOutlined />
-            <span>渠道APP配置</span>
+            <span>渠道 APP 配置</span>
           </span>
         </template>
-        <ItemLink itemKey="3" info="APP配置" to="channel" />
+        <ItemLink itemKey="3" info="APP 配置" to="channel" />
       </a-sub-menu>
       <a-sub-menu key="sub4">
         <template #title>
@@ -65,7 +75,7 @@ const toggleCollapsed = (): void => {
             <span>平台文件管理</span>
           </span>
         </template>
-        <ItemLink itemKey="4" info="文件管理" to="log" />
+        <ItemLink itemKey="4" info="文件管理" to="file" />
       </a-sub-menu>
       <a-sub-menu key="sub5">
         <template #title>

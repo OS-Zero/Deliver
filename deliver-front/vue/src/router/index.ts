@@ -43,9 +43,9 @@ const routes: RouteRecordRaw[] = [
         }
       },
       {
-        path: 'log',
-        name: 'log',
-        component: async () => await import('@/views/Log/index.vue'),
+        path: 'file',
+        name: 'file',
+        component: async () => await import('@/views/File/index.vue'),
         meta: {
           parent: 'home',
           name: '平台文件管理'
