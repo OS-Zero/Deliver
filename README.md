@@ -10,6 +10,8 @@
 <a href="https://gitee.com/OS-Zero/deliver/issues" target="_blank">需求收集</a> |
 <a href="https://gitee.com/OS-Zero/deliver/issues" target="_blank">问题反馈</a>
 
+<a href='https://gitee.com/OS-Zero/deliver/stargazers'><img src='https://gitee.com/OS-Zero/deliver/badge/star.svg?theme=dark' alt='star'></img></a>
+<a href='https://gitee.com/OS-Zero/deliver/members'><img src='https://gitee.com/OS-Zero/deliver/badge/fork.svg?theme=dark' alt='fork'></img></a>
 </div>
 
 --------------------------
