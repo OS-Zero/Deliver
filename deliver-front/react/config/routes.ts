@@ -37,7 +37,7 @@ export default [
   {
     path: '/dashboard',
     name: '系统监控看板',
-    icon: 'crown',
+    icon: 'dashboard',
     routes: [
       {
         path: '/dashboard',
@@ -53,7 +53,7 @@ export default [
   {
     path: '/template',
     name: '消息模板配置',
-    icon: 'crown',
+    icon: 'message',
     routes: [
       {
         path: '/template',
@@ -69,7 +69,7 @@ export default [
   {
     path: '/app',
     name: '渠道 APP 配置',
-    icon: 'crown',
+    icon: 'appstore',
     routes: [
       {
         path: '/app',
@@ -85,7 +85,7 @@ export default [
   {
     path: '/file',
     name: '平台文件管理',
-    icon: 'crown',
+    icon: 'file',
     routes: [
       {
         path: '/file',
