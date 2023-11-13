@@ -1,9 +1,12 @@
 <div align="center">
 
-<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">Deliver v1.0.0</h1>
+<img alt="logo" src="image/logo.png" width="150" height="150">
+
+<h1 style="margin: 30px 0 30px; font-weight: bold;">Deliver</h1>
+
 <h4 align="center">一个轻量级企业消息推送平台，旨在提供企业内部沟通和协作的便捷解决方案！</h4>
 
-[官方网站]() | [需求收集](https://gitee.com/OS-Zero/deliver/issues) | [问题反馈](https://gitee.com/OS-Zero/deliver/issues)
+[官方网站](https://os-zero.gitee.io/website/) | [需求收集](https://gitee.com/OS-Zero/deliver/issues) | [问题反馈](https://gitee.com/OS-Zero/deliver/issues)
 
 </div>
 
@@ -54,18 +57,17 @@
 
 ## 技术栈
 - 后端：Spring Boot、Mybatis-Plus、Spring Cache
-- 前端：Vue.js、React.js、Ant-Design Pro
+- 前端：Vue.js、React.js、Ant Design Pro
 - 依赖软件：MySQL、Redis、MQ、Docker
 
 ## 交流群
- ![输入图片说明](image/wechat.jpg)
+ [点击加入群聊](https://os-zero.gitee.io/website/community/communicate.html)
 
 ## 参与贡献
 我们强烈欢迎有兴趣的开发者参与到项目建设中来，同时欢迎大家对项目提出宝贵建议和功能需求，项目正在积极开发，欢迎 PR 👏。
-推荐阅读：[贡献指南]()
+推荐阅读：[贡献指南](https://os-zero.gitee.io/website/community/contributorGuide.html)
 
 ## 接入登记
 
 如果您和您的公司或组织使用了 Deliver，非常感谢您的支持与信任，请在此进行登记，您的回复将成为维护者、社区用户和观望者的信心来源。感谢支持 💖
->登记信息仅用于推广本产品～
-- 
+>登记信息仅用于推广本产品～ 
