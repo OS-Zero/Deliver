@@ -15,7 +15,7 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 
 const selectedKeys2 = ref<string[]>([`${route.name as string}-1`])
-const openKeys = ref<string[]>([route.name])
+const openKeys = ref<string[]>([route.name as string])
 const collapsed = ref(false)
 const toggleCollapsed = (): void => {
   collapsed.value = !collapsed.value
@@ -25,7 +25,7 @@ const toggleCollapsed = (): void => {
 <template>
   <a-layout-sider
     width="200"
-    :style="{ overflow: 'auto', height: '100vh', position: 'fixed', top: '85px', bottom: 0, zIndex: 1 }"
+    :style="{ overflow: 'auto', height: '100vh', position: 'fixed', top: '85px', bottom: 0, zIndex: 999 }"
     style="background: #fff"
     :collapsed="collapsed"
   >

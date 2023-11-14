@@ -18,7 +18,7 @@ export type templeteDataSource = pieDataPoint[]
 export type channelDataSource = pieDataPoint[]
 export type userDataSource = pieDataPoint[]
 
-export async function getDashboardHeadData(): Promise<DashboardHeadData> {
+export async function getDashboardHeadData(): Promise<any> {
   return await request({
     url: '/dashboard/getDashboardHeadData',
     method: 'post'
