@@ -2,10 +2,7 @@ package com.oszero.deliver.admin.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.oszero.deliver.admin.model.CommonResult;
-import com.oszero.deliver.admin.model.dto.request.DeleteIdsRequestDto;
-import com.oszero.deliver.admin.model.dto.request.TemplateAddGetByChannelRequestDto;
-import com.oszero.deliver.admin.model.dto.request.TemplateSaveAndUpdateRequestDto;
-import com.oszero.deliver.admin.model.dto.request.TemplateSearchRequestDto;
+import com.oszero.deliver.admin.model.dto.request.*;
 import com.oszero.deliver.admin.model.dto.response.MessageTypeResponseDto;
 import com.oszero.deliver.admin.model.dto.response.TemplateSearchResponseDto;
 import com.oszero.deliver.admin.service.TemplateService;
@@ -44,6 +41,12 @@ public class TemplateController {
     @PostMapping("/updateById")
     public CommonResult<?> updateById(@Valid @RequestBody TemplateSaveAndUpdateRequestDto dto) {
         templateService.updateById(dto);
+        return CommonResult.success();
+    }
+
+    @PostMapping("/updateStatusById")
+    public CommonResult<?> updateStatusById(@Valid @RequestBody TemplateUpdateStatusRequestDto dto) {
+        templateService.updateStatusById(dto);
         return CommonResult.success();
     }
 
