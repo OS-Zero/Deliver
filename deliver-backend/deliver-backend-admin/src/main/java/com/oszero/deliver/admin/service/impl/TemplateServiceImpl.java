@@ -12,10 +12,7 @@ import com.oszero.deliver.admin.enums.PushRangeEnum;
 import com.oszero.deliver.admin.enums.UsersTypeEnum;
 import com.oszero.deliver.admin.exception.BusinessException;
 import com.oszero.deliver.admin.mapper.TemplateMapper;
-import com.oszero.deliver.admin.model.dto.request.DeleteIdsRequestDto;
-import com.oszero.deliver.admin.model.dto.request.TemplateAddGetByChannelRequestDto;
-import com.oszero.deliver.admin.model.dto.request.TemplateSaveAndUpdateRequestDto;
-import com.oszero.deliver.admin.model.dto.request.TemplateSearchRequestDto;
+import com.oszero.deliver.admin.model.dto.request.*;
 import com.oszero.deliver.admin.model.dto.response.MessageTypeResponseDto;
 import com.oszero.deliver.admin.model.dto.response.TemplateSearchResponseDto;
 import com.oszero.deliver.admin.model.entity.App;
@@ -126,6 +123,16 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template>
         templateApp.setAppId(dto.getAppId());
         boolean update = templateAppService.update(templateApp, wrapper);
         if (!update) {
+            throw new BusinessException("更新模板失败！！！");
+        }
+    }
+
+    @Override
+    public void updateStatusById(TemplateUpdateStatusRequestDto dto) {
+        Template template = new Template();
+        BeanUtil.copyProperties(dto, template);
+        boolean b = this.updateById(template);
+        if (!b) {
             throw new BusinessException("更新模板失败！！！");
         }
     }
