@@ -5,6 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 数据面板头数据响应类
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Data
 @Builder
 @AllArgsConstructor

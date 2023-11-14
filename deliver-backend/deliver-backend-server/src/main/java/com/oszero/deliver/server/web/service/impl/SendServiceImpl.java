@@ -1,8 +1,8 @@
 package com.oszero.deliver.server.web.service.impl;
 
-import cn.hutool.core.lang.UUID;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.oszero.deliver.server.constant.TraceIdConstant;
 import com.oszero.deliver.server.enums.ResultEnum;
 import com.oszero.deliver.server.enums.StatusEnum;
 import com.oszero.deliver.server.exception.BusinessException;
@@ -15,6 +15,7 @@ import com.oszero.deliver.server.model.entity.TemplateApp;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
 import com.oszero.deliver.server.pretreatment.link.LinkHandler;
 import com.oszero.deliver.server.pretreatment.link.LinkModel;
+import com.oszero.deliver.server.util.MDCUtils;
 import com.oszero.deliver.server.web.service.AppService;
 import com.oszero.deliver.server.web.service.SendService;
 import com.oszero.deliver.server.web.service.TemplateAppService;
@@ -95,7 +96,7 @@ public class SendServiceImpl implements SendService {
                 .paramMap(paramMap)
                 .channelType(channelType)
                 .messageType(messageType)
-                .traceId(UUID.randomUUID().toString()) // 全局链路 id
+                .traceId(MDCUtils.get(TraceIdConstant.TRACE_ID)) // 全局链路 id
                 .retry(retry).build();
 
         // 6.处理相关责任链

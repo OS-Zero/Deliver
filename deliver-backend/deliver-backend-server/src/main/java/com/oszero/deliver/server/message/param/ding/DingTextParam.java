@@ -18,13 +18,13 @@ public class DingTextParam extends DingMessageParam {
     private TextMessage msg;
 
     @Data
-   public class TextMessage {
+    public static class TextMessage {
         private String msgtype;
         private Text text;
     }
 
     @Data
-   public class Text {
+    public static class Text {
         private String content;
     }
 }

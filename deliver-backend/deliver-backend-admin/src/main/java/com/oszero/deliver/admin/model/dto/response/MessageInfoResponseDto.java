@@ -5,9 +5,19 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
+/**
+ * 消息柱状图响应类
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Data
 @Builder
 @AllArgsConstructor
-//@NoArgsConstructor
+@NoArgsConstructor
 public class MessageInfoResponseDto {
+
+    List<List<Object>> MessageInfoList;
 }

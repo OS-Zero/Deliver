@@ -1,5 +1,5 @@
 <script lang="ts" setup></script>
 <template>
-  <div>log</div>
+  <div>file</div>
 </template>
 <style lang="scss" scoped></style>

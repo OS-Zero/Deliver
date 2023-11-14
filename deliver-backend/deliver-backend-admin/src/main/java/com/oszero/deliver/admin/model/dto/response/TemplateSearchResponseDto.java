@@ -1,7 +1,9 @@
 package com.oszero.deliver.admin.model.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -25,12 +27,12 @@ public class TemplateSearchResponseDto {
     /**
      * 推送范围（0-不限 1-企业内部 2-外部）
      */
-    private Integer pushRange;
+    private String pushRange;
 
     /**
      * 用户类型（1-企业账号 2-电话 3-平台ID 4-邮箱）
      */
-    private Integer usersType;
+    private String usersType;
 
     /**
      * 推送方式
@@ -59,7 +61,8 @@ public class TemplateSearchResponseDto {
     /**
      * 创建时间
      */
-    private Date createTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createTime;
 
     /**
      * 应用 id

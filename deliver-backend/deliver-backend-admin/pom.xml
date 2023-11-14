@@ -12,6 +12,11 @@
     <artifactId>deliver-backend-admin</artifactId>
 
     <dependencies>
+        <!-- aop -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
         <!--        MVC-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

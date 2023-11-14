@@ -13,6 +13,12 @@
     <packaging>jar</packaging>
 
     <dependencies>
+        <!--        aop-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
         <!--        MVC-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
