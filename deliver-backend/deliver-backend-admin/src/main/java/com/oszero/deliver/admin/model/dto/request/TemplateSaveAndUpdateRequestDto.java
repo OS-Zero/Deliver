@@ -5,6 +5,12 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+/**
+ * 模板保存以及更新请求 DTO
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Data
 public class TemplateSaveAndUpdateRequestDto {
 

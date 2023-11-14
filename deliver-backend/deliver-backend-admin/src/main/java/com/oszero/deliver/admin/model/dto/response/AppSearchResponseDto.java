@@ -1,8 +1,9 @@
 package com.oszero.deliver.admin.model.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * app 查询响应 dto
@@ -50,5 +51,6 @@ public class AppSearchResponseDto {
     /**
      * 创建时间
      */
-    private Date createTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createTime;
 }

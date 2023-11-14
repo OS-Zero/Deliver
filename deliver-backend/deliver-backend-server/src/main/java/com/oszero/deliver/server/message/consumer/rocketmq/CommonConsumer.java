@@ -1,10 +1,12 @@
 package com.oszero.deliver.server.message.consumer.rocketmq;
 
 import cn.hutool.json.JSONUtil;
+import com.oszero.deliver.server.constant.TraceIdConstant;
 import com.oszero.deliver.server.enums.StatusEnum;
 import com.oszero.deliver.server.message.consumer.handler.BaseHandler;
 import com.oszero.deliver.server.message.producer.Producer;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.util.MDCUtils;
 import com.oszero.deliver.server.web.service.MessageRecordService;
 import lombok.RequiredArgsConstructor;
 import org.apache.rocketmq.common.message.MessageExt;
@@ -26,6 +28,7 @@ public class CommonConsumer {
             sendTaskDto = JSONUtil.toBean(
                     new String(messageExt.getBody(), StandardCharsets.UTF_8
                     ), SendTaskDto.class);
+            MDCUtils.put(TraceIdConstant.TRACE_ID, sendTaskDto.getTraceId());
             handler.doHandle(sendTaskDto);
         } catch (Exception exception) {
             if (!Objects.isNull(sendTaskDto) && sendTaskDto.getRetry() > 0) {
