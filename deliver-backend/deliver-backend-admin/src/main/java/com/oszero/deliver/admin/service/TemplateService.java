@@ -2,11 +2,15 @@ package com.oszero.deliver.admin.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.oszero.deliver.admin.model.dto.request.DeleteIdsRequestDto;
+import com.oszero.deliver.admin.model.dto.request.TemplateAddGetByChannelRequestDto;
 import com.oszero.deliver.admin.model.dto.request.TemplateSaveAndUpdateRequestDto;
 import com.oszero.deliver.admin.model.dto.request.TemplateSearchRequestDto;
+import com.oszero.deliver.admin.model.dto.response.MessageTypeResponseDto;
 import com.oszero.deliver.admin.model.dto.response.TemplateSearchResponseDto;
 import com.oszero.deliver.admin.model.entity.Template;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * 模板 service
@@ -23,4 +27,6 @@ public interface TemplateService extends IService<Template> {
     void updateById(TemplateSaveAndUpdateRequestDto dto);
 
     void save(TemplateSaveAndUpdateRequestDto dto);
+
+    List<MessageTypeResponseDto> getMessageTypeByChannelType(TemplateAddGetByChannelRequestDto dto);
 }
