@@ -301,19 +301,19 @@ const pagination = computed(() => ({
         </template>
         <template #expandedRowRender="{ record }">
           <a-descriptions>
-            <a-descriptions-item label="appConfig">
+            <a-descriptions-item label="APP 配置">
               <div style="display: flex; justify-content: center; align-items: center">
                 <span style="margin-right: 10px">{{ visible ? record.appConfig : '***' }}</span>
                 <EyeTwoTone v-if="visible" @click="visible = !visible"></EyeTwoTone>
                 <EyeInvisibleOutlined v-else @click="visible = !visible"></EyeInvisibleOutlined>
               </div>
             </a-descriptions-item>
-            <a-descriptions-item label="createUser">{{ record.createUser }}</a-descriptions-item>
-            <a-descriptions-item label="createTime">{{ record.createTime }}</a-descriptions-item>
+            <a-descriptions-item label="创建者">{{ record.createUser }}</a-descriptions-item>
+            <a-descriptions-item label="创建时间">{{ record.createTime }}</a-descriptions-item>
           </a-descriptions>
         </template>
         <template #expandColumnTitle>
-          <span style="color: red">More</span>
+          <span style="color: red">详情</span>
         </template>
       </a-table>
     </div>
