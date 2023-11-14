@@ -50,15 +50,6 @@ const routes: RouteRecordRaw[] = [
           parent: 'home',
           name: '平台文件管理'
         }
-      },
-      {
-        path: 'setting',
-        name: 'setting',
-        component: async () => await import('@/views/Setting/index.vue'),
-        meta: {
-          parent: 'home',
-          name: '系统设置'
-        }
       }
     ]
   },
