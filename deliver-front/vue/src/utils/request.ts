@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { message } from 'ant-design-vue'
 
 const service = axios.create({
   baseURL: '/admin',
@@ -16,9 +17,10 @@ service.interceptors.request.use(
 
 service.interceptors.response.use(
   async res => {
-    if (res?.data.code === 200) return res.data.data
+    if (res?.data.code === 200) return res.data
     else {
-      return await Promise.reject(res?.data.errorMessage)
+      void message.error(`操作失败，${res?.data.errorMessage} (＞︿＜)`)
+      return res?.data.errorMessage
     }
   },
   async err => {

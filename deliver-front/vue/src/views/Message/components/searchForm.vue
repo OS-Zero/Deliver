@@ -43,11 +43,11 @@ const onRangeChange = (value: [Dayjs, Dayjs] | [string, string], dateString: [st
 }
 
 // 新增自定义事件，当查询按钮被点击时，可以立即告知父组件
-const $emit = defineEmits(['mes'])
+const emit = defineEmits(['mes'])
 
 const searchMes = (): void => {
   iconLoading.value = true
-  $emit('mes')
+  emit('mes')
 }
 
 defineExpose({
@@ -118,4 +118,10 @@ defineExpose({
   </a-form>
 </template>
 
-<style scoped></style>
+<style scoped>
+.search {
+  padding: 24px 24px 0 24px;
+  background: #ffffff;
+  border-radius: 6px;
+}
+</style>

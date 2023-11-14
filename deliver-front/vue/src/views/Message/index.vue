@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import { ReloadOutlined } from '@ant-design/icons-vue'
-import { ref, reactive, h, onMounted } from 'vue' // watch, ,
+import { ref, reactive, h, onMounted } from 'vue'
 import type { UnwrapRef } from 'vue'
-// import type { Rule } from 'ant-design-vue/es/form'
 import type { TableColumnsType } from 'ant-design-vue'
 import { message } from 'ant-design-vue'
 import type { messageTemplate, searchMessage } from './type'
 import searchForm from './components/searchForm.vue'
-import { getTemplatePages } from '@/api/message'
+import addTemplate from './components/addTemplate.vue'
+import { addTemplatePages, getTemplatePages, updateStatus } from '@/api/message'
 import { getDate } from '@/utils/date'
 
 /**
@@ -110,99 +110,62 @@ const getInnerData = (expanded, record): void => {
 /**
  * 相关操作: 增删改查
  */
-const searchform = ref()
-
-// 新增操作
-const open = ref<boolean>(false)
-const addModules = (): void => {
-  open.value = true
+interface SearchOptions {
+  page?: number
+  pageSize?: number
+  opt?: number // 操作标识符，识别操作，保证message消息提示不重复
 }
 
-// const labelCol = { span: 4 }
+const searchform = ref()
+const addtemplate = ref()
 
-// const wrapperCol = { span: 20 }
+/// 新增操作
+const saveTemplate = (): void => {
+  const { channelType, messageType, ...rest } = addtemplate.value.templateItem
+  const savetemplate = { ...rest }
+  console.warn(savetemplate)
+  addTemplatePages(savetemplate)
+    .then(res => {
+      if (res.code === 200) {
+        void message.success('新增成功~ (*^▽^*)')
+        addtemplate.value.open = false
+        searchTemplate({ opt: 2 }) // 更新表单
+        addtemplate.value.iconLoading = false
+      }
+    })
+    .catch(err => {
+      addtemplate.value.open = false
+      addtemplate.value.iconLoading = false
+      void message.error('新增失败，请检查网络~ (＞︿＜)')
+      console.error('An error occurred:', err)
+    })
+}
 
-// const rules: Record<string, Rule[]> = {
-//   templateName: [
-//     { required: true, message: '请输入模板名', trigger: 'change' },
-//     { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
-//   ],
-//   pushRange: [{ required: true, message: '请选择推送范围', trigger: 'change' }],
-//   usersType: [{ required: true, message: '请选择用户类型', trigger: 'change' }],
-//   messageType: [
-//     {
-//       required: true,
-//       message: '请选择消息类型',
-//       trigger: 'change'
-//     }
-//   ],
-//   channel: [
-//     {
-//       required: true,
-//       message: '请选择渠道',
-//       trigger: 'change'
-//     }
-//   ],
-//   channelApp: [{ required: true, message: '请选择渠道App', trigger: 'change' }]
-// }
+/// 删除操作
+const onDelete = (id: number): void => {
+  console.log(id)
+}
 
-// const templateForm = ref()
-// const handleOk = (): void => {
-//   templateForm.value
-//     .validate()
-//     .then(() => {
-//       console.log('values', templateTable)
-//       open.value = false
-//     })
-//     .catch(error => {
-//       console.log('error', error)
-//     })
-// }
-// const handleCancel = (): void => {
-//   templateForm.value.resetFields()
-// }
-
-// const channelData = ['默认标签1', '默认标签2', '默认标签3']
-
-// const messageData = {
-//   默认标签1: ['Online'],
-//   默认标签2: ['Promotion'],
-//   默认标签3: ['Offline']
-// }
-
-// const appData = {
-//   默认标签1: ['IOS'],
-//   默认标签2: ['安卓'],
-//   默认标签3: ['MAC']
-// }
-
-// const mesType = computed(() => {
-//   return messageData[templateTable.channel] === undefined ? [] : messageData[templateTable.channel]
-// })
-
-// const appType = computed(() => {
-//   return appData[templateTable.channel] === undefined ? [] : appData[templateTable.channel]
-// })
-
-// watch(
-//   () => templateTable.channel,
-//   newVal => {
-//     if (messageData[newVal] !== undefined) {
-//       templateTable.messageType = messageData[newVal][0]
-//     } else {
-//       // 未定义或空数组的情况
-//       templateTable.messageType = ''
-//       messageData[newVal] = []
-//     }
-//     if (appData[newVal] !== undefined) {
-//       templateTable.channelApp = appData[newVal][0]
-//     } else {
-//       // 处理未定义或空数组的情况
-//       templateTable.channelApp = ''
-//       appData[newVal] = []
-//     }
-//   }
-// )
+/// 修改操作
+const changeStatus = (id: number, status: number | boolean): void => {
+  // eslint-disable-next-line
+  const sta = status === true ? 1 : 0
+  const obj = {
+    templateId: id,
+    templateStatus: sta
+  }
+  updateStatus(obj)
+    .then(res => {
+      if (res.code === 200) {
+        void message.success('修改成功~ (*^▽^*)')
+        searchTemplate({ opt: 3 }) // 更新表单
+      }
+    })
+    .catch(err => {
+      void message.error('查询失败，请检查网络~ (＞︿＜)')
+      console.error('An error occurred:', err)
+    })
+}
 
 /// 查询操作
 const searchItem: searchMessage = reactive({
@@ -220,8 +183,7 @@ const total = ref()
 const current = ref()
 
 const change = (page: number, pageSize: number): void => {
-  console.log(page, pageSize)
-  searchTemplate(page, pageSize)
+  searchTemplate({ page, pageSize })
 }
 
 const locale = {
@@ -233,7 +195,7 @@ const locale = {
 }
 
 // 条件查询
-const searchTemplate = (page?: number, pageSize?: number): void => {
+const searchTemplate = ({ page, pageSize, opt }: SearchOptions = {}): void => {
   // 对象解构
   const { perid, ...rest } = searchform.value.searchPage
   const searchNeedMes = { ...rest }
@@ -243,9 +205,9 @@ const searchTemplate = (page?: number, pageSize?: number): void => {
   getTemplatePages(searchNeedMes)
     .then(res => {
       templateTable.length = 0
-      if (res.records.length > 0) {
-        total.value = res.total
-        res.records.forEach((item: any, index: number) => {
+      if (res.data.records.length > 0) {
+        total.value = res.data.total
+        res.data.records.forEach((item: any, index: number) => {
           item.channelType = JSON.parse(item.pushWays).channelType
           item.messageType = JSON.parse(item.pushWays).messageType
           item.createTime = getDate(item.createTime)
@@ -255,17 +217,20 @@ const searchTemplate = (page?: number, pageSize?: number): void => {
           const i = item
           templateTable.push(i)
         })
-        void message.success('查询成功~ (*^▽^*)')
-        console.warn('查询数据', templateTable)
+        if (opt === 1) {
+          void message.success('查询成功~ (*^▽^*)')
+        }
       } else {
-        void message.success('未查询到任何数据   ≧ ﹏ ≦')
-        console.warn('查询数据', templateTable)
+        if (opt === 1) {
+          void message.success('未查询到任何数据   ≧ ﹏ ≦')
+        }
       }
+      console.warn('查询数据', templateTable)
       searchform.value.iconLoading = false
     })
     .catch(err => {
       searchform.value.iconLoading = false
-      void message.error('查询失败~ (＞︿＜)')
+      void message.error('查询失败，请检查网络~ (＞︿＜)')
       console.error('An error occurred:', err)
     })
 }
@@ -273,9 +238,9 @@ const searchTemplate = (page?: number, pageSize?: number): void => {
 onMounted(() => {
   getTemplatePages(searchItem)
     .then(res => {
-      if (res.records.length > 0) {
-        total.value = res.total
-        res.records.forEach((item: any, index: number) => {
+      if (res.data.records.length > 0) {
+        total.value = res.data.total
+        res.data.records.forEach((item: any, index: number) => {
           item.channelType = JSON.parse(item.pushWays).channelType
           item.messageType = JSON.parse(item.pushWays).messageType
           item.createTime = getDate(item.createTime)
@@ -295,54 +260,15 @@ onMounted(() => {
 
 <template>
   <!-- 搜索部分 -->
-  <searchForm ref="searchform" @mes="searchTemplate" />
+  <searchForm ref="searchform" @mes="searchTemplate({ opt: 1 })" />
   <!-- 表格部分 -->
   <div id="message-container">
     <div class="message-section">
       <div class="splitter">
         <a-tooltip title="刷新">
-          <a-button shape="circle" :icon="h(ReloadOutlined)" @click="searchTemplate()" />
+          <a-button shape="circle" :icon="h(ReloadOutlined)" @click="searchTemplate({ opt: 1 })" />
         </a-tooltip>
-        <a-button type="primary" class="addModule" @click="addModules">新增模板</a-button>
-        <a-modal v-model:open="open" title="新增模板" width="650px" :footer="null" @cancel="handleCancel">
-          <!-- <a-form ref="templateForm" :model="templateTable" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol"
-            class="temform">
-            <a-form-item ref="templateName" label="模板名" name="templateName" class="tem-item">
-              <a-input v-model:value="templateTable.templateName" placeholder="请填写长度在3到20个字符的模板名" style="width: 70%" />
-            </a-form-item>
-            <a-form-item label="推送范围" name="pushRange" class="tem-item">
-              <a-radio-group v-model:value="templateTable.pushRange" button-style="solid">
-                <a-radio-button :value="0">不限</a-radio-button>
-                <a-radio-button :value="1">企业内部</a-radio-button>
-                <a-radio-button :value="2">企业外部</a-radio-button>
-              </a-radio-group>
-            </a-form-item>
-            <a-form-item label="用户类型" name="usersType" class="tem-item">
-              <a-radio-group v-model:value="templateTable.usersType" button-style="solid">
-                <a-radio-button :value="1">企业账号</a-radio-button>
-                <a-radio-button :value="2">电话</a-radio-button>
-                <a-radio-button :value="3">邮箱</a-radio-button>
-                <a-radio-button :value="4">平台 UserId</a-radio-button>
-              </a-radio-group>
-            </a-form-item>
-            <a-form-item label="渠道选择" name="channel" class="tem-item">
-              <a-select v-model:value="templateTable.channel" :options="channelData.map(pro => ({ value: pro }))"
-                style="width: 70%" />
-            </a-form-item>
-            <a-form-item label="消息类型" name="messageType" class="tem-item">
-              <a-select v-model:value="templateTable.messageType" :options="mesType.map((pro: any) => ({ value: pro }))"
-                style="width: 70%" />
-            </a-form-item>
-            <a-form-item label="渠道App" name="channelApp" class="tem-item">
-              <a-select v-model:value="templateTable.channelApp" :options="appType.map((pro: any) => ({ value: pro }))"
-                style="width: 70%" />
-            </a-form-item>
-            <a-form-item :wrapper-col="{ span: 14, offset: 4 }" class="tem-item">
-              <a-button type="primary" @click="handleOk">确认新建</a-button>
-              <a-button style="margin-left: 10px" @click="handleCancel">重置</a-button>
-            </a-form-item>
-          </a-form> -->
-        </a-modal>
+        <addTemplate ref="addtemplate" @add="saveTemplate()" />
       </div>
 
       <!-- 表格部分 -->
@@ -359,12 +285,19 @@ onMounted(() => {
         <template #bodyCell="{ column, record }">
           <template v-if="column.key === 'templateStatus'">
             <span>
-              <a-switch v-model:checked="record.templateStatus" checked-children="启用" un-checked-children="禁用" />
+              <a-switch
+                v-model:checked="record.templateStatus"
+                checked-children="启用"
+                un-checked-children="禁用"
+                @change="changeStatus(record.templateId, record.templateStatus)"
+              />
             </span>
           </template>
           <template v-if="column.key === 'operation'">
             <a-button type="primary" class="btn-manager" size="small" style="font-size: 13px">编辑</a-button>
-            <a-button type="primary" danger size="small" style="font-size: 13px">删除</a-button>
+            <a-popconfirm title="确认删除吗?" @confirm="onDelete(record.templateId)" ok-text="确定" cancel-text="取消">
+              <a-button type="primary" danger size="small" style="font-size: 13px">删除</a-button>
+            </a-popconfirm>
           </template>
         </template>
         <template #expandedRowRender>
@@ -393,41 +326,12 @@ onMounted(() => {
   overflow: auto;
 }
 
-.search {
-  padding: 24px 24px 0 24px;
-  background: #ffffff;
-  border-radius: 6px;
-
-  .search-item:nth-child(1) {
-    margin-left: 15px;
-  }
-
-  .search-item:nth-child(2) {
-    margin-left: 30px;
-  }
-}
-
 .splitter {
   width: 100%;
   height: 60px;
   display: flex;
   align-items: center;
   justify-content: right;
-
-  .addModule {
-    margin: 0px 20px;
-  }
-}
-
-.temform {
-  .tem-item {
-    margin-top: 20px;
-  }
-
-  .tem-item:nth-child(7) {
-    text-align: right;
-    margin-left: 300px;
-  }
 }
 
 .message-section {
