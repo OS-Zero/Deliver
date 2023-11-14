@@ -7,7 +7,7 @@ const setShowAbout = (open: boolean): void => {
 }
 </script>
 <template>
-  <a-layout-header class="header">
+  <a-layout-header class="header" :style="{ position: 'fixed', top: '25px', zIndex: 999, width: '100%' }">
     <div class="left">
       <RouterLink to="/"><img src="logo.png" style="height: 100%" alt="空" /></RouterLink>
       <h1>Deliver 企业消息推送平台</h1>

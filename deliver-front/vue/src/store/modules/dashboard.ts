@@ -1,12 +1,5 @@
 import { defineStore } from 'pinia'
-import {
-  getDashboardHeadData,
-  getMessageInfo,
-  getTemplateInfo,
-  getAppInfo,
-  getPushUserInfo,
-  type DashboardHeadData
-} from '@/api/dashboard'
+import { getDashboardHeadData, getMessageInfo, getTemplateInfo, getAppInfo, getPushUserInfo } from '@/api/dashboard'
 import { type EChartsOption } from 'echarts'
 const chartsMessageOption: EChartsOption = {
   legend: {
@@ -125,15 +118,15 @@ export const useDashboardStore = defineStore('dashboard', {
   },
   actions: {
     async getDashboardHeadData() {
-      const dashboardHeadData: DashboardHeadData = await getDashboardHeadData()
-      return dashboardHeadData
+      const dashboardHeadData = await getDashboardHeadData()
+      return dashboardHeadData.data
     },
     async getMessageInfo(dateSelect: number): Promise<EChartsOption> {
       const messageData = await getMessageInfo({ dateSelect })
       if (chartsMessageOption.dataset !== undefined) {
         chartsMessageOption.dataset = {
           dimensions: ['product', '成功', '失败'],
-          source: messageData.messageInfoList
+          source: messageData.data.messageInfoList
         }
       }
       return chartsMessageOption
@@ -141,21 +134,21 @@ export const useDashboardStore = defineStore('dashboard', {
     async getTemplateInfo(dateSelect: number): Promise<EChartsOption> {
       const messageData = await getTemplateInfo({ dateSelect })
       if (chartsTemplateOption.series !== undefined) {
-        chartsTemplateOption.series[0].data = messageData?.dashboardInfoList
+        chartsTemplateOption.series[0].data = messageData.data?.dashboardInfoList
       }
       return chartsTemplateOption
     },
     async getAppInfo(dateSelect: number): Promise<EChartsOption> {
       const messageData = await getAppInfo({ dateSelect })
       if (chartsChannelOption.series !== undefined) {
-        chartsChannelOption.series[0].data = messageData?.dashboardInfoList
+        chartsChannelOption.series[0].data = messageData.data?.dashboardInfoList
       }
       return chartsChannelOption
     },
     async getPushUserInfo(dateSelect: number): Promise<EChartsOption> {
       const messageData = await getPushUserInfo({ dateSelect })
       if (chartsAccountOption.series !== undefined) {
-        chartsAccountOption.series[0].data = messageData?.dashboardInfoList
+        chartsAccountOption.series[0].data = messageData.data?.dashboardInfoList
       }
       return chartsAccountOption
     }
