@@ -13,6 +13,9 @@
         rgb(230, 248, 255) 10px,
         rgb(230, 248, 255) 40px
       );
+      position: fixed;
+      width: 100%;
+      z-index: 999;
     "
   >
     <div>

@@ -1,11 +1,12 @@
 <script lang="ts" setup>
-import { ReloadOutlined } from '@ant-design/icons-vue'
+import { ReloadOutlined, EyeTwoTone, EyeInvisibleOutlined } from '@ant-design/icons-vue'
 import { ref, reactive, h, watch, computed } from 'vue'
 import type { UnwrapRef } from 'vue'
 import type { TableColumnsType } from 'ant-design-vue'
 import type { Rule } from 'ant-design-vue/es/form'
-import type { messageTemplate } from './type'
+// import type { messageTemplate } from './type'
 import searchForm from './components/searchForm.vue'
+
 // import { message } from 'ant-design-vue'
 
 /// 表格部分
@@ -112,31 +113,29 @@ watch(
 
 const columns: TableColumnsType = [
   {
-    title: '项目名称',
-    dataIndex: 'projectName',
-    sorter: {
-      compare: (a: any, b: any) => a.projectName.localeCompare(b.projectName),
-      multiple: 3
-    },
-    key: 'projectname'
+    title: 'AppId',
+    dataIndex: 'appId',
+    key: 'appId'
   },
   {
-    title: '管理员1',
-    dataIndex: 'admin1',
-    sorter: {
-      compare: (a: any, b: any) => a.admin1.localeCompare(b.admin1),
-      multiple: 2
-    },
-    key: 'admin1'
+    title: 'App名称',
+    dataIndex: 'appName',
+    key: 'appName'
   },
   {
-    title: '管理员2',
-    dataIndex: 'admin2',
-    sorter: {
-      compare: (a: any, b: any) => a.admin2.localeCompare(b.admin2),
-      multiple: 1
-    },
-    key: 'admin2'
+    title: '渠道类型',
+    dataIndex: 'channelType',
+    key: 'channelType'
+  },
+  {
+    title: '使用次数',
+    dataIndex: 'useCount',
+    key: 'useCount'
+  },
+  {
+    title: 'app状态',
+    dataIndex: 'appStatus',
+    key: 'appStatus'
   },
   {
     title: '操作',
@@ -149,29 +148,68 @@ const columns: TableColumnsType = [
 const data = ref([
   {
     key: '1',
-    projectName: '1.txt',
-    admin1: 'a',
-    admin2: 'b'
+    appId: '1',
+    appName: '飞书消息推送',
+    channelType: 'b',
+    useCount: 0,
+    appStatus: 1,
+    appConfig: 'xxx',
+    createUser: 1,
+    createTime: '2023/12/6'
   },
   {
     key: '2',
-    projectName: '2.txt',
-    admin1: 'c',
-    admin2: 'd'
+    appId: '1',
+    appName: '飞书消息推送',
+    channelType: 'b',
+    useCount: 0,
+    appStatus: 1,
+    appConfig: 'xxx',
+    createUser: 1,
+    createTime: '2023/12/6'
   },
   {
     key: '3',
-    projectName: '3.txt',
-    admin1: 'e',
-    admin2: 'f'
+    appId: '1',
+    appName: '飞书消息推送',
+    channelType: 'b',
+    useCount: 0,
+    appStatus: 1,
+    appConfig: 'xxx',
+    createUser: 1,
+    createTime: '2023/12/6'
   },
   {
     key: '4',
-    projectName: '4.txt',
-    admin1: 'g',
-    admin2: 'h'
+    appId: '1',
+    appName: '飞书消息推送',
+    channelType: 'b',
+    useCount: 0,
+    appStatus: 1,
+    appConfig: 'xxx',
+    createUser: 1,
+    createTime: '2023/12/6'
+  },
+  {
+    key: '',
+    appId: '1',
+    appName: '飞书消息推送',
+    channelType: 'b',
+    useCount: 0,
+    appStatus: 1,
+    appConfig: 'xxx',
+    createUser: 1,
+    createTime: '2023/12/6'
   }
 ])
+const current = ref()
+const pageSize = ref()
+const visible = ref(false)
+const pagination = computed(() => ({
+  total: 200,
+  current: current.value,
+  pageSize: pageSize.value
+}))
 </script>
 
 <template>
@@ -247,12 +285,35 @@ const data = ref([
       </div>
 
       <!-- 表格部分 -->
-      <a-table :columns="columns" :data-source="data" :scroll="{ x: 1200, y: 300 }" bordered>
+      <a-table
+        :pagination="pagination"
+        :columns="columns"
+        :data-source="data"
+        :scroll="{ x: 1200, y: 300 }"
+        bordered
+        :expand-column-width="100"
+      >
         <template #bodyCell="{ column }">
           <template v-if="column.key === 'operation'">
             <a-button type="primary" class="btn-manager">编辑</a-button>
             <a-button type="primary" danger>删除</a-button>
           </template>
+        </template>
+        <template #expandedRowRender="{ record }">
+          <a-descriptions>
+            <a-descriptions-item label="APP 配置">
+              <div style="display: flex; justify-content: center; align-items: center">
+                <span style="margin-right: 10px">{{ visible ? record.appConfig : '***' }}</span>
+                <EyeTwoTone v-if="visible" @click="visible = !visible"></EyeTwoTone>
+                <EyeInvisibleOutlined v-else @click="visible = !visible"></EyeInvisibleOutlined>
+              </div>
+            </a-descriptions-item>
+            <a-descriptions-item label="创建者">{{ record.createUser }}</a-descriptions-item>
+            <a-descriptions-item label="创建时间">{{ record.createTime }}</a-descriptions-item>
+          </a-descriptions>
+        </template>
+        <template #expandColumnTitle>
+          <span style="color: red">详情</span>
         </template>
       </a-table>
     </div>

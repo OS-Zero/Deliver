@@ -8,3 +8,11 @@ export const getDate = (d): string => {
   const second = String(date.getSeconds()).padStart(2, '0')
   return `${year}-${month}-${day} ${hour}:${minute}:${second}`
 }
+
+export const getPushWays = (channelType: string | undefined, messageType: string | undefined): string => {
+  const obj = {
+    channelType: Number(channelType),
+    messageType
+  }
+  return JSON.stringify(obj)
+}
