@@ -12,9 +12,8 @@ import com.oszero.deliver.admin.enums.PushRangeEnum;
 import com.oszero.deliver.admin.enums.UsersTypeEnum;
 import com.oszero.deliver.admin.exception.BusinessException;
 import com.oszero.deliver.admin.mapper.TemplateMapper;
-import com.oszero.deliver.admin.model.dto.request.DeleteIdsRequestDto;
-import com.oszero.deliver.admin.model.dto.request.TemplateSaveAndUpdateRequestDto;
-import com.oszero.deliver.admin.model.dto.request.TemplateSearchRequestDto;
+import com.oszero.deliver.admin.model.dto.request.*;
+import com.oszero.deliver.admin.model.dto.response.MessageTypeResponseDto;
 import com.oszero.deliver.admin.model.dto.response.TemplateSearchResponseDto;
 import com.oszero.deliver.admin.model.entity.App;
 import com.oszero.deliver.admin.model.entity.PushWay;
@@ -27,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -128,6 +128,16 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template>
     }
 
     @Override
+    public void updateStatusById(TemplateUpdateStatusRequestDto dto) {
+        Template template = new Template();
+        BeanUtil.copyProperties(dto, template);
+        boolean b = this.updateById(template);
+        if (!b) {
+            throw new BusinessException("更新模板失败！！！");
+        }
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public void save(TemplateSaveAndUpdateRequestDto dto) {
         checkTemplateNameIsDuplicate(dto);
@@ -171,6 +181,28 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template>
         }
     }
 
+    @Override
+    public List<MessageTypeResponseDto> getMessageTypeByChannelType(TemplateAddGetByChannelRequestDto dto) {
+        Integer channelType = dto.getChannelType();
+        List<MessageTypeResponseDto> list = new ArrayList<>();
+
+        MessageTypeResponseDto messageTypeResponseDto = new MessageTypeResponseDto();
+        messageTypeResponseDto.setCode(MessageTypeEnum.TEXT.getCode());
+        messageTypeResponseDto.setName(MessageTypeEnum.TEXT.getName());
+        list.add(messageTypeResponseDto);
+        if (channelType > 3) {
+            for (MessageTypeEnum v : MessageTypeEnum.values()) {
+                Integer ct = v.getChannelType();
+                if (ct.equals(channelType)) {
+                    MessageTypeResponseDto msg = new MessageTypeResponseDto();
+                    msg.setCode(v.getCode());
+                    msg.setName(v.getName());
+                    list.add(msg);
+                }
+            }
+        }
+        return list;
+    }
 }
 
 
