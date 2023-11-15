@@ -13,13 +13,15 @@ import { ref } from 'vue'
 import ItemLink from '../ItemLink/index.vue'
 import Breadcrumb from '../Breadcrumb/index.vue'
 import { useRoute } from 'vue-router'
+import { useStore } from '@/store/index'
 const route = useRoute()
-
+const store = useStore()
 const selectedKeys2 = ref<string[]>([`${route.name as string}-1`])
 const openKeys = ref<string[]>([route.name as string])
 const collapsed = ref(false)
 const toggleCollapsed = (): void => {
   collapsed.value = !collapsed.value
+  store.changeCollapse()
 }
 </script>
 

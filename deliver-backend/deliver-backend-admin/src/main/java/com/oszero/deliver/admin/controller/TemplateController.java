@@ -2,9 +2,8 @@ package com.oszero.deliver.admin.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.oszero.deliver.admin.model.CommonResult;
-import com.oszero.deliver.admin.model.dto.request.DeleteIdsRequestDto;
-import com.oszero.deliver.admin.model.dto.request.TemplateSaveAndUpdateRequestDto;
-import com.oszero.deliver.admin.model.dto.request.TemplateSearchRequestDto;
+import com.oszero.deliver.admin.model.dto.request.*;
+import com.oszero.deliver.admin.model.dto.response.MessageTypeResponseDto;
 import com.oszero.deliver.admin.model.dto.response.TemplateSearchResponseDto;
 import com.oszero.deliver.admin.service.TemplateService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 模板控制器
@@ -44,14 +44,27 @@ public class TemplateController {
         return CommonResult.success();
     }
 
+    @PostMapping("/updateStatusById")
+    public CommonResult<?> updateStatusById(@Valid @RequestBody TemplateUpdateStatusRequestDto dto) {
+        templateService.updateStatusById(dto);
+        return CommonResult.success();
+    }
+
     @PostMapping("/deleteByIds")
     public CommonResult<?> deleteByIds(@Valid @RequestBody DeleteIdsRequestDto dto) {
         templateService.deleteByIds(dto);
         return CommonResult.success();
     }
 
+    @PostMapping("/getMessageTypeByChannelType")
+    public CommonResult<List<MessageTypeResponseDto>> getMessageTypeByChannelType(@Valid @RequestBody TemplateAddGetByChannelRequestDto dto) {
+        List<MessageTypeResponseDto> messageTypeResponseDtoList = templateService.getMessageTypeByChannelType(dto);
+        return CommonResult.success(messageTypeResponseDtoList);
+    }
+
     /**
      * excel 批量导入模板
+     *
      * @param multipartFile 文件对象
      * @return 通用响应
      */

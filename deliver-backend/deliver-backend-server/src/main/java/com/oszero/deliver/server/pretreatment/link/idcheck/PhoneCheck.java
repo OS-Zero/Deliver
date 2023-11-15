@@ -5,13 +5,13 @@ import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.exception.LinkProcessException;
 import com.oszero.deliver.server.model.app.DingApp;
 import com.oszero.deliver.server.model.app.FeiShuApp;
-import com.oszero.deliver.server.util.channel.DingUtils;
-import com.oszero.deliver.server.util.channel.FeiShuUtils;
-import com.oszero.deliver.server.util.channel.WeChatUtils;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.constant.PretreatmentCodeConstant;
 import com.oszero.deliver.server.pretreatment.link.BusinessLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
+import com.oszero.deliver.server.util.channel.DingUtils;
+import com.oszero.deliver.server.util.channel.FeiShuUtils;
+import com.oszero.deliver.server.util.channel.WeChatUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -90,8 +90,7 @@ public class PhoneCheck implements BusinessLink<SendTaskDto> {
         @Override
         public List<String> convert(String appConfigJson, List<String> phones) {
             String accessToken = dingUtils.getAccessToken(JSONUtil.toBean(appConfigJson, DingApp.class));
-            List<String> relPhones = phones.stream().map(phone -> dingUtils.getUserIdByPhone(accessToken, phone)).collect(Collectors.toList());
-            return relPhones;
+            return phones.stream().map(phone -> dingUtils.getUserIdByPhone(accessToken, phone)).collect(Collectors.toList());
         }
     }
 

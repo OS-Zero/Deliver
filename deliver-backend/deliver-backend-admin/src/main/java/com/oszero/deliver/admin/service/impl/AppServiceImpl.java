@@ -7,15 +7,16 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oszero.deliver.admin.exception.BusinessException;
+import com.oszero.deliver.admin.mapper.AppMapper;
 import com.oszero.deliver.admin.model.dto.request.AppSaveAndUpdateRequestDto;
 import com.oszero.deliver.admin.model.dto.request.AppSearchRequestDto;
 import com.oszero.deliver.admin.model.dto.request.DeleteIdsRequestDto;
+import com.oszero.deliver.admin.model.dto.request.TemplateAddGetByChannelRequestDto;
+import com.oszero.deliver.admin.model.dto.response.AppByChannelResponseDto;
 import com.oszero.deliver.admin.model.dto.response.AppSearchResponseDto;
 import com.oszero.deliver.admin.model.entity.App;
-import com.oszero.deliver.admin.model.entity.Template;
 import com.oszero.deliver.admin.model.entity.TemplateApp;
 import com.oszero.deliver.admin.service.AppService;
-import com.oszero.deliver.admin.mapper.AppMapper;
 import com.oszero.deliver.admin.service.TemplateAppService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -99,6 +100,19 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>
         if (!save) {
             throw new BusinessException("app 保存失败！！！");
         }
+    }
+
+    @Override
+    public List<AppByChannelResponseDto> getAppByChannelType(TemplateAddGetByChannelRequestDto dto) {
+        Integer channelType = dto.getChannelType();
+        LambdaQueryWrapper<App> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(App::getChannelType, channelType);
+        List<App> list = this.list(wrapper);
+        return list.stream().map(app -> {
+            AppByChannelResponseDto appByChannelResponseDto = new AppByChannelResponseDto();
+            BeanUtil.copyProperties(app, appByChannelResponseDto);
+            return appByChannelResponseDto;
+        }).collect(Collectors.toList());
     }
 
     private void checkAppNameIsDuplicate(AppSaveAndUpdateRequestDto dto) {
