@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ReloadOutlined } from '@ant-design/icons-vue'
-import { ref, reactive, h, onMounted } from 'vue'
+import { ref, reactive, h, onMounted, computed } from 'vue'
 import type { UnwrapRef } from 'vue'
 import type { TableColumnsType } from 'ant-design-vue'
 import { message } from 'ant-design-vue'
@@ -142,6 +142,32 @@ const saveTemplate = (): void => {
 }
 
 /// 删除操作
+type Key = string | number
+
+const state = reactive<{
+  selectedRowKeys: Key[]
+  loading: boolean
+}>({
+  selectedRowKeys: [], // Check here to configure the default column
+  loading: false
+})
+
+const hasSelected = computed(() => state.selectedRowKeys.length > 0)
+
+const startDelete = (): void => {
+  state.loading = true
+  // ajax request after empty completing
+  setTimeout(() => {
+    state.loading = false
+    state.selectedRowKeys = []
+  }, 1000)
+}
+
+const onSelectChange = (selectedRowKeys: Key[]): void => {
+  console.log('selectedRowKeys changed: ', selectedRowKeys)
+  state.selectedRowKeys = selectedRowKeys
+}
+
 const onDelete = (id: number): void => {
   console.log(id)
 }
@@ -265,6 +291,11 @@ onMounted(() => {
   <div id="message-container">
     <div class="message-section">
       <div class="splitter">
+        <span class="describe">
+          <template v-if="hasSelected">
+            {{ `· 已选 ${state.selectedRowKeys.length} 项` }}
+          </template>
+        </span>
         <a-tooltip title="刷新">
           <a-button shape="circle" :icon="h(ReloadOutlined)" @click="searchTemplate({ opt: 1 })" />
         </a-tooltip>
@@ -275,12 +306,13 @@ onMounted(() => {
       <a-table
         :columns="columns"
         :data-source="templateTable"
-        :scroll="{ x: 1200, y: 900 }"
+        :scroll="{ x: 1200, y: undefined, scrollToFirstRowOnChange: true }"
         bordered
         class="components-table-demo-nested"
         @expand="getInnerData"
         :pagination="false"
         :expandedRowKeys="expandedRowKeys"
+        :row-selection="{ selectedRowKeys: state.selectedRowKeys, onChange: onSelectChange }"
       >
         <template #bodyCell="{ column, record }">
           <template v-if="column.key === 'templateStatus'">
@@ -317,12 +349,16 @@ onMounted(() => {
       />
     </div>
     <!-- 对表格的操作 -->
+    <div class="showDelete">
+      123
+      <a-button type="primary" @click="startDelete">批量删除</a-button>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
 #message-container {
-  height: 100%;
+  // height: 100%;
   overflow: auto;
 }
 
@@ -332,10 +368,14 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: right;
+
+  .describe {
+    margin-left: 8px;
+  }
 }
 
 .message-section {
-  height: 100%;
+  // height: 100%;
   border-radius: 6px;
   margin-top: 12px;
   background: #ffffff;
@@ -349,6 +389,19 @@ onMounted(() => {
     margin-top: 20px;
     display: flex;
     justify-content: right;
+  }
+}
+
+.message-container {
+  position: relative;
+  overflow: hidden;
+  .showDelete {
+    background-color: antiquewhite;
+    width: 100%;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    padding: 10px;
   }
 }
 </style>
