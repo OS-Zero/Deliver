@@ -314,7 +314,6 @@ onMounted(() => {
         :columns="columns"
         :data-source="templateTable"
         :scroll="{ x: 1200, y: undefined, scrollToFirstRowOnChange: true }"
-        bordered
         class="components-table-demo-nested"
         @expand="getInnerData"
         :pagination="false"
@@ -365,7 +364,6 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 #message-container {
-  // height: 100%;
   overflow: auto;
 }
 
@@ -379,7 +377,6 @@ onMounted(() => {
 }
 
 .message-section {
-  // height: 100%;
   border-radius: 6px;
   margin-top: 12px;
   background: #ffffff;
