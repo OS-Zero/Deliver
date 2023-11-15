@@ -5,14 +5,18 @@ import com.oszero.deliver.admin.model.CommonResult;
 import com.oszero.deliver.admin.model.dto.request.AppSaveAndUpdateRequestDto;
 import com.oszero.deliver.admin.model.dto.request.AppSearchRequestDto;
 import com.oszero.deliver.admin.model.dto.request.DeleteIdsRequestDto;
+import com.oszero.deliver.admin.model.dto.request.TemplateAddGetByChannelRequestDto;
+import com.oszero.deliver.admin.model.dto.response.AppByChannelResponseDto;
 import com.oszero.deliver.admin.model.dto.response.AppSearchResponseDto;
 import com.oszero.deliver.admin.service.AppService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
+import java.util.List;
 
 /**
  * APP 控制器
@@ -49,5 +53,11 @@ public class AppController {
     public CommonResult<?> deleteByIds(@RequestBody DeleteIdsRequestDto dto) {
         appService.deleteByIds(dto);
         return CommonResult.success();
+    }
+
+    @PostMapping("/getAppByChannelType")
+    public CommonResult<List<AppByChannelResponseDto>> getAppByChannelType(@Valid @RequestBody TemplateAddGetByChannelRequestDto dto) {
+        List<AppByChannelResponseDto> appList = appService.getAppByChannelType(dto);
+        return CommonResult.success(appList);
     }
 }
