@@ -7,8 +7,9 @@ import { message } from 'ant-design-vue'
 import type { messageTemplate, searchMessage } from './type'
 import searchForm from './components/searchForm.vue'
 import addTemplate from './components/addTemplate.vue'
-import { addTemplatePages, getTemplatePages, updateStatus } from '@/api/message'
+import { addTemplatePages, deleteTemplate, getTemplatePages, updateStatus } from '@/api/message'
 import { getDate } from '@/utils/date'
+import { useStore } from '@/store'
 
 /**
  * 表格初始化
@@ -97,7 +98,6 @@ const expandedRowKeys: number[] = reactive([])
 
 const getInnerData = (expanded, record): void => {
   // 判断是否点开
-  console.log('chufal')
   expandedRowKeys.length = 0
   if (expanded === true) {
     const b = record.key.toString()
@@ -111,7 +111,6 @@ const getInnerData = (expanded, record): void => {
 }
 
 const judgeInclude = (record): boolean => {
-  console.log(innertemplatedata.includes(record))
   return innertemplatedata.includes(record)
 }
 
@@ -152,6 +151,8 @@ const saveTemplate = (): void => {
 /// 删除操作
 type Key = string | number
 
+const store = useStore()
+
 const state = reactive<{
   selectedRowKeys: Key[]
   loading: boolean
@@ -160,15 +161,28 @@ const state = reactive<{
   loading: false
 })
 
+const openDelete = ref(false)
+
 const hasSelected = computed(() => state.selectedRowKeys.length > 0)
 
 const startDelete = (): void => {
   state.loading = true
-  // ajax request after empty completing
-  setTimeout(() => {
-    state.loading = false
-    state.selectedRowKeys = []
-  }, 1000)
+  const templates = {
+    ids: state.selectedRowKeys as number[]
+  }
+  deleteTemplate(templates)
+    .then(res => {
+      if (res.code === 200) {
+        void message.success('删除成功~ (*^▽^*)')
+        searchTemplate({ opt: 4 }) //
+      }
+      state.loading = false
+    })
+    .catch(err => {
+      void message.error('查询失败，请检查网络~ (＞︿＜)')
+      console.error('An error occurred:', err)
+      state.loading = false
+    })
 }
 
 const cancelSelect = (): void => {
@@ -176,8 +190,11 @@ const cancelSelect = (): void => {
 }
 
 const onSelectChange = (selectedRowKeys: Key[]): void => {
-  console.log('selectedRowKeys changed: ', selectedRowKeys)
+  console.log(selectedRowKeys)
   state.selectedRowKeys = selectedRowKeys
+  if (state.selectedRowKeys.length !== 0) {
+    openDelete.value = true
+  }
 }
 
 const onDelete = (id: number): void => {
@@ -245,13 +262,14 @@ const searchTemplate = ({ page, pageSize, opt }: SearchOptions = {}): void => {
       templateTable.length = 0
       if (res.data.records.length > 0) {
         total.value = res.data.total
-        res.data.records.forEach((item: any, index: number) => {
+        res.data.records.forEach((item: any) => {
           item.channelType = JSON.parse(item.pushWays).channelType
           item.messageType = JSON.parse(item.pushWays).messageType
           item.createTime = getDate(item.createTime)
           // eslint-disable-next-line
           item.templateStatus = item.templateStatus === 1 ? true : false
-          item.key = index
+          // item.key = index
+          item.key = item.templateId
           const i = item
           templateTable.push(i)
         })
@@ -278,13 +296,14 @@ onMounted(() => {
     .then(res => {
       if (res.data.records.length > 0) {
         total.value = res.data.total
-        res.data.records.forEach((item: any, index: number) => {
+        res.data.records.forEach((item: any) => {
           item.channelType = JSON.parse(item.pushWays).channelType
           item.messageType = JSON.parse(item.pushWays).messageType
           item.createTime = getDate(item.createTime)
           // eslint-disable-next-line
           item.templateStatus = item.templateStatus === 1 ? true : false
-          item.key = index
+          // item.key = index
+          item.key = item.templateId
           templateTable.push(item)
         })
         console.warn('初始化数据', templateTable)
@@ -294,13 +313,17 @@ onMounted(() => {
       console.error('An error occurred:', err)
     })
 })
+
+const a = computed(() => {
+  return store.$state.collapse ? 80 : 200 // 计算输入框应该有的高度
+})
 </script>
 
 <template>
   <!-- 搜索部分 -->
   <searchForm ref="searchform" @mes="searchTemplate({ opt: 1 })" />
   <!-- 表格部分 -->
-  <div id="message-container">
+  <div id="message-container" style="{ margin-bottom: 100px; }">
     <div class="message-section">
       <div class="splitter">
         <a-tooltip title="刷新">
@@ -384,9 +407,13 @@ onMounted(() => {
       />
     </div>
     <!-- 对表格的操作 -->
-    <div class="showDelete">
-      123
-      <a-button type="primary" @click="startDelete">批量删除</a-button>
+    <div class="showDelete" :style="{ width: `calc(100% - ${a}px)` }" v-if="hasSelected">
+      <div class="box">{{ `已选择 ${state.selectedRowKeys.length} 项` }}</div>
+      <div class="del">
+        <a-button type="primary" style="font-size: 14px" @click="startDelete" :loading="state.loading"
+          >批量删除</a-button
+        >
+      </div>
     </div>
   </div>
 </template>
@@ -440,16 +467,30 @@ onMounted(() => {
   }
 }
 
-.message-container {
+#message-container {
   position: relative;
-  overflow: hidden;
+  width: 100%;
+  height: 100%;
   .showDelete {
-    background-color: antiquewhite;
-    width: 100%;
-    position: fixed;
-    left: 0;
-    bottom: 0;
+    position: fixed; /* 将showDelete盒子设置为固定定位 */
+    inset-inline-end: 0;
+    bottom: 0; /* 将showDelete盒子的底部与页面底部对齐 */
+    right: 0; /* 将showDelete盒子的左侧与页面左侧对齐 */
+    background-color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
     padding: 10px;
+    height: 60px;
+    z-index: 999;
+    box-sizing: border-box; /* 确保padding不会撑开盒子 */
+    transition: 0.2s;
+    line-height: 40px;
+    .box {
+      margin-left: 2%;
+    }
+    .del {
+      margin-left: 78%;
+    }
   }
 }
 </style>

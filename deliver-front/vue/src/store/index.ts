@@ -1,4 +1,15 @@
-import { createPinia } from 'pinia'
-const pinia = createPinia()
+import { defineStore } from 'pinia'
 
-export default pinia
+export const useStore = defineStore('store', {
+  state: () => {
+    return {
+      collapse: false
+    }
+  },
+  getters: {},
+  actions: {
+    changeCollapse() {
+      this.collapse = !this.collapse
+    }
+  }
+})
