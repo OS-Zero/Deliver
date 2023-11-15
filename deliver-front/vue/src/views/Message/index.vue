@@ -1,14 +1,15 @@
 <script lang="ts" setup>
-import { ReloadOutlined } from '@ant-design/icons-vue'
-import { ref, reactive, h, onMounted } from 'vue'
+import { ReloadOutlined, DownOutlined, UpOutlined } from '@ant-design/icons-vue'
+import { ref, reactive, h, onMounted, computed } from 'vue'
 import type { UnwrapRef } from 'vue'
 import type { TableColumnsType } from 'ant-design-vue'
 import { message } from 'ant-design-vue'
 import type { messageTemplate, searchMessage } from './type'
 import searchForm from './components/searchForm.vue'
 import addTemplate from './components/addTemplate.vue'
-import { addTemplatePages, getTemplatePages, updateStatus } from '@/api/message'
+import { addTemplatePages, deleteTemplate, getTemplatePages, updateStatus } from '@/api/message'
 import { getDate } from '@/utils/date'
+import { useStore } from '@/store'
 
 /**
  * 表格初始化
@@ -50,7 +51,7 @@ const columns: TableColumnsType = [
     title: '操作',
     key: 'operation',
     fixed: 'right',
-    width: 140
+    width: 200
   }
 ]
 
@@ -90,6 +91,7 @@ const innerColumns = [
 /**
  * 渲染 data
  */
+
 const innertemplatedata: UnwrapRef<messageTemplate[]> = reactive([])
 
 const expandedRowKeys: number[] = reactive([])
@@ -104,7 +106,12 @@ const getInnerData = (expanded, record): void => {
     innertemplatedata.push(record)
   } else {
     expandedRowKeys.length = 0
+    innertemplatedata.length = 0
   }
+}
+
+const judgeInclude = (record): boolean => {
+  return innertemplatedata.includes(record)
 }
 
 /**
@@ -142,6 +149,54 @@ const saveTemplate = (): void => {
 }
 
 /// 删除操作
+type Key = string | number
+
+const store = useStore()
+
+const state = reactive<{
+  selectedRowKeys: Key[]
+  loading: boolean
+}>({
+  selectedRowKeys: [],
+  loading: false
+})
+
+const openDelete = ref(false)
+
+const hasSelected = computed(() => state.selectedRowKeys.length > 0)
+
+const startDelete = (): void => {
+  state.loading = true
+  const templates = {
+    ids: state.selectedRowKeys as number[]
+  }
+  deleteTemplate(templates)
+    .then(res => {
+      if (res.code === 200) {
+        void message.success('删除成功~ (*^▽^*)')
+        searchTemplate({ opt: 4 }) //
+      }
+      state.loading = false
+    })
+    .catch(err => {
+      void message.error('查询失败，请检查网络~ (＞︿＜)')
+      console.error('An error occurred:', err)
+      state.loading = false
+    })
+}
+
+const cancelSelect = (): void => {
+  state.selectedRowKeys.length = 0
+}
+
+const onSelectChange = (selectedRowKeys: Key[]): void => {
+  console.log(selectedRowKeys)
+  state.selectedRowKeys = selectedRowKeys
+  if (state.selectedRowKeys.length !== 0) {
+    openDelete.value = true
+  }
+}
+
 const onDelete = (id: number): void => {
   console.log(id)
 }
@@ -207,13 +262,14 @@ const searchTemplate = ({ page, pageSize, opt }: SearchOptions = {}): void => {
       templateTable.length = 0
       if (res.data.records.length > 0) {
         total.value = res.data.total
-        res.data.records.forEach((item: any, index: number) => {
+        res.data.records.forEach((item: any) => {
           item.channelType = JSON.parse(item.pushWays).channelType
           item.messageType = JSON.parse(item.pushWays).messageType
           item.createTime = getDate(item.createTime)
           // eslint-disable-next-line
           item.templateStatus = item.templateStatus === 1 ? true : false
-          item.key = index
+          // item.key = index
+          item.key = item.templateId
           const i = item
           templateTable.push(i)
         })
@@ -240,13 +296,14 @@ onMounted(() => {
     .then(res => {
       if (res.data.records.length > 0) {
         total.value = res.data.total
-        res.data.records.forEach((item: any, index: number) => {
+        res.data.records.forEach((item: any) => {
           item.channelType = JSON.parse(item.pushWays).channelType
           item.messageType = JSON.parse(item.pushWays).messageType
           item.createTime = getDate(item.createTime)
           // eslint-disable-next-line
           item.templateStatus = item.templateStatus === 1 ? true : false
-          item.key = index
+          // item.key = index
+          item.key = item.templateId
           templateTable.push(item)
         })
         console.warn('初始化数据', templateTable)
@@ -256,13 +313,17 @@ onMounted(() => {
       console.error('An error occurred:', err)
     })
 })
+
+const a = computed(() => {
+  return store.$state.collapse ? 80 : 200 // 计算输入框应该有的高度
+})
 </script>
 
 <template>
   <!-- 搜索部分 -->
   <searchForm ref="searchform" @mes="searchTemplate({ opt: 1 })" />
   <!-- 表格部分 -->
-  <div id="message-container">
+  <div id="message-container" style="{ margin-bottom: 100px; }">
     <div class="message-section">
       <div class="splitter">
         <a-tooltip title="刷新">
@@ -271,17 +332,28 @@ onMounted(() => {
         <addTemplate ref="addtemplate" @add="saveTemplate()" />
       </div>
 
+      <div class="describe" v-if="hasSelected">
+        <template v-if="hasSelected">
+          <span class="count">
+            {{ `已选择 ${state.selectedRowKeys.length} 项` }}
+          </span>
+          <a-button type="link" class="cancel" @click="cancelSelect">取消选择</a-button>
+        </template>
+      </div>
       <!-- 表格部分 -->
       <a-table
         :columns="columns"
         :data-source="templateTable"
-        :scroll="{ x: 1200, y: 900 }"
-        bordered
+        :scroll="{ x: 1200, y: undefined, scrollToFirstRowOnChange: true }"
         class="components-table-demo-nested"
         @expand="getInnerData"
+        :expandIconColumnIndex="-1"
+        :expandIconAsCell="false"
         :pagination="false"
         :expandedRowKeys="expandedRowKeys"
+        :row-selection="{ selectedRowKeys: state.selectedRowKeys, onChange: onSelectChange }"
       >
+        >
         <template #bodyCell="{ column, record }">
           <template v-if="column.key === 'templateStatus'">
             <span>
@@ -294,9 +366,27 @@ onMounted(() => {
             </span>
           </template>
           <template v-if="column.key === 'operation'">
-            <a-button type="primary" class="btn-manager" size="small" style="font-size: 13px">编辑</a-button>
+            <a-button
+              type="link"
+              size="small"
+              style="font-size: 14px"
+              @click="getInnerData(false, record)"
+              v-if="judgeInclude(record)"
+            >
+              <UpOutlined />
+              收起
+            </a-button>
+            <a-button
+              type="link"
+              size="small"
+              style="font-size: 14px"
+              @click="getInnerData(true, record)"
+              v-if="!judgeInclude(record)"
+              ><DownOutlined />展开</a-button
+            >
+            <a-button type="link" class="btn-manager" size="small" style="font-size: 14px">编辑</a-button>
             <a-popconfirm title="确认删除吗?" @confirm="onDelete(record.templateId)" ok-text="确定" cancel-text="取消">
-              <a-button type="primary" danger size="small" style="font-size: 13px">删除</a-button>
+              <a-button type="link" danger size="small" style="font-size: 14px; margin-left: -5px">删除</a-button>
             </a-popconfirm>
           </template>
         </template>
@@ -317,12 +407,19 @@ onMounted(() => {
       />
     </div>
     <!-- 对表格的操作 -->
+    <div class="showDelete" :style="{ width: `calc(100% - ${a}px)` }" v-if="hasSelected">
+      <div class="box">{{ `已选择 ${state.selectedRowKeys.length} 项` }}</div>
+      <div class="del">
+        <a-button type="primary" style="font-size: 14px" @click="startDelete" :loading="state.loading"
+          >批量删除</a-button
+        >
+      </div>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
 #message-container {
-  height: 100%;
   overflow: auto;
 }
 
@@ -332,10 +429,10 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: right;
+  margin-bottom: 6px;
 }
 
 .message-section {
-  height: 100%;
   border-radius: 6px;
   margin-top: 12px;
   background: #ffffff;
@@ -349,6 +446,51 @@ onMounted(() => {
     margin-top: 20px;
     display: flex;
     justify-content: right;
+  }
+
+  .describe {
+    width: 100%;
+    background-color: rgb(248, 248, 248);
+    height: 40px;
+    margin-bottom: 20px;
+    line-height: 40px;
+    border-radius: 10px;
+    .count {
+      color: gray;
+      margin-left: 30px;
+    }
+    .cancel {
+      position: absolute;
+      right: 50px;
+      padding-top: 7px;
+    }
+  }
+}
+
+#message-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  .showDelete {
+    position: fixed; /* 将showDelete盒子设置为固定定位 */
+    inset-inline-end: 0;
+    bottom: 0; /* 将showDelete盒子的底部与页面底部对齐 */
+    right: 0; /* 将showDelete盒子的左侧与页面左侧对齐 */
+    background-color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    height: 60px;
+    z-index: 999;
+    box-sizing: border-box; /* 确保padding不会撑开盒子 */
+    transition: 0.2s;
+    line-height: 40px;
+    .box {
+      margin-left: 2%;
+    }
+    .del {
+      margin-left: 78%;
+    }
   }
 }
 </style>
