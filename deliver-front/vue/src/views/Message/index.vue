@@ -163,6 +163,10 @@ const startDelete = (): void => {
   }, 1000)
 }
 
+const cancelSelect = (): void => {
+  state.selectedRowKeys.length = 0
+}
+
 const onSelectChange = (selectedRowKeys: Key[]): void => {
   console.log('selectedRowKeys changed: ', selectedRowKeys)
   state.selectedRowKeys = selectedRowKeys
@@ -291,17 +295,20 @@ onMounted(() => {
   <div id="message-container">
     <div class="message-section">
       <div class="splitter">
-        <span class="describe">
-          <template v-if="hasSelected">
-            {{ `· 已选 ${state.selectedRowKeys.length} 项` }}
-          </template>
-        </span>
         <a-tooltip title="刷新">
           <a-button shape="circle" :icon="h(ReloadOutlined)" @click="searchTemplate({ opt: 1 })" />
         </a-tooltip>
         <addTemplate ref="addtemplate" @add="saveTemplate()" />
       </div>
 
+      <div class="describe" v-if="hasSelected">
+        <template v-if="hasSelected">
+          <span class="count">
+            {{ `已选择 ${state.selectedRowKeys.length} 项` }}
+          </span>
+          <a-button type="link" class="cancel" @click="cancelSelect">取消选择</a-button>
+        </template>
+      </div>
       <!-- 表格部分 -->
       <a-table
         :columns="columns"
@@ -368,10 +375,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: right;
-
-  .describe {
-    margin-left: 8px;
-  }
+  margin-bottom: 6px;
 }
 
 .message-section {
@@ -389,6 +393,24 @@ onMounted(() => {
     margin-top: 20px;
     display: flex;
     justify-content: right;
+  }
+
+  .describe {
+    width: 100%;
+    background-color: rgb(248, 248, 248);
+    height: 40px;
+    margin-bottom: 20px;
+    line-height: 40px;
+    border-radius: 10px;
+    .count {
+      color: gray;
+      margin-left: 30px;
+    }
+    .cancel {
+      position: absolute;
+      right: 50px;
+      padding-top: 7px;
+    }
   }
 }
 
