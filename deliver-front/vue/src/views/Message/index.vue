@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ReloadOutlined } from '@ant-design/icons-vue'
+import { ReloadOutlined, DownOutlined, UpOutlined } from '@ant-design/icons-vue'
 import { ref, reactive, h, onMounted, computed } from 'vue'
 import type { UnwrapRef } from 'vue'
 import type { TableColumnsType } from 'ant-design-vue'
@@ -50,7 +50,7 @@ const columns: TableColumnsType = [
     title: '操作',
     key: 'operation',
     fixed: 'right',
-    width: 140
+    width: 200
   }
 ]
 
@@ -90,12 +90,14 @@ const innerColumns = [
 /**
  * 渲染 data
  */
+
 const innertemplatedata: UnwrapRef<messageTemplate[]> = reactive([])
 
 const expandedRowKeys: number[] = reactive([])
 
 const getInnerData = (expanded, record): void => {
   // 判断是否点开
+  console.log('chufal')
   expandedRowKeys.length = 0
   if (expanded === true) {
     const b = record.key.toString()
@@ -104,7 +106,13 @@ const getInnerData = (expanded, record): void => {
     innertemplatedata.push(record)
   } else {
     expandedRowKeys.length = 0
+    innertemplatedata.length = 0
   }
+}
+
+const judgeInclude = (record): boolean => {
+  console.log(innertemplatedata.includes(record))
+  return innertemplatedata.includes(record)
 }
 
 /**
@@ -148,7 +156,7 @@ const state = reactive<{
   selectedRowKeys: Key[]
   loading: boolean
 }>({
-  selectedRowKeys: [], // Check here to configure the default column
+  selectedRowKeys: [],
   loading: false
 })
 
@@ -316,10 +324,13 @@ onMounted(() => {
         :scroll="{ x: 1200, y: undefined, scrollToFirstRowOnChange: true }"
         class="components-table-demo-nested"
         @expand="getInnerData"
+        :expandIconColumnIndex="-1"
+        :expandIconAsCell="false"
         :pagination="false"
         :expandedRowKeys="expandedRowKeys"
         :row-selection="{ selectedRowKeys: state.selectedRowKeys, onChange: onSelectChange }"
       >
+        >
         <template #bodyCell="{ column, record }">
           <template v-if="column.key === 'templateStatus'">
             <span>
@@ -332,9 +343,27 @@ onMounted(() => {
             </span>
           </template>
           <template v-if="column.key === 'operation'">
-            <a-button type="primary" class="btn-manager" size="small" style="font-size: 13px">编辑</a-button>
+            <a-button
+              type="link"
+              size="small"
+              style="font-size: 14px"
+              @click="getInnerData(false, record)"
+              v-if="judgeInclude(record)"
+            >
+              <UpOutlined />
+              收起
+            </a-button>
+            <a-button
+              type="link"
+              size="small"
+              style="font-size: 14px"
+              @click="getInnerData(true, record)"
+              v-if="!judgeInclude(record)"
+              ><DownOutlined />展开</a-button
+            >
+            <a-button type="link" class="btn-manager" size="small" style="font-size: 14px">编辑</a-button>
             <a-popconfirm title="确认删除吗?" @confirm="onDelete(record.templateId)" ok-text="确定" cancel-text="取消">
-              <a-button type="primary" danger size="small" style="font-size: 13px">删除</a-button>
+              <a-button type="link" danger size="small" style="font-size: 14px; margin-left: -5px">删除</a-button>
             </a-popconfirm>
           </template>
         </template>
