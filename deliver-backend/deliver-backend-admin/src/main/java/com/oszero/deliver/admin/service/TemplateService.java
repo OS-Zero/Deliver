@@ -28,4 +28,6 @@ public interface TemplateService extends IService<Template> {
     void save(TemplateSaveAndUpdateRequestDto dto);
 
     List<MessageTypeResponseDto> getMessageTypeByChannelType(TemplateAddGetByChannelRequestDto dto);
+
+    void testSendMessage(SendTestRequestDto sendTestRequestDto);
 }

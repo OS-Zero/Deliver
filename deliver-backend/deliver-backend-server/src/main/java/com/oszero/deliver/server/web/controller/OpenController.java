@@ -3,9 +3,7 @@ package com.oszero.deliver.server.web.controller;
 import com.oszero.deliver.server.model.CommonResult;
 import com.oszero.deliver.server.model.dto.request.SendRequestDto;
 import com.oszero.deliver.server.web.service.SendService;
-import com.taobao.api.ApiException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +26,12 @@ public class OpenController {
 
     private final SendService sendService;
 
+    /**
+     * 发送消息
+     *
+     * @param sendRequestDto 发送请求 DTO
+     * @return 返回成功信息
+     */
     @PostMapping("/sendMessage")
     public CommonResult<?> sendMessage(@Valid @RequestBody SendRequestDto sendRequestDto) {
         Integer send = sendService.send(sendRequestDto);
