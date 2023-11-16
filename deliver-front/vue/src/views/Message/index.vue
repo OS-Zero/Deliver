@@ -323,7 +323,7 @@ const a = computed(() => {
   <!-- 搜索部分 -->
   <searchForm ref="searchform" @mes="searchTemplate({ opt: 1 })" />
   <!-- 表格部分 -->
-  <div id="message-container" style="{ margin-bottom: 100px; }">
+  <div id="message-container" :style="{ height: hasSelected ? '100%' : 'auto' }">
     <div class="message-section">
       <div class="splitter">
         <a-tooltip title="刷新">
@@ -470,7 +470,7 @@ const a = computed(() => {
 #message-container {
   position: relative;
   width: 100%;
-  height: 100%;
+  // height: 100%;
   .showDelete {
     position: fixed; /* 将showDelete盒子设置为固定定位 */
     inset-inline-end: 0;
@@ -486,6 +486,8 @@ const a = computed(() => {
     transition: 0.2s;
     line-height: 40px;
     .box {
+      width: 15%;
+      height: 100%;
       margin-left: 2%;
     }
     .del {
