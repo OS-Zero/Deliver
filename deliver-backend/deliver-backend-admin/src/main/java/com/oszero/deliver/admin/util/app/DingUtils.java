@@ -41,7 +41,7 @@ public class DingUtils {
         try {
             response = client.execute(request);
         } catch (ApiException apiException) {
-            throw new BusinessException("获取 tenantAccessTokens 失败");
+            throw new BusinessException("获取 AccessToken 失败");
         }
 
         DingAccessTokenBody dingAccessTokenBody = JSONUtil.toBean(response.getBody(), DingAccessTokenBody.class);

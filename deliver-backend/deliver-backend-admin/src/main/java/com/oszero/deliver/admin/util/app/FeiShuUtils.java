@@ -4,6 +4,7 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.admin.model.app.FeiShuApp;
+import com.oszero.deliver.admin.model.dto.app.PlatformFileDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -42,5 +43,13 @@ public class FeiShuUtils {
         String body = response.body();
         TenantAccessTokenRespBody tenantAccessTokenRespBody = JSONUtil.toBean(body, TenantAccessTokenRespBody.class);
         return "Bearer " + tenantAccessTokenRespBody.getTenant_access_token();
+    }
+
+    public String uploadFeiShuFile(String tenantAccessToken, PlatformFileDto platformFileDto) {
+        return null;
+    }
+
+    public String uploadFeiShuImageFile(String tenantAccessToken, PlatformFileDto platformFileDto) {
+        return null;
     }
 }
