@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { ReloadOutlined, DownOutlined, UpOutlined } from '@ant-design/icons-vue'
+import { ReloadOutlined, DownOutlined, UpOutlined, ExclamationCircleOutlined } from '@ant-design/icons-vue'
 import { ref, reactive, h, onMounted, computed } from 'vue'
 import type { UnwrapRef } from 'vue'
 import type { TableColumnsType } from 'ant-design-vue'
-import { message } from 'ant-design-vue'
+import { message, Modal } from 'ant-design-vue'
 import type { messageTemplate, searchMessage } from './type'
 import searchForm from './components/searchForm.vue'
 import addTemplate from './components/addTemplate.vue'
@@ -218,6 +218,22 @@ const onDelete = (id: number): void => {
     })
 }
 
+const [modal, contextHolder] = Modal.useModal()
+
+const showDeleteConfirm = (): void => {
+  modal.confirm({
+    title: '确认删除吗?',
+    icon: h(ExclamationCircleOutlined),
+    content: '删除后不可恢复，请谨慎删除！',
+    okText: '确认',
+    okType: 'danger',
+    cancelText: '取消',
+    onOk() {
+      startDelete()
+    }
+  })
+}
+
 /// 修改操作
 const changeStatus = (id: number, status: number | boolean): void => {
   // eslint-disable-next-line
@@ -425,9 +441,10 @@ const a = computed(() => {
     <div class="showDelete" :style="{ width: `calc(100% - ${a}px)` }" v-if="hasSelected">
       <div class="box">{{ `已选择 ${state.selectedRowKeys.length} 项` }}</div>
       <div class="del">
-        <a-button type="primary" style="font-size: 14px" @click="startDelete" :loading="state.loading"
-          >批量删除</a-button
-        >
+        <a-button type="primary" style="font-size: 14px" :loading="state.loading" @click="showDeleteConfirm">
+          批量删除
+        </a-button>
+        <contextHolder />
       </div>
     </div>
   </div>
@@ -506,7 +523,7 @@ const a = computed(() => {
       margin-left: 2%;
     }
     .del {
-      margin-left: 78%;
+      margin-left: 75%;
     }
   }
 }
