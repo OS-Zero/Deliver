@@ -1,4 +1,4 @@
-package com.oszero.deliver.admin.util;
+package com.oszero.deliver.admin.util.app;
 
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
