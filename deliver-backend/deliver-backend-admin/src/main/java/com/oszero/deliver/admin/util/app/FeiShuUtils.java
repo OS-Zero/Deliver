@@ -1,8 +1,10 @@
 package com.oszero.deliver.admin.util.app;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONUtil;
+import com.oszero.deliver.admin.exception.BusinessException;
 import com.oszero.deliver.admin.model.app.FeiShuApp;
 import com.oszero.deliver.admin.model.dto.app.PlatformFileDto;
 import lombok.AllArgsConstructor;
@@ -50,6 +52,27 @@ public class FeiShuUtils {
     }
 
     public String uploadFeiShuImageFile(String tenantAccessToken, PlatformFileDto platformFileDto) {
-        return null;
+        HttpResponse response = HttpRequest.post("https://open.feishu.cn/open-apis/im/v1/images")
+                .header("Authorization", tenantAccessToken)
+                .header("Content-Type", "multipart/form-data; boundary=---7MA4YWxkTrZu0gW")
+                .form("image_type", "message")
+                .form("image", platformFileDto.getFile(), platformFileDto.getFileName())
+                .execute();
+        @Data
+        class FeiShuUploadImageResponse {
+            private Integer code;
+            private String msg;
+            private Data data;
+
+            @lombok.Data
+            class Data {
+                private String image_key;
+            }
+        }
+        FeiShuUploadImageResponse feiShuUploadImageResponse = JSONUtil.toBean(response.body(), FeiShuUploadImageResponse.class);
+        if (!feiShuUploadImageResponse.getCode().equals(0) || StrUtil.isBlank(feiShuUploadImageResponse.getData().getImage_key())) {
+            throw new BusinessException("上传飞书图片失败！！！");
+        }
+        return feiShuUploadImageResponse.getData().getImage_key();
     }
 }

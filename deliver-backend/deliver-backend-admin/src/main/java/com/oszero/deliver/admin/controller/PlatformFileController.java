@@ -16,7 +16,7 @@ public class PlatformFileController {
     private final PlatformFileService platformFileService;
 
     @PostMapping("/uploadFile")
-    public CommonResult<?> uploadFile(@Valid @RequestBody PlatformFileUploadRequestDto dto, @RequestParam("platformFile") MultipartFile platformFile) throws Exception {
+    public CommonResult<?> uploadFile(@Valid PlatformFileUploadRequestDto dto, @RequestParam("platformFile") MultipartFile platformFile) throws Exception {
         platformFileService.uploadFile(dto, platformFile);
         return CommonResult.success();
     }
