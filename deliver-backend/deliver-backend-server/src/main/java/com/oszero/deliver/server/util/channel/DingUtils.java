@@ -59,14 +59,13 @@ public class DingUtils {
         try {
             response = client.execute(request);
         } catch (ApiException apiException) {
-            // XHYTODO:2023/10/23  后续日志记录
+            // TODO:2023/10/23  后续日志记录
             throw new LinkProcessException("获取 tenantAccessTokens 失败");
         }
 
         DingAccessTokenBody dingAccessTokenBody = JSONUtil.toBean(response.getBody(), DingAccessTokenBody.class);
         return dingAccessTokenBody.getAccessToken();
     }
-
 
     /**
      * 发送钉钉消息
