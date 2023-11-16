@@ -62,6 +62,12 @@ public class TemplateController {
         return CommonResult.success(messageTypeResponseDtoList);
     }
 
+    @PostMapping("/testSendMessage")
+    public CommonResult<?> testSendMessage(@Valid @RequestBody SendTestRequestDto sendTestRequestDto) {
+        templateService.testSendMessage(sendTestRequestDto);
+        return CommonResult.success();
+    }
+
     /**
      * excel 批量导入模板
      *
