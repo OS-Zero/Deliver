@@ -198,7 +198,24 @@ const onSelectChange = (selectedRowKeys: Key[]): void => {
 }
 
 const onDelete = (id: number): void => {
-  console.log(id)
+  const arr: number[] = []
+  arr.push(id)
+  const templates = {
+    ids: arr
+  }
+  deleteTemplate(templates)
+    .then(res => {
+      if (res.code === 200) {
+        void message.success('删除成功~ (*^▽^*)')
+        searchTemplate({ opt: 4 }) //
+      }
+      state.loading = false
+    })
+    .catch(err => {
+      void message.error('删除失败，请检查网络~ (＞︿＜)')
+      console.error('An error occurred:', err)
+      state.loading = false
+    })
 }
 
 /// 修改操作
@@ -268,7 +285,6 @@ const searchTemplate = ({ page, pageSize, opt }: SearchOptions = {}): void => {
           item.createTime = getDate(item.createTime)
           // eslint-disable-next-line
           item.templateStatus = item.templateStatus === 1 ? true : false
-          // item.key = index
           item.key = item.templateId
           const i = item
           templateTable.push(i)
@@ -302,7 +318,6 @@ onMounted(() => {
           item.createTime = getDate(item.createTime)
           // eslint-disable-next-line
           item.templateStatus = item.templateStatus === 1 ? true : false
-          // item.key = index
           item.key = item.templateId
           templateTable.push(item)
         })
