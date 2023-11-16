@@ -1,16 +1,24 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { DownOutlined, UpOutlined } from '@ant-design/icons-vue'
-import type { appSearch } from '../type'
+import locale from 'ant-design-vue/es/date-picker/locale/zh_CN'
+import 'dayjs/locale/zh-cn'
+import type { searchMessage } from '../type'
 import type { FormInstance } from 'ant-design-vue'
+import type { Dayjs } from 'dayjs'
+
+interface DelayLoading {
+  delay: number
+}
 
 const expand = ref(false)
 
 const formRef = ref<FormInstance>()
 
-const searchForm = reactive<appSearch>({
-  appName: undefined,
-  channelType: undefined,
+const searchPage = reactive<searchMessage>({
+  templateName: undefined,
+  pushRange: undefined,
+  usersType: undefined,
   currentPage: 1,
   pageSize: 10,
   startTime: undefined,
@@ -18,33 +26,60 @@ const searchForm = reactive<appSearch>({
   perid: undefined
 })
 
-const onFinish = (): void => {
-  console.log('searchForm: ', searchForm)
+const selectedRange = ref<Array<Dayjs | null>>([null, null])
+
+const iconLoading = ref<boolean | DelayLoading>(false)
+
+const clearForm = (): void => {
+  selectedRange.value = [null, null]
+  formRef.value?.resetFields()
 }
 
-// 等接口出来在该
-const searchMessage = (): void => {
-  console.log('查询成功')
+const onRangeChange = (value: [Dayjs, Dayjs] | [string, string], dateString: [string, string]): void => {
+  if (Array.isArray(value)) {
+    searchPage.startTime = dateString[0] + ' 00:00:00'
+    searchPage.endTime = dateString[1] + ' 23:59:59'
+  }
 }
+
+// 新增自定义事件，当查询按钮被点击时，可以立即告知父组件
+const emit = defineEmits(['mes'])
+
+const searchMes = (): void => {
+  iconLoading.value = true
+  emit('mes')
+}
+
+defineExpose({
+  searchPage,
+  iconLoading
+})
 </script>
 
 <template>
-  <a-form ref="formRef" name="advanced_search" class="search" :model="searchForm" @finish="onFinish">
+  <a-form ref="formRef" name="advanced_search" class="search" :model="searchPage">
     <a-row :gutter="24">
       <a-col :span="8">
-        <a-form-item name="appName" label="APP 名">
-          <a-input v-model:value="searchForm.appName" placeholder="请输入 APP 名"></a-input>
+        <a-form-item name="templateName" label="模板名">
+          <a-input v-model:value="searchPage.templateName" placeholder="请输入模板名"></a-input>
         </a-form-item>
       </a-col>
       <a-col :span="8">
-        <a-form-item name="channelType" label="渠道类型">
-          <a-select v-model:value="searchForm.channelType" placeholder="请选择渠道类型">
-            <a-select-option value="1">电话</a-select-option>
-            <a-select-option value="2">短信</a-select-option>
-            <a-select-option value="3">邮件</a-select-option>
-            <a-select-option value="4">钉钉</a-select-option>
-            <a-select-option value="5">企微</a-select-option>
-            <a-select-option value="6">飞书</a-select-option>
+        <a-form-item name="pushRange" label="推送范围">
+          <a-select v-model:value="searchPage.pushRange" placeholder="请选择推送范围">
+            <a-select-option value="0">不限</a-select-option>
+            <a-select-option value="1">企业内部</a-select-option>
+            <a-select-option value="2">企业外部</a-select-option>
+          </a-select>
+        </a-form-item>
+      </a-col>
+      <a-col :span="8" v-if="expand">
+        <a-form-item name="usersType" label="用户类型">
+          <a-select v-model:value="searchPage.usersType" placeholder="请选择用户类型">
+            <a-select-option value="1">企业账号</a-select-option>
+            <a-select-option value="2">电话</a-select-option>
+            <a-select-option value="3">邮箱</a-select-option>
+            <a-select-option value="4">平台 UserId</a-select-option>
           </a-select>
         </a-form-item>
       </a-col>
@@ -52,7 +87,7 @@ const searchMessage = (): void => {
         <a-form-item name="perid" label="创建时间">
           <a-range-picker
             :locale="locale"
-            v-model:value="searchForm.perid"
+            v-model:value="searchPage.perid"
             @change="onRangeChange"
             format="YYYY-MM-DD"
             :placeholder="['起始日期', '结束日期']"
@@ -66,8 +101,8 @@ const searchMessage = (): void => {
           'margin-bottom': expand === true ? '24px' : '0'
         }"
       >
-        <a-button type="primary" html-type="submit" @click="searchMessage">查询</a-button>
-        <a-button style="margin: 0 8px" @click="() => (formRef as FormInstance).resetFields()">清空</a-button>
+        <a-button type="primary" html-type="submit" @click="searchMes" :loading="iconLoading">查询</a-button>
+        <a-button style="margin: 0 8px" @click="clearForm">清空</a-button>
         <a style="font-size: 14px" @click="expand = !expand">
           <template v-if="expand">
             <UpOutlined />
@@ -83,4 +118,10 @@ const searchMessage = (): void => {
   </a-form>
 </template>
 
-<style scoped></style>
+<style scoped>
+.search {
+  padding: 24px 24px 0 24px;
+  background: #ffffff;
+  border-radius: 6px;
+}
+</style>
