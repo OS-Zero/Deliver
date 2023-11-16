@@ -29,5 +29,4 @@
 
 ### VS Code ###
 .vscode/
-/logs
-/dist/notification/logs
+/logs/

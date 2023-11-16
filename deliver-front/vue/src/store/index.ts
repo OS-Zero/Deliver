@@ -8,6 +8,9 @@ export const useStore = defineStore('store', {
   },
   getters: {},
   actions: {
+    getCollapse() {
+      return this.collapse
+    },
     changeCollapse() {
       this.collapse = !this.collapse
     }

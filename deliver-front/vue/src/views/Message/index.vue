@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { ReloadOutlined, DownOutlined, UpOutlined } from '@ant-design/icons-vue'
+import { ReloadOutlined, DownOutlined, UpOutlined, ExclamationCircleOutlined } from '@ant-design/icons-vue'
 import { ref, reactive, h, onMounted, computed } from 'vue'
 import type { UnwrapRef } from 'vue'
 import type { TableColumnsType } from 'ant-design-vue'
-import { message } from 'ant-design-vue'
+import { message, Modal } from 'ant-design-vue'
 import type { messageTemplate, searchMessage } from './type'
 import searchForm from './components/searchForm.vue'
 import addTemplate from './components/addTemplate.vue'
@@ -100,8 +100,8 @@ const getInnerData = (expanded, record): void => {
   // 判断是否点开
   expandedRowKeys.length = 0
   if (expanded === true) {
-    const b = record.key.toString()
-    expandedRowKeys.push(Number(b.slice(-1)))
+    const b = record.key
+    expandedRowKeys.push(b)
     innertemplatedata.length = 0
     innertemplatedata.push(record)
   } else {
@@ -179,7 +179,7 @@ const startDelete = (): void => {
       state.loading = false
     })
     .catch(err => {
-      void message.error('查询失败，请检查网络~ (＞︿＜)')
+      void message.error('删除失败，请检查网络~ (＞︿＜)')
       console.error('An error occurred:', err)
       state.loading = false
     })
@@ -198,7 +198,40 @@ const onSelectChange = (selectedRowKeys: Key[]): void => {
 }
 
 const onDelete = (id: number): void => {
-  console.log(id)
+  const arr: number[] = []
+  arr.push(id)
+  const templates = {
+    ids: arr
+  }
+  deleteTemplate(templates)
+    .then(res => {
+      if (res.code === 200) {
+        void message.success('删除成功~ (*^▽^*)')
+        searchTemplate({ opt: 4 }) //
+      }
+      state.loading = false
+    })
+    .catch(err => {
+      void message.error('删除失败，请检查网络~ (＞︿＜)')
+      console.error('An error occurred:', err)
+      state.loading = false
+    })
+}
+
+const [modal, contextHolder] = Modal.useModal()
+
+const showDeleteConfirm = (): void => {
+  modal.confirm({
+    title: '确认删除吗?',
+    icon: h(ExclamationCircleOutlined),
+    content: '删除后不可恢复，请谨慎删除！',
+    okText: '确认',
+    okType: 'danger',
+    cancelText: '取消',
+    onOk() {
+      startDelete()
+    }
+  })
 }
 
 /// 修改操作
@@ -268,7 +301,6 @@ const searchTemplate = ({ page, pageSize, opt }: SearchOptions = {}): void => {
           item.createTime = getDate(item.createTime)
           // eslint-disable-next-line
           item.templateStatus = item.templateStatus === 1 ? true : false
-          // item.key = index
           item.key = item.templateId
           const i = item
           templateTable.push(i)
@@ -302,7 +334,6 @@ onMounted(() => {
           item.createTime = getDate(item.createTime)
           // eslint-disable-next-line
           item.templateStatus = item.templateStatus === 1 ? true : false
-          // item.key = index
           item.key = item.templateId
           templateTable.push(item)
         })
@@ -315,7 +346,7 @@ onMounted(() => {
 })
 
 const a = computed(() => {
-  return store.$state.collapse ? 80 : 200 // 计算输入框应该有的高度
+  return store.getCollapse() ? 80 : 200 // 计算输入框应该有的高度
 })
 </script>
 
@@ -323,7 +354,7 @@ const a = computed(() => {
   <!-- 搜索部分 -->
   <searchForm ref="searchform" @mes="searchTemplate({ opt: 1 })" />
   <!-- 表格部分 -->
-  <div id="message-container" style="{ margin-bottom: 100px; }">
+  <div id="message-container" :style="{ height: hasSelected ? '100%' : 'auto' }">
     <div class="message-section">
       <div class="splitter">
         <a-tooltip title="刷新">
@@ -410,9 +441,10 @@ const a = computed(() => {
     <div class="showDelete" :style="{ width: `calc(100% - ${a}px)` }" v-if="hasSelected">
       <div class="box">{{ `已选择 ${state.selectedRowKeys.length} 项` }}</div>
       <div class="del">
-        <a-button type="primary" style="font-size: 14px" @click="startDelete" :loading="state.loading"
-          >批量删除</a-button
-        >
+        <a-button type="primary" style="font-size: 14px" :loading="state.loading" @click="showDeleteConfirm">
+          批量删除
+        </a-button>
+        <contextHolder />
       </div>
     </div>
   </div>
@@ -470,7 +502,7 @@ const a = computed(() => {
 #message-container {
   position: relative;
   width: 100%;
-  height: 100%;
+  // height: 100%;
   .showDelete {
     position: fixed; /* 将showDelete盒子设置为固定定位 */
     inset-inline-end: 0;
@@ -486,10 +518,12 @@ const a = computed(() => {
     transition: 0.2s;
     line-height: 40px;
     .box {
+      width: 15%;
+      height: 100%;
       margin-left: 2%;
     }
     .del {
-      margin-left: 78%;
+      margin-left: 75%;
     }
   }
 }
