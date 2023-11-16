@@ -94,7 +94,7 @@ public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, Pla
                 // 得到 token
                 String tenantAccessToken = feiShuUtils.getTenantAccessToken(feiShuApp);
                 // 发送
-                if (PlatformFileTypeEnum.FEI_SHU_IMAGE.getName().equals(dto.getFileType())) {
+                if (PlatformFileTypeEnum.FEI_SHU_IMAGE.getFileType().equals(dto.getFileType())) {
                     if (!PlatformFileConstant.feiShuImageFormatSet.contains(fileFormat)) {
                         throw new BusinessException("不支持 " + fileFormat + " 格式的图片！！！");
                     }
@@ -104,7 +104,7 @@ public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, Pla
                     fileKey = feiShuUtils.uploadFeiShuImageFile(tenantAccessToken, platformFileDto);
                 } else {
                     if (!PlatformFileConstant.feiShuFileFormatSet.contains(fileFormat)) {
-                        throw new BusinessException("不支持 " + fileFormat + " 格式的图片！！！");
+                        throw new BusinessException("不支持 " + fileFormat + " 格式的文件！！！");
                     }
                     if (fileSize > PlatformFileConstant.feiShuFileMaxSize) {
                         throw new BusinessException("文件最大为：30M！！！");
