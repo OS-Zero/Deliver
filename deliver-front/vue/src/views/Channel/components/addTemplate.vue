@@ -38,7 +38,7 @@ const templateItem: addTemp = reactive({
 
 const open = ref<boolean>(false)
 
-const labelCol = { span: 5 }
+const labelCol = { span: 4 }
 
 const wrapperCol = { span: 20 }
 
