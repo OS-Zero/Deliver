@@ -1,302 +1,424 @@
 <script lang="ts" setup>
-import { ReloadOutlined } from '@ant-design/icons-vue'
-import { ref, reactive, h, watch, computed } from 'vue'
+import { ReloadOutlined, DownOutlined, UpOutlined, ExclamationCircleOutlined } from '@ant-design/icons-vue'
+import { ref, reactive, h, onMounted, computed } from 'vue'
 import type { UnwrapRef } from 'vue'
 import type { TableColumnsType } from 'ant-design-vue'
-import type { Rule } from 'ant-design-vue/es/form'
-import type { messageTemplate } from './type'
+import { message, Modal } from 'ant-design-vue'
+import type { messageTemplate, searchMessage } from './type'
 import searchForm from './components/searchForm.vue'
-// import { message } from 'ant-design-vue'
+import addTemplate from './components/addTemplate.vue'
+import { addTemplatePages, deleteTemplate, getTemplatePages, updateStatus } from '@/api/message'
+import { getDate } from '@/utils/date'
+import { useStore } from '@/store'
 
-/// 表格部分
-// 新增
-const open = ref<boolean>(false)
-const addModules = (): void => {
-  open.value = true
-}
-
-const labelCol = { span: 4 }
-
-const wrapperCol = { span: 20 }
-
-const addTemplate: UnwrapRef<messageTemplate> = reactive({
-  templateName: '',
-  pushRange: '',
-  userType: '',
-  channel: '',
-  messageType: '',
-  channelApp: ''
-})
-
-const rules: Record<string, Rule[]> = {
-  templateName: [
-    { required: true, message: '请输入模板名', trigger: 'change' },
-    { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
-  ],
-  pushRange: [{ required: true, message: '请选择推送范围', trigger: 'change' }],
-  userType: [{ required: true, message: '请选择用户类型', trigger: 'change' }],
-  messageType: [
-    {
-      required: true,
-      message: '请选择消息类型',
-      trigger: 'change'
-    }
-  ],
-  channel: [
-    {
-      required: true,
-      message: '请选择渠道',
-      trigger: 'change'
-    }
-  ],
-  channelApp: [{ required: true, message: '请选择渠道App', trigger: 'change' }]
-}
-
-const templateForm = ref()
-const handleOk = (): void => {
-  templateForm.value
-    .validate()
-    .then(() => {
-      console.log('values', addTemplate)
-      open.value = false
-    })
-    .catch(error => {
-      console.log('error', error)
-    })
-}
-const handleCancel = (): void => {
-  templateForm.value.resetFields()
-}
-
-const channelData = ['默认标签1', '默认标签2', '默认标签3']
-
-const messageData = {
-  默认标签1: ['Online'],
-  默认标签2: ['Promotion'],
-  默认标签3: ['Offline']
-}
-
-const appData = {
-  默认标签1: ['IOS'],
-  默认标签2: ['安卓'],
-  默认标签3: ['MAC']
-}
-
-const mesType = computed(() => {
-  return messageData[addTemplate.channel] === undefined ? [] : messageData[addTemplate.channel]
-})
-
-const appType = computed(() => {
-  return appData[addTemplate.channel] === undefined ? [] : appData[addTemplate.channel]
-})
-
-watch(
-  () => addTemplate.channel,
-  newVal => {
-    if (messageData[newVal] !== undefined) {
-      addTemplate.messageType = messageData[newVal][0]
-    } else {
-      // 未定义或空数组的情况
-      addTemplate.messageType = ''
-      messageData[newVal] = []
-    }
-    if (appData[newVal] !== undefined) {
-      addTemplate.channelApp = appData[newVal][0]
-    } else {
-      // 处理未定义或空数组的情况
-      addTemplate.channelApp = ''
-      appData[newVal] = []
-    }
-  }
-)
-
+/**
+ * 表格初始化
+ */
+const templateTable: UnwrapRef<messageTemplate[]> = reactive([])
+// 表格数据
 const columns: TableColumnsType = [
   {
-    title: 'AppId',
-    dataIndex: 'appId',
-    key: 'appId'
+    title: 'TemplateId',
+    dataIndex: 'templateId',
+    key: 'templateId'
   },
   {
-    title: 'App名称',
-    dataIndex: 'appName',
-    key: 'appName'
+    title: '模板名',
+    dataIndex: 'templateName',
+    key: 'templateName'
   },
   {
-    title: '渠道类型',
-    dataIndex: 'channelType',
-    key: 'channelType'
+    title: '推送范围',
+    dataIndex: 'pushRange',
+    key: 'pushRange'
   },
   {
-    title: '使用次数',
+    title: '用户类型',
+    dataIndex: 'usersType',
+    key: 'usersType'
+  },
+  {
+    title: '模板累计使用数',
     dataIndex: 'useCount',
     key: 'useCount'
   },
   {
-    title: 'app状态',
-    dataIndex: 'appStatus',
-    key: 'appStatus'
+    title: '模板状态',
+    dataIndex: 'templateStatus',
+    key: 'templateStatus'
   },
   {
     title: '操作',
     key: 'operation',
     fixed: 'right',
-    width: 180
+    width: 200
   }
 ]
-// data到时候肯定是需要去接口获取到res然后渲染的
-const data = ref([
-  {
-    key: '1',
-    appId: '1',
-    appName: '飞书消息推送',
-    channelType: 'b',
-    useCount: 0,
-    appStatus: 1,
-    appConfig: "{'a':1,'b':2,'c':3}",
-    createUser: 1,
-    createTime: '2023/12/6'
-  },
-  {
-    key: '2',
-    appId: '1',
-    appName: '飞书消息推送',
-    channelType: 'b',
-    useCount: 0,
-    appStatus: 1,
-    appConfig: 'xxx',
-    createUser: 1,
-    createTime: '2023/12/6'
-  },
-  {
-    key: '3',
-    appId: '1',
-    appName: '飞书消息推送',
-    channelType: 'b',
-    useCount: 0,
-    appStatus: 1,
-    appConfig: 'xxx',
-    createUser: 1,
-    createTime: '2023/12/6'
-  },
-  {
-    key: '4',
-    appId: '1',
-    appName: '飞书消息推送',
-    channelType: 'b',
-    useCount: 0,
-    appStatus: 1,
-    appConfig: 'xxx',
-    createUser: 1,
-    createTime: '2023/12/6'
-  },
-  {
-    key: '',
-    appId: '1',
-    appName: '飞书消息推送',
-    channelType: 'b',
-    useCount: 0,
-    appStatus: 1,
-    appConfig: 'xxx',
-    createUser: 1,
-    createTime: '2023/12/6'
+
+// const innerColumns = [
+//   {
+//     title: '渠道选择',
+//     dataIndex: 'channelType',
+//     key: 'channelType'
+//   },
+//   {
+//     title: '消息类型',
+//     dataIndex: 'messageType',
+//     key: 'messageType'
+//   },
+//   {
+//     title: '创建用户',
+//     dataIndex: 'createUser',
+//     key: 'createUser'
+//   },
+//   {
+//     title: '创建时间',
+//     dataIndex: 'createTime',
+//     key: 'createTime'
+//   },
+//   {
+//     title: '渠道 AppId',
+//     dataIndex: 'appId',
+//     key: 'appId'
+//   },
+//   {
+//     title: '渠道 APP 名',
+//     dataIndex: 'appName',
+//     key: 'appName'
+//   }
+// ]
+
+/**
+ * 渲染 data
+ */
+
+const innertemplatedata: UnwrapRef<messageTemplate[]> = reactive([])
+
+const expandedRowKeys: number[] = reactive([])
+
+const getInnerData = (expanded, record): void => {
+  // 判断是否点开
+  expandedRowKeys.length = 0
+  if (expanded === true) {
+    const b = record.key
+    expandedRowKeys.push(b)
+    innertemplatedata.length = 0
+    innertemplatedata.push(record)
+  } else {
+    expandedRowKeys.length = 0
+    innertemplatedata.length = 0
   }
-])
+}
+
+const judgeInclude = (record): boolean => {
+  return innertemplatedata.includes(record)
+}
+
+/**
+ * 相关操作: 增删改查
+ */
+interface SearchOptions {
+  page?: number
+  pageSize?: number
+  opt?: number // 操作标识符，识别操作，保证message消息提示不重复
+}
+
+const searchform = ref()
+const addtemplate = ref()
+
+/// 新增操作
+const saveTemplate = (): void => {
+  const { channelType, messageType, ...rest } = addtemplate.value.templateItem
+  const savetemplate = { ...rest }
+  console.warn(savetemplate)
+  addTemplatePages(savetemplate)
+    .then(res => {
+      if (res.code === 200) {
+        void message.success('新增成功~ (*^▽^*)')
+        addtemplate.value.open = false
+        searchTemplate({ opt: 2 }) // 更新表单
+        addtemplate.value.iconLoading = false
+      }
+    })
+    .catch(err => {
+      addtemplate.value.open = false
+      addtemplate.value.iconLoading = false
+      void message.error('新增失败，请检查网络~ (＞︿＜)')
+      console.error('An error occurred:', err)
+    })
+}
+
+/// 删除操作
+type Key = string | number
+
+const store = useStore()
+
+const state = reactive<{
+  selectedRowKeys: Key[]
+  loading: boolean
+}>({
+  selectedRowKeys: [],
+  loading: false
+})
+
+const openDelete = ref(false)
+
+const hasSelected = computed(() => state.selectedRowKeys.length > 0)
+
+const startDelete = (): void => {
+  state.loading = true
+  const templates = {
+    ids: state.selectedRowKeys as number[]
+  }
+  deleteTemplate(templates)
+    .then(res => {
+      if (res.code === 200) {
+        void message.success('删除成功~ (*^▽^*)')
+        searchTemplate({ opt: 4 }) //
+      }
+      state.loading = false
+    })
+    .catch(err => {
+      void message.error('删除失败，请检查网络~ (＞︿＜)')
+      console.error('An error occurred:', err)
+      state.loading = false
+    })
+}
+
+const cancelSelect = (): void => {
+  state.selectedRowKeys.length = 0
+}
+
+const onSelectChange = (selectedRowKeys: Key[]): void => {
+  console.log(selectedRowKeys)
+  state.selectedRowKeys = selectedRowKeys
+  if (state.selectedRowKeys.length !== 0) {
+    openDelete.value = true
+  }
+}
+
+const onDelete = (id: number): void => {
+  const arr: number[] = []
+  arr.push(id)
+  const templates = {
+    ids: arr
+  }
+  deleteTemplate(templates)
+    .then(res => {
+      if (res.code === 200) {
+        void message.success('删除成功~ (*^▽^*)')
+        searchTemplate({ opt: 4 }) //
+      }
+      state.loading = false
+    })
+    .catch(err => {
+      void message.error('删除失败，请检查网络~ (＞︿＜)')
+      console.error('An error occurred:', err)
+      state.loading = false
+    })
+}
+
+const [modal, contextHolder] = Modal.useModal()
+
+const showDeleteConfirm = (): void => {
+  modal.confirm({
+    title: '确认删除吗?',
+    icon: h(ExclamationCircleOutlined),
+    content: '删除后不可恢复，请谨慎删除！',
+    okText: '确认',
+    okType: 'danger',
+    cancelText: '取消',
+    onOk() {
+      startDelete()
+    }
+  })
+}
+
+/// 修改操作
+const changeStatus = (id: number, status: number | boolean): void => {
+  // eslint-disable-next-line
+  const sta = status === true ? 1 : 0
+  const obj = {
+    templateId: id,
+    templateStatus: sta
+  }
+  updateStatus(obj)
+    .then(res => {
+      if (res.code === 200) {
+        void message.success('修改成功~ (*^▽^*)')
+        searchTemplate({ opt: 3 }) // 更新表单
+      }
+    })
+    .catch(err => {
+      void message.error('查询失败，请检查网络~ (＞︿＜)')
+      console.error('An error occurred:', err)
+    })
+}
+
+/// 查询操作
+const searchItem: searchMessage = reactive({
+  templateName: undefined,
+  pushRange: undefined,
+  usersType: undefined,
+  currentPage: 1,
+  pageSize: 10,
+  startTime: undefined,
+  endTime: undefined
+})
+
+const total = ref()
+
 const current = ref()
-const pageSize = ref()
-// const visible = ref(false)
-const pagination = computed(() => ({
-  total: 200,
-  current: current.value,
-  pageSize: pageSize.value
-}))
-// const code = ref<string>("{'a':1,'b':2}")
+
+const change = (page: number, pageSize: number): void => {
+  searchTemplate({ page, pageSize })
+}
+
+const locale = {
+  items_per_page: '条/页', // 每页显示条数的文字描述
+  jump_to: '跳至', // 跳转到某页的文字描述
+  page: '页', // 页的文字描述
+  prev_page: '上一页', // 上一页按钮文字描述
+  next_page: '下一页' // 下一页按钮文字描述
+}
+
+// 条件查询
+const searchTemplate = ({ page, pageSize, opt }: SearchOptions = {}): void => {
+  // 对象解构
+  const { perid, ...rest } = searchform.value.searchPage
+  const searchNeedMes = { ...rest }
+  console.warn(searchNeedMes)
+  searchNeedMes.currentPage = page
+  searchNeedMes.pageSize = pageSize
+  getTemplatePages(searchNeedMes)
+    .then(res => {
+      templateTable.length = 0
+      if (res.data.records.length > 0) {
+        total.value = res.data.total
+        res.data.records.forEach((item: any) => {
+          item.channelType = JSON.parse(item.pushWays).channelType
+          item.messageType = JSON.parse(item.pushWays).messageType
+          item.createTime = getDate(item.createTime)
+          // eslint-disable-next-line
+          item.templateStatus = item.templateStatus === 1 ? true : false
+          item.key = item.templateId
+          const i = item
+          templateTable.push(i)
+        })
+        if (opt === 1) {
+          void message.success('查询成功~ (*^▽^*)')
+        }
+      } else {
+        if (opt === 1) {
+          void message.success('未查询到任何数据   ≧ ﹏ ≦')
+        }
+      }
+      console.warn('查询数据', templateTable)
+      searchform.value.iconLoading = false
+    })
+    .catch(err => {
+      searchform.value.iconLoading = false
+      void message.error('查询失败，请检查网络~ (＞︿＜)')
+      console.error('An error occurred:', err)
+    })
+}
+
+onMounted(() => {
+  getTemplatePages(searchItem)
+    .then(res => {
+      if (res.data.records.length > 0) {
+        total.value = res.data.total
+        res.data.records.forEach((item: any) => {
+          item.channelType = JSON.parse(item.pushWays).channelType
+          item.messageType = JSON.parse(item.pushWays).messageType
+          item.createTime = getDate(item.createTime)
+          // eslint-disable-next-line
+          item.templateStatus = item.templateStatus === 1 ? true : false
+          item.key = item.templateId
+          templateTable.push(item)
+        })
+        console.warn('初始化数据', templateTable)
+      }
+    })
+    .catch(err => {
+      console.error('An error occurred:', err)
+    })
+})
+
+const a = computed(() => {
+  return store.getCollapse() ? 80 : 200 // 计算输入框应该有的高度
+})
 </script>
 
 <template>
   <!-- 搜索部分 -->
-  <searchForm />
+  <searchForm ref="searchform" @mes="searchTemplate({ opt: 1 })" />
   <!-- 表格部分 -->
-  <div id="message-container">
+  <div id="message-container" :style="{ height: hasSelected ? '100%' : 'auto' }">
     <div class="message-section">
       <div class="splitter">
         <a-tooltip title="刷新">
-          <a-button shape="circle" :icon="h(ReloadOutlined)" />
+          <a-button shape="circle" :icon="h(ReloadOutlined)" @click="searchTemplate({ opt: 1 })" />
         </a-tooltip>
-        <a-button type="primary" class="addModule" @click="addModules">新增模板</a-button>
-        <a-modal v-model:open="open" title="新增模板" width="650px" :footer="null" @cancel="handleCancel">
-          <a-form
-            ref="templateForm"
-            :model="addTemplate"
-            :rules="rules"
-            :label-col="labelCol"
-            :wrapper-col="wrapperCol"
-            class="temform"
-          >
-            <a-form-item ref="templateName" label="模板名" name="templateName" class="tem-item">
-              <a-input
-                v-model:value="addTemplate.templateName"
-                placeholder="请填写长度在3到20个字符的模板名"
-                style="width: 70%"
-              />
-            </a-form-item>
-            <a-form-item label="推送范围" name="pushRange" class="tem-item">
-              <a-radio-group v-model:value="addTemplate.pushRange" button-style="solid">
-                <a-radio-button value="杭州">杭州</a-radio-button>
-                <a-radio-button value="上海">上海</a-radio-button>
-                <a-radio-button value="北京">北京</a-radio-button>
-                <a-radio-button value="成都">成都</a-radio-button>
-              </a-radio-group>
-            </a-form-item>
-            <a-form-item label="用户类型" name="userType" class="tem-item">
-              <a-radio-group v-model:value="addTemplate.userType" button-style="solid">
-                <a-radio-button value="类型1">类型1</a-radio-button>
-                <a-radio-button value="类型2">类型2</a-radio-button>
-                <a-radio-button value="类型3">类型3</a-radio-button>
-                <a-radio-button value="类型4">类型4</a-radio-button>
-              </a-radio-group>
-            </a-form-item>
-            <a-form-item label="渠道选择" name="channel" class="tem-item">
-              <a-select
-                v-model:value="addTemplate.channel"
-                :options="channelData.map(pro => ({ value: pro }))"
-                style="width: 70%"
-              />
-            </a-form-item>
-            <a-form-item label="消息类型" name="messageType" class="tem-item">
-              <a-select
-                v-model:value="addTemplate.messageType"
-                :options="mesType.map((pro: any) => ({ value: pro }))"
-                style="width: 70%"
-              />
-            </a-form-item>
-            <a-form-item label="渠道App" name="channelApp" class="tem-item">
-              <a-select
-                v-model:value="addTemplate.channelApp"
-                :options="appType.map((pro: any) => ({ value: pro }))"
-                style="width: 70%"
-              />
-            </a-form-item>
-            <a-form-item :wrapper-col="{ span: 14, offset: 4 }" class="tem-item">
-              <a-button type="primary" @click="handleOk">确认新建</a-button>
-              <a-button style="margin-left: 10px" @click="handleCancel">重置</a-button>
-            </a-form-item>
-          </a-form>
-        </a-modal>
+        <addTemplate ref="addtemplate" @add="saveTemplate()" />
+      </div>
+
+      <div class="describe" v-if="hasSelected">
+        <template v-if="hasSelected">
+          <span class="count">
+            {{ `已选择 ${state.selectedRowKeys.length} 项` }}
+          </span>
+          <a-button type="link" class="cancel" @click="cancelSelect">取消选择</a-button>
+        </template>
       </div>
       <!-- 表格部分 -->
-
       <a-table
-        :pagination="pagination"
         :columns="columns"
-        :data-source="data"
-        :scroll="{ x: 1200, y: 300 }"
-        bordered
-        :expand-column-width="100"
+        :data-source="templateTable"
+        :scroll="{ x: 1200, y: undefined, scrollToFirstRowOnChange: true }"
+        class="components-table-demo-nested"
+        @expand="getInnerData"
+        :expandIconColumnIndex="-1"
+        :expandIconAsCell="false"
+        :pagination="false"
+        :expandedRowKeys="expandedRowKeys"
+        :row-selection="{ selectedRowKeys: state.selectedRowKeys, onChange: onSelectChange }"
       >
-        <template #bodyCell="{ column }">
+        >
+        <template #bodyCell="{ column, record }">
+          <template v-if="column.key === 'templateStatus'">
+            <span>
+              <a-switch
+                v-model:checked="record.templateStatus"
+                checked-children="启用"
+                un-checked-children="禁用"
+                @change="changeStatus(record.templateId, record.templateStatus)"
+              />
+            </span>
+          </template>
           <template v-if="column.key === 'operation'">
-            <a-button type="primary" class="btn-manager">编辑</a-button>
-            <a-button type="primary" danger>删除</a-button>
+            <a-button
+              type="link"
+              size="small"
+              style="font-size: 14px"
+              @click="getInnerData(false, record)"
+              v-if="judgeInclude(record)"
+            >
+              <UpOutlined />
+              收起
+            </a-button>
+            <a-button
+              type="link"
+              size="small"
+              style="font-size: 14px"
+              @click="getInnerData(true, record)"
+              v-if="!judgeInclude(record)"
+              ><DownOutlined />展开</a-button
+            >
+            <a-button type="link" class="btn-manager" size="small" style="font-size: 14px">编辑</a-button>
+            <a-popconfirm title="确认删除吗?" @confirm="onDelete(record.templateId)" ok-text="确定" cancel-text="取消">
+              <a-button type="link" danger size="small" style="font-size: 14px; margin-left: -5px">删除</a-button>
+            </a-popconfirm>
           </template>
         </template>
         <template #expandedRowRender="{ record }">
@@ -306,64 +428,104 @@ const pagination = computed(() => ({
             <a-col :span="6">创建时间：{{ record.createTime }}</a-col>
           </a-row>
         </template>
-        <template #expandColumnTitle>
-          <span style="color: red">详情</span>
-        </template>
       </a-table>
+      <a-pagination
+        v-model:current="current"
+        class="pagination"
+        show-quick-jumper
+        :total="total"
+        @change="change"
+        showSizeChanger
+        :locale="locale"
+      />
     </div>
     <!-- 对表格的操作 -->
+    <div class="showDelete" :style="{ width: `calc(100% - ${a}px)` }" v-if="hasSelected">
+      <div class="box">{{ `已选择 ${state.selectedRowKeys.length} 项` }}</div>
+      <div class="del">
+        <a-button type="primary" style="font-size: 14px" :loading="state.loading" @click="showDeleteConfirm">
+          批量删除
+        </a-button>
+        <contextHolder />
+      </div>
+    </div>
   </div>
 </template>
-<style lang="scss">
+
+<style lang="scss" scoped>
 #message-container {
-  height: 100%;
   overflow: auto;
-  .search {
-    padding: 24px 24px 0 24px;
-    background: #ffffff;
-    border-radius: 6px;
+}
 
-    .search-item:nth-child(1) {
-      margin-left: 15px;
-    }
+.splitter {
+  width: 100%;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  margin-bottom: 6px;
+}
 
-    .search-item:nth-child(2) {
+.message-section {
+  border-radius: 6px;
+  margin-top: 12px;
+  background: #ffffff;
+  padding: 12px;
+
+  .btn-manager {
+    margin-right: 10px;
+  }
+
+  .pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: right;
+  }
+
+  .describe {
+    width: 100%;
+    background-color: rgb(248, 248, 248);
+    height: 40px;
+    margin-bottom: 20px;
+    line-height: 40px;
+    border-radius: 10px;
+    .count {
+      color: gray;
       margin-left: 30px;
     }
+    .cancel {
+      position: absolute;
+      right: 50px;
+      padding-top: 7px;
+    }
   }
+}
 
-  .splitter {
-    width: 100%;
-    height: 60px;
+#message-container {
+  position: relative;
+  width: 100%;
+  // height: 100%;
+  .showDelete {
+    position: fixed; /* 将showDelete盒子设置为固定定位 */
+    inset-inline-end: 0;
+    bottom: 0; /* 将showDelete盒子的底部与页面底部对齐 */
+    right: 0; /* 将showDelete盒子的左侧与页面左侧对齐 */
+    background-color: rgba(255, 255, 255, 0.9);
     display: flex;
     align-items: center;
-    justify-content: right;
-
-    .addModule {
-      margin: 0px 20px;
+    padding: 10px;
+    height: 60px;
+    z-index: 999;
+    box-sizing: border-box; /* 确保padding不会撑开盒子 */
+    transition: 0.2s;
+    line-height: 40px;
+    .box {
+      width: 15%;
+      height: 100%;
+      margin-left: 2%;
     }
-  }
-
-  .temform {
-    .tem-item {
-      margin-top: 20px;
-    }
-
-    .tem-item:nth-child(7) {
-      text-align: right;
-      margin-left: 300px;
-    }
-  }
-
-  .message-section {
-    height: 100%;
-    border-radius: 6px;
-    margin-top: 12px;
-    background: #ffffff;
-    padding: 12px;
-
-    .btn-manager {
-      margin-right: 10px;
+    .del {
+      margin-left: 75%;
     }
   }
 }
