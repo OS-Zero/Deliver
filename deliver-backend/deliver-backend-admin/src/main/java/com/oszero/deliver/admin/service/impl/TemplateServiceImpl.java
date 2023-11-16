@@ -2,6 +2,8 @@ package com.oszero.deliver.admin.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -12,6 +14,7 @@ import com.oszero.deliver.admin.enums.PushRangeEnum;
 import com.oszero.deliver.admin.enums.UsersTypeEnum;
 import com.oszero.deliver.admin.exception.BusinessException;
 import com.oszero.deliver.admin.mapper.TemplateMapper;
+import com.oszero.deliver.admin.model.CommonResult;
 import com.oszero.deliver.admin.model.dto.request.*;
 import com.oszero.deliver.admin.model.dto.response.MessageTypeResponseDto;
 import com.oszero.deliver.admin.model.dto.response.TemplateSearchResponseDto;
@@ -202,6 +205,22 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template>
             }
         }
         return list;
+    }
+
+    @Override
+    public void testSendMessage(SendTestRequestDto sendTestRequestDto) {
+        try {
+            HttpResponse response = HttpRequest.post("http://localhost:8080/open/sendMessage")
+                    .header("ContentType", "application/json")
+                    .body(JSONUtil.toJsonStr(sendTestRequestDto))
+                    .execute();
+            CommonResult<?> commonResult = JSONUtil.toBean(response.body(), CommonResult.class);
+            if (Objects.isNull(commonResult) || !commonResult.getCode().equals(200)) {
+                throw new BusinessException("测试发送接口失败！！！");
+            }
+        } catch (Exception exception) {
+            throw new BusinessException("测试发送接口失败！！！");
+        }
     }
 }
 
