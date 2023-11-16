@@ -30,9 +30,9 @@ export default defineConfig({
       ]
     }),
     prismjsPlugin({
-      languages: ['json', 'js'], //  languages: 'all',
-      plugins: ['line-numbers'], // 配置显示行号插件
-      theme: 'solarizedlight', // 主题名称
+      languages: ['json', 'js'],
+      plugins: ['line-numbers', 'copy-to-clipboard'],
+      theme: 'solarizedlight',
       css: true
     })
   ],
