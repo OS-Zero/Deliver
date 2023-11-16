@@ -99,6 +99,22 @@ export default [
     ],
   },
   {
+    path: '/flowControlRule',
+    name: '流控规则配置',
+    icon: 'filter',
+    routes: [
+      {
+        path: '/flowControlRule',
+        redirect: '/flowControlRule/info',
+      },
+      {
+        path: '/flowControlRule/info',
+        name: '规则配置',
+        component: './FlowControlRule',
+      },
+    ],
+  },
+  {
     path: '/',
     redirect: '/welcome',
   },
