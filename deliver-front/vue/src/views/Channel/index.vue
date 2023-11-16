@@ -1,15 +1,12 @@
 <script lang="ts" setup>
-import { ReloadOutlined, EyeTwoTone, EyeInvisibleOutlined } from '@ant-design/icons-vue'
-import { ref, reactive, h, watch, computed, onMounted } from 'vue'
+import { ReloadOutlined } from '@ant-design/icons-vue'
+import { ref, reactive, h, watch, computed } from 'vue'
 import type { UnwrapRef } from 'vue'
 import type { TableColumnsType } from 'ant-design-vue'
 import type { Rule } from 'ant-design-vue/es/form'
 import type { messageTemplate } from './type'
 import searchForm from './components/searchForm.vue'
 // import { message } from 'ant-design-vue'
-
-import Prism from 'prismjs' // 导入代码高亮插件的core（里面提供了其他官方插件及代码高亮样式主题，你只需要引入即可）
-import 'prismjs/themes/prism.css' // 引入代码高亮主题（这个去node_modules的安装prismjs中找到想使用的主题即可）
 
 /// 表格部分
 // 新增
@@ -155,7 +152,7 @@ const data = ref([
     channelType: 'b',
     useCount: 0,
     appStatus: 1,
-    appConfig: 'xxx',
+    appConfig: "{'a':1,'b':2,'c':3}",
     createUser: 1,
     createTime: '2023/12/6'
   },
@@ -206,15 +203,13 @@ const data = ref([
 ])
 const current = ref()
 const pageSize = ref()
-const visible = ref(false)
+// const visible = ref(false)
 const pagination = computed(() => ({
   total: 200,
   current: current.value,
   pageSize: pageSize.value
 }))
-onMounted(() => {
-  Prism.highlightAll()
-})
+// const code = ref<string>("{'a':1,'b':2}")
 </script>
 
 <template>
@@ -305,28 +300,11 @@ onMounted(() => {
           </template>
         </template>
         <template #expandedRowRender="{ record }">
-          <a-descriptions>
-            <a-descriptions-item>
-              <pre class="language-json" style="width: 100%">
-              <code class="language-json" >
-                {
-                   "a":1,
-                   "b":2
-                }
-              </code>
-              </pre>
-            </a-descriptions-item>
-
-            <a-descriptions-item label="APP 配置">
-              <div style="display: flex; justify-content: center; align-items: center">
-                <span style="margin-right: 10px">{{ visible ? record.appConfig : '***' }}</span>
-                <EyeTwoTone v-if="visible" @click="visible = !visible"></EyeTwoTone>
-                <EyeInvisibleOutlined v-else @click="visible = !visible"></EyeInvisibleOutlined>
-              </div>
-            </a-descriptions-item>
-            <!-- <a-descriptions-item label="创建者">{{ record.createUser }}</a-descriptions-item>
-            <a-descriptions-item label="创建时间">{{ record.createTime }}</a-descriptions-item> -->
-          </a-descriptions>
+          <a-row :gutter="[16, 16]">
+            <a-col :span="24"> APP 配置：<Code type="json" :code="record.appConfig"></Code> </a-col>
+            <a-col :span="6">创建者：{{ record.createUser }}</a-col>
+            <a-col :span="6">创建时间：{{ record.createTime }}</a-col>
+          </a-row>
         </template>
         <template #expandColumnTitle>
           <span style="color: red">详情</span>
