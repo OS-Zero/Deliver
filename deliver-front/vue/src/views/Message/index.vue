@@ -100,8 +100,8 @@ const getInnerData = (expanded, record): void => {
   // 判断是否点开
   expandedRowKeys.length = 0
   if (expanded === true) {
-    const b = record.key.toString()
-    expandedRowKeys.push(Number(b.slice(-1)))
+    const b = record.key
+    expandedRowKeys.push(b)
     innertemplatedata.length = 0
     innertemplatedata.push(record)
   } else {
@@ -179,7 +179,7 @@ const startDelete = (): void => {
       state.loading = false
     })
     .catch(err => {
-      void message.error('查询失败，请检查网络~ (＞︿＜)')
+      void message.error('删除失败，请检查网络~ (＞︿＜)')
       console.error('An error occurred:', err)
       state.loading = false
     })
@@ -315,7 +315,7 @@ onMounted(() => {
 })
 
 const a = computed(() => {
-  return store.$state.collapse ? 80 : 200 // 计算输入框应该有的高度
+  return store.getCollapse() ? 80 : 200 // 计算输入框应该有的高度
 })
 </script>
 
