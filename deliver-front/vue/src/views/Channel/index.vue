@@ -1,13 +1,15 @@
 <script lang="ts" setup>
 import { ReloadOutlined, EyeTwoTone, EyeInvisibleOutlined } from '@ant-design/icons-vue'
-import { ref, reactive, h, watch, computed } from 'vue'
+import { ref, reactive, h, watch, computed, onMounted } from 'vue'
 import type { UnwrapRef } from 'vue'
 import type { TableColumnsType } from 'ant-design-vue'
 import type { Rule } from 'ant-design-vue/es/form'
-// import type { messageTemplate } from './type'
+import type { messageTemplate } from './type'
 import searchForm from './components/searchForm.vue'
-
 // import { message } from 'ant-design-vue'
+
+import Prism from 'prismjs' // 导入代码高亮插件的core（里面提供了其他官方插件及代码高亮样式主题，你只需要引入即可）
+import 'prismjs/themes/prism.css' // 引入代码高亮主题（这个去node_modules的安装prismjs中找到想使用的主题即可）
 
 /// 表格部分
 // 新增
@@ -210,6 +212,9 @@ const pagination = computed(() => ({
   current: current.value,
   pageSize: pageSize.value
 }))
+onMounted(() => {
+  Prism.highlightAll()
+})
 </script>
 
 <template>
@@ -283,8 +288,8 @@ const pagination = computed(() => ({
           </a-form>
         </a-modal>
       </div>
-
       <!-- 表格部分 -->
+
       <a-table
         :pagination="pagination"
         :columns="columns"
@@ -301,6 +306,17 @@ const pagination = computed(() => ({
         </template>
         <template #expandedRowRender="{ record }">
           <a-descriptions>
+            <a-descriptions-item>
+              <pre class="language-json" style="width: 100%">
+              <code class="language-json" >
+                {
+                   "a":1,
+                   "b":2
+                }
+              </code>
+              </pre>
+            </a-descriptions-item>
+
             <a-descriptions-item label="APP 配置">
               <div style="display: flex; justify-content: center; align-items: center">
                 <span style="margin-right: 10px">{{ visible ? record.appConfig : '***' }}</span>
@@ -308,8 +324,8 @@ const pagination = computed(() => ({
                 <EyeInvisibleOutlined v-else @click="visible = !visible"></EyeInvisibleOutlined>
               </div>
             </a-descriptions-item>
-            <a-descriptions-item label="创建者">{{ record.createUser }}</a-descriptions-item>
-            <a-descriptions-item label="创建时间">{{ record.createTime }}</a-descriptions-item>
+            <!-- <a-descriptions-item label="创建者">{{ record.createUser }}</a-descriptions-item>
+            <a-descriptions-item label="创建时间">{{ record.createTime }}</a-descriptions-item> -->
           </a-descriptions>
         </template>
         <template #expandColumnTitle>
@@ -320,58 +336,57 @@ const pagination = computed(() => ({
     <!-- 对表格的操作 -->
   </div>
 </template>
-<style lang="scss" scoped>
+<style lang="scss">
 #message-container {
   height: 100%;
   overflow: auto;
-}
+  .search {
+    padding: 24px 24px 0 24px;
+    background: #ffffff;
+    border-radius: 6px;
 
-.search {
-  padding: 24px 24px 0 24px;
-  background: #ffffff;
-  border-radius: 6px;
+    .search-item:nth-child(1) {
+      margin-left: 15px;
+    }
 
-  .search-item:nth-child(1) {
-    margin-left: 15px;
+    .search-item:nth-child(2) {
+      margin-left: 30px;
+    }
   }
 
-  .search-item:nth-child(2) {
-    margin-left: 30px;
-  }
-}
+  .splitter {
+    width: 100%;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: right;
 
-.splitter {
-  width: 100%;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: right;
-
-  .addModule {
-    margin: 0px 20px;
-  }
-}
-
-.temform {
-  .tem-item {
-    margin-top: 20px;
+    .addModule {
+      margin: 0px 20px;
+    }
   }
 
-  .tem-item:nth-child(7) {
-    text-align: right;
-    margin-left: 300px;
+  .temform {
+    .tem-item {
+      margin-top: 20px;
+    }
+
+    .tem-item:nth-child(7) {
+      text-align: right;
+      margin-left: 300px;
+    }
   }
-}
 
-.message-section {
-  height: 100%;
-  border-radius: 6px;
-  margin-top: 12px;
-  background: #ffffff;
-  padding: 12px;
+  .message-section {
+    height: 100%;
+    border-radius: 6px;
+    margin-top: 12px;
+    background: #ffffff;
+    padding: 12px;
 
-  .btn-manager {
-    margin-right: 10px;
+    .btn-manager {
+      margin-right: 10px;
+    }
   }
 }
 </style>

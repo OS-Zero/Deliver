@@ -5,6 +5,7 @@ import { resolve } from 'path'
 // 按需导入ant design vue
 import Components from 'unplugin-vue-components/vite'
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
+import { prismjsPlugin } from 'vite-plugin-prismjs'
 export default defineConfig({
   server: {
     host: 'localhost',
@@ -27,6 +28,12 @@ export default defineConfig({
           importStyle: false // css in js
         })
       ]
+    }),
+    prismjsPlugin({
+      languages: ['json', 'js'], //  languages: 'all',
+      plugins: ['line-numbers'], // 配置显示行号插件
+      theme: 'solarizedlight', // 主题名称
+      css: true
     })
   ],
   resolve: {
