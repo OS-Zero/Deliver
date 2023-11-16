@@ -7,8 +7,9 @@ import { message, Modal } from 'ant-design-vue'
 import type { messageTemplate, searchMessage } from './type'
 import searchForm from './components/searchForm.vue'
 import addTemplate from './components/addTemplate.vue'
-import { addTemplatePages, deleteTemplate, getTemplatePages, updateStatus } from '@/api/message'
-import { getDate } from '@/utils/date'
+import modifyTemplate from './components/modifyTemplate.vue'
+import { addTemplatePages, deleteTemplate, getApp, getMessageType, getTemplatePages, updateStatus } from '@/api/message'
+import { getAllMessage, getChannelType, getDate } from '@/utils/date'
 import { useStore } from '@/store'
 
 /**
@@ -125,6 +126,7 @@ interface SearchOptions {
 
 const searchform = ref()
 const addtemplate = ref()
+const modifytemplate = ref()
 
 /// 新增操作
 const saveTemplate = (): void => {
@@ -251,6 +253,32 @@ const changeStatus = (id: number, status: number | boolean): void => {
     })
     .catch(err => {
       void message.error('查询失败，请检查网络~ (＞︿＜)')
+      console.error('An error occurred:', err)
+    })
+}
+
+// 传递相关数据，初始化data
+const startModify = (record): void => {
+  modifytemplate.value.openModify = true
+  console.log(record)
+  getAllMessage(modifytemplate.value.updateTemp, record)
+  console.log(modifytemplate.value.updateTemp)
+  getMessageType({ channelType: getChannelType(record.channelType) })
+    .then(res => {
+      res.data.forEach(item => {
+        modifytemplate.value.messageData.push(item)
+      })
+    })
+    .catch(err => {
+      console.error('An error occurred:', err)
+    })
+  getApp({ channelType: getChannelType(record.channelType) })
+    .then(res => {
+      res.data.forEach(item => {
+        modifytemplate.value.appData.push(item)
+      })
+    })
+    .catch(err => {
       console.error('An error occurred:', err)
     })
 }
@@ -415,7 +443,10 @@ const a = computed(() => {
               v-if="!judgeInclude(record)"
               ><DownOutlined />展开</a-button
             >
-            <a-button type="link" class="btn-manager" size="small" style="font-size: 14px">编辑</a-button>
+            <a-button type="link" class="btn-manager" size="small" style="font-size: 14px" @click="startModify(record)">
+              编辑
+            </a-button>
+            <modifyTemplate ref="modifytemplate" :mod="record" />
             <a-popconfirm title="确认删除吗?" @confirm="onDelete(record.templateId)" ok-text="确定" cancel-text="取消">
               <a-button type="link" danger size="small" style="font-size: 14px; margin-left: -5px">删除</a-button>
             </a-popconfirm>
