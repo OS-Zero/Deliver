@@ -1,16 +1,32 @@
 <script setup lang="ts">
 import type { Rule } from 'ant-design-vue/es/form'
-import { ref, computed, watch, reactive } from 'vue'
-import type { updateTemp } from '../type'
+import { ref, reactive, watch } from 'vue'
+import type { addTemp } from '../type'
 import { getPushWays } from '@/utils/date'
+import { getApp, getMessageType } from '@/api/message'
 
 // 新增操作
 interface DelayLoading {
   delay: number
 }
 
-const modifyTemp: updateTemp = reactive({
-  templateId: 0,
+interface Channel {
+  value: string
+  label: string
+}
+
+interface mess {
+  code: string
+  name: string
+}
+
+interface appItem {
+  appId: number
+  appName: string
+}
+
+const updateTemp: addTemp = reactive({
+  templateId: undefined,
   templateName: '',
   pushRange: undefined,
   usersType: undefined,
@@ -21,13 +37,20 @@ const modifyTemp: updateTemp = reactive({
   messageType: ''
 })
 
-const open = ref<boolean>(false)
+const openModify = ref<boolean>(false)
 
-const labelCol = { span: 4 }
+const labelCol = { span: 5 }
 
 const wrapperCol = { span: 20 }
 
 const iconLoading = ref<boolean | DelayLoading>(false)
+
+const validatePass = async (_rule: Rule): Promise<any> => {
+  if (!appDisabled.value && appData.value.length === 0) {
+    throw new Error('请先进行渠道 App 配置')
+  }
+  await Promise.resolve()
+}
 
 const rules: Record<string, Rule[]> = {
   templateName: [
@@ -42,143 +65,160 @@ const rules: Record<string, Rule[]> = {
       message: '请选择渠道',
       trigger: 'change'
     }
-  ]
+  ],
+  appId: [
+    {
+      required: true,
+      validator: validatePass,
+      trigger: 'change'
+    }
+  ],
+  messageType: [{ required: true, message: '请选择消息类型', trigger: 'change' }],
+  templateStatus: [{ required: true, message: '请选择模板状态', trigger: 'change' }]
 }
 
 const templateForm = ref()
 
-const emit = defineEmits(['add'])
+// 处理推送范围和用户类型之间的关系
+const userdisabled = ref([
+  { value: 1, label: '企业账号', disabled: false },
+  { value: 2, label: '电话', disabled: false },
+  { value: 3, label: '邮箱', disabled: false },
+  { value: 4, label: '平台 UserId', disabled: false }
+])
+
+const handlePushRangeChange = (e): void => {
+  if (e.target.value === 0 || e.target.value === 1) {
+    userdisabled.value = userdisabled.value.map(item => ({ ...item, disabled: false }))
+  } else if (e.target.value === 2) {
+    userdisabled.value = userdisabled.value.map(item => {
+      if (item.value === 2 || item.value === 3) {
+        return { ...item, disabled: false }
+      } else {
+        return { ...item, disabled: true }
+      }
+    })
+  }
+}
+
+const channelData = ref<Channel[]>([])
+
+// 推送范围 + 用户类型 => 渠道
+const pickChannel = (e): void => {
+  channelDisabled.value = false
+  updateTemp.channelType = undefined
+  const Data: Channel[] = [
+    { value: '1', label: '电话' },
+    { value: '2', label: '短信' },
+    { value: '3', label: '邮件' },
+    { value: '4', label: '钉钉' },
+    { value: '5', label: '企业微信' },
+    { value: '6', label: '飞书' }
+  ]
+  if (e.target.value === 1) {
+    channelData.value = [...Data]
+  } else if (e.target.value === 2) {
+    channelData.value = Data.filter(item => item.value !== '3')
+  } else if (e.target.value === 3) {
+    channelData.value = Data.filter(item => item.value === '3')
+  } else if (e.target.value === 4) {
+    channelData.value = Data.slice(3)
+  }
+}
+
+const channelDisabled = ref(false)
+
+const messageDisabled = ref(false)
+
+const appDisabled = ref(false)
+
+const messageData = ref<mess[]>([])
+
+const appData = ref<appItem[]>([])
+
+// 选择完渠道后，此时应该是已经拿到下面两项的选择项
+const selectValues = (channelType): void => {
+  updateTemp.appId = undefined
+  updateTemp.messageType = ''
+  messageData.value.length = 0
+  appData.value.length = 0
+  getMessageType({ channelType: Number(channelType) })
+    .then(res => {
+      res.data.forEach((item: mess) => {
+        messageData.value.push(item)
+      })
+    })
+    .catch(err => {
+      console.error('An error occurred:', err)
+    })
+  getApp({ channelType: Number(channelType) })
+    .then(res => {
+      res.data.forEach((item: any) => {
+        appData.value.push(item)
+      })
+    })
+    .catch(err => {
+      console.error('An error occurred:', err)
+    })
+}
+
+const selectApp = (): void => {
+  messageDisabled.value = false
+}
+
+// 提交并传递
+// const emit = defineEmits(['add'])
 
 const handleOk = (): void => {
   // 异步关闭，先添加，渲染成功后关闭
   templateForm.value
     .validate()
     .then(() => {
+      // eslint-disable-next-line
+      updateTemp.templateStatus = updateTemp.templateStatus === true ? 1 : 0
       // 处理templateItem的pushways
-      modifyTemp.pushWays = getPushWays(modifyTemp.channelType, modifyTemp.messageType)
-      emit('add')
+      updateTemp.pushWays = getPushWays(updateTemp.channelType, updateTemp.messageType)
+      // emit('add')
+      console.log(updateTemp)
     })
     .catch(error => {
       console.log('error', error)
     })
 }
 
-const handleCancel = (): void => {
-  templateForm.value.resetFields()
-}
-
-const addModules = (): void => {
-  open.value = true
-}
-
-const channelData = [
-  { value: '1', label: '电话' },
-  { value: '2', label: '短信' },
-  { value: '3', label: '邮件' },
-  { value: '4', label: '钉钉' },
-  { value: '5', label: '企业微信' },
-  { value: '6', label: '飞书' }
-]
-
-const messageData = {
-  1: ['text 消息'],
-  2: ['text 消息'],
-  3: ['text 消息'],
-  4: [
-    'text 消息',
-    '钉钉图片消息',
-    '钉钉语音消息',
-    '钉钉文件消息',
-    '钉钉链接消息',
-    '钉钉 OA 消息',
-    '钉钉 markdown 消息',
-    '钉钉卡片消息'
-  ],
-  5: [
-    'text 消息',
-    '企业微信图片消息',
-    '企业微信语音消息',
-    '企业微信视频消息',
-    '企业微信文件消息',
-    '企业微信文本卡片消息',
-    '企业微信图文消息（mpnews）',
-    '企业微信 markdown 消息',
-    '企业微信小程序通知消息'
-  ],
-  6: [
-    '消息 text',
-    '富文本 post',
-    '图片 image',
-    '消息卡片 interactive',
-    '分享群名片 share_chat',
-    '分享个人名片 share_user',
-    '语音 audio',
-    '视频 media',
-    '文件 file',
-    '表情包 sticker'
-  ]
-}
-
-const appData = {
-  1: ['电话'],
-  2: ['短信'],
-  3: ['邮件'],
-  4: ['钉钉'],
-  5: ['企业微信'],
-  6: ['飞书']
-}
-
-const mesType = computed(() => {
-  if (modifyTemp.channelType !== undefined) {
-    const messageType = messageData[modifyTemp.channelType]
-    return messageType === undefined ? [] : messageType
-  } else {
-    return []
-  }
-})
-
-const appType = computed(() => {
-  if (modifyTemp.channelType !== undefined) {
-    const appTypeData = appData[modifyTemp.channelType]
-    return appTypeData === undefined ? [] : appTypeData
-  } else {
-    return []
-  }
-})
+const handleCancel = (): void => {}
 
 watch(
-  () => modifyTemp.channelType,
+  () => updateTemp.channelType,
   newVal => {
-    if (newVal !== undefined) {
-      if (messageData[newVal] !== undefined) {
-        modifyTemp.messageType = messageData[newVal][0]
-      } else {
-        modifyTemp.messageType = ''
-        messageData[newVal] = []
+    // 防止不能及时重置到数据，直接清零
+    if (newVal === undefined) {
+      updateTemp.appId = undefined
+      updateTemp.messageType = ''
+      messageDisabled.value = true
+      appDisabled.value = true
+      if (updateTemp.pushRange === undefined && updateTemp.usersType === undefined) {
+        channelDisabled.value = true
       }
-      if (appData[newVal] !== undefined) {
-        modifyTemp.appId = appData[newVal][0]
-      } else {
-        modifyTemp.appId = undefined
-        appData[newVal] = []
-      }
+    } else {
+      appDisabled.value = false
     }
   }
 )
 
-// defineExpose({
-//   open,
-//   modifyTemp,
-//   iconLoading
-// })
+defineExpose({
+  openModify,
+  updateTemp,
+  messageData,
+  appData
+})
 </script>
 
 <template>
-  <a-button type="primary" class="addModule" @click="addModules">新增模板</a-button>
-  <a-modal v-model:open="open" title="新增模板" width="650px" :footer="null" @cancel="handleCancel">
+  <a-modal v-model:open="openModify" title="修改模板" width="650px" :footer="null" @cancel="handleCancel">
     <a-form
       ref="templateForm"
-      :model="modifyTemp"
+      :model="updateTemp"
       :rules="rules"
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
@@ -186,49 +226,53 @@ watch(
     >
       <a-form-item ref="templateName" label="模板名" name="templateName" class="tem-item">
         <a-input
-          v-model:value="modifyTemp.templateName"
+          v-model:value="updateTemp.templateName"
           placeholder="请填写长度在3到20个字符的模板名"
           style="width: 70%"
         />
       </a-form-item>
       <a-form-item label="推送范围" name="pushRange" class="tem-item">
-        <a-radio-group v-model:value="modifyTemp.pushRange" button-style="solid">
+        <a-radio-group v-model:value="updateTemp.pushRange" button-style="solid" @change="handlePushRangeChange">
           <a-radio-button :value="0">不限</a-radio-button>
           <a-radio-button :value="1">企业内部</a-radio-button>
           <a-radio-button :value="2">企业外部</a-radio-button>
         </a-radio-group>
       </a-form-item>
       <a-form-item label="用户类型" name="usersType" class="tem-item">
-        <a-radio-group v-model:value="modifyTemp.usersType" button-style="solid">
-          <a-radio-button :value="1">企业账号</a-radio-button>
-          <a-radio-button :value="2">电话</a-radio-button>
-          <a-radio-button :value="3">邮箱</a-radio-button>
-          <a-radio-button :value="4">平台 UserId</a-radio-button>
+        <a-radio-group v-model:value="updateTemp.usersType" button-style="solid" @change="pickChannel">
+          <a-radio-button v-for="u in userdisabled" :key="u.value" :disabled="u.disabled" :value="u.value">
+            {{ u.label }}
+          </a-radio-button>
         </a-radio-group>
       </a-form-item>
       <a-form-item label="渠道选择" name="channelType" class="tem-item">
         <a-select
-          v-model:value="modifyTemp.channelType"
+          v-model:value="updateTemp.channelType"
           :options="channelData.map(pro => ({ value: pro.value, label: pro.label }))"
           style="width: 70%"
+          @change="selectValues"
+          :disabled="channelDisabled"
         />
       </a-form-item>
       <a-form-item label="渠道 App" name="appId" class="tem-item">
-        <a-select
-          v-model:value="modifyTemp.appId"
-          :options="appType.map((pro: any) => ({ value: pro }))"
-          style="width: 70%"
-        />
+        <a-select v-model:value="updateTemp.appId" style="width: 70%" :disabled="appDisabled" @change="selectApp">
+          <a-select-option v-for="item in appData" :key="item.appId" :value="item.appId">
+            {{ item.appName }}
+          </a-select-option>
+        </a-select>
       </a-form-item>
       <a-form-item label="消息类型" name="messageType" class="tem-item">
-        <a-select
-          v-model:value="modifyTemp.messageType"
-          :options="mesType.map((pro: any) => ({ value: pro }))"
-          style="width: 70%"
-        />
+        <a-select v-model:value="updateTemp.messageType" style="width: 70%" :disabled="messageDisabled">
+          <a-select-option v-for="item in messageData" :key="item.code" :value="item.code">
+            {{ item.name }}
+          </a-select-option>
+        </a-select>
+      </a-form-item>
+      <a-form-item label="模板状态" name="templateStatus" class="tem-item">
+        <a-switch v-model:checked="updateTemp.templateStatus" checked-children="启用" un-checked-children="禁用" />
       </a-form-item>
       <a-form-item :wrapper-col="{ span: 14, offset: 4 }" class="tem-item">
-        <a-button type="primary" @click="handleOk" :loading="iconLoading">确认新建</a-button>
+        <a-button type="primary" @click="handleOk" :loading="iconLoading">确认修改</a-button>
         <a-button style="margin-left: 10px" @click="handleCancel">重置</a-button>
       </a-form-item>
     </a-form>
@@ -236,8 +280,8 @@ watch(
 </template>
 
 <style scoped>
-.addModule {
-  margin: 0px 20px;
+.btn-manager {
+  margin-right: 10px;
 }
 
 .temform {
@@ -245,7 +289,7 @@ watch(
     margin-top: 20px;
   }
 
-  .tem-item:nth-child(7) {
+  .tem-item:nth-child(8) {
     text-align: right;
     margin-left: 300px;
   }
