@@ -66,7 +66,8 @@ public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, Pla
         // 设置发送具体平台 DTO
         PlatformFileDto platformFileDto = new PlatformFileDto();
         platformFileDto.setFile(platformFile.getBytes());
-        platformFileDto.setFileName(dto.getFileName());
+        platformFileDto.setFileName(dto.getFileName() + "." + fileFormat);
+        platformFileDto.setFileType(dto.getFileType());
 
         // 设置 PlatformFile 实体
         PlatformFile platformFileEntity = new PlatformFile();
