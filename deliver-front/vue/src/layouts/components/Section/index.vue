@@ -6,19 +6,22 @@ import {
   DashboardOutlined,
   LeftOutlined,
   RightOutlined,
-  SmileOutlined
+  SmileOutlined,
+  AppstoreOutlined
 } from '@ant-design/icons-vue'
 import { ref } from 'vue'
 import ItemLink from '../ItemLink/index.vue'
 import Breadcrumb from '../Breadcrumb/index.vue'
 import { useRoute } from 'vue-router'
+import { useStore } from '@/store/index'
 const route = useRoute()
-
+const store = useStore()
 const selectedKeys2 = ref<string[]>([`${route.name as string}-1`])
 const openKeys = ref<string[]>([route.name as string])
 const collapsed = ref(false)
 const toggleCollapsed = (): void => {
   collapsed.value = !collapsed.value
+  store.changeCollapse()
 }
 </script>
 
@@ -70,7 +73,7 @@ const toggleCollapsed = (): void => {
       <a-sub-menu key="channel">
         <template #title>
           <span>
-            <FunnelPlotOutlined />
+            <AppstoreOutlined />
             <span>渠道 APP 配置</span>
           </span>
         </template>
@@ -84,6 +87,15 @@ const toggleCollapsed = (): void => {
           </span>
         </template>
         <ItemLink itemKey="file-1" info="文件管理" to="file" />
+      </a-sub-menu>
+      <a-sub-menu key="flowControlRule">
+        <template #title>
+          <span>
+            <FunnelPlotOutlined />
+            <span>流控规则配置</span>
+          </span>
+        </template>
+        <ItemLink itemKey="flowControlRule-1" info="规则配置" to="flowControlRule" />
       </a-sub-menu>
     </a-menu>
   </a-layout-sider>
