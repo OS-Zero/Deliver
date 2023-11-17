@@ -178,7 +178,7 @@ export interface sendMessageTest {
   /**
    * 传递参数
    */
-  paramMap: string
+  paramMap: JSON
   /**
    * 重试次数
    */
