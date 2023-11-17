@@ -393,6 +393,9 @@ const a = computed(() => {
       >
         >
         <template #bodyCell="{ column, record }">
+          <template v-if="column.key === 'templateId'">
+            <span style="font-weight: bold">{{ record.templateId }}</span>
+          </template>
           <template v-if="column.key === 'templateStatus'">
             <span>
               <a-switch
