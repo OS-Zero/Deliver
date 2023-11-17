@@ -52,7 +52,7 @@ const columns: TableColumnsType = [
     title: '操作',
     key: 'operation',
     fixed: 'right',
-    width: 200
+    width: 270
   }
 ]
 
@@ -430,6 +430,9 @@ const a = computed(() => {
               编辑
             </a-button>
             <modifyTemplate ref="modifytemplate" :mod="record" />
+            <a-button type="link" class="btn-manager" size="small" style="font-size: 14px; margin-left: -5px">
+              测试发送
+            </a-button>
             <a-popconfirm title="确认删除吗?" @confirm="onDelete(record.templateId)" ok-text="确定" cancel-text="取消">
               <a-button type="link" danger size="small" style="font-size: 14px; margin-left: -5px">删除</a-button>
             </a-popconfirm>
@@ -449,6 +452,7 @@ const a = computed(() => {
         @change="change"
         showSizeChanger
         :locale="locale"
+        :show-total="total => `共 ${total} 条数据`"
       />
     </div>
     <!-- 对表格的操作 -->
