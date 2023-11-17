@@ -8,8 +8,8 @@ import type { messageTemplate, searchMessage } from './type'
 import searchForm from './components/searchForm.vue'
 import addTemplate from './components/addTemplate.vue'
 import modifyTemplate from './components/modifyTemplate.vue'
-import { addTemplatePages, deleteTemplate, getApp, getMessageType, getTemplatePages, updateStatus } from '@/api/message'
-import { getAllMessage, getChannelType, getDate } from '@/utils/date'
+import { addTemplatePages, deleteTemplate, getTemplatePages, updateStatus } from '@/api/message'
+import { getAllMessage, getDate } from '@/utils/date'
 import { useStore } from '@/store'
 
 /**
@@ -133,13 +133,14 @@ const saveTemplate = (): void => {
   const { channelType, messageType, ...rest } = addtemplate.value.templateItem
   const savetemplate = { ...rest }
   console.warn(savetemplate)
+  addtemplate.value.iconLoading = true
   addTemplatePages(savetemplate)
     .then(res => {
       if (res.code === 200) {
-        void message.success('新增成功~ (*^▽^*)')
-        addtemplate.value.open = false
-        searchTemplate({ opt: 2 }) // 更新表单
         addtemplate.value.iconLoading = false
+        addtemplate.value.open = false
+        void message.success('新增成功~ (*^▽^*)')
+        searchTemplate({ opt: 2 }) // 更新表单
       }
     })
     .catch(err => {
@@ -261,26 +262,8 @@ const changeStatus = (id: number, status: number | boolean): void => {
 const startModify = (record): void => {
   modifytemplate.value.openModify = true
   console.log(record)
-  getAllMessage(modifytemplate.value.updateTemp, record)
+  getAllMessage(modifytemplate.value, record)
   console.log(modifytemplate.value.updateTemp)
-  getMessageType({ channelType: getChannelType(record.channelType) })
-    .then(res => {
-      res.data.forEach(item => {
-        modifytemplate.value.messageData.push(item)
-      })
-    })
-    .catch(err => {
-      console.error('An error occurred:', err)
-    })
-  getApp({ channelType: getChannelType(record.channelType) })
-    .then(res => {
-      res.data.forEach(item => {
-        modifytemplate.value.appData.push(item)
-      })
-    })
-    .catch(err => {
-      console.error('An error occurred:', err)
-    })
 }
 
 /// 查询操作
