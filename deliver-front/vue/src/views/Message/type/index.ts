@@ -165,3 +165,22 @@ export interface modiTemp {
    */
   appId: number | undefined | string
 }
+
+export interface sendMessageTest {
+  /**
+   * 模板id
+   */
+  templateId: number
+  /**
+   * 用户列表
+   */
+  users: string[]
+  /**
+   * 传递参数
+   */
+  paramMap: string
+  /**
+   * 重试次数
+   */
+  retry: number | undefined
+}

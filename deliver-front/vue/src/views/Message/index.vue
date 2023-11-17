@@ -8,8 +8,9 @@ import type { messageTemplate, searchMessage } from './type'
 import searchForm from './components/searchForm.vue'
 import addTemplate from './components/addTemplate.vue'
 import modifyTemplate from './components/modifyTemplate.vue'
+import sendTest from './components/sendTest.vue'
 import { addTemplatePages, deleteTemplate, getTemplatePages, updateStatus } from '@/api/message'
-import { getAllMessage, getDate } from '@/utils/date'
+import { changeTable, getAllMessage, getDate } from '@/utils/date'
 import { useStore } from '@/store'
 
 /**
@@ -340,12 +341,7 @@ onMounted(() => {
       if (res.data.records.length > 0) {
         total.value = res.data.total
         res.data.records.forEach((item: any) => {
-          item.channelType = JSON.parse(item.pushWays).channelType
-          item.messageType = JSON.parse(item.pushWays).messageType
-          item.createTime = getDate(item.createTime)
-          // eslint-disable-next-line
-          item.templateStatus = item.templateStatus === 1 ? true : false
-          item.key = item.templateId
+          item = changeTable(item)
           templateTable.push(item)
         })
         console.warn('初始化数据', templateTable)
@@ -430,9 +426,7 @@ const a = computed(() => {
               编辑
             </a-button>
             <modifyTemplate ref="modifytemplate" :mod="record" />
-            <a-button type="link" class="btn-manager" size="small" style="font-size: 14px; margin-left: -5px">
-              测试发送
-            </a-button>
+            <sendTest />
             <a-popconfirm title="确认删除吗?" @confirm="onDelete(record.templateId)" ok-text="确定" cancel-text="取消">
               <a-button type="link" danger size="small" style="font-size: 14px; margin-left: -5px">删除</a-button>
             </a-popconfirm>

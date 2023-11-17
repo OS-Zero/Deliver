@@ -93,3 +93,16 @@ export const getAllMessage = (mod, record: messageTemplate): void => {
       console.error('An error occurred:', err)
     })
 }
+
+export const changeTable = (item): any => {
+  item.channelType = JSON.parse(item.pushWays).channelType
+  item.messageType = JSON.parse(item.pushWays).messageType
+  item.createTime = getDate(item.createTime)
+  // eslint-disable-next-line
+  item.templateStatus = item.templateStatus === 1 ? true : false
+  item.key = item.templateId
+  // pushrange
+  const pusharr = ['不限', '企业内部', '企业外部']
+  item.pushRange = pusharr[item.pushRange]
+  return item
+}
