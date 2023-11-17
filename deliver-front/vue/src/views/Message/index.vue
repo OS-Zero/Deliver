@@ -429,7 +429,7 @@ const a = computed(() => {
               编辑
             </a-button>
             <modifyTemplate ref="modifytemplate" :mod="record" />
-            <sendTest />
+            <sendTest :test="record.templateId" />
             <a-popconfirm title="确认删除吗?" @confirm="onDelete(record.templateId)" ok-text="确定" cancel-text="取消">
               <a-button type="link" danger size="small" style="font-size: 14px; margin-left: -5px">删除</a-button>
             </a-popconfirm>
