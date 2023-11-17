@@ -1,4 +1,10 @@
-import type { messageTemplate, updateTemp } from '@/views/Message/type'
+import { getApp, getMessageType } from '@/api/message'
+import type { messageTemplate } from '@/views/Message/type'
+
+interface Channel {
+  value: string
+  label: string
+}
 
 export const getDate = (d): string => {
   const date = new Date(d)
@@ -30,27 +36,60 @@ export const getChannelType = (s: string): number => {
 }
 
 export const getUsersType = (s: string): number => {
-  const usersarr = ['企业账号', '电话', '邮箱', '平台 UserId']
+  const usersarr = ['企业账号', '电话', '邮箱', '平台userId']
   return usersarr.indexOf(s)
 }
 
-export const getAllMessage = (mod: updateTemp, record: messageTemplate): void => {
-  mod.templateId = record.templateId
-  mod.templateName = record.templateName
-  mod.pushRange = getPushRange(record.pushRange as string)
-  mod.usersType = getUsersType(record.usersType as string)
-  mod.appId = record.appName
-  mod.templateStatus = record.templateStatus as number
-  mod.channelType = record.channelType
-  mod.messageType = record.messageType
-}
+export const getAllMessage = (mod, record: messageTemplate): void => {
+  // 表格渲染数据
+  mod.updateTemp.templateId = record.templateId
+  mod.updateTemp.templateName = record.templateName
+  mod.updateTemp.pushRange = getPushRange(record.pushRange as string)
+  mod.updateTemp.usersType = getUsersType(record.usersType as string) + 1
+  mod.updateTemp.appId = record.appName
+  mod.updateTemp.templateStatus = record.templateStatus as number
+  mod.updateTemp.channelType = record.channelType
+  mod.updateTemp.messageType = record.messageType
 
-// templateId: undefined,
-// templateName: '',
-// pushRange: undefined,
-// usersType: undefined,
-// pushWays: '',
-// templateStatus: 0,
-// appId: undefined,
-// channelType: undefined,
-// messageType: ''
+  // 选项渲染
+  mod.messageData.length = 0
+  mod.appData.length = 0
+
+  const Data: Channel[] = [
+    { value: '1', label: '电话' },
+    { value: '2', label: '短信' },
+    { value: '3', label: '邮件' },
+    { value: '4', label: '钉钉' },
+    { value: '5', label: '企业微信' },
+    { value: '6', label: '飞书' }
+  ]
+  const user = getUsersType(record.usersType as string)
+  if (user === 1) {
+    mod.channelData = [...Data]
+  } else if (user === 2) {
+    mod.channelData = Data.filter(item => item.value !== '3')
+  } else if (user === 3) {
+    mod.channelData = Data.filter(item => item.value === '3')
+  } else if (user === 4) {
+    mod.channelData = Data.slice(3)
+  }
+
+  getMessageType({ channelType: getChannelType(record.channelType as string) })
+    .then(res => {
+      res.data.forEach(item => {
+        mod.messageData.push(item)
+      })
+    })
+    .catch(err => {
+      console.error('An error occurred:', err)
+    })
+  getApp({ channelType: getChannelType(record.channelType as string) })
+    .then(res => {
+      res.data.forEach(item => {
+        mod.appData.push(item)
+      })
+    })
+    .catch(err => {
+      console.error('An error occurred:', err)
+    })
+}

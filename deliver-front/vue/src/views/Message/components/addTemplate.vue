@@ -54,7 +54,7 @@ const validatePass = async (_rule: Rule): Promise<any> => {
 const rules: Record<string, Rule[]> = {
   templateName: [
     { required: true, message: '请输入模板名', trigger: 'change' },
-    { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
+    { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
   ],
   pushRange: [{ required: true, message: '请选择推送范围', trigger: 'change' }],
   usersType: [{ required: true, message: '请选择用户类型', trigger: 'change' }],
@@ -278,7 +278,7 @@ defineExpose({
       <a-form-item label="模板状态" name="templateStatus" class="tem-item">
         <a-switch v-model:checked="templateItem.templateStatus" checked-children="启用" un-checked-children="禁用" />
       </a-form-item>
-      <a-form-item :wrapper-col="{ span: 14, offset: 4 }" class="tem-item">
+      <a-form-item :wrapper-col="{ span: 15, offset: 7 }" class="tem-item">
         <a-button type="primary" @click="handleOk" :loading="iconLoading">确认新建</a-button>
         <a-button style="margin-left: 10px" @click="handleCancel">重置</a-button>
       </a-form-item>

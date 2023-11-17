@@ -23,7 +23,7 @@ export interface messageTemplate {
   /**
    * 渠道选择
    */
-  channelType: number
+  channelType: number | string
   /**
    * 消息类型
    */
@@ -127,7 +127,7 @@ export interface addTemp {
 }
 
 // 修改接口
-export interface updateTemp {
+export interface modiTemp {
   /**
    * 模板id
    */
@@ -151,7 +151,7 @@ export interface updateTemp {
   /**
    * 渠道选择
    */
-  channelType?: string | undefined
+  channelType?: string | undefined | number
   /**
    * 消息类型
    */
