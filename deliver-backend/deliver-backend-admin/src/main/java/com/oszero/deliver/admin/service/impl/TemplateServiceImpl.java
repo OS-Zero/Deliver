@@ -8,10 +8,7 @@ import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.oszero.deliver.admin.enums.ChannelTypeEnum;
 import com.oszero.deliver.admin.enums.MessageTypeEnum;
-import com.oszero.deliver.admin.enums.PushRangeEnum;
-import com.oszero.deliver.admin.enums.UsersTypeEnum;
 import com.oszero.deliver.admin.exception.BusinessException;
 import com.oszero.deliver.admin.mapper.TemplateMapper;
 import com.oszero.deliver.admin.model.CommonResult;
@@ -19,7 +16,6 @@ import com.oszero.deliver.admin.model.dto.request.*;
 import com.oszero.deliver.admin.model.dto.response.MessageTypeResponseDto;
 import com.oszero.deliver.admin.model.dto.response.TemplateSearchResponseDto;
 import com.oszero.deliver.admin.model.entity.App;
-import com.oszero.deliver.admin.model.entity.PushWay;
 import com.oszero.deliver.admin.model.entity.Template;
 import com.oszero.deliver.admin.model.entity.TemplateApp;
 import com.oszero.deliver.admin.service.AppService;
@@ -73,13 +69,6 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template>
 
             templateSearchResponseDto.setAppId(app.getAppId());
             templateSearchResponseDto.setAppName(app.getAppName());
-            templateSearchResponseDto.setPushRange(PushRangeEnum.getInstanceByCode(template.getPushRange()).getName());
-            templateSearchResponseDto.setUsersType(UsersTypeEnum.getInstanceByCode(template.getUsersType()).getName());
-            String pushWays = template.getPushWays();
-            PushWay pushWay = JSONUtil.toBean(pushWays, PushWay.class);
-            pushWay.setChannelType(ChannelTypeEnum.getInstanceByCode(Integer.valueOf(pushWay.getChannelType())).getName());
-            pushWay.setMessageType(MessageTypeEnum.getInstanceByCode(pushWay.getMessageType()).getName());
-            templateSearchResponseDto.setPushWays(JSONUtil.toJsonStr(pushWay));
 
             return templateSearchResponseDto;
         }).collect(Collectors.toList());
