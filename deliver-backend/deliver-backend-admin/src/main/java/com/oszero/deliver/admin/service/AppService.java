@@ -1,10 +1,7 @@
 package com.oszero.deliver.admin.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.oszero.deliver.admin.model.dto.request.AppSaveAndUpdateRequestDto;
-import com.oszero.deliver.admin.model.dto.request.AppSearchRequestDto;
-import com.oszero.deliver.admin.model.dto.request.DeleteIdsRequestDto;
-import com.oszero.deliver.admin.model.dto.request.TemplateAddGetByChannelRequestDto;
+import com.oszero.deliver.admin.model.dto.request.*;
 import com.oszero.deliver.admin.model.dto.response.AppByChannelResponseDto;
 import com.oszero.deliver.admin.model.dto.response.AppSearchResponseDto;
 import com.oszero.deliver.admin.model.entity.App;
@@ -29,4 +26,6 @@ public interface AppService extends IService<App> {
     void save(AppSaveAndUpdateRequestDto dto);
 
     List<AppByChannelResponseDto> getAppByChannelType(TemplateAddGetByChannelRequestDto dto);
+
+    void updateStatusById(AppUpdateStatusRequestDto dto);
 }
