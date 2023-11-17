@@ -11,11 +11,11 @@ export interface messageTemplate {
   /**
    * 推送范围
    */
-  pushRange: number
+  pushRange: number | string
   /**
    * 用户类型
    */
-  usersType: number
+  usersType: number | string
   /**
    * 推送方式
    */
@@ -163,5 +163,5 @@ export interface updateTemp {
   /**
    * Appid
    */
-  appId: number | undefined
+  appId: number | undefined | string
 }
