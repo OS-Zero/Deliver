@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import type { searchMessage, addTemp } from '@/views/Message/type'
+import type { searchMessage, addTemp, sendMessageTest } from '@/views/Message/type'
 
 export async function getTemplatePages(data: searchMessage): Promise<any> {
   return await request({
@@ -44,6 +44,14 @@ export async function updateStatus(data: { templateId: number; templateStatus: n
 export async function deleteTemplate(data: { ids: number[] }): Promise<any> {
   return await request({
     url: '/template/deleteByIds',
+    method: 'post',
+    data
+  })
+}
+
+export async function sendTestMes(data: sendMessageTest): Promise<any> {
+  return await request({
+    url: '/template/testSendMessage',
     method: 'post',
     data
   })

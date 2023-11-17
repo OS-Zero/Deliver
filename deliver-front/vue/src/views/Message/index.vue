@@ -8,8 +8,9 @@ import type { messageTemplate, searchMessage } from './type'
 import searchForm from './components/searchForm.vue'
 import addTemplate from './components/addTemplate.vue'
 import modifyTemplate from './components/modifyTemplate.vue'
-import { addTemplatePages, deleteTemplate, getApp, getMessageType, getTemplatePages, updateStatus } from '@/api/message'
-import { getAllMessage, getChannelType, getDate } from '@/utils/date'
+import sendTest from './components/sendTest.vue'
+import { addTemplatePages, deleteTemplate, getTemplatePages, updateStatus } from '@/api/message'
+import { changeTable, getAllMessage, getDate } from '@/utils/date'
 import { useStore } from '@/store'
 
 /**
@@ -52,7 +53,7 @@ const columns: TableColumnsType = [
     title: '操作',
     key: 'operation',
     fixed: 'right',
-    width: 200
+    width: 270
   }
 ]
 
@@ -133,13 +134,14 @@ const saveTemplate = (): void => {
   const { channelType, messageType, ...rest } = addtemplate.value.templateItem
   const savetemplate = { ...rest }
   console.warn(savetemplate)
+  addtemplate.value.iconLoading = true
   addTemplatePages(savetemplate)
     .then(res => {
       if (res.code === 200) {
-        void message.success('新增成功~ (*^▽^*)')
-        addtemplate.value.open = false
-        searchTemplate({ opt: 2 }) // 更新表单
         addtemplate.value.iconLoading = false
+        addtemplate.value.open = false
+        void message.success('新增成功~ (*^▽^*)')
+        searchTemplate({ opt: 2 }) // 更新表单
       }
     })
     .catch(err => {
@@ -261,26 +263,8 @@ const changeStatus = (id: number, status: number | boolean): void => {
 const startModify = (record): void => {
   modifytemplate.value.openModify = true
   console.log(record)
-  getAllMessage(modifytemplate.value.updateTemp, record)
+  getAllMessage(modifytemplate.value, record)
   console.log(modifytemplate.value.updateTemp)
-  getMessageType({ channelType: getChannelType(record.channelType) })
-    .then(res => {
-      res.data.forEach(item => {
-        modifytemplate.value.messageData.push(item)
-      })
-    })
-    .catch(err => {
-      console.error('An error occurred:', err)
-    })
-  getApp({ channelType: getChannelType(record.channelType) })
-    .then(res => {
-      res.data.forEach(item => {
-        modifytemplate.value.appData.push(item)
-      })
-    })
-    .catch(err => {
-      console.error('An error occurred:', err)
-    })
 }
 
 /// 查询操作
@@ -357,12 +341,7 @@ onMounted(() => {
       if (res.data.records.length > 0) {
         total.value = res.data.total
         res.data.records.forEach((item: any) => {
-          item.channelType = JSON.parse(item.pushWays).channelType
-          item.messageType = JSON.parse(item.pushWays).messageType
-          item.createTime = getDate(item.createTime)
-          // eslint-disable-next-line
-          item.templateStatus = item.templateStatus === 1 ? true : false
-          item.key = item.templateId
+          item = changeTable(item)
           templateTable.push(item)
         })
         console.warn('初始化数据', templateTable)
@@ -414,6 +393,9 @@ const a = computed(() => {
       >
         >
         <template #bodyCell="{ column, record }">
+          <template v-if="column.key === 'templateId'">
+            <span style="font-weight: bold">{{ record.templateId }}</span>
+          </template>
           <template v-if="column.key === 'templateStatus'">
             <span>
               <a-switch
@@ -447,6 +429,7 @@ const a = computed(() => {
               编辑
             </a-button>
             <modifyTemplate ref="modifytemplate" :mod="record" />
+            <sendTest :test="record.templateId" />
             <a-popconfirm title="确认删除吗?" @confirm="onDelete(record.templateId)" ok-text="确定" cancel-text="取消">
               <a-button type="link" danger size="small" style="font-size: 14px; margin-left: -5px">删除</a-button>
             </a-popconfirm>
@@ -466,6 +449,7 @@ const a = computed(() => {
         @change="change"
         showSizeChanger
         :locale="locale"
+        :show-total="total => `共 ${total} 条数据`"
       />
     </div>
     <!-- 对表格的操作 -->

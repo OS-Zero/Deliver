@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Rule } from 'ant-design-vue/es/form'
 import { ref, reactive, watch } from 'vue'
-import type { addTemp } from '../type'
+import type { modiTemp } from '../type'
 import { getPushWays } from '@/utils/date'
 import { getApp, getMessageType } from '@/api/message'
 
@@ -25,8 +25,8 @@ interface appItem {
   appName: string
 }
 
-const updateTemp: addTemp = reactive({
-  templateId: undefined,
+const updateTemp: modiTemp = reactive({
+  templateId: -1,
   templateName: '',
   pushRange: undefined,
   usersType: undefined,
@@ -45,8 +45,18 @@ const wrapperCol = { span: 20 }
 
 const iconLoading = ref<boolean | DelayLoading>(false)
 
+const channelDisabled = ref(false)
+
+const messageDisabled = ref(false)
+
+const appDisabled = ref(false)
+
+const messageData = ref<mess[]>([])
+
+const appData = ref<appItem[]>([])
+
 const validatePass = async (_rule: Rule): Promise<any> => {
-  if (!appDisabled.value && appData.value.length === 0) {
+  if (!appDisabled.value && appData.value.length === 0 && updateTemp.appId === undefined) {
     throw new Error('请先进行渠道 App 配置')
   }
   await Promise.resolve()
@@ -55,7 +65,7 @@ const validatePass = async (_rule: Rule): Promise<any> => {
 const rules: Record<string, Rule[]> = {
   templateName: [
     { required: true, message: '请输入模板名', trigger: 'change' },
-    { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
+    { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
   ],
   pushRange: [{ required: true, message: '请选择推送范围', trigger: 'change' }],
   usersType: [{ required: true, message: '请选择用户类型', trigger: 'change' }],
@@ -70,7 +80,7 @@ const rules: Record<string, Rule[]> = {
     {
       required: true,
       validator: validatePass,
-      trigger: 'change'
+      trigger: 'blur'
     }
   ],
   messageType: [{ required: true, message: '请选择消息类型', trigger: 'change' }],
@@ -88,6 +98,12 @@ const userdisabled = ref([
 ])
 
 const handlePushRangeChange = (e): void => {
+  userdisabled.value = [
+    { value: 1, label: '企业账号', disabled: false },
+    { value: 2, label: '电话', disabled: false },
+    { value: 3, label: '邮箱', disabled: false },
+    { value: 4, label: '平台 UserId', disabled: false }
+  ]
   if (e.target.value === 0 || e.target.value === 1) {
     userdisabled.value = userdisabled.value.map(item => ({ ...item, disabled: false }))
   } else if (e.target.value === 2) {
@@ -99,6 +115,13 @@ const handlePushRangeChange = (e): void => {
       }
     })
   }
+  channelDisabled.value = true
+  updateTemp.channelType = undefined
+  messageDisabled.value = true
+  updateTemp.messageType = ''
+  appDisabled.value = true
+  updateTemp.appId = undefined
+  updateTemp.usersType = undefined
 }
 
 const channelData = ref<Channel[]>([])
@@ -126,22 +149,13 @@ const pickChannel = (e): void => {
   }
 }
 
-const channelDisabled = ref(false)
-
-const messageDisabled = ref(false)
-
-const appDisabled = ref(false)
-
-const messageData = ref<mess[]>([])
-
-const appData = ref<appItem[]>([])
-
 // 选择完渠道后，此时应该是已经拿到下面两项的选择项
 const selectValues = (channelType): void => {
   updateTemp.appId = undefined
   updateTemp.messageType = ''
   messageData.value.length = 0
   appData.value.length = 0
+  messageDisabled.value = true
   getMessageType({ channelType: Number(channelType) })
     .then(res => {
       res.data.forEach((item: mess) => {
@@ -186,7 +200,28 @@ const handleOk = (): void => {
     })
 }
 
-const handleCancel = (): void => {}
+const handleCancel = (): void => {
+  channelDisabled.value = false
+  messageDisabled.value = false
+  appDisabled.value = false
+  userdisabled.value = [
+    { value: 1, label: '企业账号', disabled: false },
+    { value: 2, label: '电话', disabled: false },
+    { value: 3, label: '邮箱', disabled: false },
+    { value: 4, label: '平台 UserId', disabled: false }
+  ]
+}
+
+const reset = (): void => {
+  updateTemp.channelType = undefined
+  updateTemp.usersType = undefined
+  updateTemp.templateName = ''
+  updateTemp.pushRange = undefined
+  messageDisabled.value = true
+  appDisabled.value = true
+  channelDisabled.value = true
+  userdisabled.value = userdisabled.value.map(item => ({ ...item, disabled: true }))
+}
 
 watch(
   () => updateTemp.channelType,
@@ -210,7 +245,8 @@ defineExpose({
   openModify,
   updateTemp,
   messageData,
-  appData
+  appData,
+  channelData
 })
 </script>
 
@@ -271,9 +307,9 @@ defineExpose({
       <a-form-item label="模板状态" name="templateStatus" class="tem-item">
         <a-switch v-model:checked="updateTemp.templateStatus" checked-children="启用" un-checked-children="禁用" />
       </a-form-item>
-      <a-form-item :wrapper-col="{ span: 14, offset: 4 }" class="tem-item">
+      <a-form-item :wrapper-col="{ span: 15, offset: 7 }" class="tem-item">
         <a-button type="primary" @click="handleOk" :loading="iconLoading">确认修改</a-button>
-        <a-button style="margin-left: 10px" @click="handleCancel">重置</a-button>
+        <a-button style="margin-left: 10px" @click="reset">重置</a-button>
       </a-form-item>
     </a-form>
   </a-modal>
