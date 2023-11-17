@@ -127,7 +127,7 @@ export interface addTemp {
 }
 
 // 修改接口
-export interface updateTemp {
+export interface modiTemp {
   /**
    * 模板id
    */
