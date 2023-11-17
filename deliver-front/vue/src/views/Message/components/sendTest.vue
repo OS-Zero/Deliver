@@ -4,6 +4,7 @@ import type { DrawerProps, FormInstance } from 'ant-design-vue'
 import { UserOutlined } from '@ant-design/icons-vue'
 import type { sendMessageTest } from '../type'
 import type { Rule } from 'ant-design-vue/es/form'
+import jsonView from 'vue-json-views'
 
 const placement = ref<DrawerProps['placement']>('right')
 
@@ -21,6 +22,21 @@ const sendtest = ref<FormInstance>()
 const userItem = ref<string>('')
 
 const iconLoading = ref(false)
+
+const jsonData = {
+  name: 'dog',
+  age: 2,
+  hobby: {
+    eat: {
+      food: '狗粮',
+      water: '冰可乐'
+    },
+    sleep: {
+      time: '白日梦'
+    }
+  }
+}
+const jsonString = JSON.stringify(jsonData)
 
 const showDrawer = (): void => {
   open.value = true
@@ -100,6 +116,7 @@ const rules: Record<string, Rule[]> = {
       <a-form-item label="重试次数" name="retry">
         <a-input-number id="inputNumber" v-model:value="sendTestTable.retry" :min="1" :max="3" />
       </a-form-item>
+      <json-view :data="jsonString" />
     </a-form>
     <template #extra>
       <a-button type="primary" html-type="submit" @click="searchMes" :loading="iconLoading">发送</a-button>
