@@ -560,9 +560,11 @@ const a = computed(() => {
       <a-form-item label="APP 状态" name="appStatus" class="tem-item">
         <a-switch v-model:checked="updateDate.appStatus" checked-children="启用" un-checked-children="禁用" />
       </a-form-item>
-      <a-form-item :wrapper-col="{ span: 14, offset: 4 }" class="tem-item">
-        <a-button type="primary" @click="handleOk" :loading="iconLoading">确认修改</a-button>
-        <a-button style="margin-left: 10px" @click="handleCancel">取消修改</a-button>
+      <a-form-item :wrapper-col="{ span: 20, offset: 4 }" class="tem-item">
+        <div class="between">
+          <a-button @click="handleCancel">取消修改</a-button>
+          <a-button type="primary" @click="handleOk" :loading="iconLoading">确认修改</a-button>
+        </div>
       </a-form-item>
     </a-form>
   </a-modal>
@@ -644,5 +646,11 @@ const a = computed(() => {
       margin-left: 75%;
     }
   }
+}
+.between {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
 }
 </style>
