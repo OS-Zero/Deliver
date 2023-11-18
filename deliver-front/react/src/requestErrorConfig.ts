@@ -30,7 +30,7 @@ export const errorConfig: RequestConfig = {
     errorThrower: (res) => {
       const {code, errorMessage} =
         res as unknown as ResponseStructure;
-      if (!(code === 200)) {
+      if (code !== 200) {
         const error: any = new Error(errorMessage);
         error.name = 'BizError';
         error.info = {errorMessage};
@@ -76,12 +76,13 @@ export const errorConfig: RequestConfig = {
   responseInterceptors: [
     (response) => {
       // 拦截响应数据，进行个性化处理
-      const {code} = response as unknown as ResponseStructure;
-
-      if (!(code === 200)) {
+      const {data} = response as unknown as ResponseStructure;
+      const {code} = data;
+      console.log(data)
+      if (code !== 200) {
         message.error('请求失败！');
       }
-      return response;
+      return data;
     },
   ],
 };

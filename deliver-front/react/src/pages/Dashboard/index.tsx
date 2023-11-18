@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Column} from '@ant-design/charts';
 import {Pie} from '@ant-design/plots';
 import {PageContainer,} from '@ant-design/pro-components';
-import {Card, Col, Radio, Row} from 'antd';
+import {Card, Col, message, Radio, Row} from 'antd';
 import {AppstoreTwoTone, FileTwoTone, FunnelPlotTwoTone, MessageTwoTone} from '@ant-design/icons';
 import {getDashboardHeadData} from "@/services/ant-design-pro/api";
 
@@ -22,8 +22,9 @@ const Page: React.FC = () => {
         // 调用接口获取数据
         const response = await getDashboardHeadData();
         // 更新状态
-        setDashboardHeadData(response.data);
+        setDashboardHeadData(response);
       } catch (error) {
+        message.error(error.message)
         console.error('Error fetching dashboard data:', error);
       }
     }
@@ -135,7 +136,7 @@ const Page: React.FC = () => {
     },
   };
 
-  const templateInfo = [
+  const [templateInfo, setTemplateInfo] = useState<any>([
     {
       type: '分类一',
       value: 101,
@@ -156,7 +157,8 @@ const Page: React.FC = () => {
       type: '分类五',
       value: 130,
     },
-  ];
+  ]);
+
   const templateConfig = {
     appendPadding: 10,
     data: templateInfo,
