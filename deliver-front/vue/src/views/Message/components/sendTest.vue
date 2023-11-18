@@ -55,14 +55,30 @@ const onClose = (): void => {
   open.value = false
 }
 
+const addUserFlag = ref<boolean>(true)
+
 const addUser = (): void => {
   if (userItem.value !== '') {
     if (!sendTestTable.users.includes(userItem.value) || sendTestTable.users.length === 0) {
       sendTestTable.users.push(userItem.value)
       userItem.value = ''
     }
+    userItem.value = ''
+    addUserFlag.value = true
   }
-  userItem.value = ''
+}
+
+const deleteUserItem = (userItem): void => {
+  console.log(userItem)
+  // 使用 splice 方法删除指定元素
+  const indexToDelete = sendTestTable.users.indexOf(userItem)
+  if (indexToDelete !== -1) {
+    sendTestTable.users.splice(indexToDelete, 1)
+  }
+}
+
+const changeAddUser = (): void => {
+  addUserFlag.value = false
 }
 
 const searchMes = (): void => {
@@ -104,22 +120,29 @@ const rules: Record<string, Rule[]> = {
   <a-button type="link" class="btn-manager" size="small" style="font-size: 14px; margin-left: -5px" @click="showDrawer">
     测试发送
   </a-button>
-  <a-drawer title="测试发送" :placement="placement" :closable="true" :open="open" @close="onClose" :width="660">
+  <a-drawer title="测试消息模版发送" :placement="placement" :closable="true" :open="open" @close="onClose" :width="660">
     <a-form ref="sendtest" :model="sendTestTable" :rules="rules">
-      <a-form-item label="用户 ID" name="userItem" style="margin-left: 22px">
-        <a-input-group compact>
-          <a-input v-model:value="userItem" placeholder="请输入用户 ID" style="width: 450px"></a-input>
+      <a-form-item label="添加用户" name="userItem" style="margin-left: 10px">
+        <a-button type="primary" v-if="addUserFlag" @click="changeAddUser">添加发送用户</a-button>
+        <a-input-group compact v-if="!addUserFlag">
+          <a-input v-model:value="userItem" placeholder="请输入用户 ID 添加至用户列表" style="width: 452px"></a-input>
           <a-button type="primary" @click="addUser">添加</a-button>
         </a-input-group>
       </a-form-item>
       <a-form-item label="用户列表" name="users">
-        <a-select
-          v-model:value="sendTestTable.users"
-          mode="multiple"
-          style="width: 100%"
-          :max-tag-text-length="11"
-          :open="false"
-        ></a-select>
+        <a-list size="small" bordered :data-source="sendTestTable.users">
+          <template #renderItem="{ item }">
+            <a-list-item>
+              {{ item }}
+              <template #actions>
+                <a @click="deleteUserItem(item)">删除</a>
+              </template>
+            </a-list-item>
+          </template>
+          <template #header>
+            <div style="color: #1677ff">用户 ID</div>
+          </template>
+        </a-list>
       </a-form-item>
       <a-form-item label="发送参数" name="paramMap">
         <json-editor-vue
@@ -136,8 +159,8 @@ const rules: Record<string, Rule[]> = {
       </a-form-item>
     </a-form>
     <template #extra>
-      <a-button type="primary" html-type="submit" @click="searchMes" :loading="iconLoading">发送</a-button>
       <a-button style="margin: 0 8px" @click="clearForm">清空</a-button>
+      <a-button type="primary" html-type="submit" @click="searchMes" :loading="iconLoading">发送</a-button>
     </template>
   </a-drawer>
 </template>
