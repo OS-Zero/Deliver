@@ -194,9 +194,11 @@ defineExpose({
       <a-form-item label="APP 状态" name="appStatus" class="tem-item">
         <a-switch v-model:checked="templateItem.appStatus" checked-children="启用" un-checked-children="禁用" />
       </a-form-item>
-      <a-form-item :wrapper-col="{ span: 14, offset: 4 }" class="tem-item">
-        <a-button type="primary" @click="handleOk" :loading="iconLoading">确认新建</a-button>
-        <a-button style="margin-left: 10px" @click="handleCancel">重置</a-button>
+      <a-form-item :wrapper-col="{ span: 25, offset: 4 }" class="tem-item">
+        <div class="between">
+          <a-button @click="handleCancel">重置</a-button>
+          <a-button type="primary" @click="handleOk" :loading="iconLoading">确认新建</a-button>
+        </div>
       </a-form-item>
     </a-form>
   </a-modal>
@@ -216,5 +218,11 @@ defineExpose({
     text-align: right;
     margin-left: 300px;
   }
+}
+.between {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
 }
 </style>
