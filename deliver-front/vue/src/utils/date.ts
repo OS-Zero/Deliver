@@ -36,7 +36,7 @@ export const getChannelType = (s: string): number => {
 }
 
 export const getUsersType = (s: string): number => {
-  const usersarr = ['企业账号', '电话', '邮箱', '平台userId']
+  const usersarr = ['企业账号', '电话', '邮箱', '平台 UserId']
   return usersarr.indexOf(s)
 }
 
@@ -104,5 +104,8 @@ export const changeTable = (item): any => {
   // pushrange
   const pusharr = ['不限', '企业内部', '企业外部']
   item.pushRange = pusharr[item.pushRange]
+  // userstype
+  const userarr = ['', '企业账号', '电话', '邮箱', '平台 UserId']
+  item.usersType = userarr[Number(item.usersType)]
   return item
 }
