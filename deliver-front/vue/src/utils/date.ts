@@ -101,11 +101,14 @@ export const changeTable = (item): any => {
   // eslint-disable-next-line
   item.templateStatus = item.templateStatus === 1 ? true : false
   item.key = item.templateId
-  // pushrange
-  const pusharr = ['不限', '企业内部', '企业外部']
-  item.pushRange = pusharr[item.pushRange]
-  // userstype
-  const userarr = ['', '企业账号', '电话', '邮箱', '平台 UserId']
-  item.usersType = userarr[Number(item.usersType)]
+  // pushRange
+  const pushArr = ['不限', '企业内部', '企业外部']
+  item.pushRange = pushArr[item.pushRange]
+  // usersType
+  const userArr = ['', '企业账号', '电话', '邮箱', '平台 UserId']
+  item.usersType = userArr[Number(item.usersType)]
+  // channelType
+  const channelArr = ['', '电话', '短信', '邮件', '钉钉', '企业微信', '飞书']
+  item.channelType = channelArr[item.channelType]
   return item
 }
