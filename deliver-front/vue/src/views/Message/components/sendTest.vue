@@ -53,6 +53,7 @@ const showDrawer = (): void => {
 
 const onClose = (): void => {
   open.value = false
+  clearForm()
 }
 
 const addUserFlag = ref<boolean>(true)
@@ -69,7 +70,6 @@ const addUser = (): void => {
 }
 
 const deleteUserItem = (userItem): void => {
-  console.log(userItem)
   // 使用 splice 方法删除指定元素
   const indexToDelete = sendTestTable.users.indexOf(userItem)
   if (indexToDelete !== -1) {
@@ -90,27 +90,25 @@ const searchMes = (): void => {
     ?.validate()
     .then(() => {
       iconLoading.value = true
+      console.log(sendTestTable.users)
       sendTestMes(sendTestTable)
         .then(res => {
           if (res.code === 200) {
             void message.success('发送成功~ (*^▽^*)')
             onClose()
-          } else {
-            void message.error('发送失败，请检查网络~ (＞︿＜)')
           }
           showTime.value = true
           const setIntervals = setInterval(() => {
             timeOut.value = timeOut.value - 1
             if (timeOut.value === 0) {
-              iconLoading.value = false
               showTime.value = false
+              iconLoading.value = false
               clearInterval(setIntervals)
+              timeOut.value = 3
             }
           }, 1000)
         })
-        .catch(err => {
-          console.error('An error occurred:', err)
-        })
+        .catch(_ => {})
     })
     .catch(error => {
       console.log('error', error)
@@ -142,7 +140,7 @@ const rules: Record<string, Rule[]> = {
         </a-input-group>
       </a-form-item>
       <a-form-item label="用户列表" name="users">
-        <a-list size="small" bordered :data-source="sendTestTable.users">
+        <a-list size="small" bordered v-model:value="sendTestTable.users" :data-source="sendTestTable.users">
           <template #renderItem="{ item }">
             <a-list-item>
               {{ item }}
@@ -174,8 +172,8 @@ const rules: Record<string, Rule[]> = {
     <template #extra>
       <a-button style="margin: 0 8px" @click="clearForm">清空</a-button>
       <a-button type="primary" html-type="submit" @click="searchMes" :loading="iconLoading">
-        发送
-        <span v-if="showTime">{{ timeOut }}</span>
+        <template v-if="showTime">{{ timeOut }}s</template>
+        <template v-else>发送</template>
       </a-button>
     </template>
   </a-drawer>
