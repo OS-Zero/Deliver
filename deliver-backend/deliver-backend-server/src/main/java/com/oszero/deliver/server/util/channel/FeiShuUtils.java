@@ -1,13 +1,11 @@
 package com.oszero.deliver.server.util.channel;
 
+import cn.hutool.core.lang.UUID;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONUtil;
-import com.lark.oapi.Client;
-import com.lark.oapi.core.request.RequestOptions;
-import com.lark.oapi.service.contact.v3.model.GetUserReq;
-import com.lark.oapi.service.contact.v3.model.GetUserResp;
 import com.oszero.deliver.server.exception.LinkProcessException;
+import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.model.app.FeiShuApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import lombok.AllArgsConstructor;
@@ -15,8 +13,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -28,6 +25,9 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 public class FeiShuUtils {
+
+    private static final Set<String> batchMsgType =
+            new HashSet<>(Arrays.asList("text", "image", "post", "share_chat", "interactive"));
 
     /**
      * 获取 tenantAccessToken
@@ -67,14 +67,51 @@ public class FeiShuUtils {
      * @param sendTaskDto       消息 dto
      */
     public void sendMessage(String tenantAccessToken, SendTaskDto sendTaskDto) {
+
+        @Data
+        class SendMessageResponse {
+            private Integer code;
+            private String msg;
+            private Object data;
+        }
+        String body = sendTaskDto.getParamJson();
         Map<String, Object> paramMap = sendTaskDto.getParamMap();
-        String body = JSONUtil.toJsonStr(paramMap);
-        HttpResponse response = HttpRequest.post("https://open.feishu.cn/open-apis/message/v4/batch_send/")
-                .header("Content-Type", "application/json; charset=utf-8")
-                .header("Authorization", tenantAccessToken)
-                .body(body)
-                .execute();
-        log.info("飞书消息发送响应为：{}", response.body());
+        String msg_type = (String) paramMap.get("msg_type");
+
+        if (batchMsgType.contains(msg_type)) {
+            HttpResponse response = HttpRequest.post("https://open.feishu.cn/open-apis/message/v4/batch_send/")
+                    .header("Content-Type", "application/json; charset=utf-8")
+                    .header("Authorization", tenantAccessToken)
+                    .body(body)
+                    .execute();
+            log.info("飞书消息发送响应为：{}", response.body());
+            SendMessageResponse sendMessageResponse = JSONUtil.toBean(response.body(), SendMessageResponse.class);
+            if (!sendMessageResponse.getCode().equals(0)) {
+                throw new MessageException("飞书发送消息失败, " + sendMessageResponse.getMsg());
+            }
+        } else {
+            List<String> user_ids = (List<String>) paramMap.get("user_ids");
+            paramMap.remove("user_ids");
+            user_ids.forEach(userId -> {
+                paramMap.put("uuid", UUID.randomUUID().toString());
+                paramMap.remove("receive_id");
+                paramMap.put("receive_id", userId);
+                Object content = paramMap.get("content");
+                String contentJson = JSONUtil.toJsonStr(content);
+                paramMap.put("content", contentJson);
+                String jsonStr = JSONUtil.toJsonStr(paramMap);
+                HttpResponse response = HttpRequest.post("https://open.feishu.cn/open-apis/im/v1/messages?receive_id_type=user_id")
+                        .header("Content-Type", "application/json; charset=utf-8")
+                        .header("Authorization", tenantAccessToken)
+                        .body(jsonStr)
+                        .execute();
+                log.info("飞书消息发送响应为：{}", response.body());
+                SendMessageResponse sendMessageResponse = JSONUtil.toBean(response.body(), SendMessageResponse.class);
+                if (!sendMessageResponse.getCode().equals(0)) {
+                    throw new MessageException("飞书发送消息失败, " + sendMessageResponse.getMsg());
+                }
+            });
+        }
     }
 
     /**
