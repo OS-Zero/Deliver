@@ -1,41 +1,29 @@
 import type { Dayjs } from 'dayjs'
-export interface messageTemplate {
+export interface appTemplate {
   /**
-   * 模板id
+   * Appid
    */
-  templateId: number
+  appId: number
   /**
-   * 模板名
+   * app名称
    */
-  templateName: string
+  appName: string
   /**
-   * 推送范围
-   */
-  pushRange: number
-  /**
-   * 用户类型
-   */
-  usersType: number
-  /**
-   * 推送方式
-   */
-  pushWays?: string
-  /**
-   * 渠道选择
+   * 渠道类型
    */
   channelType: number
   /**
-   * 消息类型
+   * app配置
    */
-  messageType: string
+  appconfig: string
   /**
-   * 模板累计使用数
+   * app使用次数
    */
-  useCount: number
+  userCount: number
   /**
-   * 模板状态
+   * app状态
    */
-  templateStatus: number | boolean
+  appStatus: number
   /**
    * 创建用户
    */
@@ -44,14 +32,6 @@ export interface messageTemplate {
    * 创建时间
    */
   createTime: string
-  /**
-   * Appid
-   */
-  appId: number
-  /**
-   * App名称
-   */
-  appName: string
 }
 
 // 搜索框接口
@@ -59,15 +39,11 @@ export interface searchMessage {
   /**
    * 模板名
    */
-  templateName?: string
+  appName?: string
   /**
    * 推送范围
    */
-  pushRange?: number
-  /**
-   * 用户类型
-   */
-  usersType?: number
+  channelType?: number
   /**
    * 当前页面序号
    */
@@ -93,75 +69,43 @@ export interface searchMessage {
 // 新增接口
 export interface addTemp {
   /**
-   * 模板名
+   * app名称
    */
-  templateName: string
+  appName: string
   /**
-   * 推送范围
+   * 渠道类型
    */
-  pushRange: number | undefined
+  channelType: number | undefined
   /**
-   * 用户类型
+   * App配置
    */
-  usersType: number | undefined
+  appConfig: string
   /**
-   * 用户类型
+   * App状态
    */
-  pushWays: string
-  /**
-   * 渠道选择
-   */
-  channelType?: string | undefined
-  /**
-   * 消息类型
-   */
-  messageType?: string
-  /**
-   * Appid
-   */
-  appId: number | undefined
-  /**
-   * 模板状态
-   */
-  templateStatus: number | boolean
+  appStatus: number|boolean
 }
 
 // 修改接口
 export interface updateTemp {
   /**
-   * 模板id
+   * appId
    */
-  templateId: number
+  appId?: number
   /**
-   * 模板名
+   * app名称
    */
-  templateName: string
+  appName?: string
   /**
-   * 推送范围
+   * 渠道类型
    */
-  pushRange: number | undefined
+  channelType?: number | undefined
   /**
-   * 用户类型
+   * App配置
    */
-  usersType: number | undefined
+  appConfig?: string
   /**
-   * 用户类型
+   * App状态
    */
-  pushWays: string
-  /**
-   * 渠道选择
-   */
-  channelType?: string | undefined
-  /**
-   * 消息类型
-   */
-  messageType?: string
-  /**
-   * 模板状态
-   */
-  templateStatus: number | undefined
-  /**
-   * Appid
-   */
-  appId: number | undefined
+  appStatus?: number|boolean
 }
