@@ -10,7 +10,7 @@ import addTemplate from './components/addTemplate.vue'
 import modifyTemplate from './components/modifyTemplate.vue'
 import sendTest from './components/sendTest.vue'
 import { addTemplatePages, deleteTemplate, getTemplatePages, updateStatus } from '@/api/message'
-import { changeTable, getAllMessage, getDate } from '@/utils/date'
+import { changeTable, getAllMessage } from '@/utils/date'
 import { useStore } from '@/store'
 
 /**
@@ -308,14 +308,8 @@ const searchTemplate = ({ page, pageSize, opt }: SearchOptions = {}): void => {
       if (res.data.records.length > 0) {
         total.value = res.data.total
         res.data.records.forEach((item: any) => {
-          item.channelType = JSON.parse(item.pushWays).channelType
-          item.messageType = JSON.parse(item.pushWays).messageType
-          item.createTime = getDate(item.createTime)
-          // eslint-disable-next-line
-          item.templateStatus = item.templateStatus === 1 ? true : false
-          item.key = item.templateId
-          const i = item
-          templateTable.push(i)
+          item = changeTable(item)
+          templateTable.push(item)
         })
         if (opt === 1) {
           void message.success('查询成功~ (*^▽^*)')
