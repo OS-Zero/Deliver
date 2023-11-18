@@ -87,7 +87,7 @@ export interface addTemp {
 }
 
 // 修改接口
-export interface modiTemp {
+export interface updateTemp {
   /**
    * appId
    */
