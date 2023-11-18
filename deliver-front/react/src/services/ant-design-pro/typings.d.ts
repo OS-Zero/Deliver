@@ -109,7 +109,7 @@ declare namespace API {
     numberOfApps?: number
   }
 
-  type TemplateInfoRequest = {
+  type DashboardInfoSelectRequest = {
     dateSelect: number;
   }
 
