@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref, defineProps } from 'vue'
+import { reactive, ref } from 'vue'
 import { message, type DrawerProps, type FormInstance } from 'ant-design-vue'
 import type { sendMessageTest } from '../type'
 import type { Rule } from 'ant-design-vue/es/form'
@@ -140,7 +140,7 @@ const rules: Record<string, Rule[]> = {
             </a-list-item>
           </template>
           <template #header>
-            <div style="color: #1677ff">用户 ID</div>
+            <div style="color: #1677ff">用户 ID 列表</div>
           </template>
         </a-list>
       </a-form-item>
@@ -152,6 +152,7 @@ const rules: Record<string, Rule[]> = {
           currentMode="code"
           :modeList="modeList"
           :options="options"
+          language="cn"
         />
       </a-form-item>
       <a-form-item label="重试次数" name="retry" style="margin-left: 10px">
