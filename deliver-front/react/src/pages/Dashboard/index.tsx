@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Column} from '@ant-design/charts';
-import {Pie} from '@ant-design/plots';
+import {Bar, Pie, Rose} from '@ant-design/plots';
 import {PageContainer,} from '@ant-design/pro-components';
 import {Card, Col, message, Radio, Row} from 'antd';
 import {AppstoreTwoTone, FileTwoTone, FunnelPlotTwoTone, MessageTwoTone} from '@ant-design/icons';
@@ -17,20 +17,26 @@ const Page: React.FC = () => {
 
   const [templateInfoList, setTemplateInfoList] = useState<API.DashboardInfo[]>([]);
 
+  const getDashboard1 = async () => {
+    // 调用接口获取数据
+    const response1 = await getDashboardHeadData();
+    // 更新状态
+    setDashboardHeadData(response1);
+  }
+
+  const getDashboard3 = async (options?: API.DashboardInfoSelectRequest) => {
+    // 调用接口获取数据
+    const response2 = await getTemplateInfo(options);
+    // 更新状态
+    setTemplateInfoList(response2.dashboardInfoList);
+  }
+
   useEffect(() => {
     // 定义一个异步函数，用于获取数据并更新状态
     const fetchData = async () => {
       try {
-        // 调用接口获取数据
-        const response1 = await getDashboardHeadData();
-        // 更新状态
-        setDashboardHeadData(response1);
-
-        // 调用接口获取数据
-        const response2 = await getTemplateInfo({dateSelect: 3});
-        // 更新状态
-        setTemplateInfoList(response2.dashboardInfoList);
-        console.log(templateInfoList)
+        await getDashboard1();
+        await getDashboard3({dateSelect: 1});
       } catch (error) {
         message.error(error.message)
         console.error('Error fetching dashboard data:', error);
@@ -145,112 +151,94 @@ const Page: React.FC = () => {
   };
 
   const templateConfig = {
-    appendPadding: 10,
     data: templateInfoList,
-    angleField: 'value',
-    colorField: 'name',
-    radius: 0.75,
-    label: {
-      type: 'spider',
-      labelHeight: 28,
-      content: '{name}\n{percentage}',
+    xField: 'value',
+    yField: 'name',
+    seriesField: 'name',
+    legend: {
+      position: 'top-left',
     },
-    interactions: [
-      {
-        type: 'element-selected',
-      },
-      {
-        type: 'element-active',
-      },
-    ],
   };
 
   const appInfo = [
     {
-      type: '分类一',
+      name: '分类一',
       value: 227,
     },
     {
-      type: '分类二',
+      name: '分类二',
       value: 225,
     },
     {
-      type: '分类三',
+      name: '分类三',
       value: 128,
     },
     {
-      type: '分类四',
+      name: '分类四',
       value: 125,
     },
     {
-      type: '分类五',
+      name: '分类五',
       value: 120,
     },
   ];
+
   const appConfig = {
-    appendPadding: 10,
     data: appInfo,
-    angleField: 'value',
-    colorField: 'type',
-    radius: 1,
-    innerRadius: 0.6,
+    xField: 'name',
+    yField: 'value',
+    seriesField: 'name',
+    radius: 0.9,
     label: {
-      type: 'inner',
-      offset: '-50%',
-      content: '{value}',
-      style: {
-        textAlign: 'center',
-        fontSize: 14,
+      offset: -15,
+    },
+    // 设置 active 状态样式
+    state: {
+      active: {
+        style: {
+          lineWidth: 0,
+          fillOpacity: 0.65,
+        },
       },
     },
+    legend: {
+      position: 'bottom',
+    },
     interactions: [
-      {
-        type: 'element-selected',
-      },
       {
         type: 'element-active',
       },
     ],
-    statistic: {
-      title: false,
-      content: {
-        style: {
-          whiteSpace: 'pre-wrap',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-        },
-        content: '',
-      },
-    },
   };
 
   const pushUserInfo = [
     {
-      type: '分类一',
+      name: '分类一',
       value: 27,
     },
     {
-      type: '分类二',
+      name: '分类二',
       value: 25,
     },
     {
-      type: '分类三',
+      name: '分类三',
       value: 28,
     },
     {
-      type: '分类四',
+      name: '分类四',
       value: 25,
     },
     {
-      type: '分类五',
+      name: '分类五',
       value: 20,
     }
   ];
+
   const pushUserConfig = {
     appendPadding: 10,
     data: pushUserInfo,
     angleField: 'value',
-    colorField: 'type',
+    colorField: 'name',
     radius: 1,
     innerRadius: 0.6,
     label: {
@@ -278,7 +266,7 @@ const Page: React.FC = () => {
           overflow: 'hidden',
           textOverflow: 'ellipsis',
         },
-        content: '',
+        content: 'Push\nUserId',
       },
     },
   };
@@ -339,12 +327,12 @@ const Page: React.FC = () => {
             </Col>
             <Col span={12}>
               <Card title="模板使用 TOP5" extra={<Radio.Group defaultValue="a" buttonStyle="solid">
-                <Radio.Button value="a">今日</Radio.Button>
-                <Radio.Button value="b">本周</Radio.Button>
-                <Radio.Button value="c">本月</Radio.Button>
-                <Radio.Button value="d">本年</Radio.Button>
+                <Radio.Button onClick={() => getDashboard3({dateSelect: 1})} value="a">今日</Radio.Button>
+                <Radio.Button onClick={() => getDashboard3({dateSelect: 2})} value="b">本周</Radio.Button>
+                <Radio.Button onClick={() => getDashboard3({dateSelect: 3})} value="c">本月</Radio.Button>
+                <Radio.Button onClick={() => getDashboard3({dateSelect: 4})} value="d">本年</Radio.Button>
               </Radio.Group>} style={{width: 580}}>
-                <Pie {...templateConfig} />
+                <Bar {...templateConfig} />
               </Card>
             </Col>
             <Col span={12}>
@@ -354,7 +342,7 @@ const Page: React.FC = () => {
                 <Radio.Button value="c">本月</Radio.Button>
                 <Radio.Button value="d">本年</Radio.Button>
               </Radio.Group>} style={{width: 580}}>
-                <Pie {...appConfig} />
+                <Rose {...appConfig} />
               </Card>
             </Col>
             <Col span={12}>

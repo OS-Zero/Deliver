@@ -91,7 +91,7 @@ export async function getDashboardHeadData(options?: { [key: string]: any }) {
     ...(options || {}),
   });
 }
-export async function getTemplateInfo(options?: API.TemplateInfoRequest ) {
+export async function getTemplateInfo(options?: API.DashboardInfoSelectRequest ) {
   return request<API.DashboardInfo[]>('/admin/dashboard/getTemplateInfo', {
     method: 'POST',
     data: {
