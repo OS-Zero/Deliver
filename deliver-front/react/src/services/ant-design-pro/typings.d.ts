@@ -98,4 +98,14 @@ declare namespace API {
     description?: string;
     type?: NoticeIconItemType;
   };
+
+  /**
+   * 平台监控看板参数
+   */
+  type DashboardHeadData = {
+    numberOfMessagesToday?: number,
+    numberOfPlatformFiles?: number,
+    accumulatedTemplateOwnership?: number,
+    numberOfApps?: number
+  }
 }

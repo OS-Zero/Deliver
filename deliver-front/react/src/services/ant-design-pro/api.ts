@@ -83,3 +83,16 @@ export async function removeRule(options?: { [key: string]: any }) {
     ...(options || {}),
   });
 }
+
+/** 平台监控看板接口 **/
+export async function getDashboardHeadData(options?: { [key: string]: any }) {
+  return request<API.DashboardHeadData>('/admin/dashboard/getDashboardHeadData', {
+    method: 'POST',
+    ...(options || {}),
+  });
+}
+
+
+
+
+

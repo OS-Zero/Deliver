@@ -1,18 +1,34 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Column} from '@ant-design/charts';
 import {Pie} from '@ant-design/plots';
 import {PageContainer,} from '@ant-design/pro-components';
 import {Card, Col, Radio, Row} from 'antd';
 import {AppstoreTwoTone, FileTwoTone, FunnelPlotTwoTone, MessageTwoTone} from '@ant-design/icons';
+import {getDashboardHeadData} from "@/services/ant-design-pro/api";
 
 const Page: React.FC = () => {
 
-  const dashboardHeadData = {
+  const [dashboardHeadData, setDashboardHeadData] = useState<API.DashboardHeadData>({
     numberOfMessagesToday: 101,
     numberOfPlatformFiles: 120,
     accumulatedTemplateOwnership: 20,
     numberOfApps: 141,
-  }
+  })
+
+  useEffect(() => {
+    // 定义一个异步函数，用于获取数据并更新状态
+    const fetchData = async () => {
+      try {
+        // 调用接口获取数据
+        const response = await getDashboardHeadData();
+        // 更新状态
+        setDashboardHeadData(response.data);
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+      }
+    }
+    fetchData(); // 调用数据获取函数
+  }, [])
 
   const messageInfo = [
     {
