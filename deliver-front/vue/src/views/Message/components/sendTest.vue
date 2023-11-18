@@ -7,7 +7,7 @@ import JsonEditorVue from 'json-editor-vue3'
 import { sendTestMes } from '@/api/message'
 
 const props = defineProps({
-  test: String
+  test: Number
 })
 
 const placement = ref<DrawerProps['placement']>('right')
@@ -81,6 +81,10 @@ const changeAddUser = (): void => {
   addUserFlag.value = false
 }
 
+const timeOut = ref<number>(3)
+
+const showTime = ref<boolean>(false)
+
 const searchMes = (): void => {
   sendtest.value
     ?.validate()
@@ -94,7 +98,15 @@ const searchMes = (): void => {
           } else {
             void message.error('发送失败，请检查网络~ (＞︿＜)')
           }
-          iconLoading.value = false
+          showTime.value = true
+          const setIntervals = setInterval(() => {
+            timeOut.value = timeOut.value - 1
+            if (timeOut.value === 0) {
+              iconLoading.value = false
+              showTime.value = false
+              clearInterval(setIntervals)
+            }
+          }, 1000)
         })
         .catch(err => {
           console.error('An error occurred:', err)
@@ -161,7 +173,10 @@ const rules: Record<string, Rule[]> = {
     </a-form>
     <template #extra>
       <a-button style="margin: 0 8px" @click="clearForm">清空</a-button>
-      <a-button type="primary" html-type="submit" @click="searchMes" :loading="iconLoading">发送</a-button>
+      <a-button type="primary" html-type="submit" @click="searchMes" :loading="iconLoading">
+        发送
+        <span v-if="showTime">{{ timeOut }}</span>
+      </a-button>
     </template>
   </a-drawer>
 </template>
