@@ -8,10 +8,7 @@ import com.oszero.deliver.admin.model.dto.response.DashboardHeadDataResponseDto;
 import com.oszero.deliver.admin.model.dto.response.DashboardInfoResponseDto;
 import com.oszero.deliver.admin.model.dto.response.MessageInfoResponseDto;
 import com.oszero.deliver.admin.model.entity.MessageRecord;
-import com.oszero.deliver.admin.service.AppService;
-import com.oszero.deliver.admin.service.DashboardService;
-import com.oszero.deliver.admin.service.MessageRecordService;
-import com.oszero.deliver.admin.service.TemplateService;
+import com.oszero.deliver.admin.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +32,7 @@ public class DashboardServiceImpl implements DashboardService {
     private final MessageRecordService messageRecordService;
     private final TemplateService templateService;
     private final AppService appService;
+    private final PlatformFileService platformFileService;
 
     /**
      * 获取数据面板头数据
@@ -62,7 +60,7 @@ public class DashboardServiceImpl implements DashboardService {
         wrapper.ge(MessageRecord::getCreateTime, startOfDayZoned).lt(MessageRecord::getCreateTime, endOfDayZoned);
 
         long messageCount = messageRecordService.count(wrapper);
-        long platformFiles = 100;
+        long platformFiles = platformFileService.count();
         long templateCount = templateService.count();
         long appCount = appService.count();
 

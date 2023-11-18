@@ -18,6 +18,10 @@ public enum PlatformFileTypeEnum {
     /**
      * 钉钉平台文件 1 代表钉钉
      */
+    DING_IMAGE("1-1", "图片", "image", 1),
+    DING_VOICE("1-2", "图片", "voice", 1),
+    DING_VIDEO("1-3", "图片", "video", 1),
+    DING_FILE("1-4", "图片", "file", 1),
 
     /**
      * 企业微信平台文件 2 代表企业微信
@@ -26,14 +30,14 @@ public enum PlatformFileTypeEnum {
     /**
      * 飞书平台文件 3 代表飞书
      */
-    IMAGE("3-1", "图片", "image", 3),
-    OPUS("3-2", "opus音频文件", "opus", 3),
-    MP4("3-3", "mp4视频文件", "mp4", 3),
-    PDF("3-4", "pdf格式文件", "pdf", 3),
-    DOC("3-5", "doc格式文件", "doc", 3),
-    XLS("3-6", "xls格式文件", "xls", 3),
-    PPT("3-7", "ppt格式文件", "ppt", 3),
-    STREAM("3-8", "stream格式文件", "stream", 3),
+    FEI_SHU_IMAGE("3-1", "图片", "image", 3),
+    FEI_SHU_OPUS("3-2", "opus音频文件", "opus", 3),
+    FEI_SHU_MP4("3-3", "mp4视频文件", "mp4", 3),
+    FEI_SHU_PDF("3-4", "pdf格式文件", "pdf", 3),
+    FEI_SHU_DOC("3-5", "doc格式文件", "doc", 3),
+    FEI_SHU_XLS("3-6", "xls格式文件", "xls", 3),
+    FEI_SHU_PPT("3-7", "ppt格式文件", "ppt", 3),
+    FEI_SHU_STREAM("3-8", "stream格式文件", "stream", 3),
     ;
 
     private final String code;

@@ -8,10 +8,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oszero.deliver.admin.exception.BusinessException;
 import com.oszero.deliver.admin.mapper.AppMapper;
-import com.oszero.deliver.admin.model.dto.request.AppSaveAndUpdateRequestDto;
-import com.oszero.deliver.admin.model.dto.request.AppSearchRequestDto;
-import com.oszero.deliver.admin.model.dto.request.DeleteIdsRequestDto;
-import com.oszero.deliver.admin.model.dto.request.TemplateAddGetByChannelRequestDto;
+import com.oszero.deliver.admin.model.dto.request.*;
 import com.oszero.deliver.admin.model.dto.response.AppByChannelResponseDto;
 import com.oszero.deliver.admin.model.dto.response.AppSearchResponseDto;
 import com.oszero.deliver.admin.model.entity.App;
@@ -99,6 +96,16 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>
         boolean save = this.save(app);
         if (!save) {
             throw new BusinessException("app 保存失败！！！");
+        }
+    }
+
+    @Override
+    public void updateStatusById(AppUpdateStatusRequestDto dto) {
+        App app = new App();
+        BeanUtil.copyProperties(dto, app);
+        boolean update = this.updateById(app);
+        if (!update) {
+            throw new BusinessException("app 状态更新失败！！！");
         }
     }
 
