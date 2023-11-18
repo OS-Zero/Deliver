@@ -4,48 +4,79 @@ import { ref, reactive, h, onMounted, computed } from 'vue'
 import type { UnwrapRef } from 'vue'
 import type { TableColumnsType } from 'ant-design-vue'
 import { message, Modal } from 'ant-design-vue'
-import type { messageTemplate, searchMessage } from './type'
+import type { appTemplate, searchMessage, updateTemp } from './type'
 import searchForm from './components/searchForm.vue'
 import addTemplate from './components/addTemplate.vue'
-import { addTemplatePages, deleteTemplate, getTemplatePages, updateStatus } from '@/api/message'
 import { getDate } from '@/utils/date'
 import { useStore } from '@/store'
-
+import { addAppItem, getAppInfo, deleteAppInfo, updateAppStatus, updateAppItem } from '@/api/channel'
+import JsonEditorVue from 'json-editor-vue3'
+import type { Rule } from 'ant-design-vue/es/form'
 /**
  * 表格初始化
  */
-const templateTable: UnwrapRef<messageTemplate[]> = reactive([])
+const templateTable: UnwrapRef<appTemplate[]> = reactive([])
+
+const open = ref<boolean>(false)
+
+const labelCol = { span: 4 }
+
+const wrapperCol = { span: 20 }
+
+const updateDate = ref<updateTemp>({})
+
+const jsonstr = ref<string>('')
+
+const jsonobj = ref<object>({})
+
+const update = (appData): void => {
+  open.value = true
+  jsonstr.value = appData.appConfig ?? '{}'
+  jsonobj.value = JSON.parse(jsonstr.value)
+  updateDate.value = JSON.parse(JSON.stringify(appData))
+}
+
+interface Channel {
+  value: number
+  label: string
+}
+
+const channelData = ref<Channel[]>([])
+channelData.value = [
+  { value: 1, label: '电话' },
+  { value: 2, label: '短信' },
+  { value: 3, label: '邮件' },
+  { value: 4, label: '钉钉' },
+  { value: 5, label: '企业微信' },
+  { value: 6, label: '飞书' }
+]
+
 // 表格数据
 const columns: TableColumnsType = [
   {
-    title: 'TemplateId',
-    dataIndex: 'templateId',
-    key: 'templateId'
+    title: 'AppId',
+    dataIndex: 'appId',
+    key: 'appId'
   },
   {
-    title: '模板名',
-    dataIndex: 'templateName',
-    key: 'templateName'
+    title: 'APP 名称',
+    dataIndex: 'appName',
+    key: 'appName'
   },
   {
-    title: '推送范围',
-    dataIndex: 'pushRange',
-    key: 'pushRange'
+    title: '渠道类型',
+    dataIndex: 'channelType',
+    key: 'channelType'
   },
   {
-    title: '用户类型',
-    dataIndex: 'usersType',
-    key: 'usersType'
-  },
-  {
-    title: '模板累计使用数',
+    title: '累计使用次数',
     dataIndex: 'useCount',
     key: 'useCount'
   },
   {
-    title: '模板状态',
-    dataIndex: 'templateStatus',
-    key: 'templateStatus'
+    title: 'APP 状态',
+    dataIndex: 'appStatus',
+    key: 'appStatus'
   },
   {
     title: '操作',
@@ -54,45 +85,13 @@ const columns: TableColumnsType = [
     width: 200
   }
 ]
-
-// const innerColumns = [
-//   {
-//     title: '渠道选择',
-//     dataIndex: 'channelType',
-//     key: 'channelType'
-//   },
-//   {
-//     title: '消息类型',
-//     dataIndex: 'messageType',
-//     key: 'messageType'
-//   },
-//   {
-//     title: '创建用户',
-//     dataIndex: 'createUser',
-//     key: 'createUser'
-//   },
-//   {
-//     title: '创建时间',
-//     dataIndex: 'createTime',
-//     key: 'createTime'
-//   },
-//   {
-//     title: '渠道 AppId',
-//     dataIndex: 'appId',
-//     key: 'appId'
-//   },
-//   {
-//     title: '渠道 APP 名',
-//     dataIndex: 'appName',
-//     key: 'appName'
-//   }
-// ]
+const channelValue = ['', '电话', '短信', '邮件', '钉钉', '企业微信', '飞书']
 
 /**
  * 渲染 data
  */
 
-const innertemplatedata: UnwrapRef<messageTemplate[]> = reactive([])
+const innertemplatedata: UnwrapRef<appTemplate[]> = reactive([])
 
 const expandedRowKeys: number[] = reactive([])
 
@@ -127,11 +126,10 @@ const searchform = ref()
 const addtemplate = ref()
 
 /// 新增操作
-const saveTemplate = (): void => {
-  const { channelType, messageType, ...rest } = addtemplate.value.templateItem
-  const savetemplate = { ...rest }
-  console.warn(savetemplate)
-  addTemplatePages(savetemplate)
+const saveApp = (): void => {
+  const saveApp = addtemplate.value.templateItem
+  console.warn(saveApp)
+  addAppItem(saveApp)
     .then(res => {
       if (res.code === 200) {
         void message.success('新增成功~ (*^▽^*)')
@@ -170,7 +168,7 @@ const startDelete = (): void => {
   const templates = {
     ids: state.selectedRowKeys as number[]
   }
-  deleteTemplate(templates)
+  deleteAppInfo(templates)
     .then(res => {
       if (res.code === 200) {
         void message.success('删除成功~ (*^▽^*)')
@@ -183,6 +181,7 @@ const startDelete = (): void => {
       console.error('An error occurred:', err)
       state.loading = false
     })
+  state.selectedRowKeys.length = 0
 }
 
 const cancelSelect = (): void => {
@@ -203,7 +202,7 @@ const onDelete = (id: number): void => {
   const templates = {
     ids: arr
   }
-  deleteTemplate(templates)
+  deleteAppInfo(templates)
     .then(res => {
       if (res.code === 200) {
         void message.success('删除成功~ (*^▽^*)')
@@ -239,10 +238,10 @@ const changeStatus = (id: number, status: number | boolean): void => {
   // eslint-disable-next-line
   const sta = status === true ? 1 : 0
   const obj = {
-    templateId: id,
-    templateStatus: sta
+    appId: id,
+    appStatus: sta
   }
-  updateStatus(obj)
+  updateAppStatus(obj)
     .then(res => {
       if (res.code === 200) {
         void message.success('修改成功~ (*^▽^*)')
@@ -250,16 +249,15 @@ const changeStatus = (id: number, status: number | boolean): void => {
       }
     })
     .catch(err => {
-      void message.error('查询失败，请检查网络~ (＞︿＜)')
+      void message.error('修改失败，请检查网络~ (＞︿＜)')
       console.error('An error occurred:', err)
     })
 }
 
 /// 查询操作
 const searchItem: searchMessage = reactive({
-  templateName: undefined,
-  pushRange: undefined,
-  usersType: undefined,
+  appName: undefined,
+  channelType: undefined,
   currentPage: 1,
   pageSize: 10,
   startTime: undefined,
@@ -290,18 +288,16 @@ const searchTemplate = ({ page, pageSize, opt }: SearchOptions = {}): void => {
   console.warn(searchNeedMes)
   searchNeedMes.currentPage = page
   searchNeedMes.pageSize = pageSize
-  getTemplatePages(searchNeedMes)
+  getAppInfo(searchNeedMes)
     .then(res => {
       templateTable.length = 0
       if (res.data.records.length > 0) {
         total.value = res.data.total
         res.data.records.forEach((item: any) => {
-          item.channelType = JSON.parse(item.pushWays).channelType
-          item.messageType = JSON.parse(item.pushWays).messageType
           item.createTime = getDate(item.createTime)
           // eslint-disable-next-line
-          item.templateStatus = item.templateStatus === 1 ? true : false
-          item.key = item.templateId
+          item.appStatus = item.appStatus === 1 ? true : false
+          item.key = item.appId
           const i = item
           templateTable.push(i)
         })
@@ -323,18 +319,91 @@ const searchTemplate = ({ page, pageSize, opt }: SearchOptions = {}): void => {
     })
 }
 
+const handleCancel = (): void => {
+  // userdisabled.value = userdisabled.value.map(item => ({ ...item, disabled: true }))
+  updateDate.value.channelType = undefined
+  updateDate.value.appName = ''
+  updateDate.value.appStatus = 1
+  updateDate.value.appConfig = ''
+  open.value = false
+}
+
+const templateForm = ref()
+
+interface DelayLoading {
+  delay: number
+}
+
+const iconLoading = ref<boolean | DelayLoading>(false)
+
+const handleOk = (): void => {
+  // 异步关闭，先添加，渲染成功后关闭
+  templateForm.value
+    .validate()
+    .then(() => {
+      // eslint-disable-next-line
+      updateDate.value.appStatus = updateDate.value.appStatus === true ? 1 : 0
+      updateDate.value.appConfig = JSON.stringify(jsonobj.value)
+      updateAppItem(updateDate.value)
+        .then(res => {
+          if (res.code === 200) {
+            void message.success('修改成功~ (*^▽^*)')
+            searchTemplate({ opt: 3 }) // 更新表单
+          }
+        })
+        .catch(err => {
+          void message.error('修改失败，请检查网络~ (＞︿＜)')
+          console.error('An error occurred:', err)
+        })
+      handleCancel()
+    })
+    .catch(error => {
+      console.log('error', error)
+    })
+}
+
+const rules: Record<string, Rule[]> = {
+  appName: [
+    { required: true, message: '请输入模板名', trigger: 'change' },
+    { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
+  ],
+  channelType: [
+    {
+      required: true,
+      message: '请选择渠道',
+      trigger: 'change'
+    }
+  ],
+  appConfig: [{ required: true, message: '请输入 APP 配置', trigger: 'change' }],
+  appStatus: [{ required: true, message: '请选择 APP 状态', trigger: 'change' }]
+}
+
+const options = ref({
+  search: false,
+  history: false
+})
+const modeList = ref(['text', 'view', 'tree', 'code', 'form']) // 可选模式
+
+const remarkValidate = (): void => {
+  const newjsonstr = JSON.stringify(jsonobj.value)
+  console.log('remarkValidate', jsonobj.value, newjsonstr, updateDate.value.appConfig)
+  if (jsonstr.value === newjsonstr) {
+    console.log('no change')
+  } else {
+    jsonstr.value = newjsonstr
+  }
+}
+
 onMounted(() => {
-  getTemplatePages(searchItem)
+  getAppInfo(searchItem)
     .then(res => {
       if (res.data.records.length > 0) {
         total.value = res.data.total
         res.data.records.forEach((item: any) => {
-          item.channelType = JSON.parse(item.pushWays).channelType
-          item.messageType = JSON.parse(item.pushWays).messageType
           item.createTime = getDate(item.createTime)
           // eslint-disable-next-line
-          item.templateStatus = item.templateStatus === 1 ? true : false
-          item.key = item.templateId
+          item.appStatus = item.appStatus === 1 ? true : false
+          item.key = item.appId
           templateTable.push(item)
         })
         console.warn('初始化数据', templateTable)
@@ -360,7 +429,7 @@ const a = computed(() => {
         <a-tooltip title="刷新">
           <a-button shape="circle" :icon="h(ReloadOutlined)" @click="searchTemplate({ opt: 1 })" />
         </a-tooltip>
-        <addTemplate ref="addtemplate" @add="saveTemplate()" />
+        <addTemplate ref="addtemplate" @add="saveApp()" />
       </div>
 
       <div class="describe" v-if="hasSelected">
@@ -385,14 +454,20 @@ const a = computed(() => {
         :row-selection="{ selectedRowKeys: state.selectedRowKeys, onChange: onSelectChange }"
       >
         >
+
         <template #bodyCell="{ column, record }">
-          <template v-if="column.key === 'templateStatus'">
+          <template v-if="column.key === 'channelType'">
+            <span>
+              {{ channelValue[record.channelType] }}
+            </span>
+          </template>
+          <template v-if="column.key === 'appStatus'">
             <span>
               <a-switch
-                v-model:checked="record.templateStatus"
+                v-model:checked="record.appStatus"
                 checked-children="启用"
                 un-checked-children="禁用"
-                @change="changeStatus(record.templateId, record.templateStatus)"
+                @change="changeStatus(record.appId, record.appStatus)"
               />
             </span>
           </template>
@@ -415,8 +490,10 @@ const a = computed(() => {
               v-if="!judgeInclude(record)"
               ><DownOutlined />展开</a-button
             >
-            <a-button type="link" class="btn-manager" size="small" style="font-size: 14px">编辑</a-button>
-            <a-popconfirm title="确认删除吗?" @confirm="onDelete(record.templateId)" ok-text="确定" cancel-text="取消">
+            <a-button type="link" class="btn-manager" size="small" style="font-size: 14px" @click="update(record)"
+              >编辑</a-button
+            >
+            <a-popconfirm title="确认删除吗?" @confirm="onDelete(record.appId)" ok-text="确定" cancel-text="取消">
               <a-button type="link" danger size="small" style="font-size: 14px; margin-left: -5px">删除</a-button>
             </a-popconfirm>
           </template>
@@ -450,6 +527,47 @@ const a = computed(() => {
       </div>
     </div>
   </div>
+  <a-modal v-model:open="open" title="修改 APP 选项" width="650px" :footer="null" @cancel="handleCancel">
+    <a-form
+      ref="templateForm"
+      :model="updateDate"
+      :label-col="labelCol"
+      :wrapper-col="wrapperCol"
+      class="temform"
+      :rules="rules"
+    >
+      <a-form-item ref="appName" label="APP 名称" name="appName" class="tem-item">
+        <a-input v-model:value="updateDate.appName" placeholder="请填写长度在3到20个字符的模板名" style="width: 70%" />
+      </a-form-item>
+
+      <a-form-item label="渠道选择" name="channelType" class="tem-item">
+        <a-select
+          v-model:value="updateDate.channelType"
+          :options="channelData.map(pro => ({ value: pro.value, label: pro.label }))"
+          style="width: 70%"
+        />
+      </a-form-item>
+      <a-form-item label="APP 配置" name="appConfig" class="tem-item">
+        <json-editor-vue
+          class="editor"
+          v-model="jsonobj"
+          @blur="remarkValidate"
+          currentMode="text"
+          :modeList="modeList"
+          :options="options"
+        />
+      </a-form-item>
+      <a-form-item label="APP 状态" name="appStatus" class="tem-item">
+        <a-switch v-model:checked="updateDate.appStatus" checked-children="启用" un-checked-children="禁用" />
+      </a-form-item>
+      <a-form-item :wrapper-col="{ span: 20, offset: 4 }" class="tem-item">
+        <div class="between">
+          <a-button @click="handleCancel">取消修改</a-button>
+          <a-button type="primary" @click="handleOk" :loading="iconLoading">确认修改</a-button>
+        </div>
+      </a-form-item>
+    </a-form>
+  </a-modal>
 </template>
 
 <style lang="scss" scoped>
@@ -528,5 +646,11 @@ const a = computed(() => {
       margin-left: 75%;
     }
   }
+}
+.between {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
 }
 </style>
