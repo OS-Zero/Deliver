@@ -108,4 +108,13 @@ declare namespace API {
     accumulatedTemplateOwnership?: number,
     numberOfApps?: number
   }
+
+  type TemplateInfoRequest = {
+    dateSelect: number;
+  }
+
+  type DashboardInfo = {
+    value?: number,
+    name?: string
+  }
 }
