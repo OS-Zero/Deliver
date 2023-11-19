@@ -30,10 +30,10 @@ public class DingUtils {
 
         @Data
         class DingAccessTokenBody {
-            private String errcode;
+            private Integer errcode;
             private String accessToken;
             private String errmsg;
-            private String expiresIn;
+            private Integer expiresIn;
         }
 
         DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/gettoken");
@@ -60,6 +60,16 @@ public class DingUtils {
      */
 
     public String  uploadDingFile (String accessToken, PlatformFileDto platformFileDto){
+        @Data
+        class DingBody {
+            private Integer errcode;
+            private String errmsg;
+            private String mediaId;
+            private String createdAt;
+            private String type;
+
+        }
+
         DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/media/upload");
         OapiMediaUploadRequest req = new OapiMediaUploadRequest();
         req.setType(platformFileDto.getFileType());
@@ -72,9 +82,12 @@ public class DingUtils {
         }catch (ApiException a){
             throw new BusinessException("钉钉上传失败");
         }
-       if(rsp.getErrcode()!=0){
+
+        DingBody dingBody = JSONUtil.toBean(rsp.getBody(), DingBody.class);
+        if(dingBody.getErrcode()!=0){
            throw new BusinessException("钉钉上传失败");
        }
-       return rsp.getMediaId();
+
+       return  dingBody.getMediaId();
     }
 }
