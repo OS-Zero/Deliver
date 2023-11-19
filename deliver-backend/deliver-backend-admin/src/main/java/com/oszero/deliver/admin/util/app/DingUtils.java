@@ -4,10 +4,14 @@ import cn.hutool.json.JSONUtil;
 import com.dingtalk.api.DefaultDingTalkClient;
 import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.OapiGettokenRequest;
+import com.dingtalk.api.request.OapiMediaUploadRequest;
 import com.dingtalk.api.response.OapiGettokenResponse;
+import com.dingtalk.api.response.OapiMediaUploadResponse;
 import com.oszero.deliver.admin.exception.BusinessException;
 import com.oszero.deliver.admin.model.app.DingApp;
+import com.oszero.deliver.admin.model.dto.app.PlatformFileDto;
 import com.taobao.api.ApiException;
+import com.taobao.api.FileItem;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -26,10 +30,10 @@ public class DingUtils {
 
         @Data
         class DingAccessTokenBody {
-            private String errcode;
+            private Integer errcode;
             private String accessToken;
             private String errmsg;
-            private String expiresIn;
+            private Integer expiresIn;
         }
 
         DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/gettoken");
@@ -46,5 +50,44 @@ public class DingUtils {
 
         DingAccessTokenBody dingAccessTokenBody = JSONUtil.toBean(response.getBody(), DingAccessTokenBody.class);
         return dingAccessTokenBody.getAccessToken();
+    }
+
+    /**
+     *
+     * @param accessToken
+     * @param platformFileDto
+     * @return       media_id
+     */
+
+    public String  uploadDingFile (String accessToken, PlatformFileDto platformFileDto){
+        @Data
+        class DingBody {
+            private Integer errcode;
+            private String errmsg;
+            private String mediaId;
+            private String createdAt;
+            private String type;
+
+        }
+
+        DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/media/upload");
+        OapiMediaUploadRequest req = new OapiMediaUploadRequest();
+        req.setType(platformFileDto.getFileType());
+        byte[] file = platformFileDto.getFile();
+        FileItem item = new FileItem(platformFileDto.getFileName(),file);
+        req.setMedia(item);
+        OapiMediaUploadResponse rsp =null;
+        try {
+              rsp = client.execute(req, accessToken);
+        }catch (ApiException a){
+            throw new BusinessException("钉钉上传失败");
+        }
+
+        DingBody dingBody = JSONUtil.toBean(rsp.getBody(), DingBody.class);
+        if(dingBody.getErrcode()!=0){
+           throw new BusinessException("钉钉上传失败");
+       }
+
+       return  dingBody.getMediaId();
     }
 }

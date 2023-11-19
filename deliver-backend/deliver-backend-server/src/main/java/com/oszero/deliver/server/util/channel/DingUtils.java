@@ -43,10 +43,10 @@ public class DingUtils {
         @Data
         class DingAccessTokenBody {
 
-            private String errcode;
+            private Integer errcode;
             private String accessToken;
             private String errmsg;
-            private String expiresIn;
+            private Integer expiresIn;
 
         }
 
