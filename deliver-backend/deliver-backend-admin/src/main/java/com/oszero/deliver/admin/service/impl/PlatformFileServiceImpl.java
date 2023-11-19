@@ -89,9 +89,29 @@ public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, Pla
                 String appConfig = app.getAppConfig();
                 DingApp dingApp = JSONUtil.toBean(appConfig, DingApp.class);
                 String accessToken = dingUtils.getAccessToken(dingApp);
+
+                if(PlatformFileTypeEnum.DING_VOICE.getFileType().equals(dto.getFileType())){
+                    if (!PlatformFileConstant.dingFileFormatSet.contains(fileFormat)) {
+                        throw new BusinessException("不支持 " + fileFormat + " 格式的语音！！！");
+                    }
+                    if (fileSize > PlatformFileConstant.dingVoiceMaxSize) {
+                        throw new BusinessException("图片最大为：2M！！！");
+                    }
+                    fileKey = dingUtils.uploadDingFile(accessToken, platformFileDto);
+                }else {
+                    if (!PlatformFileConstant.dingFileFormatSet.contains(fileFormat)) {
+                        throw new BusinessException("不支持 " + fileFormat + " 格式的文件！！！");
+                    }
+                    if (fileSize > PlatformFileConstant.dingFileMaxSize) {
+                        throw new BusinessException("图片最大为：20M！！！");
+                    }
+
+                    fileKey = dingUtils.uploadDingFile(accessToken, platformFileDto);
+                }
                 break;
             }
             case WECHAT: {
+
                 break;
             }
             case FEI_SHU: {
