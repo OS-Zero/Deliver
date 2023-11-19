@@ -19,9 +19,9 @@ public enum PlatformFileTypeEnum {
      * 钉钉平台文件 1 代表钉钉
      */
     DING_IMAGE("1-1", "图片", "image", 1),
-    DING_VOICE("1-2", "图片", "voice", 1),
-    DING_VIDEO("1-3", "图片", "video", 1),
-    DING_FILE("1-4", "图片", "file", 1),
+    DING_VOICE("1-2", "语音", "voice", 1),
+    DING_VIDEO("1-3", "视频", "video", 1),
+    DING_FILE("1-4", "文件", "file", 1),
 
     /**
      * 企业微信平台文件 2 代表企业微信
