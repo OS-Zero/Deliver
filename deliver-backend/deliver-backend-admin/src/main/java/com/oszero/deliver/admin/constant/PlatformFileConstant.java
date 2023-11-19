@@ -18,4 +18,10 @@ public interface PlatformFileConstant {
     Long feiShuImageFileMaxSize = 10L * 1024 * 1024;
     Long feiShuFileMaxSize = 30L * 1024 * 1024;
 
+    Set<String> dingFileFormatSet =
+            new HashSet<>(Arrays.asList("jpg","gif","png","bmp","amr","mp3","wav","mp4",
+                    "doc","docx","xls","xlsx","ppt","pptx","zip","pdf","rar"));
+
+    Long dingVoiceMaxSize = 2L * 1024 *1024;
+    Long dingFileMaxSize = 20L * 1024 * 1024;
 }
