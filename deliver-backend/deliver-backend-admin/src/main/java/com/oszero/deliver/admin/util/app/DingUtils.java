@@ -72,7 +72,6 @@ public class DingUtils {
         }catch (ApiException a){
             throw new BusinessException("钉钉上传失败");
         }
-
        if(rsp.getErrcode()!=0){
            throw new BusinessException("钉钉上传失败");
        }
