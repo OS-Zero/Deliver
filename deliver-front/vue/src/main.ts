@@ -10,6 +10,4 @@ import './permisson'
 
 const pinia = createPinia()
 
-console.log('ok')
-
 createApp(App).use(router).use(pinia).mount('#app')
