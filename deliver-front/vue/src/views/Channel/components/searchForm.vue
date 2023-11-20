@@ -16,9 +16,8 @@ const expand = ref(false)
 const formRef = ref<FormInstance>()
 
 const searchPage = reactive<searchMessage>({
-	templateName: undefined,
-	pushRange: undefined,
-	usersType: undefined,
+	appName: undefined,
+	channelType: undefined,
 	currentPage: 1,
 	pageSize: 10,
 	startTime: undefined,
@@ -31,7 +30,11 @@ const selectedRange = ref<Array<Dayjs | null>>([null, null])
 const iconLoading = ref<boolean | DelayLoading>(false)
 
 const clearForm = (): void => {
+	searchPage.appName = undefined
+	searchPage.channelType = undefined
 	selectedRange.value = [null, null]
+	searchPage.startTime = ''
+	searchPage.endTime = ''
 	formRef.value?.resetFields()
 }
 
@@ -63,26 +66,19 @@ defineExpose({
 	<a-form ref="formRef" name="advanced_search" class="search" :model="searchPage">
 		<a-row :gutter="24">
 			<a-col :span="8">
-				<a-form-item name="templateName" label="模板名">
-					<a-input v-model:value="searchPage.templateName" placeholder="请输入模板名"></a-input>
+				<a-form-item name="templateName" label="APP 名称">
+					<a-input v-model:value="searchPage.appName" placeholder="请输入 APP 名称"></a-input>
 				</a-form-item>
 			</a-col>
 			<a-col :span="8">
-				<a-form-item name="pushRange" label="推送范围">
-					<a-select v-model:value="searchPage.pushRange" placeholder="请选择推送范围">
-						<a-select-option value="0">不限</a-select-option>
-						<a-select-option value="1">企业内部</a-select-option>
-						<a-select-option value="2">企业外部</a-select-option>
-					</a-select>
-				</a-form-item>
-			</a-col>
-			<a-col :span="8" v-if="expand">
-				<a-form-item name="usersType" label="用户类型">
-					<a-select v-model:value="searchPage.usersType" placeholder="请选择用户类型">
-						<a-select-option value="1">企业账号</a-select-option>
-						<a-select-option value="2">电话</a-select-option>
-						<a-select-option value="3">邮箱</a-select-option>
-						<a-select-option value="4">平台 UserId</a-select-option>
+				<a-form-item name="pushRange" label="渠道选择">
+					<a-select v-model:value="searchPage.channelType" placeholder="请选择渠道类型">
+						<a-select-option value="1">电话</a-select-option>
+						<a-select-option value="2">短信</a-select-option>
+						<a-select-option value="3">邮件</a-select-option>
+						<a-select-option value="4">钉钉</a-select-option>
+						<a-select-option value="5">企业微信</a-select-option>
+						<a-select-option value="6">飞书</a-select-option>
 					</a-select>
 				</a-form-item>
 			</a-col>

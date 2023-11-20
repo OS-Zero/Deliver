@@ -17,7 +17,7 @@ public abstract class BaseHandler {
     protected MessageRecordService messageRecordService;
 
     public void doHandle(SendTaskDto sendTaskDto) throws Exception {
-        // 1. todo:前置处理 限流 日志
+        // 1. todo:前置处理 日志
         // 2. 具体处理
         handle(sendTaskDto);
 
