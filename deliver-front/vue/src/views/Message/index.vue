@@ -10,7 +10,7 @@ import addTemplate from './components/addTemplate.vue'
 import modifyTemplate from './components/modifyTemplate.vue'
 import sendTest from './components/sendTest.vue'
 import { addTemplatePages, deleteTemplate, getTemplatePages, updateStatus } from '@/api/message'
-import { changeTable, getPushRange, getUsersType, getChannelType, getMessageTypeArr } from '@/utils/date'
+import { changeTable, getPushRange, getUsersType, getChannelType, getMessageTypeArr, getAllMessage } from '@/utils/date'
 import { useStore } from '@/store'
 
 /**
@@ -263,12 +263,7 @@ const changeStatus = (id: number, status: number | boolean): void => {
 const startModify = (record): void => {
   modifytemplate.value.openModify = true
   console.log(record)
-  // getAllMessage(modifytemplate.value, record)
-  modifytemplate.value.updateTemp.channelType = 4
-  modifytemplate.value.updateTemp.pushRange = 2
-  modifytemplate.value.updateTemp.usersType = 1
-  modifytemplate.value.updateTemp.appId = 3
-  modifytemplate.value.updateTemp.messageType = 1
+  getAllMessage(modifytemplate.value, record)
   console.log(modifytemplate.value.updateTemp)
 }
 
