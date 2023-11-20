@@ -11,11 +11,11 @@ export interface messageTemplate {
   /**
    * 推送范围
    */
-  pushRange: number | string
+  pushRange: string
   /**
    * 用户类型
    */
-  usersType: number | string
+  usersType: string
   /**
    * 推送方式
    */
