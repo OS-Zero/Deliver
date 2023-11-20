@@ -223,6 +223,10 @@ const reset = (): void => {
   userdisabled.value = userdisabled.value.map(item => ({ ...item, disabled: true }))
 }
 
+const getchan = (e): string => {
+  return e + '飞鼠'
+}
+
 watch(
   () => updateTemp.channelType,
   newVal => {
@@ -283,7 +287,8 @@ defineExpose({
       </a-form-item>
       <a-form-item label="渠道选择" name="channelType" class="tem-item">
         <a-select
-          v-model:value="updateTemp.channelType"
+          v-model="updateTemp.channelType"
+          :value="getchan(updateTemp.channelType)"
           :options="channelData.map(pro => ({ value: pro.value, label: pro.label }))"
           style="width: 70%"
           @change="selectValues"
@@ -316,10 +321,6 @@ defineExpose({
 </template>
 
 <style scoped>
-.btn-manager {
-  margin-right: 10px;
-}
-
 .temform {
   .tem-item {
     margin-top: 20px;
