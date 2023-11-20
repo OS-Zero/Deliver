@@ -39,7 +39,7 @@ export const getChannelType = (s: string): number => {
 }
 
 export const getUsersType = (s: string): number => {
-	const usersarr = ['企业账号', '电话', '邮箱', '平台userId']
+	const usersarr = ['企业账号', '电话', '邮箱', '平台 UserId']
 	return usersarr.indexOf(s)
 }
 
@@ -102,10 +102,48 @@ export const changeTable = (item): any => {
 	item.messageType = JSON.parse(item.pushWays).messageType
 	item.createTime = getDate(item.createTime)
 	// eslint-disable-next-line
-	item.templateStatus = item.templateStatus === 1 ? true : false
+  item.templateStatus = item.templateStatus === 1 ? true : false
 	item.key = item.templateId
-	// pushrange
-	const pusharr = ['不限', '企业内部', '企业外部']
-	item.pushRange = pusharr[item.pushRange]
+	// pushRange
+	const pushArr = ['不限', '企业内部', '企业外部']
+	item.pushRange = pushArr[item.pushRange]
+	// usersType
+	const userArr = ['', '企业账号', '电话', '邮箱', '平台 UserId']
+	item.usersType = userArr[Number(item.usersType)]
+	// channelType
+	const channelArr = ['', '电话', '短信', '邮件', '钉钉', '企业微信', '飞书']
+	item.channelType = channelArr[item.channelType]
+	// messageType
+	const arr = [
+		{ id: '1', name: 'text 消息' },
+		//
+		{ id: '4-1', name: '钉钉图片消息' },
+		{ id: '4-2', name: '钉钉语音消息' },
+		{ id: '4-3', name: '钉钉文件消息' },
+		{ id: '4-4', name: '钉钉链接消息' },
+		{ id: '4-5', name: '钉钉 OA 消息' },
+		{ id: '4-6', name: '钉钉 markdown 消息' },
+		{ id: '4-7', name: '钉钉卡片消息' },
+		//
+		{ id: '5-1', name: '企业微信图片消息' },
+		{ id: '5-2', name: '企业微信语音消息' },
+		{ id: '5-3', name: '企业微信视频消息' },
+		{ id: '5-4', name: '企业微信文件消息' },
+		{ id: '5-5', name: '企业微信文本卡片消息' },
+		{ id: '5-6', name: '企业微信图文消息（mpnews）' },
+		{ id: '5-7', name: '企业微信 markdown 消息' },
+		{ id: '5-8', name: '企业微信小程序通知消息' },
+		//
+		{ id: '6-1', name: '富文本 post' },
+		{ id: '6-2', name: '图片 image' },
+		{ id: '6-3', name: '消息卡片 interactive' },
+		{ id: '6-4', name: '分享群名片 share_chat' },
+		{ id: '6-5', name: '分享个人名片 share_user' },
+		{ id: '6-6', name: '语音 audio' },
+		{ id: '6-7', name: '视频 media' },
+		{ id: '6-8', name: '文件 file' },
+		{ id: '6-9', name: '表情包 sticker' }
+	]
+	item.messageType = arr.find((it) => it.id === item.messageType)?.name
 	return item
 }

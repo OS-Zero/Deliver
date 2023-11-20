@@ -1,7 +1,14 @@
 package com.oszero.deliver.admin.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.oszero.deliver.admin.model.dto.request.PlatformFileSearchRequestDto;
+import com.oszero.deliver.admin.model.dto.request.PlatformFileUploadRequestDto;
+import com.oszero.deliver.admin.model.dto.response.PlatformFileSearchResponseDto;
 import com.oszero.deliver.admin.model.entity.PlatformFile;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 /**
 * @author 23088
@@ -10,4 +17,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface PlatformFileService extends IService<PlatformFile> {
 
+    void uploadFile(PlatformFileUploadRequestDto dto, MultipartFile platformFile) throws IOException;
+
+    Page<PlatformFileSearchResponseDto> getPagePlatformFile(PlatformFileSearchRequestDto dto);
 }
