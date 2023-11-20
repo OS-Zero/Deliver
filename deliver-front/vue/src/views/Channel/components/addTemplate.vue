@@ -128,7 +128,7 @@ const handleOk = (): void => {
 		.validate()
 		.then(() => {
 			// eslint-disable-next-line
-      templateItem.appStatus = templateItem.appStatus === true ? 1 : 0
+			templateItem.appStatus = templateItem.appStatus === true ? 1 : 0
 			templateItem.appConfig = JSON.stringify(jsonobj.value)
 			emit('add')
 			handleCancel()
