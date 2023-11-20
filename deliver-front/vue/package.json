@@ -12,7 +12,7 @@
 		"format": "prettier --write \"./**/*.{html,vue,js,ts,json,md}\" ",
 		"lint:style": "stylelint src/**/*.{css,scss,vue} --cache --fix",
 		"prepare": "husky install",
-    "commitlint": "commitlint --config commitlint.config.cjs -e -V"
+		"commitlint": "commitlint --config commitlint.config.cjs -e -V"
 	},
 	"dependencies": {
 		"ant-design-vue": "^4.0.6",
