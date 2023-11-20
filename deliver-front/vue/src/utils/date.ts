@@ -102,7 +102,7 @@ export const changeTable = (item): any => {
 	item.messageType = JSON.parse(item.pushWays).messageType
 	item.createTime = getDate(item.createTime)
 	// eslint-disable-next-line
-  item.templateStatus = item.templateStatus === 1 ? true : false
+	item.templateStatus = item.templateStatus === 1 ? true : false
 	item.key = item.templateId
 	// pushRange
 	const pushArr = ['不限', '企业内部', '企业外部']

@@ -247,7 +247,7 @@ const showDeleteConfirm = (): void => {
 /// 修改操作
 const changeStatus = (id: number, status: number | boolean): void => {
 	// eslint-disable-next-line
-  const sta = status === true ? 1 : 0
+	const sta = status === true ? 1 : 0
 	const obj = {
 		appId: id,
 		appStatus: sta
@@ -307,7 +307,7 @@ const searchTemplate = ({ page, pageSize, opt }: SearchOptions = {}): void => {
 				res.data.records.forEach((item: any) => {
 					item.createTime = getDate(item.createTime)
 					// eslint-disable-next-line
-          item.appStatus = item.appStatus === 1 ? true : false
+					item.appStatus = item.appStatus === 1 ? true : false
 					item.key = item.appId
 					const i = item
 					templateTable.push(i)
@@ -353,7 +353,7 @@ const handleOk = (): void => {
 		.validate()
 		.then(() => {
 			// eslint-disable-next-line
-      updateDate.value.appStatus = updateDate.value.appStatus === true ? 1 : 0
+			updateDate.value.appStatus = updateDate.value.appStatus === true ? 1 : 0
 			updateDate.value.appConfig = JSON.stringify(jsonobj.value)
 			updateAppItem(updateDate.value)
 				.then((res) => {
@@ -413,7 +413,7 @@ onMounted(() => {
 				res.data.records.forEach((item: any) => {
 					item.createTime = getDate(item.createTime)
 					// eslint-disable-next-line
-          item.appStatus = item.appStatus === 1 ? true : false
+					item.appStatus = item.appStatus === 1 ? true : false
 					item.key = item.appId
 					templateTable.push(item)
 				})
