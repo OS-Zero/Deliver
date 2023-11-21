@@ -43,7 +43,7 @@ const labelCol = { span: 5 }
 
 const wrapperCol = { span: 20 }
 
-const iconLoading = ref<boolean | DelayLoading>(false)
+const updateiconLoading = ref<boolean | DelayLoading>(false)
 
 const channelDisabled = ref(false)
 
@@ -181,7 +181,7 @@ const selectApp = (): void => {
 }
 
 // 提交并传递
-// const emit = defineEmits(['add'])
+const emit = defineEmits(['update'])
 
 const handleOk = (): void => {
   // 异步关闭，先添加，渲染成功后关闭
@@ -192,8 +192,8 @@ const handleOk = (): void => {
       updateTemp.templateStatus = updateTemp.templateStatus ? 1 : 0
       // 处理templateItem的pushways
       updateTemp.pushWays = getPushWays(updateTemp.channelType as string, updateTemp.messageType)
-      // emit('add')
-      console.log(updateTemp)
+      updateiconLoading.value = true
+      emit('update')
     })
     .catch(error => {
       console.log('error', error)
@@ -250,7 +250,8 @@ defineExpose({
   updateTemp,
   messageData,
   appData,
-  channelData
+  channelData,
+  updateiconLoading
 })
 </script>
 
@@ -312,7 +313,7 @@ defineExpose({
         <a-switch v-model:checked="updateTemp.templateStatus" checked-children="启用" un-checked-children="禁用" />
       </a-form-item>
       <a-form-item :wrapper-col="{ span: 15, offset: 7 }" class="tem-item">
-        <a-button type="primary" @click="handleOk" :loading="iconLoading">确认修改</a-button>
+        <a-button type="primary" @click="handleOk" :loading="updateiconLoading">确认修改</a-button>
         <a-button style="margin-left: 10px" @click="reset">重置</a-button>
       </a-form-item>
     </a-form>

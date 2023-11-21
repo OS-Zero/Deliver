@@ -9,7 +9,7 @@ import searchForm from './components/searchForm.vue'
 import addTemplate from './components/addTemplate.vue'
 import modifyTemplate from './components/modifyTemplate.vue'
 import sendTest from './components/sendTest.vue'
-import { addTemplatePages, deleteTemplate, getTemplatePages, updateStatus } from '@/api/message'
+import { addTemplatePages, deleteTemplate, getTemplatePages, updateStatus, updatetemplate } from '@/api/message'
 import { changeTable, getPushRange, getUsersType, getChannelType, getMessageTypeArr, getAllMessage } from '@/utils/date'
 import { useStore } from '@/store'
 
@@ -259,11 +259,31 @@ const changeStatus = (id: number, status: number | boolean): void => {
     })
 }
 
+const updateTemplate = (): void => {
+  const { messageType, channelType, ...rest } = modifytemplate.value.updateTemp
+  const obj = { ...rest }
+  console.log(obj)
+  updatetemplate(obj)
+    .then(res => {
+      if (res.code === 200) {
+        modifytemplate.value.updateiconLoading = false
+        modifytemplate.value.openModify = false
+        void message.success('修改成功~ (*^▽^*)')
+        searchTemplate({ opt: 3 }) // 更新表单
+      } else {
+        modifytemplate.value.updateiconLoading = false
+      }
+    })
+    .catch(err => {
+      void message.error('查询失败，请检查网络~ (＞︿＜)')
+      console.error('An error occurred:', err)
+    })
+}
+
 // 传递相关数据，初始化data
 const startModify = (record): void => {
   modifytemplate.value.openModify = true
   getAllMessage(modifytemplate.value, record)
-  console.log(modifytemplate.value.updateTemp)
 }
 
 /// 查询操作
@@ -428,7 +448,7 @@ const a = computed(() => {
             <a-button type="link" class="btn-manager" size="small" style="font-size: 14px" @click="startModify(record)">
               编辑
             </a-button>
-            <modifyTemplate ref="modifytemplate" :mod="record" />
+            <modifyTemplate ref="modifytemplate" :mod="record" @update="updateTemplate()" />
             <sendTest :test="record.templateId" />
             <a-popconfirm title="确认删除吗?" @confirm="onDelete(record.templateId)" ok-text="确定" cancel-text="取消">
               <a-button type="link" danger size="small" style="font-size: 14px; margin-left: -5px">删除</a-button>
