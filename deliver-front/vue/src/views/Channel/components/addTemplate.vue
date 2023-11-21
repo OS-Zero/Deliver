@@ -70,7 +70,7 @@ const options = ref({
 	history: false
 })
 
-const modeList = ref(['text', 'view', 'tree', 'code', 'form']) // 可选模式
+const modeList = ref(['code']) // 可选模式
 
 const remarkValidate = (): void => {
 	const newjsonstr = JSON.stringify(jsonobj.value)
@@ -183,9 +183,10 @@ defineExpose({
 					class="editor"
 					v-model="jsonobj"
 					@blur="remarkValidate"
-					currentMode="text"
+					currentMode="code"
 					:modeList="modeList"
-					:options="options" />
+					:options="options"
+					language="cn" />
 			</a-form-item>
 			<a-form-item label="APP 状态" name="appStatus" class="tem-item">
 				<a-switch
