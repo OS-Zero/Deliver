@@ -123,4 +123,30 @@ declare namespace API {
     value?: number,
     name?: string
   }
+
+  /**
+   * 平台监控看板参数
+   */
+  type PlatformFileSearchRequest = {
+    fileName: string,
+    appType: number,
+    fileType: string,
+    fileKey: string,
+    appId: number,
+    startTime: string,
+    endTime: string,
+    currentPage: number,
+    pageSize: number
+  }
+
+  type PlatformFile = {
+    id: number,
+    fileName: string,
+    appType: number,
+    fileType: string,
+    fileKey: string,
+    createUser: string,
+    createTime: string,
+    appId: number
+  }
 }
