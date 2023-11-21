@@ -5,12 +5,12 @@ import Section from './components/Section/index.vue'
 </script>
 
 <template>
-  <a-layout style="min-height: 100%">
-    <Banner></Banner>
-    <Header></Header>
-    <a-layout>
-      <Section></Section>
-    </a-layout>
-  </a-layout>
+	<a-layout style="min-height: 100%">
+		<Banner></Banner>
+		<Header></Header>
+		<a-layout>
+			<Section></Section>
+		</a-layout>
+	</a-layout>
 </template>
 <style scoped lang="scss"></style>
