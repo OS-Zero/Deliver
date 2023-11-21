@@ -18,6 +18,8 @@ import org.springframework.context.annotation.Configuration;
 public class MyBatisPlusConfig {
     /**
      * 添加分页插件
+     *
+     * @return 拦截器
      */
     @Bean
     public MybatisPlusInterceptor mybatisPlusInterceptor() {

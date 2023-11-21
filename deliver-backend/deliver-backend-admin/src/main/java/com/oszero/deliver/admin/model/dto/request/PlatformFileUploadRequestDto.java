@@ -5,6 +5,12 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+/**
+ * 平台文件上传请求 dto
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Data
 public class PlatformFileUploadRequestDto {
 

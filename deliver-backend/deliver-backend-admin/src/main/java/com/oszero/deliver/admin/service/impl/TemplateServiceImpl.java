@@ -175,7 +175,7 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template>
 
     @Override
     public List<MessageTypeResponseDto> getMessageTypeByChannelType(TemplateAddGetByChannelRequestDto dto) {
-        Integer channelType = dto.getChannelType();
+        final Integer channelType = dto.getChannelType();
         List<MessageTypeResponseDto> list = new ArrayList<>();
 
         MessageTypeResponseDto messageTypeResponseDto = new MessageTypeResponseDto();

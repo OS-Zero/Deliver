@@ -13,6 +13,11 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class IpUtils {
 
+    /**
+     * 获取客户端 IP
+     *
+     * @return ip
+     */
     public static String getClientIp() {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (attributes == null) {

@@ -5,6 +5,7 @@ package com.oszero.deliver.server.pretreatment.link;
  *
  * @author oszero
  * @version 1.0.0
+ * @param <T> LinkModel
  */
 public interface BusinessLink<T extends LinkModel> {
 

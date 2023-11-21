@@ -4,6 +4,12 @@ import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 
+/**
+ * 模版状态更新 dto
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Data
 public class TemplateUpdateStatusRequestDto {
     /**

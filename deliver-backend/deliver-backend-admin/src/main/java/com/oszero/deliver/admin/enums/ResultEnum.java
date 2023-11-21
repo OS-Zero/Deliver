@@ -1,11 +1,18 @@
 package com.oszero.deliver.admin.enums;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
+
 /**
  * 响应状态枚举
  *
  * @author oszero
  * @version 1.0.0
  */
+@Getter
+@ToString
+@AllArgsConstructor
 public enum ResultEnum {
     SUCCESS(200, "success"),
     CLIENT_ERROR(400, "client_error"),
@@ -14,17 +21,4 @@ public enum ResultEnum {
 
     private final Integer code;
     private final String message;
-
-    private ResultEnum(Integer code, String message) {
-        this.code = code;
-        this.message = message;
-    }
-
-    public Integer getCode() {
-        return this.code;
-    }
-
-    public String getMessage() {
-        return this.message;
-    }
 }

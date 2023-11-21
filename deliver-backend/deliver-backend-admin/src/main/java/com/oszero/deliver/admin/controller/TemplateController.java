@@ -26,42 +26,84 @@ public class TemplateController {
 
     private final TemplateService templateService;
 
+    /**
+     * 分页搜索模版
+     *
+     * @param templateSearchRequestDto 查询参数
+     * @return Page
+     */
     @PostMapping("/search")
     public CommonResult<Page<TemplateSearchResponseDto>> search(@RequestBody TemplateSearchRequestDto templateSearchRequestDto) {
         Page<TemplateSearchResponseDto> page = templateService.search(templateSearchRequestDto);
         return CommonResult.success(page);
     }
 
+    /**
+     * 保存模版
+     *
+     * @param dto 参数
+     * @return 成功
+     */
     @PostMapping("/saveTemplate")
     public CommonResult<?> saveTemplate(@Valid @RequestBody TemplateSaveAndUpdateRequestDto dto) {
         templateService.save(dto);
         return CommonResult.success();
     }
 
+    /**
+     * 更新通过 ID
+     *
+     * @param dto 参数
+     * @return 成功
+     */
     @PostMapping("/updateById")
     public CommonResult<?> updateById(@Valid @RequestBody TemplateSaveAndUpdateRequestDto dto) {
         templateService.updateById(dto);
         return CommonResult.success();
     }
 
+    /**
+     * 更新模版状态通过 ID
+     *
+     * @param dto 参数
+     * @return 成功
+     */
     @PostMapping("/updateStatusById")
     public CommonResult<?> updateStatusById(@Valid @RequestBody TemplateUpdateStatusRequestDto dto) {
         templateService.updateStatusById(dto);
         return CommonResult.success();
     }
 
+    /**
+     * 批量删除
+     *
+     * @param dto 参数
+     * @return 成功
+     */
     @PostMapping("/deleteByIds")
     public CommonResult<?> deleteByIds(@Valid @RequestBody DeleteIdsRequestDto dto) {
         templateService.deleteByIds(dto);
         return CommonResult.success();
     }
 
+    /**
+     * 获取消息类型通过渠道类型
+     *
+     * @param dto dto
+     * @return 消息类型
+     */
     @PostMapping("/getMessageTypeByChannelType")
     public CommonResult<List<MessageTypeResponseDto>> getMessageTypeByChannelType(@Valid @RequestBody TemplateAddGetByChannelRequestDto dto) {
         List<MessageTypeResponseDto> messageTypeResponseDtoList = templateService.getMessageTypeByChannelType(dto);
         return CommonResult.success(messageTypeResponseDtoList);
     }
 
+    /**
+     * 测试消息发送功能
+     *
+     * @param sendTestRequestDto 参数
+     * @return 成功
+     */
     @PostMapping("/testSendMessage")
     public CommonResult<?> testSendMessage(@Valid @RequestBody SendTestRequestDto sendTestRequestDto) {
         templateService.testSendMessage(sendTestRequestDto);
