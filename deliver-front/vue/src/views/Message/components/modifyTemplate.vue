@@ -189,9 +189,9 @@ const handleOk = (): void => {
     .validate()
     .then(() => {
       // eslint-disable-next-line
-      updateTemp.templateStatus = updateTemp.templateStatus === true ? 1 : 0
+      updateTemp.templateStatus = updateTemp.templateStatus ? 1 : 0
       // 处理templateItem的pushways
-      updateTemp.pushWays = getPushWays(updateTemp.channelType, updateTemp.messageType)
+      updateTemp.pushWays = getPushWays(updateTemp.channelType as string, updateTemp.messageType)
       // emit('add')
       console.log(updateTemp)
     })
@@ -223,9 +223,9 @@ const reset = (): void => {
   userdisabled.value = userdisabled.value.map(item => ({ ...item, disabled: true }))
 }
 
-const getchan = (e): string => {
-  return e + '飞鼠'
-}
+// const getComChannel = computed(() => {
+//   return getChannelType(updateTemp.channelType as number)
+// })
 
 watch(
   () => updateTemp.channelType,
@@ -287,8 +287,7 @@ defineExpose({
       </a-form-item>
       <a-form-item label="渠道选择" name="channelType" class="tem-item">
         <a-select
-          v-model="updateTemp.channelType"
-          :value="getchan(updateTemp.channelType)"
+          v-model:value="updateTemp.channelType"
           :options="channelData.map(pro => ({ value: pro.value, label: pro.label }))"
           style="width: 70%"
           @change="selectValues"
