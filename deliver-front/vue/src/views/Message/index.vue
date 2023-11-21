@@ -262,7 +262,6 @@ const changeStatus = (id: number, status: number | boolean): void => {
 // 传递相关数据，初始化data
 const startModify = (record): void => {
   modifytemplate.value.openModify = true
-  console.log(record)
   getAllMessage(modifytemplate.value, record)
   console.log(modifytemplate.value.updateTemp)
 }

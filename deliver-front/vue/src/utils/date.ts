@@ -1,10 +1,11 @@
 // import { getApp, getMessageType } from '@/api/message'
+import { getApp, getMessageType } from '@/api/message'
 import type { messageTemplate } from '@/views/Message/type'
 
-// interface Channel {
-//   value: string
-//   label: string
-// }
+interface Channel {
+  value: string
+  label: string
+}
 
 // 表格数据渲染方法
 export const getDate = (d): string => {
@@ -74,61 +75,6 @@ export const getMessageTypeArr = (s: string): string | undefined => {
   ]
   return arr.find(it => it.id === s)?.name
 }
-///
-
-export const getAllMessage = (mod, record: messageTemplate): void => {
-  // 修改界面渲染数据
-  mod.updateTemp.templateId = record.templateId
-  mod.updateTemp.templateName = record.templateName
-  mod.updateTemp.pushRange = Number(record.pushRange)
-  mod.updateTemp.usersType = Number(record.usersType)
-  mod.updateTemp.pushWays = record.pushWays
-  mod.updateTemp.messageType = record.messageType
-  mod.updateTemp.appId = record.appId
-  mod.updateTemp.channelType = record.channelType
-  mod.updateTemp.templateStatus = record.templateStatus
-  // 选项渲染
-  mod.messageData.length = 0
-  mod.appData.length = 0
-
-  // const Data: Channel[] = [
-  //   { value: '1', label: '电话' },
-  //   { value: '2', label: '短信' },
-  //   { value: '3', label: '邮件' },
-  //   { value: '4', label: '钉钉' },
-  //   { value: '5', label: '企业微信' },
-  //   { value: '6', label: '飞书' }
-  // ]
-  // const user = getUsersType(record.usersType as string)
-  // if (user === 1) {
-  //   mod.channelData = [...Data]
-  // } else if (user === 2) {
-  //   mod.channelData = Data.filter(item => item.value !== '3')
-  // } else if (user === 3) {
-  //   mod.channelData = Data.filter(item => item.value === '3')
-  // } else if (user === 4) {
-  //   mod.channelData = Data.slice(3)
-  // }
-
-  // getMessageType({ channelType: getChannelType(record.channelType as string) })
-  //   .then(res => {
-  //     res.data.forEach(item => {
-  //       mod.messageData.push(item)
-  //     })
-  //   })
-  //   .catch(err => {
-  //     console.error('An error occurred:', err)
-  //   })
-  // getApp({ channelType: getChannelType(record.channelType as string) })
-  //   .then(res => {
-  //     res.data.forEach(item => {
-  //       mod.appData.push(item)
-  //     })
-  //   })
-  //   .catch(err => {
-  //     console.error('An error occurred:', err)
-  //   })
-}
 
 export const changeTable = (item): any => {
   item.channelType = JSON.parse(item.pushWays).channelType
@@ -138,4 +84,65 @@ export const changeTable = (item): any => {
   item.templateStatus = item.templateStatus === 1 ? true : false
   item.key = item.templateId
   return item
+}
+///
+
+export const getAllMessage = (mod, record: messageTemplate): void => {
+  // 修改界面渲染数据
+  // const { pushRange, usersType } = record
+  // mod.updateTemp = {
+  //   ...record,
+  //   pushRange: Number(pushRange),
+  //   usersType: Number(usersType)
+  // }
+  mod.updateTemp.templateId = record.templateId
+  mod.updateTemp.templateName = record.templateName
+  mod.updateTemp.pushRange = Number(record.pushRange)
+  mod.updateTemp.usersType = Number(record.usersType)
+  mod.updateTemp.pushWays = record.pushWays
+  mod.updateTemp.messageType = record.messageType
+  mod.updateTemp.appId = record.appId
+  mod.updateTemp.channelType = record.channelType.toString()
+  mod.updateTemp.templateStatus = record.templateStatus
+  // 选项渲染
+  mod.messageData.length = 0
+  mod.appData.length = 0
+
+  const Data: Channel[] = [
+    { value: '1', label: '电话' },
+    { value: '2', label: '短信' },
+    { value: '3', label: '邮件' },
+    { value: '4', label: '钉钉' },
+    { value: '5', label: '企业微信' },
+    { value: '6', label: '飞书' }
+  ]
+  const user = mod.updateTemp.usersType
+  if (user === 1) {
+    mod.channelData = [...Data]
+  } else if (user === 2) {
+    mod.channelData = Data.filter(item => item.value !== '3')
+  } else if (user === 3) {
+    mod.channelData = Data.filter(item => item.value === '3')
+  } else if (user === 4) {
+    mod.channelData = Data.slice(3)
+  }
+
+  getMessageType({ channelType: mod.updateTemp.channelType })
+    .then(res => {
+      res.data.forEach(item => {
+        mod.messageData.push(item)
+      })
+    })
+    .catch(err => {
+      console.error('An error occurred:', err)
+    })
+  getApp({ channelType: mod.updateTemp.channelType })
+    .then(res => {
+      res.data.forEach(item => {
+        mod.appData.push(item)
+      })
+    })
+    .catch(err => {
+      console.error('An error occurred:', err)
+    })
 }
