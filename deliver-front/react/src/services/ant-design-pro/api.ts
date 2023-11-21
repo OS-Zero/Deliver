@@ -107,6 +107,14 @@ export async function getAppInfo(options?: API.DashboardInfoSelectRequest ) {
     }
   });
 }
+export async function getPushUserInfo(options?: API.DashboardInfoSelectRequest ) {
+  return request<API.DashboardInfo[]>('/admin/dashboard/getPushUserInfo', {
+    method: 'POST',
+    data: {
+      ...(options || {}),
+    }
+  });
+}
 
 
 

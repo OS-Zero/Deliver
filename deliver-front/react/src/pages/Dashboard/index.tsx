@@ -4,7 +4,7 @@ import {Bar, Pie, Rose} from '@ant-design/plots';
 import {PageContainer,} from '@ant-design/pro-components';
 import {Card, Col, message, Radio, Row} from 'antd';
 import {AppstoreTwoTone, FileTwoTone, FunnelPlotTwoTone, MessageTwoTone} from '@ant-design/icons';
-import {getAppInfo, getDashboardHeadData, getTemplateInfo} from "@/services/ant-design-pro/api";
+import {getAppInfo, getDashboardHeadData, getPushUserInfo, getTemplateInfo} from "@/services/ant-design-pro/api";
 
 const Page: React.FC = () => {
 
@@ -42,6 +42,13 @@ const Page: React.FC = () => {
     setAppInfoList(response.dashboardInfoList);
   }
 
+  const getDashboard5 = async (options?: API.DashboardInfoSelectRequest) => {
+    // 调用接口获取数据
+    const response = await getPushUserInfo(options);
+    // 更新状态
+    setPushUserInfoList(response.dashboardInfoList);
+  }
+
   useEffect(() => {
     // 定义一个异步函数，用于获取数据并更新状态
     const fetchData = async () => {
@@ -49,6 +56,7 @@ const Page: React.FC = () => {
         await getDashboard1();
         await getDashboard3({dateSelect: 1});
         await getDashboard4({dateSelect: 1});
+        await getDashboard5({dateSelect: 1});
       } catch (error) {
         message.error(error.message)
         console.error('Error fetching dashboard data:', error);
@@ -200,32 +208,9 @@ const Page: React.FC = () => {
     ],
   };
 
-  const pushUserInfo = [
-    {
-      name: '分类一',
-      value: 27,
-    },
-    {
-      name: '分类二',
-      value: 25,
-    },
-    {
-      name: '分类三',
-      value: 28,
-    },
-    {
-      name: '分类四',
-      value: 25,
-    },
-    {
-      name: '分类五',
-      value: 20,
-    }
-  ];
-
   const pushUserConfig = {
     appendPadding: 10,
-    data: pushUserInfo,
+    data: pushUserInfoList,
     angleField: 'value',
     colorField: 'name',
     radius: 1,
@@ -336,10 +321,10 @@ const Page: React.FC = () => {
             </Col>
             <Col span={12}>
               <Card title="推送用户 TOP5" extra={<Radio.Group defaultValue="a" buttonStyle="solid">
-                <Radio.Button value="a">今日</Radio.Button>
-                <Radio.Button value="b">本周</Radio.Button>
-                <Radio.Button value="c">本月</Radio.Button>
-                <Radio.Button value="d">本年</Radio.Button>
+                <Radio.Button onClick={() => getDashboard5({dateSelect: 1})} value="a">今日</Radio.Button>
+                <Radio.Button onClick={() => getDashboard5({dateSelect: 2})} value="b">本周</Radio.Button>
+                <Radio.Button onClick={() => getDashboard5({dateSelect: 3})} value="c">本月</Radio.Button>
+                <Radio.Button onClick={() => getDashboard5({dateSelect: 4})} value="d">本年</Radio.Button>
               </Radio.Group>} style={{width: 580}}>
                 <Pie {...pushUserConfig} />
               </Card>
