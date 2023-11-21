@@ -149,8 +149,8 @@ const modifytemplate = ref()
 
 /// 新增操作
 const saveTemplate = (): void => {
+	// eslint-disable-next-line
 	const { channelType, messageType, ...rest } = addtemplate.value.templateItem
-	console.log(channelType, messageType)
 	const savetemplate = { ...rest }
 	console.warn(savetemplate)
 	addtemplate.value.iconLoading = true
@@ -529,7 +529,65 @@ const a = computed(() => {
 #message-container {
 	position: relative;
 	width: 100%;
+	overflow: auto;
 	// height: 100%;
+
+	.box {
+		width: 15%;
+		height: 100%;
+		margin-left: 2%;
+	}
+
+	.del {
+		margin-left: 75%;
+	}
+
+	.splitter {
+		display: flex;
+		align-items: center;
+		justify-content: right;
+		width: 100%;
+		height: 60px;
+		margin-bottom: 6px;
+	}
+
+	.message-section {
+		padding: 12px;
+		margin-top: 12px;
+		background: #fff;
+		border-radius: 6px;
+
+		.btn-manager {
+			margin-right: 10px;
+		}
+
+		.pagination {
+			display: flex;
+			justify-content: right;
+			margin-top: 20px;
+		}
+
+		.describe {
+			width: 100%;
+			height: 40px;
+			margin-bottom: 20px;
+			line-height: 40px;
+			background-color: rgb(248 248 248);
+			border-radius: 10px;
+
+			.count {
+				margin-left: 30px;
+				color: gray;
+			}
+
+			.cancel {
+				position: absolute;
+				right: 50px;
+				padding-top: 7px;
+			}
+		}
+	}
+
 	.showDelete {
 		position: fixed; /* 将showDelete盒子设置为固定定位 */
 		right: 0; /* 将showDelete盒子的左侧与页面左侧对齐 */
@@ -544,62 +602,13 @@ const a = computed(() => {
 		background-color: rgb(255 255 255 / 90%);
 		transition: 0.2s;
 		inset-inline-end: 0;
-
-		.box {
-			width: 15%;
-			height: 100%;
-			margin-left: 2%;
-		}
-
-		.del {
-			margin-left: 75%;
-		}
-
-		.splitter {
-			display: flex;
-			align-items: center;
-			justify-content: right;
-			width: 100%;
-			height: 60px;
-			margin-bottom: 6px;
-		}
-
-		.message-section {
-			padding: 12px;
-			margin-top: 12px;
-			background: #fff;
-			border-radius: 6px;
-
-			.btn-manager {
-				margin-right: 10px;
-			}
-
-			.pagination {
-				display: flex;
-				justify-content: right;
-				margin-top: 20px;
-			}
-
-			.describe {
-				width: 100%;
-				height: 40px;
-				margin-bottom: 20px;
-				line-height: 40px;
-				background-color: rgb(248 248 248);
-				border-radius: 10px;
-
-				.count {
-					margin-left: 30px;
-					color: gray;
-				}
-
-				.cancel {
-					position: absolute;
-					right: 50px;
-					padding-top: 7px;
-				}
-			}
-		}
 	}
+}
+
+.between {
+	display: flex;
+	justify-content: space-between;
+	padding: 0;
+	margin: 0;
 }
 </style>
