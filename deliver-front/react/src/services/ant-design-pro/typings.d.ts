@@ -113,6 +113,12 @@ declare namespace API {
     dateSelect: number;
   }
 
+  type MessageInfo = {
+    name?: string,
+    time?: string,
+    count?: number,
+  }
+
   type DashboardInfo = {
     value?: number,
     name?: string

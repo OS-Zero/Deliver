@@ -4,7 +4,13 @@ import {Bar, Pie, Rose} from '@ant-design/plots';
 import {PageContainer,} from '@ant-design/pro-components';
 import {Card, Col, message, Radio, Row} from 'antd';
 import {AppstoreTwoTone, FileTwoTone, FunnelPlotTwoTone, MessageTwoTone} from '@ant-design/icons';
-import {getAppInfo, getDashboardHeadData, getPushUserInfo, getTemplateInfo} from "@/services/ant-design-pro/api";
+import {
+  getAppInfo,
+  getDashboardHeadData,
+  getMessageInfoReact,
+  getPushUserInfo,
+  getTemplateInfo
+} from "@/services/ant-design-pro/api";
 
 const Page: React.FC = () => {
 
@@ -14,6 +20,8 @@ const Page: React.FC = () => {
     accumulatedTemplateOwnership: 0,
     numberOfApps: 0,
   })
+
+  const [messageInfoList, setMessageInfoList] = useState<API.DashboardInfo[]>([]);
 
   const [templateInfoList, setTemplateInfoList] = useState<API.DashboardInfo[]>([]);
 
@@ -26,6 +34,13 @@ const Page: React.FC = () => {
     const response = await getDashboardHeadData();
     // 更新状态
     setDashboardHeadData(response);
+  }
+
+  const getDashboard2 = async (options?: API.DashboardInfoSelectRequest) => {
+    // 调用接口获取数据
+    const response = await getMessageInfoReact(options);
+    // 更新状态
+    setMessageInfoList(response);
   }
 
   const getDashboard3 = async (options?: API.DashboardInfoSelectRequest) => {
@@ -54,6 +69,7 @@ const Page: React.FC = () => {
     const fetchData = async () => {
       try {
         await getDashboard1();
+        await getDashboard2({dateSelect: 1});
         await getDashboard3({dateSelect: 1});
         await getDashboard4({dateSelect: 1});
         await getDashboard5({dateSelect: 1});
@@ -65,84 +81,11 @@ const Page: React.FC = () => {
     fetchData(); // 调用数据获取函数
   }, [])
 
-  const messageInfo = [
-    {
-      name: '成功',
-      时间: 'Week1',
-      次数: 18,
-    },
-    {
-      name: '失败',
-      时间: 'Week1',
-      次数: 11,
-    },
-    {
-      name: '成功',
-      时间: 'Week2',
-      次数: 200,
-    },
-    {
-      name: '失败',
-      时间: 'Week2',
-      次数: 20,
-    },
-    {
-      name: '成功',
-      时间: 'Week3',
-      次数: 180,
-    },
-    {
-      name: '失败',
-      时间: 'Week3',
-      次数: 28,
-    },
-    {
-      name: '成功',
-      时间: 'Week4',
-      次数: 18,
-    },
-    {
-      name: '失败',
-      时间: 'Week4',
-      次数: 28,
-    },
-    {
-      name: '成功',
-      时间: 'Week5',
-      次数: 108,
-    },
-    {
-      name: '失败',
-      时间: 'Week5',
-      次数: 18,
-    },
-    {
-      name: '成功',
-      时间: 'Week6',
-      次数: 14,
-    },
-    {
-      name: '失败',
-      时间: 'Week6',
-      次数: 1,
-    },
-    {
-      name: '成功',
-      时间: 'Week7',
-      次数: 167,
-    },
-    {
-      name: '失败',
-      时间: 'Week7',
-      次数: 21,
-    },
-  ];
-
   const messageConfig = {
-    data: messageInfo,
+    data: messageInfoList,
     isGroup: true,
-    xField: '时间',
-    yField: '次数',
+    xField: 'time',
+    yField: 'count',
     seriesField: 'name',
 
     /** 设置颜色 */
@@ -291,10 +234,10 @@ const Page: React.FC = () => {
           <Row gutter={[12, 12]}>
             <Col span={12}>
               <Card title="消息详情" extra={<Radio.Group defaultValue="a" buttonStyle="solid">
-                <Radio.Button onClick={() => getDashboard3({dateSelect: 1})} value="a">今日</Radio.Button>
-                <Radio.Button onClick={() => getDashboard3({dateSelect: 2})} value="b">本周</Radio.Button>
-                <Radio.Button onClick={() => getDashboard3({dateSelect: 3})} value="c">本月</Radio.Button>
-                <Radio.Button onClick={() => getDashboard3({dateSelect: 4})} value="d">本年</Radio.Button>
+                <Radio.Button onClick={() => getDashboard2({dateSelect: 1})} value="a">今日</Radio.Button>
+                <Radio.Button onClick={() => getDashboard2({dateSelect: 2})} value="b">本周</Radio.Button>
+                <Radio.Button onClick={() => getDashboard2({dateSelect: 3})} value="c">本月</Radio.Button>
+                <Radio.Button onClick={() => getDashboard2({dateSelect: 4})} value="d">本年</Radio.Button>
               </Radio.Group>} style={{width: 580}}>
                 <Column {...messageConfig} />
               </Card>
