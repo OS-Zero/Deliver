@@ -23,9 +23,9 @@ public enum PlatformFileTypeEnum {
     DING_VIDEO("1-3", "视频", "video", 1),
     DING_FILE("1-4", "文件", "file", 1),
 
-    /**
-     * 企业微信平台文件 2 代表企业微信
-     */
+//    /**
+//     * 企业微信平台文件 2 代表企业微信
+//     */
 
     /**
      * 飞书平台文件 3 代表飞书
@@ -45,6 +45,12 @@ public enum PlatformFileTypeEnum {
     private final String fileType;
     private final Integer appType;
 
+    /**
+     * 通过 code 获取实例
+     *
+     * @param code code 码
+     * @return 实例
+     */
     public static PlatformFileTypeEnum getInstanceByCode(String code) {
         for (PlatformFileTypeEnum v : values()) {
             if (v.getCode().equals(code)) {

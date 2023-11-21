@@ -54,7 +54,7 @@ public class GlobalExceptionHandler {
      *
      * @param e       异常信息
      * @param request 请求
-     * @return
+     * @return 错误
      */
     @ExceptionHandler(Exception.class)
     public CommonResult<?> handleException(Exception e, HttpServletRequest request) {

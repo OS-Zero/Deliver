@@ -12,6 +12,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
+/**
+ * 平台文件控制器
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @RestController
 @RequestMapping("/platformFile")
 @RequiredArgsConstructor
@@ -19,12 +25,26 @@ public class PlatformFileController {
 
     private final PlatformFileService platformFileService;
 
+    /**
+     * 分页查询平台文件
+     *
+     * @param dto 查询参数
+     * @return Page
+     */
     @PostMapping("/getPagePlatformFile")
     public CommonResult<Page<PlatformFileSearchResponseDto>> getPagePlatformFile(@RequestBody PlatformFileSearchRequestDto dto) {
         Page<PlatformFileSearchResponseDto> platformFileSearchResponseDtoPage = platformFileService.getPagePlatformFile(dto);
         return CommonResult.success(platformFileSearchResponseDtoPage);
     }
 
+    /**
+     * 上传平台文件
+     *
+     * @param dto          参数
+     * @param platformFile 文件
+     * @return 成功
+     * @throws Exception 异常
+     */
     @PostMapping("/uploadFile")
     public CommonResult<?> uploadFile(@Valid PlatformFileUploadRequestDto dto, @RequestParam("platformFile") MultipartFile platformFile) throws Exception {
         platformFileService.uploadFile(dto, platformFile);

@@ -22,6 +22,12 @@ public enum AppTypeEnum {
     private final Integer code;
     private final String name;
 
+    /**
+     * 通过 code 获取实例
+     *
+     * @param code code 码
+     * @return 实例
+     */
     public static AppTypeEnum getInstanceByCode(Integer code) {
         for (AppTypeEnum v : values()) {
             if (v.getCode().equals(code)) {

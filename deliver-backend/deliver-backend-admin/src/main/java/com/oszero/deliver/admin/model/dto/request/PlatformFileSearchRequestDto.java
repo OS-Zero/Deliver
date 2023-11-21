@@ -6,6 +6,12 @@ import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
 
+/**
+ * 平台文件分页搜索请求 dto
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class PlatformFileSearchRequestDto extends PageRequest {

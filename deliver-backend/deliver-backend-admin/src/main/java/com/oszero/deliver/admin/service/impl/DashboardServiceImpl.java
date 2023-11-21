@@ -175,12 +175,12 @@ public class DashboardServiceImpl implements DashboardService {
             }
             case YEAR: {
                 // 初始化一个基础时间，当年的第一个月的第一天
-                LocalDate baseMDate = LocalDate.now().withMonth(1).withDayOfMonth(1);
-                LocalDate lastMDate = baseMDate.plusYears(1);
+                LocalDate baseDate = LocalDate.now().withMonth(1).withDayOfMonth(1);
+                LocalDate lastDate = baseDate.plusYears(1);
 
                 for (int i = 0; i < 6; i++) {
-                    LocalDate periodStart = baseMDate.plusMonths(i * 2);
-                    LocalDate periodEnd = baseMDate.plusMonths((i + 1) * 2).isAfter(lastMDate) ? lastMDate : baseMDate.plusMonths((i + 1) * 2);
+                    LocalDate periodStart = baseDate.plusMonths(i * 2);
+                    LocalDate periodEnd = baseDate.plusMonths((i + 1) * 2).isAfter(lastDate) ? lastDate : baseDate.plusMonths((i + 1) * 2);
 
                     // 获取开始结束时间
                     LocalDateTime startTime = periodStart.atStartOfDay();
@@ -198,6 +198,8 @@ public class DashboardServiceImpl implements DashboardService {
                     messageInfoList.add(ans);
                 }
                 break;
+            }
+            default: {
             }
         }
         messageInfoResponseVueDto.setMessageInfoList(messageInfoList);
@@ -228,8 +230,8 @@ public class DashboardServiceImpl implements DashboardService {
                     LocalDateTime endTime = baseTime.plusHours((i + 1) * 4); // 结束时间
 
                     // 获取消息数量
-                    Long successCount = getMessageCountByTime(startTime, endTime, 1);
-                    Long failCount = getMessageCountByTime(startTime, endTime, 0);
+                    final Long successCount = getMessageCountByTime(startTime, endTime, 1);
+                    final Long failCount = getMessageCountByTime(startTime, endTime, 0);
 
                     // 组装返回值
                     MessageInfoResponseReactDto messageSuccessInfoResponseReactDto = new MessageInfoResponseReactDto();
@@ -257,8 +259,8 @@ public class DashboardServiceImpl implements DashboardService {
                     LocalDateTime endTime = startTime.plusDays(1);
 
                     // 获取消息数量
-                    Long successCount = getMessageCountByTime(startTime, endTime, 1);
-                    Long failCount = getMessageCountByTime(startTime, endTime, 0);
+                    final Long successCount = getMessageCountByTime(startTime, endTime, 1);
+                    final Long failCount = getMessageCountByTime(startTime, endTime, 0);
 
                     // 组装返回值
                     MessageInfoResponseReactDto messageSuccessInfoResponseReactDto = new MessageInfoResponseReactDto();
@@ -290,8 +292,8 @@ public class DashboardServiceImpl implements DashboardService {
                     LocalDateTime endTime = periodEnd.atStartOfDay();
 
                     // 获取消息数量
-                    Long successCount = getMessageCountByTime(startTime, endTime, 1);
-                    Long failCount = getMessageCountByTime(startTime, endTime, 0);
+                    final Long successCount = getMessageCountByTime(startTime, endTime, 1);
+                    final Long failCount = getMessageCountByTime(startTime, endTime, 0);
 
                     // 组装返回值
                     MessageInfoResponseReactDto messageSuccessInfoResponseReactDto = new MessageInfoResponseReactDto();
@@ -314,8 +316,8 @@ public class DashboardServiceImpl implements DashboardService {
                     LocalDateTime startTime = remainingStart.atStartOfDay();
                     LocalDateTime endTime = lastDate.atStartOfDay();
 
-                    Long successCount = getMessageCountByTime(startTime, endTime, 1);
-                    Long failCount = getMessageCountByTime(startTime, endTime, 0);
+                    final Long successCount = getMessageCountByTime(startTime, endTime, 1);
+                    final Long failCount = getMessageCountByTime(startTime, endTime, 0);
 
                     // 组装返回值
                     MessageInfoResponseReactDto messageSuccessInfoResponseReactDto = new MessageInfoResponseReactDto();
@@ -335,20 +337,20 @@ public class DashboardServiceImpl implements DashboardService {
             }
             case YEAR: {
                 // 初始化一个基础时间，当年的第一个月的第一天
-                LocalDate baseMDate = LocalDate.now().withMonth(1).withDayOfMonth(1);
-                LocalDate lastMDate = baseMDate.plusYears(1);
+                LocalDate baseDate = LocalDate.now().withMonth(1).withDayOfMonth(1);
+                LocalDate lastDate = baseDate.plusYears(1);
 
                 for (int i = 0; i < 6; i++) {
-                    LocalDate periodStart = baseMDate.plusMonths(i * 2);
-                    LocalDate periodEnd = baseMDate.plusMonths((i + 1) * 2).isAfter(lastMDate) ? lastMDate : baseMDate.plusMonths((i + 1) * 2);
+                    LocalDate periodStart = baseDate.plusMonths(i * 2);
+                    LocalDate periodEnd = baseDate.plusMonths((i + 1) * 2).isAfter(lastDate) ? lastDate : baseDate.plusMonths((i + 1) * 2);
 
                     // 获取开始结束时间
                     LocalDateTime startTime = periodStart.atStartOfDay();
                     LocalDateTime endTime = periodEnd.atStartOfDay();
 
                     // 获取消息数量
-                    Long successCount = getMessageCountByTime(startTime, endTime, 1);
-                    Long failCount = getMessageCountByTime(startTime, endTime, 0);
+                    final Long successCount = getMessageCountByTime(startTime, endTime, 1);
+                    final Long failCount = getMessageCountByTime(startTime, endTime, 0);
 
                     // 组装返回值
                     MessageInfoResponseReactDto messageSuccessInfoResponseReactDto = new MessageInfoResponseReactDto();
@@ -365,6 +367,8 @@ public class DashboardServiceImpl implements DashboardService {
                     messageInfoResponseReactDtoList.add(messageFailInfoResponseReactDto);
                 }
                 break;
+            }
+            default: {
             }
         }
         return messageInfoResponseReactDtoList;
@@ -460,10 +464,12 @@ public class DashboardServiceImpl implements DashboardService {
             }
             case YEAR: {
                 // 初始化一个基础时间，当年的第一个月的第一天
-                LocalDateTime baseMDate = LocalDate.now().withMonth(1).withDayOfMonth(1).atTime(0, 0, 0, 0);
-                LocalDateTime lastMDate = baseMDate.with(TemporalAdjusters.lastDayOfYear()).toLocalDate().atTime(23, 59, 59, 999999999);
-                getInfo(dashboardInfoResponseDto, baseMDate, lastMDate, 5, type);
+                LocalDateTime baseDate = LocalDate.now().withMonth(1).withDayOfMonth(1).atTime(0, 0, 0, 0);
+                LocalDateTime lastDate = baseDate.with(TemporalAdjusters.lastDayOfYear()).toLocalDate().atTime(23, 59, 59, 999999999);
+                getInfo(dashboardInfoResponseDto, baseDate, lastDate, 5, type);
                 break;
+            }
+            default: {
             }
         }
         // 进行具体处理

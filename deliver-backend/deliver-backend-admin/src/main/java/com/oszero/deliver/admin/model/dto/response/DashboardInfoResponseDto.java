@@ -21,6 +21,12 @@ public class DashboardInfoResponseDto {
 
     private List<DashboardInfo> dashboardInfoList;
 
+    /**
+     * 仪表盘响应类
+     *
+     * @author oszero
+     * @version 1.0.0
+     */
     @Data
     public static class DashboardInfo {
         private Long value;

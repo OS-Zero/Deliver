@@ -7,6 +7,12 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+/**
+ * 平台文件分页搜索响应 dto
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Data
 public class PlatformFileSearchResponseDto {
     /**

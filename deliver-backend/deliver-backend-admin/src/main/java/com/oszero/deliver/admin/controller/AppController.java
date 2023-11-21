@@ -28,36 +28,72 @@ public class AppController {
 
     private final AppService appService;
 
+    /**
+     * 分页搜索 APP
+     *
+     * @param appSearchRequestDto dto
+     * @return Page对象
+     */
     @PostMapping("/search")
     public CommonResult<Page<AppSearchResponseDto>> getAppPagesByCondition(@RequestBody AppSearchRequestDto appSearchRequestDto) {
         Page<AppSearchResponseDto> page = appService.getAppPagesByCondition(appSearchRequestDto);
         return CommonResult.success(page);
     }
 
+    /**
+     * 保存 APP
+     *
+     * @param dto dto
+     * @return 成功
+     */
     @PostMapping("/save")
     public CommonResult<?> save(@RequestBody AppSaveAndUpdateRequestDto dto) {
         appService.save(dto);
         return CommonResult.success();
     }
 
+    /**
+     * 更新通过 ID
+     *
+     * @param dto dto
+     * @return 成功
+     */
     @PostMapping("/updateById")
     public CommonResult<?> updateById(@RequestBody AppSaveAndUpdateRequestDto dto) {
         appService.updateById(dto);
         return CommonResult.success();
     }
 
+    /**
+     * 更新 APP 状态通过 ID
+     *
+     * @param dto dto
+     * @return 成功
+     */
     @PostMapping("/updateStatusById")
     public CommonResult<?> updateStatusById(@RequestBody AppUpdateStatusRequestDto dto) {
         appService.updateStatusById(dto);
         return CommonResult.success();
     }
 
+    /**
+     * 批量删除 APP
+     *
+     * @param dto dto
+     * @return 成功
+     */
     @PostMapping("/deleteByIds")
     public CommonResult<?> deleteByIds(@RequestBody DeleteIdsRequestDto dto) {
         appService.deleteByIds(dto);
         return CommonResult.success();
     }
 
+    /**
+     * 获取 APP 通过渠道类型
+     *
+     * @param dto dto
+     * @return APP 列表
+     */
     @PostMapping("/getAppByChannelType")
     public CommonResult<List<AppByChannelResponseDto>> getAppByChannelType(@Valid @RequestBody TemplateAddGetByChannelRequestDto dto) {
         List<AppByChannelResponseDto> appList = appService.getAppByChannelType(dto);

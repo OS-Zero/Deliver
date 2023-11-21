@@ -16,6 +16,12 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+/**
+ * 获取模版详情
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Slf4j
 @Component
 public class DingUtils {
@@ -53,13 +59,14 @@ public class DingUtils {
     }
 
     /**
+     * 上传钉钉文件
      *
-     * @param accessToken
-     * @param platformFileDto
-     * @return       media_id
+     * @param accessToken     token
+     * @param platformFileDto 文件 dto
+     * @return media_id
      */
 
-    public String  uploadDingFile (String accessToken, PlatformFileDto platformFileDto){
+    public String uploadDingFile(String accessToken, PlatformFileDto platformFileDto) {
         @Data
         class DingBody {
             private Integer errcode;
@@ -74,20 +81,20 @@ public class DingUtils {
         OapiMediaUploadRequest req = new OapiMediaUploadRequest();
         req.setType(platformFileDto.getFileType());
         byte[] file = platformFileDto.getFile();
-        FileItem item = new FileItem(platformFileDto.getFileName(),file);
+        FileItem item = new FileItem(platformFileDto.getFileName(), file);
         req.setMedia(item);
-        OapiMediaUploadResponse rsp =null;
+        OapiMediaUploadResponse rsp = null;
         try {
-              rsp = client.execute(req, accessToken);
-        }catch (ApiException a){
+            rsp = client.execute(req, accessToken);
+        } catch (ApiException a) {
             throw new BusinessException("钉钉上传失败");
         }
 
         DingBody dingBody = JSONUtil.toBean(rsp.getBody(), DingBody.class);
-        if(dingBody.getErrcode()!=0){
-           throw new BusinessException("钉钉上传失败");
-       }
+        if (dingBody.getErrcode() != 0) {
+            throw new BusinessException("钉钉上传失败");
+        }
 
-       return  dingBody.getMediaId();
+        return dingBody.getMediaId();
     }
 }

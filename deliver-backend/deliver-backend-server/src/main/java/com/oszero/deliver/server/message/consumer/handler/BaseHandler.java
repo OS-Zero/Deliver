@@ -16,6 +16,11 @@ public abstract class BaseHandler {
 
     protected MessageRecordService messageRecordService;
 
+    /**
+     * 消息处理
+     * @param sendTaskDto 发送 Dto
+     * @throws Exception 异常
+     */
     public void doHandle(SendTaskDto sendTaskDto) throws Exception {
         // 1. todo:前置处理 日志
         // 2. 具体处理

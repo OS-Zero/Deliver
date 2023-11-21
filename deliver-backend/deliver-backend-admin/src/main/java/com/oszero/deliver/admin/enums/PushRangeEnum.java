@@ -31,6 +31,12 @@ public enum PushRangeEnum {
     private final Integer code;
     private final String name;
 
+    /**
+     * 通过 code 获取实例
+     *
+     * @param code code 码
+     * @return 实例
+     */
     public static PushRangeEnum getInstanceByCode(Integer code) {
         for (PushRangeEnum item : values()
         ) {

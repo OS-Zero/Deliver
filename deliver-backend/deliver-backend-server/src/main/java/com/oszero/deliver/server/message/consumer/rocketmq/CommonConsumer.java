@@ -15,6 +15,12 @@ import org.springframework.stereotype.Component;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
+/**
+ * RocketMQ 通用消费者
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Component
 @RequiredArgsConstructor
 public class CommonConsumer {

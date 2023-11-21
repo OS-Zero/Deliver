@@ -12,6 +12,12 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+/**
+ * 获取模版详情
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Slf4j
 @Component
 public class FeiShuUtils {
@@ -47,6 +53,13 @@ public class FeiShuUtils {
         return "Bearer " + tenantAccessTokenRespBody.getTenant_access_token();
     }
 
+    /**
+     * 上传飞书文件
+     *
+     * @param tenantAccessToken token
+     * @param platformFileDto   文件 dto
+     * @return file_key
+     */
     public String uploadFeiShuFile(String tenantAccessToken, PlatformFileDto platformFileDto) {
         HttpResponse response = HttpRequest.post("https://open.feishu.cn/open-apis/im/v1/files")
                 .header("Authorization", tenantAccessToken)
@@ -73,6 +86,13 @@ public class FeiShuUtils {
         return feiShuUploadFileResponse.getData().getFile_key();
     }
 
+    /**
+     * 上传飞书图片文件
+     *
+     * @param tenantAccessToken token
+     * @param platformFileDto   文件 dto
+     * @return file_key
+     */
     public String uploadFeiShuImageFile(String tenantAccessToken, PlatformFileDto platformFileDto) {
         HttpResponse response = HttpRequest.post("https://open.feishu.cn/open-apis/im/v1/images")
                 .header("Authorization", tenantAccessToken)

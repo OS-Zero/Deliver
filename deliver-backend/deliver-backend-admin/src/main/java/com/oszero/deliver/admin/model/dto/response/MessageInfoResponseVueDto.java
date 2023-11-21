@@ -19,5 +19,5 @@ import java.util.List;
 @NoArgsConstructor
 public class MessageInfoResponseVueDto {
 
-    List<List<Object>> MessageInfoList;
+    List<List<Object>> messageInfoList;
 }

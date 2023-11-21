@@ -66,6 +66,12 @@ public enum MessageTypeEnum {
     private final String name;
     private final Integer channelType;
 
+    /**
+     * 通过 code 获取实例
+     *
+     * @param code code 码
+     * @return 实例
+     */
     public static MessageTypeEnum getInstanceByCode(String code) {
         for (MessageTypeEnum v : values()) {
             if (v.getCode().equals(code)) {

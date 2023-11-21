@@ -90,19 +90,19 @@ public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, Pla
                 DingApp dingApp = JSONUtil.toBean(appConfig, DingApp.class);
                 String accessToken = dingUtils.getAccessToken(dingApp);
 
-                if(PlatformFileTypeEnum.DING_VOICE.getFileType().equals(dto.getFileType())){
-                    if (!PlatformFileConstant.dingFileFormatSet.contains(fileFormat)) {
+                if (PlatformFileTypeEnum.DING_VOICE.getFileType().equals(dto.getFileType())) {
+                    if (!PlatformFileConstant.DING_FILE_FORMAT_SET.contains(fileFormat)) {
                         throw new BusinessException("不支持 " + fileFormat + " 格式的语音！！！");
                     }
-                    if (fileSize > PlatformFileConstant.dingVoiceMaxSize) {
+                    if (fileSize > PlatformFileConstant.DING_VOICE_MAX_SIZE) {
                         throw new BusinessException("图片最大为：2M！！！");
                     }
                     fileKey = dingUtils.uploadDingFile(accessToken, platformFileDto);
-                }else {
-                    if (!PlatformFileConstant.dingFileFormatSet.contains(fileFormat)) {
+                } else {
+                    if (!PlatformFileConstant.DING_FILE_FORMAT_SET.contains(fileFormat)) {
                         throw new BusinessException("不支持 " + fileFormat + " 格式的文件！！！");
                     }
-                    if (fileSize > PlatformFileConstant.dingFileMaxSize) {
+                    if (fileSize > PlatformFileConstant.DING_FILE_MAX_SIZE) {
                         throw new BusinessException("图片最大为：20M！！！");
                     }
 
@@ -122,23 +122,25 @@ public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, Pla
                 String tenantAccessToken = feiShuUtils.getTenantAccessToken(feiShuApp);
                 // 发送
                 if (PlatformFileTypeEnum.FEI_SHU_IMAGE.getFileType().equals(dto.getFileType())) {
-                    if (!PlatformFileConstant.feiShuImageFormatSet.contains(fileFormat)) {
+                    if (!PlatformFileConstant.FEI_SHU_IMAGE_FORMAT_SET.contains(fileFormat)) {
                         throw new BusinessException("不支持 " + fileFormat + " 格式的图片！！！");
                     }
-                    if (fileSize > PlatformFileConstant.feiShuImageFileMaxSize) {
+                    if (fileSize > PlatformFileConstant.FEI_SHU_IMAGE_FILE_MAX_SIZE) {
                         throw new BusinessException("图片最大为：10M！！！");
                     }
                     fileKey = feiShuUtils.uploadFeiShuImageFile(tenantAccessToken, platformFileDto);
                 } else {
-                    if (!PlatformFileConstant.feiShuFileFormatSet.contains(fileFormat)) {
+                    if (!PlatformFileConstant.FEI_SHU_FILE_FORMAT_SET.contains(fileFormat)) {
                         throw new BusinessException("不支持 " + fileFormat + " 格式的文件！！！");
                     }
-                    if (fileSize > PlatformFileConstant.feiShuFileMaxSize) {
+                    if (fileSize > PlatformFileConstant.FEI_SHU_FILE_MAX_SIZE) {
                         throw new BusinessException("文件最大为：30M！！！");
                     }
                     fileKey = feiShuUtils.uploadFeiShuFile(tenantAccessToken, platformFileDto);
                 }
                 break;
+            }
+            default: {
             }
         }
 

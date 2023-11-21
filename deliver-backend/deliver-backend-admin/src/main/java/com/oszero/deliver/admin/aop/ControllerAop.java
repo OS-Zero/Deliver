@@ -4,18 +4,35 @@ import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.admin.util.IpUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
+/**
+ * 控制器切面
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Slf4j
 @Aspect
 @Component
 public class ControllerAop {
 
+    /**
+     * 切点
+     */
     @Pointcut(value = "execution(* com.oszero.deliver.admin.controller.*.*(..))")
     public void controllerPointcut() {
     }
 
+    /**
+     * 前置切点
+     *
+     * @param joinPoint 连接点
+     */
     @Before(value = "controllerPointcut()")
     public void before(JoinPoint joinPoint) {
         // 获取 IP 地址
@@ -32,6 +49,12 @@ public class ControllerAop {
         log.info("IP地址为: {}，请求进入 [{}#{}] 请求参数为: {}", ip, className, methodName, params);
     }
 
+    /**
+     * 后置切点
+     *
+     * @param joinPoint 连接点
+     * @param result    返回值
+     */
     @AfterReturning(value = "controllerPointcut()", returning = "result")
     public void afterReturn(JoinPoint joinPoint, Object result) {
         // 获取 IP 地址

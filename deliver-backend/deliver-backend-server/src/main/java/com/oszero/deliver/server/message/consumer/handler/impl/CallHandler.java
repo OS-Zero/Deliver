@@ -3,7 +3,6 @@ package com.oszero.deliver.server.message.consumer.handler.impl;
 import com.oszero.deliver.server.message.consumer.handler.BaseHandler;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.util.channel.CallUtils;
-import com.oszero.deliver.server.util.channel.FeiShuUtils;
 import com.oszero.deliver.server.web.service.MessageRecordService;
 import org.springframework.stereotype.Component;
 

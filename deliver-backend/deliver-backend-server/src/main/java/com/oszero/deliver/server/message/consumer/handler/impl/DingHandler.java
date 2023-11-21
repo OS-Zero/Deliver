@@ -4,10 +4,8 @@ import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.message.consumer.handler.BaseHandler;
 import com.oszero.deliver.server.model.app.DingApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
-import com.oszero.deliver.server.util.channel.CallUtils;
 import com.oszero.deliver.server.util.channel.DingUtils;
 import com.oszero.deliver.server.web.service.MessageRecordService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 /**
