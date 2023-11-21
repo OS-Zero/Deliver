@@ -4,7 +4,7 @@ import {Bar, Pie, Rose} from '@ant-design/plots';
 import {PageContainer,} from '@ant-design/pro-components';
 import {Card, Col, message, Radio, Row} from 'antd';
 import {AppstoreTwoTone, FileTwoTone, FunnelPlotTwoTone, MessageTwoTone} from '@ant-design/icons';
-import {getDashboardHeadData, getTemplateInfo} from "@/services/ant-design-pro/api";
+import {getAppInfo, getDashboardHeadData, getTemplateInfo} from "@/services/ant-design-pro/api";
 
 const Page: React.FC = () => {
 
@@ -17,18 +17,29 @@ const Page: React.FC = () => {
 
   const [templateInfoList, setTemplateInfoList] = useState<API.DashboardInfo[]>([]);
 
+  const [appInfoList, setAppInfoList] = useState<API.DashboardInfo[]>([]);
+
+  const [pushUserInfoList, setPushUserInfoList] = useState<API.DashboardInfo[]>([]);
+
   const getDashboard1 = async () => {
     // 调用接口获取数据
-    const response1 = await getDashboardHeadData();
+    const response = await getDashboardHeadData();
     // 更新状态
-    setDashboardHeadData(response1);
+    setDashboardHeadData(response);
   }
 
   const getDashboard3 = async (options?: API.DashboardInfoSelectRequest) => {
     // 调用接口获取数据
-    const response2 = await getTemplateInfo(options);
+    const response = await getTemplateInfo(options);
     // 更新状态
-    setTemplateInfoList(response2.dashboardInfoList);
+    setTemplateInfoList(response.dashboardInfoList);
+  }
+
+  const getDashboard4 = async (options?: API.DashboardInfoSelectRequest) => {
+    // 调用接口获取数据
+    const response = await getAppInfo(options);
+    // 更新状态
+    setAppInfoList(response.dashboardInfoList);
   }
 
   useEffect(() => {
@@ -37,6 +48,7 @@ const Page: React.FC = () => {
       try {
         await getDashboard1();
         await getDashboard3({dateSelect: 1});
+        await getDashboard4({dateSelect: 1});
       } catch (error) {
         message.error(error.message)
         console.error('Error fetching dashboard data:', error);
@@ -160,31 +172,8 @@ const Page: React.FC = () => {
     },
   };
 
-  const appInfo = [
-    {
-      name: '分类一',
-      value: 227,
-    },
-    {
-      name: '分类二',
-      value: 225,
-    },
-    {
-      name: '分类三',
-      value: 128,
-    },
-    {
-      name: '分类四',
-      value: 125,
-    },
-    {
-      name: '分类五',
-      value: 120,
-    },
-  ];
-
   const appConfig = {
-    data: appInfo,
+    data: appInfoList,
     xField: 'name',
     yField: 'value',
     seriesField: 'name',
@@ -337,10 +326,10 @@ const Page: React.FC = () => {
             </Col>
             <Col span={12}>
               <Card title="渠道 APP 使用 TOP5" extra={<Radio.Group defaultValue="a" buttonStyle="solid">
-                <Radio.Button value="a">今日</Radio.Button>
-                <Radio.Button value="b">本周</Radio.Button>
-                <Radio.Button value="c">本月</Radio.Button>
-                <Radio.Button value="d">本年</Radio.Button>
+                <Radio.Button onClick={() => getDashboard4({dateSelect: 1})} value="a">今日</Radio.Button>
+                <Radio.Button onClick={() => getDashboard4({dateSelect: 2})} value="b">本周</Radio.Button>
+                <Radio.Button onClick={() => getDashboard4({dateSelect: 3})} value="c">本月</Radio.Button>
+                <Radio.Button onClick={() => getDashboard4({dateSelect: 4})} value="d">本年</Radio.Button>
               </Radio.Group>} style={{width: 580}}>
                 <Rose {...appConfig} />
               </Card>

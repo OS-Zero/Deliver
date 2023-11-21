@@ -99,6 +99,14 @@ export async function getTemplateInfo(options?: API.DashboardInfoSelectRequest )
     }
   });
 }
+export async function getAppInfo(options?: API.DashboardInfoSelectRequest ) {
+  return request<API.DashboardInfo[]>('/admin/dashboard/getAppInfo', {
+    method: 'POST',
+    data: {
+      ...(options || {}),
+    }
+  });
+}
 
 
 
