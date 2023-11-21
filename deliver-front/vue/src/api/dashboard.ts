@@ -26,7 +26,7 @@ export async function getDashboardHeadData(): Promise<any> {
 }
 export async function getMessageInfo(data: { dateSelect: number }): Promise<any> {
   return await request({
-    url: '/dashboard/getMessageInfo',
+    url: '/dashboard/getMessageInfo/vue',
     method: 'post',
     data
   })
