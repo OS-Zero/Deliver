@@ -41,6 +41,14 @@ export async function updateStatus(data: { templateId: number; templateStatus: n
   })
 }
 
+export async function updatetemplate(data: any): Promise<any> {
+  return await request({
+    url: '/template/updateById',
+    method: 'post',
+    data
+  })
+}
+
 export async function deleteTemplate(data: { ids: number[] }): Promise<any> {
   return await request({
     url: '/template/deleteByIds',

@@ -159,7 +159,7 @@ export interface modiTemp {
   /**
    * 模板状态
    */
-  templateStatus: number | undefined
+  templateStatus: number | boolean
   /**
    * Appid
    */
