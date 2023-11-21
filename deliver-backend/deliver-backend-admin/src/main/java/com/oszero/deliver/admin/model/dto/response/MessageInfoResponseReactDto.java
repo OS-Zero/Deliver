@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 /**
  * 消息柱状图响应类
  *
@@ -17,7 +15,8 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MessageInfoResponseDto {
-
-    List<List<Object>> MessageInfoList;
+public class MessageInfoResponseReactDto {
+    private String name;
+    private String time;
+    private Long count;
 }

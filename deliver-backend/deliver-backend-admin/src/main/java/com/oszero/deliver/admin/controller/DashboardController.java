@@ -2,7 +2,10 @@ package com.oszero.deliver.admin.controller;
 
 import com.oszero.deliver.admin.model.CommonResult;
 import com.oszero.deliver.admin.model.dto.request.DashboardDateSelectRequestDto;
-import com.oszero.deliver.admin.model.dto.response.*;
+import com.oszero.deliver.admin.model.dto.response.DashboardHeadDataResponseDto;
+import com.oszero.deliver.admin.model.dto.response.DashboardInfoResponseDto;
+import com.oszero.deliver.admin.model.dto.response.MessageInfoResponseReactDto;
+import com.oszero.deliver.admin.model.dto.response.MessageInfoResponseVueDto;
 import com.oszero.deliver.admin.service.DashboardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 仪表盘
@@ -31,10 +35,16 @@ public class DashboardController {
         return CommonResult.success(dto);
     }
 
-    @PostMapping("/getMessageInfo")
-    public CommonResult<MessageInfoResponseDto> getMessageInfo(@Valid @RequestBody DashboardDateSelectRequestDto dto) {
-        MessageInfoResponseDto messageInfoResponseDto = dashboardService.getMessageInfo(dto);
-        return CommonResult.success(messageInfoResponseDto);
+    @PostMapping("/getMessageInfo/vue")
+    public CommonResult<MessageInfoResponseVueDto> getMessageInfoVue(@Valid @RequestBody DashboardDateSelectRequestDto dto) {
+        MessageInfoResponseVueDto messageInfoResponseVueDto = dashboardService.getMessageInfoVue(dto);
+        return CommonResult.success(messageInfoResponseVueDto);
+    }
+
+    @PostMapping("/getMessageInfo/react")
+    public CommonResult<List<MessageInfoResponseReactDto>> getMessageInfoReact(@Valid @RequestBody DashboardDateSelectRequestDto dto) {
+        List<MessageInfoResponseReactDto> messageInfoResponseReactDtoList = dashboardService.getMessageInfoReact(dto);
+        return CommonResult.success(messageInfoResponseReactDtoList);
     }
 
     @PostMapping("/getTemplateInfo")

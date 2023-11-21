@@ -291,10 +291,10 @@ const Page: React.FC = () => {
           <Row gutter={[12, 12]}>
             <Col span={12}>
               <Card title="消息详情" extra={<Radio.Group defaultValue="a" buttonStyle="solid">
-                <Radio.Button value="a">今日</Radio.Button>
-                <Radio.Button value="b">本周</Radio.Button>
-                <Radio.Button value="c">本月</Radio.Button>
-                <Radio.Button value="d">本年</Radio.Button>
+                <Radio.Button onClick={() => getDashboard3({dateSelect: 1})} value="a">今日</Radio.Button>
+                <Radio.Button onClick={() => getDashboard3({dateSelect: 2})} value="b">本周</Radio.Button>
+                <Radio.Button onClick={() => getDashboard3({dateSelect: 3})} value="c">本月</Radio.Button>
+                <Radio.Button onClick={() => getDashboard3({dateSelect: 4})} value="d">本年</Radio.Button>
               </Radio.Group>} style={{width: 580}}>
                 <Column {...messageConfig} />
               </Card>

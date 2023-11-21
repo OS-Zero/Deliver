@@ -6,7 +6,8 @@ import com.oszero.deliver.admin.exception.BusinessException;
 import com.oszero.deliver.admin.model.dto.request.DashboardDateSelectRequestDto;
 import com.oszero.deliver.admin.model.dto.response.DashboardHeadDataResponseDto;
 import com.oszero.deliver.admin.model.dto.response.DashboardInfoResponseDto;
-import com.oszero.deliver.admin.model.dto.response.MessageInfoResponseDto;
+import com.oszero.deliver.admin.model.dto.response.MessageInfoResponseReactDto;
+import com.oszero.deliver.admin.model.dto.response.MessageInfoResponseVueDto;
 import com.oszero.deliver.admin.model.entity.MessageRecord;
 import com.oszero.deliver.admin.service.*;
 import lombok.RequiredArgsConstructor;
@@ -78,10 +79,10 @@ public class DashboardServiceImpl implements DashboardService {
      * @return 柱状图信息
      */
     @Override
-    public MessageInfoResponseDto getMessageInfo(DashboardDateSelectRequestDto dto) {
+    public MessageInfoResponseVueDto getMessageInfoVue(DashboardDateSelectRequestDto dto) {
         Integer dateSelect = dto.getDateSelect();
         DateSelectEnum instanceByCode = DateSelectEnum.getInstanceByCode(dateSelect);
-        MessageInfoResponseDto messageInfoResponseDto = new MessageInfoResponseDto();
+        MessageInfoResponseVueDto messageInfoResponseVueDto = new MessageInfoResponseVueDto();
         List<List<Object>> messageInfoList = new ArrayList<>();
         if (Objects.isNull(instanceByCode)) {
             throw new BusinessException("传递的日期选择错误，在 1-4！！！");
@@ -199,8 +200,174 @@ public class DashboardServiceImpl implements DashboardService {
                 break;
             }
         }
-        messageInfoResponseDto.setMessageInfoList(messageInfoList);
-        return messageInfoResponseDto;
+        messageInfoResponseVueDto.setMessageInfoList(messageInfoList);
+        return messageInfoResponseVueDto;
+    }
+
+    /**
+     * 获取消息柱状图
+     *
+     * @param dto 日期选择
+     * @return 柱状图信息
+     */
+    @Override
+    public List<MessageInfoResponseReactDto> getMessageInfoReact(DashboardDateSelectRequestDto dto) {
+        Integer dateSelect = dto.getDateSelect();
+        DateSelectEnum instanceByCode = DateSelectEnum.getInstanceByCode(dateSelect);
+        List<MessageInfoResponseReactDto> messageInfoResponseReactDtoList = new ArrayList<>();
+        if (Objects.isNull(instanceByCode)) {
+            throw new BusinessException("传递的日期选择错误，在 1-4！！！");
+        }
+        // 进行具体处理
+        switch (instanceByCode) {
+            case DAY: {
+                // 初始化一个基础时间，当日凌晨
+                LocalDateTime baseTime = LocalDateTime.now().with(LocalTime.MIDNIGHT);
+                for (int i = 0; i < 6; i++) {
+                    LocalDateTime startTime = baseTime.plusHours(i * 4); // 起始时间
+                    LocalDateTime endTime = baseTime.plusHours((i + 1) * 4); // 结束时间
+
+                    // 获取消息数量
+                    Long successCount = getMessageCountByTime(startTime, endTime, 1);
+                    Long failCount = getMessageCountByTime(startTime, endTime, 0);
+
+                    // 组装返回值
+                    MessageInfoResponseReactDto messageSuccessInfoResponseReactDto = new MessageInfoResponseReactDto();
+                    messageSuccessInfoResponseReactDto.setName("成功");
+                    messageSuccessInfoResponseReactDto.setTime(i * 4 + "-" + (1 + i) * 4 + "h");
+                    messageSuccessInfoResponseReactDto.setCount(successCount);
+
+                    MessageInfoResponseReactDto messageFailInfoResponseReactDto = new MessageInfoResponseReactDto();
+                    messageFailInfoResponseReactDto.setName("失败");
+                    messageFailInfoResponseReactDto.setTime(i * 4 + "-" + (1 + i) * 4 + "h");
+                    messageFailInfoResponseReactDto.setCount(failCount);
+
+                    messageInfoResponseReactDtoList.add(messageSuccessInfoResponseReactDto);
+                    messageInfoResponseReactDtoList.add(messageFailInfoResponseReactDto);
+
+                }
+                break;
+            }
+            case WEEK: {
+                // 得到这周开始日
+                LocalDateTime weekStart = LocalDateTime.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).toLocalDate().atTime(0, 0, 0, 0);
+                for (int i = 0; i < 7; i++) {
+                    // 获取开始结束时间
+                    LocalDateTime startTime = weekStart.plusDays(i);
+                    LocalDateTime endTime = startTime.plusDays(1);
+
+                    // 获取消息数量
+                    Long successCount = getMessageCountByTime(startTime, endTime, 1);
+                    Long failCount = getMessageCountByTime(startTime, endTime, 0);
+
+                    // 组装返回值
+                    MessageInfoResponseReactDto messageSuccessInfoResponseReactDto = new MessageInfoResponseReactDto();
+                    messageSuccessInfoResponseReactDto.setName("成功");
+                    messageSuccessInfoResponseReactDto.setTime("Week " + (i + 1));
+                    messageSuccessInfoResponseReactDto.setCount(successCount);
+
+                    MessageInfoResponseReactDto messageFailInfoResponseReactDto = new MessageInfoResponseReactDto();
+                    messageFailInfoResponseReactDto.setName("失败");
+                    messageFailInfoResponseReactDto.setTime("Week " + (i + 1));
+                    messageFailInfoResponseReactDto.setCount(failCount);
+
+                    messageInfoResponseReactDtoList.add(messageSuccessInfoResponseReactDto);
+                    messageInfoResponseReactDtoList.add(messageFailInfoResponseReactDto);
+                }
+                break;
+            }
+            case MONTH: {
+                // 初始化一个基础时间，当月的第一天与最后一天
+                LocalDate baseDate = LocalDate.now().withDayOfMonth(1);
+                LocalDate lastDate = LocalDate.now().with(TemporalAdjusters.lastDayOfMonth());
+
+                for (int i = 0; i < 4; i++) {
+                    LocalDate periodStart = baseDate.plusDays(i * 7);
+                    LocalDate periodEnd = baseDate.plusDays((i + 1) * 7).isAfter(lastDate) ? lastDate : baseDate.plusDays((i + 1) * 7);
+
+                    // 获取开始结束时间
+                    LocalDateTime startTime = periodStart.atStartOfDay();
+                    LocalDateTime endTime = periodEnd.atStartOfDay();
+
+                    // 获取消息数量
+                    Long successCount = getMessageCountByTime(startTime, endTime, 1);
+                    Long failCount = getMessageCountByTime(startTime, endTime, 0);
+
+                    // 组装返回值
+                    MessageInfoResponseReactDto messageSuccessInfoResponseReactDto = new MessageInfoResponseReactDto();
+                    messageSuccessInfoResponseReactDto.setName("成功");
+                    messageSuccessInfoResponseReactDto.setTime((i * 7 + 1) + "-" + (i + 1) * 7 + "日");
+                    messageSuccessInfoResponseReactDto.setCount(successCount);
+
+                    MessageInfoResponseReactDto messageFailInfoResponseReactDto = new MessageInfoResponseReactDto();
+                    messageFailInfoResponseReactDto.setName("失败");
+                    messageFailInfoResponseReactDto.setTime((i * 7 + 1) + "-" + (i + 1) * 7 + "日");
+                    messageFailInfoResponseReactDto.setCount(failCount);
+
+                    messageInfoResponseReactDtoList.add(messageSuccessInfoResponseReactDto);
+                    messageInfoResponseReactDtoList.add(messageFailInfoResponseReactDto);
+                }
+                // 处理不足 7 天的剩余部分
+                if (lastDate.getDayOfMonth() - baseDate.plusDays(28).getDayOfMonth() > 0) {
+                    LocalDate remainingStart = baseDate.plusDays(28);
+
+                    LocalDateTime startTime = remainingStart.atStartOfDay();
+                    LocalDateTime endTime = lastDate.atStartOfDay();
+
+                    Long successCount = getMessageCountByTime(startTime, endTime, 1);
+                    Long failCount = getMessageCountByTime(startTime, endTime, 0);
+
+                    // 组装返回值
+                    MessageInfoResponseReactDto messageSuccessInfoResponseReactDto = new MessageInfoResponseReactDto();
+                    messageSuccessInfoResponseReactDto.setName("成功");
+                    messageSuccessInfoResponseReactDto.setTime(((4 * 7) + 1) + "-" + lastDate.getDayOfMonth() + "日");
+                    messageSuccessInfoResponseReactDto.setCount(successCount);
+
+                    MessageInfoResponseReactDto messageFailInfoResponseReactDto = new MessageInfoResponseReactDto();
+                    messageFailInfoResponseReactDto.setName("失败");
+                    messageFailInfoResponseReactDto.setTime(((4 * 7) + 1) + "-" + lastDate.getDayOfMonth() + "日");
+                    messageFailInfoResponseReactDto.setCount(failCount);
+
+                    messageInfoResponseReactDtoList.add(messageSuccessInfoResponseReactDto);
+                    messageInfoResponseReactDtoList.add(messageFailInfoResponseReactDto);
+                }
+                break;
+            }
+            case YEAR: {
+                // 初始化一个基础时间，当年的第一个月的第一天
+                LocalDate baseMDate = LocalDate.now().withMonth(1).withDayOfMonth(1);
+                LocalDate lastMDate = baseMDate.plusYears(1);
+
+                for (int i = 0; i < 6; i++) {
+                    LocalDate periodStart = baseMDate.plusMonths(i * 2);
+                    LocalDate periodEnd = baseMDate.plusMonths((i + 1) * 2).isAfter(lastMDate) ? lastMDate : baseMDate.plusMonths((i + 1) * 2);
+
+                    // 获取开始结束时间
+                    LocalDateTime startTime = periodStart.atStartOfDay();
+                    LocalDateTime endTime = periodEnd.atStartOfDay();
+
+                    // 获取消息数量
+                    Long successCount = getMessageCountByTime(startTime, endTime, 1);
+                    Long failCount = getMessageCountByTime(startTime, endTime, 0);
+
+                    // 组装返回值
+                    MessageInfoResponseReactDto messageSuccessInfoResponseReactDto = new MessageInfoResponseReactDto();
+                    messageSuccessInfoResponseReactDto.setName("成功");
+                    messageSuccessInfoResponseReactDto.setTime(Month.of((i * 2) + 1).getValue() + "-" + Month.of((i + 1) * 2).getValue() + "月");
+                    messageSuccessInfoResponseReactDto.setCount(successCount);
+
+                    MessageInfoResponseReactDto messageFailInfoResponseReactDto = new MessageInfoResponseReactDto();
+                    messageFailInfoResponseReactDto.setName("失败");
+                    messageFailInfoResponseReactDto.setTime(Month.of((i * 2) + 1).getValue() + "-" + Month.of((i + 1) * 2).getValue() + "月");
+                    messageFailInfoResponseReactDto.setCount(failCount);
+
+                    messageInfoResponseReactDtoList.add(messageSuccessInfoResponseReactDto);
+                    messageInfoResponseReactDtoList.add(messageFailInfoResponseReactDto);
+                }
+                break;
+            }
+        }
+        return messageInfoResponseReactDtoList;
     }
 
     /**
