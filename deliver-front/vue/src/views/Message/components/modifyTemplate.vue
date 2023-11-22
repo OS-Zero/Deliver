@@ -334,7 +334,7 @@ defineExpose({
 					checked-children="启用"
 					un-checked-children="禁用" />
 			</a-form-item>
-			<a-form-item :wrapper-col="{ span: 15, offset: 7 }" class="tem-item">
+			<a-form-item :wrapper-col="{ span: 15, offset: 16 }" class="tem-item">
 				<a-button type="primary" @click="handleOk" :loading="updateiconLoading">确认修改</a-button>
 				<a-button style="margin-left: 10px" @click="reset">重置</a-button>
 			</a-form-item>

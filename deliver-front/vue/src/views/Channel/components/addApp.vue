@@ -140,12 +140,10 @@ const handleOk = (): void => {
 
 const handleCancel = (): void => {
 	templateForm.value.resetFields()
-	// userdisabled.value = userdisabled.value.map(item => ({ ...item, disabled: true }))
 	templateItem.channelType = undefined
 	templateItem.appName = ''
 	templateItem.appStatus = 1
-	templateItem.appConfig = ''
-	// channelDisabled.value = true
+	templateItem.appConfig = '{}'
 }
 
 defineExpose({
@@ -194,7 +192,7 @@ defineExpose({
 					checked-children="启用"
 					un-checked-children="禁用" />
 			</a-form-item>
-			<a-form-item :wrapper-col="{ span: 25, offset: 4 }" class="tem-item">
+			<a-form-item :wrapper-col="{ span: 20, offset: 17 }" class="tem-item">
 				<div class="between">
 					<a-button @click="handleCancel">重置</a-button>
 					<a-button type="primary" @click="handleOk" :loading="iconLoading">确认新建</a-button>
@@ -220,7 +218,7 @@ defineExpose({
 	}
 }
 .between {
-	margin: 0;
+	margin-right: 16px;
 	padding: 0;
 	display: flex;
 	justify-content: space-between;
