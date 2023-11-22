@@ -17,9 +17,9 @@
 
     <modules>
         <module>deliver-backend-server</module>
-        <module>deliver-backend-sdk</module>
         <module>deliver-backend-admin</module>
         <module>deliver-backend-common</module>
+        <module>deliver-backend-sdk/deliver-backend-sdk-java</module>
     </modules>
 
     <dependencyManagement>
