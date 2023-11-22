@@ -62,6 +62,8 @@ const addUser = (): void => {
 	if (userItem.value !== '') {
 		if (!sendTestTable.users.includes(userItem.value) || sendTestTable.users.length === 0) {
 			sendTestTable.users.push(userItem.value)
+			// 模拟提交，更新视图
+			sendtest.value?.validate().then(() => {})
 		}
 		userItem.value = ''
 		addUserFlag.value = true
@@ -118,8 +120,15 @@ const clearForm = (): void => {
 	sendtest.value?.resetFields()
 }
 
+const validatePass = async (): Promise<any> => {
+	if (sendTestTable.users.length === 0) {
+		throw new Error('请添加至少一个用户')
+	}
+	await Promise.resolve()
+}
+
 const rules: Record<string, Rule[]> = {
-	users: [{ required: true, message: '请添加至少一个用户', trigger: 'change' }],
+	users: [{ required: true, validator: validatePass, trigger: 'change' }],
 	paramMap: [{ required: true, message: '请输入请求参数', trigger: 'change' }]
 }
 </script>
