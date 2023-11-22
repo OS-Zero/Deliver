@@ -199,7 +199,7 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template>
     @Override
     public void testSendMessage(SendTestRequestDto sendTestRequestDto) {
         try {
-            HttpResponse response = HttpRequest.post("http://localhost:8080/open/sendMessage")
+            HttpResponse response = HttpRequest.post("http://localhost:7070/open/sendMessage")
                     .header("ContentType", "application/json")
                     .body(JSONUtil.toJsonStr(sendTestRequestDto))
                     .execute();

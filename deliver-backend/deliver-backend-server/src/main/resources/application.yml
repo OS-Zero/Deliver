@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 7070
 spring:
   application:
     name: deliver-server

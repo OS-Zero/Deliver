@@ -11,7 +11,7 @@ import type { TableColumnsType } from 'ant-design-vue'
 import { message, Modal } from 'ant-design-vue'
 import type { appTemplate, searchMessage, updateTemp } from './type'
 import searchForm from './components/searchForm.vue'
-import addTemplate from './components/addTemplate.vue'
+import addTemplate from './components/addApp.vue'
 import { getDate } from '@/utils/date'
 import { useStore } from '@/store'
 import {
@@ -394,7 +394,7 @@ const options = ref({
 	search: false,
 	history: false
 })
-const modeList = ref(['text', 'view', 'tree', 'code', 'form']) // 可选模式
+const modeList = ref(['code']) // 可选模式
 
 const remarkValidate = (): void => {
 	const newjsonstr = JSON.stringify(jsonobj.value)
@@ -537,7 +537,8 @@ const a = computed(() => {
 				:total="total"
 				@change="change"
 				showSizeChanger
-				:locale="locale" />
+				:locale="locale"
+				:show-total="(total) => `共 ${total} 条数据`" />
 		</div>
 		<!-- 对表格的操作 -->
 		<div class="showDelete" :style="{ width: `calc(100% - ${a}px)` }" v-if="hasSelected">
@@ -556,7 +557,7 @@ const a = computed(() => {
 	</div>
 	<a-modal
 		v-model:open="open"
-		title="修改 APP 选项"
+		title="修改 APP "
 		width="650px"
 		:footer="null"
 		@cancel="handleCancel">
@@ -596,9 +597,9 @@ const a = computed(() => {
 					checked-children="启用"
 					un-checked-children="禁用" />
 			</a-form-item>
-			<a-form-item :wrapper-col="{ span: 20, offset: 4 }" class="tem-item">
+			<a-form-item :wrapper-col="{ span: 20, offset: 17 }" class="tem-item">
 				<div class="between">
-					<a-button @click="handleCancel">取消修改</a-button>
+					<a-button @click="handleCancel">取消</a-button>
 					<a-button type="primary" @click="handleOk" :loading="iconLoading">确认修改</a-button>
 				</div>
 			</a-form-item>
@@ -690,6 +691,6 @@ const a = computed(() => {
 	display: flex;
 	justify-content: space-between;
 	padding: 0;
-	margin: 0;
+	margin-right: 16px;
 }
 </style>
