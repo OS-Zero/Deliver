@@ -585,9 +585,10 @@ const a = computed(() => {
 					class="editor"
 					v-model="jsonobj"
 					@blur="remarkValidate"
-					currentMode="text"
+					currentMode="code"
 					:modeList="modeList"
-					:options="options" />
+					:options="options"
+					language="cn" />
 			</a-form-item>
 			<a-form-item label="APP 状态" name="appStatus" class="tem-item">
 				<a-switch
