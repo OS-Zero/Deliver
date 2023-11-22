@@ -7,6 +7,7 @@ import com.oszero.deliver.admin.model.dto.response.AppByChannelResponseDto;
 import com.oszero.deliver.admin.model.dto.response.AppSearchResponseDto;
 import com.oszero.deliver.admin.service.AppService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,7 @@ import java.util.List;
  * @author oszero
  * @version 1.0.0
  */
+@Validated
 @RestController
 @RequestMapping("/app")
 @RequiredArgsConstructor
@@ -47,7 +49,7 @@ public class AppController {
      * @return 成功
      */
     @PostMapping("/save")
-    public CommonResult<?> save(@RequestBody AppSaveAndUpdateRequestDto dto) {
+    public CommonResult<?> save(@Valid @RequestBody AppSaveAndUpdateRequestDto dto) {
         appService.save(dto);
         return CommonResult.success();
     }
@@ -59,7 +61,7 @@ public class AppController {
      * @return 成功
      */
     @PostMapping("/updateById")
-    public CommonResult<?> updateById(@RequestBody AppSaveAndUpdateRequestDto dto) {
+    public CommonResult<?> updateById(@Valid @RequestBody AppSaveAndUpdateRequestDto dto) {
         appService.updateById(dto);
         return CommonResult.success();
     }
@@ -71,7 +73,7 @@ public class AppController {
      * @return 成功
      */
     @PostMapping("/updateStatusById")
-    public CommonResult<?> updateStatusById(@RequestBody AppUpdateStatusRequestDto dto) {
+    public CommonResult<?> updateStatusById(@Valid @RequestBody AppUpdateStatusRequestDto dto) {
         appService.updateStatusById(dto);
         return CommonResult.success();
     }
@@ -83,7 +85,7 @@ public class AppController {
      * @return 成功
      */
     @PostMapping("/deleteByIds")
-    public CommonResult<?> deleteByIds(@RequestBody DeleteIdsRequestDto dto) {
+    public CommonResult<?> deleteByIds(@Valid @RequestBody DeleteIdsRequestDto dto) {
         appService.deleteByIds(dto);
         return CommonResult.success();
     }

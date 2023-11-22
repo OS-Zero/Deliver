@@ -1,6 +1,8 @@
 package com.oszero.deliver.admin.model.dto.request;
 
+import com.oszero.deliver.admin.annotation.JsonString;
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -23,6 +25,7 @@ public class AppSaveAndUpdateRequestDto {
      * 应用名称
      */
     @NotBlank
+    @Length(min = 3, max = 20)
     private String appName;
 
     /**
@@ -35,6 +38,7 @@ public class AppSaveAndUpdateRequestDto {
      * 应用信息配置 json
      */
     @NotBlank
+    @JsonString
     private String appConfig;
 
     /**
