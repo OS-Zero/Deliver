@@ -35,7 +35,7 @@ public class SendTestRequestDto {
     /**
      * 不同消息的不同参数
      */
-    @NotNull(message = "消息参数不能为 NULL")
+    @NotEmpty(message = "消息参数不能为空")
     private Map<String, Object> paramMap;
 
     /**

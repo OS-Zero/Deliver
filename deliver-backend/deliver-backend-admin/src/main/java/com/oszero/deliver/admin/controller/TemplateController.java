@@ -7,6 +7,7 @@ import com.oszero.deliver.admin.model.dto.response.MessageTypeResponseDto;
 import com.oszero.deliver.admin.model.dto.response.TemplateSearchResponseDto;
 import com.oszero.deliver.admin.service.TemplateService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +20,7 @@ import java.util.List;
  * @author oszero
  * @version 1.0.0
  */
+@Validated
 @RestController
 @RequestMapping("/template")
 @RequiredArgsConstructor

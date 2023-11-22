@@ -42,7 +42,8 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>
         wrapper.like(StrUtil.isNotBlank(dto.getAppName()), App::getAppName, dto.getAppName())
                 .eq(!Objects.isNull(dto.getChannelType()), App::getChannelType, dto.getChannelType())
                 .gt(!Objects.isNull(dto.getStartTime()), App::getCreateTime, dto.getStartTime())
-                .lt(!Objects.isNull(dto.getStartTime()), App::getCreateTime, dto.getEndTime());
+                .lt(!Objects.isNull(dto.getStartTime()), App::getCreateTime, dto.getEndTime())
+                .orderByDesc(App::getCreateTime);
 
         Page<App> appPage = new Page<>(dto.getCurrentPage(), dto.getPageSize());
         this.page(appPage, wrapper);
@@ -91,6 +92,7 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>
 
     @Override
     public void save(AppSaveAndUpdateRequestDto dto) {
+        checkAppNameIsDuplicate(dto);
         App app = new App();
         BeanUtil.copyProperties(dto, app);
         boolean save = this.save(app);
@@ -113,7 +115,8 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>
     public List<AppByChannelResponseDto> getAppByChannelType(TemplateAddGetByChannelRequestDto dto) {
         Integer channelType = dto.getChannelType();
         LambdaQueryWrapper<App> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(App::getChannelType, channelType);
+        wrapper.eq(App::getChannelType, channelType)
+                .orderByDesc(App::getCreateTime);
         List<App> list = this.list(wrapper);
         return list.stream().map(app -> {
             AppByChannelResponseDto appByChannelResponseDto = new AppByChannelResponseDto();
@@ -133,14 +136,14 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>
             wrapper.eq(App::getAppName, appName);
             App one = this.getOne(wrapper);
             if (!Objects.isNull(one)) {
-                throw new BusinessException("此模板名(" + appName + ")已存在！！！");
+                throw new BusinessException("此 APP 名(" + appName + ")已存在！！！");
             }
         } else {
             wrapper.eq(App::getAppName, appName)
                     .or().eq(App::getAppId, appId);
             List<App> list = this.list(wrapper);
             if (list.size() > 1) {
-                throw new BusinessException("此模板名(" + appName + ")已存在！！！");
+                throw new BusinessException("此 APP 名(" + appName + ")已存在！！！");
             }
         }
     }
