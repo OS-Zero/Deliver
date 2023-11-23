@@ -48,13 +48,13 @@ const routes: RouteRecordRaw[] = [
 				component: async () => await import('@/views/File/index.vue'),
 				meta: {
 					parent: 'home',
-					name: '平台文件管理 - Deliver 企业消息推送平台'
+					title: '平台文件管理 - Deliver 企业消息推送平台'
 				}
 			},
 			{
 				path: 'flowControlRule',
 				name: 'flowControlRule',
-				component: async () => await import('@/views/flowControlRule/index.vue'),
+				component: async () => await import('@/views/FlowControlRule/index.vue'),
 				meta: {
 					parent: 'home',
 					name: '规则配置 - Deliver 企业消息推送平台'
@@ -67,7 +67,7 @@ const routes: RouteRecordRaw[] = [
 		name: '404',
 		component: async () => await import('@/views/404.vue'),
 		meta: {
-			title: 'Deliver'
+			title: 'Deliver 企业消息推送平台'
 		}
 	}
 ]
