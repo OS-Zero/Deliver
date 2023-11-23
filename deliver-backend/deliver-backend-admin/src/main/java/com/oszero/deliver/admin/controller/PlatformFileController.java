@@ -7,8 +7,10 @@ import com.oszero.deliver.admin.model.dto.request.PlatformFileUploadRequestDto;
 import com.oszero.deliver.admin.model.dto.response.PlatformFileSearchResponseDto;
 import com.oszero.deliver.admin.service.PlatformFileService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
@@ -40,14 +42,13 @@ public class PlatformFileController {
     /**
      * 上传平台文件
      *
-     * @param dto          参数
-     * @param platformFile 文件
+     * @param dto 参数
      * @return 成功
      * @throws Exception 异常
      */
     @PostMapping("/uploadFile")
-    public CommonResult<?> uploadFile(@Valid PlatformFileUploadRequestDto dto, @RequestParam("platformFile") MultipartFile platformFile) throws Exception {
-        platformFileService.uploadFile(dto, platformFile);
+    public CommonResult<?> uploadFile(@Valid PlatformFileUploadRequestDto dto) throws Exception {
+        platformFileService.uploadFile(dto);
         return CommonResult.success();
     }
 }

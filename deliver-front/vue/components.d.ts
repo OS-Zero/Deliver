@@ -41,6 +41,7 @@ declare module 'vue' {
     ASwitch: typeof import('ant-design-vue/es')['Switch']
     ATable: typeof import('ant-design-vue/es')['Table']
     ATooltip: typeof import('ant-design-vue/es')['Tooltip']
+    AUploadDragger: typeof import('ant-design-vue/es')['UploadDragger']
     Banner: typeof import('./src/components/Banner/index.vue')['default']
     Code: typeof import('./src/components/Code/index.vue')['default']
     Echarts: typeof import('./src/components/Echarts/index.vue')['default']

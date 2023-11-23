@@ -33,9 +33,8 @@ const templateItem: addTemp = reactive({
 
 const open = ref<boolean>(false)
 
-const labelCol = { span: 4 }
-
-const wrapperCol = { span: 20 }
+const labelCol = { style: { width: '80px' } }
+const wrapperCol = { span: 36 }
 
 const iconLoading = ref<boolean | DelayLoading>(false)
 
@@ -176,7 +175,7 @@ defineExpose({
 					style="width: 70%"
 					@change="selectValues" />
 			</a-form-item>
-			<a-form-item label="APP 配置" name="appConfig" class="tem-item">
+			<a-form-item label="APP 配置" name="appConfig" class="tem-item" :wrapper-col="{ span: 16 }">
 				<json-editor-vue
 					class="editor"
 					v-model="jsonobj"
