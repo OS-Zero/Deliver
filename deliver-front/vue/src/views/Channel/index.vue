@@ -95,7 +95,6 @@ const columns: TableColumnsType = [
 		width: 200
 	}
 ]
-const channelValue = ['', '电话', '短信', '邮件', '钉钉', '企业微信', '飞书']
 
 /**
  * 渲染 data
@@ -468,7 +467,38 @@ const a = computed(() => {
 				<template #bodyCell="{ column, record }">
 					<template v-if="column.key === 'channelType'">
 						<span>
-							{{ channelValue[record.channelType] }}
+							<!-- 根据 appType 的值显示不同的图片 -->
+							<img
+								style="height: 30px; width: 30px"
+								v-if="record.channelType === 1"
+								src="电话.png"
+								alt="电话" />
+							<img
+								style="height: 30px; width: 30px"
+								v-else-if="record.channelType === 2"
+								src="短信.png"
+								alt="短信" />
+							<img
+								style="height: 30px; width: 30px"
+								v-else-if="record.channelType === 3"
+								src="邮件.png"
+								alt="邮件" />
+							<img
+								style="height: 30px; width: 30px"
+								v-else-if="record.channelType === 4"
+								src="钉钉.png"
+								alt="钉钉" />
+							<img
+								style="height: 30px; width: 30px"
+								v-else-if="record.channelType === 5"
+								src="企业微信.png"
+								alt="企业微信" />
+							<img
+								style="height: 30px; width: 30px"
+								v-else-if="record.channelType === 6"
+								src="飞书.png"
+								alt="飞书" />
+							<!-- 添加更多条件根据需要显示不同的图片 -->
 						</span>
 					</template>
 					<template v-if="column.key === 'appStatus'">
