@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import {
 	MessageOutlined,
-	FunnelPlotOutlined,
+	// FunnelPlotOutlined,
 	FileTextOutlined,
 	DashboardOutlined,
 	LeftOutlined,
@@ -93,7 +93,7 @@ const toggleCollapsed = (): void => {
 				</template>
 				<ItemLink itemKey="file-1" info="文件管理" to="file" />
 			</a-sub-menu>
-			<a-sub-menu key="flowControlRule">
+			<!-- <a-sub-menu key="flowControlRule">
 				<template #title>
 					<span>
 						<FunnelPlotOutlined />
@@ -101,7 +101,7 @@ const toggleCollapsed = (): void => {
 					</span>
 				</template>
 				<ItemLink itemKey="flowControlRule-1" info="规则配置" to="flowControlRule" />
-			</a-sub-menu>
+			</a-sub-menu> -->
 		</a-menu>
 	</a-layout-sider>
 	<a-layout

@@ -1,8 +1,6 @@
 package com.oszero.deliver.admin.constant;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 平台文件常量
@@ -28,4 +26,6 @@ public interface PlatformFileConstant {
     Long DING_VOICE_MAX_SIZE = 2L * 1024 * 1024;
 
     Long DING_FILE_MAX_SIZE = 20L * 1024 * 1024;
+
+    Map<String, String> FILE_TYPE_NAME_MAP = new HashMap<>();
 }

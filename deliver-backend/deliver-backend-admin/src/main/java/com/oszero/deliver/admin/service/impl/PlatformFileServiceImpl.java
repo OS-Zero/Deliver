@@ -33,14 +33,30 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * @author 23088
- * @description 针对表【platform_file(平台文件表)】的数据库操作Service实现
- * @createDate 2023-11-14 19:38:02
+ * 针对表【platform_file(平台文件表)】的数据库操作Service实现
+ *
+ * @author oszero
+ * @version 1.0.0
  */
 @Service
 @RequiredArgsConstructor
 public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, PlatformFile>
         implements PlatformFileService {
+
+    static {
+        PlatformFileConstant.FILE_TYPE_NAME_MAP.put("1-image", "钉钉图片");
+        PlatformFileConstant.FILE_TYPE_NAME_MAP.put("1-voice", "钉钉语音");
+        PlatformFileConstant.FILE_TYPE_NAME_MAP.put("1-video", "钉钉视频");
+        PlatformFileConstant.FILE_TYPE_NAME_MAP.put("1-file", "钉钉文件");
+        PlatformFileConstant.FILE_TYPE_NAME_MAP.put("3-image", "飞书图片");
+        PlatformFileConstant.FILE_TYPE_NAME_MAP.put("3-opus", "飞书 opus 音频文件");
+        PlatformFileConstant.FILE_TYPE_NAME_MAP.put("3-mp4", "飞书 mp4 视频文件");
+        PlatformFileConstant.FILE_TYPE_NAME_MAP.put("3-pdf", "飞书 pdf 格式文件");
+        PlatformFileConstant.FILE_TYPE_NAME_MAP.put("3-doc", "飞书 doc 格式文件");
+        PlatformFileConstant.FILE_TYPE_NAME_MAP.put("3-xls", "飞书 xls 格式文件");
+        PlatformFileConstant.FILE_TYPE_NAME_MAP.put("3-ppt", "飞书 ppt 格式文件");
+        PlatformFileConstant.FILE_TYPE_NAME_MAP.put("3-stream", "飞书 stream 格式文件");
+    }
 
     private final DingUtils dingUtils;
     private final FeiShuUtils feiShuUtils;
@@ -99,14 +115,14 @@ public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, Pla
                         throw new BusinessException("不支持 " + fileFormat + " 格式的语音！！！");
                     }
                     if (fileSize > PlatformFileConstant.DING_VOICE_MAX_SIZE) {
-                        throw new BusinessException("图片最大为：2M！！！");
+                        throw new BusinessException("语音最大为：2M！！！");
                     }
                 } else {
                     if (!PlatformFileConstant.DING_FILE_FORMAT_SET.contains(fileFormat.toLowerCase(Locale.ROOT))) {
                         throw new BusinessException("不支持 " + fileFormat + " 格式的文件！！！");
                     }
                     if (fileSize > PlatformFileConstant.DING_FILE_MAX_SIZE) {
-                        throw new BusinessException("图片最大为：20M！！！");
+                        throw new BusinessException("文件最大为：20M！！！");
                     }
                 }
                 fileKey = dingUtils.uploadDingFile(accessToken, platformFileDto);
@@ -163,14 +179,17 @@ public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, Pla
                 .le(!Objects.isNull(dto.getEndTime()), PlatformFile::getCreateTime, dto.getStartTime())
                 .orderByDesc(PlatformFile::getCreateTime);
         Page<PlatformFile> platformFilePage = new Page<>(dto.getCurrentPage(), dto.getPageSize());
+
         this.page(platformFilePage, wrapper);
 
         Page<PlatformFileSearchResponseDto> platformFileSearchResponseDtoPage = new Page<>(platformFilePage.getPages(), platformFilePage.getSize());
         platformFileSearchResponseDtoPage.setRecords(platformFilePage.getRecords().stream().map(platformFile -> {
             PlatformFileSearchResponseDto platformFileSearchResponseDto = new PlatformFileSearchResponseDto();
             BeanUtil.copyProperties(platformFile, platformFileSearchResponseDto);
+            platformFileSearchResponseDto.setFileType(PlatformFileConstant.FILE_TYPE_NAME_MAP.get(platformFile.getFileType()));
             return platformFileSearchResponseDto;
         }).collect(Collectors.toList()));
+
         platformFileSearchResponseDtoPage.setTotal(platformFilePage.getTotal());
 
         return platformFileSearchResponseDtoPage;
