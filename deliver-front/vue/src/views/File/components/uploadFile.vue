@@ -102,7 +102,7 @@ const rules: Record<string, Rule[]> = {
 	file: [{ required: true, validator: validateFileList, trigger: 'change' }]
 }
 // 表单对齐设置
-const labelCol = { style: { width: '80px' } }
+const labelCol = { style: { width: '90px' } }
 const wrapperCol = { span: 20 }
 </script>
 
@@ -199,7 +199,7 @@ const wrapperCol = { span: 20 }
 					</a-select-option>
 				</a-select>
 			</a-form-item>
-			<a-form-item label="AppId" name="appId" style="margin-left: 10px">
+			<a-form-item label="关联 AppId" name="appId" style="margin-left: 10px">
 				<a-input
 					:maxlength="50"
 					v-model:value="uploadFileTable.appId"

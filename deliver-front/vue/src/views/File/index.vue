@@ -8,7 +8,7 @@ import { platformFile, searchPlatformFile } from './type'
 import { getPagePlatformFile } from '@/api/platformFile'
 import searchForm from './components/searchForm.vue'
 import uploadFile from './components/uploadFile.vue'
-import { DownOutlined, UpOutlined } from '@ant-design/icons-vue'
+import { DownOutlined, UpOutlined, CopyTwoTone } from '@ant-design/icons-vue'
 /**
  * 表格初始化
  */
@@ -218,7 +218,25 @@ onMounted(() => {
 				<template #bodyCell="{ column, record }">
 					<!-- 表格数据渲染 -->
 					<template v-if="column.key === 'appType'">
-						<span>{{ record.appType }}</span>
+						<span>
+							<!-- 根据 appType 的值显示不同的图片 -->
+							<img
+								style="height: 30px; width: 30px"
+								v-if="record.appType === 1"
+								src="钉钉.png"
+								alt="钉钉" />
+							<img
+								style="height: 30px; width: 30px"
+								v-else-if="record.appType === 2"
+								src="企业微信.png"
+								alt="企业微信" />
+							<img
+								style="height: 30px; width: 30px"
+								v-else-if="record.appType === 3"
+								src="飞书.png"
+								alt="飞书" />
+							<!-- 添加更多条件根据需要显示不同的图片 -->
+						</span>
 					</template>
 					<template v-if="column.key === 'operation'">
 						<a-button
@@ -247,7 +265,7 @@ onMounted(() => {
 							FileKey：
 							<strong>
 								{{ record.fileKey }}
-								<a-button type="link" @click="copyFileKey(record.fileKey)">copy</a-button>
+								<CopyTwoTone @click="copyFileKey(record.fileKey)" />
 							</strong>
 						</a-col>
 						<a-col :span="6">

@@ -37,11 +37,13 @@ const setShowAbout = (open: boolean): void => {
 					<div style="margin-left: 60px">
 						<p>产品：Deliver 企业消息推送平台</p>
 						<p>版本：v1.0.0</p>
-						<p>https://os-zero.gitee.io/website/</p>
+						<a target="_blank" href="https://os-zero.gitee.io/deliver-website">
+							https://os-zero.gitee.io/deliver-website
+						</a>
 					</div>
 				</div>
 			</a-modal>
-			<a target="_blank" href="https://os-zero.gitee.io/website/" style="color: #8b8b8b">
+			<a target="_blank" href="https://os-zero.gitee.io/deliver-website" style="color: #8b8b8b">
 				<QuestionCircleOutlined />
 			</a>
 			<a href="https://gitee.com/OS-Zero/deliver" target="_blank" style="color: #8b8b8b">

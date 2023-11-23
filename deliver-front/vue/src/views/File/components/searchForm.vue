@@ -67,7 +67,10 @@ defineExpose({
 		<a-row :gutter="24">
 			<a-col :span="8">
 				<a-form-item name="fileName" label="文件名">
-					<a-input v-model:value="searchPage.fileName" placeholder="请输入文件名"></a-input>
+					<a-input
+						:maxlength="50"
+						v-model:value="searchPage.fileName"
+						placeholder="请输入文件名"></a-input>
 				</a-form-item>
 			</a-col>
 			<a-col :span="8">
@@ -147,12 +150,18 @@ defineExpose({
 			</a-col>
 			<a-col :span="8" v-if="expand">
 				<a-form-item name="templateName" label="FileKey">
-					<a-input v-model:value="searchPage.fileKey" placeholder="请输入 FileKey"></a-input>
+					<a-input
+						:maxlength="100"
+						v-model:value="searchPage.fileKey"
+						placeholder="请输入 FileKey"></a-input>
 				</a-form-item>
 			</a-col>
 			<a-col :span="8" v-if="expand">
 				<a-form-item name="appId" label="AppId">
-					<a-input v-model:value="searchPage.appId" placeholder="请输入 AppId"></a-input>
+					<a-input
+						:maxlength="50"
+						v-model:value="searchPage.appId"
+						placeholder="请输入 AppId"></a-input>
 				</a-form-item>
 			</a-col>
 			<a-col :span="16" v-if="expand">
