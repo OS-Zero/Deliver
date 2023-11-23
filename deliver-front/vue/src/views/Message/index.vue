@@ -25,7 +25,6 @@ import {
 	changeTable,
 	getPushRange,
 	getUsersType,
-	getChannelType,
 	getMessageTypeArr,
 	getAllMessage
 } from '@/utils/date'
@@ -77,7 +76,7 @@ const columns: TableColumnsType = [
 
 const innerColumns = [
 	{
-		title: '渠道选择',
+		title: '渠道类型',
 		dataIndex: 'channelType',
 		key: 'channelType'
 	},
@@ -489,7 +488,40 @@ const a = computed(() => {
 					<a-table :columns="innerColumns" :data-source="innertemplatedata" :pagination="false">
 						<template #bodyCell="{ column, record }">
 							<template v-if="column.key === 'channelType'">
-								<span>{{ getChannelType(record.channelType) }}</span>
+								<span>
+									<!-- 根据 appType 的值显示不同的图片 -->
+									<img
+										style="height: 30px; width: 30px"
+										v-if="record.channelType === 1"
+										src="电话.png"
+										alt="电话" />
+									<img
+										style="height: 30px; width: 30px"
+										v-else-if="record.channelType === 2"
+										src="短信.png"
+										alt="短信" />
+									<img
+										style="height: 30px; width: 30px"
+										v-else-if="record.channelType === 3"
+										src="邮件.png"
+										alt="邮件" />
+									<img
+										style="height: 30px; width: 30px"
+										v-else-if="record.channelType === 4"
+										src="钉钉.png"
+										alt="钉钉" />
+									<img
+										style="height: 30px; width: 30px"
+										v-else-if="record.channelType === 5"
+										src="企业微信.png"
+										alt="企业微信" />
+									<img
+										style="height: 30px; width: 30px"
+										v-else-if="record.channelType === 6"
+										src="飞书.png"
+										alt="飞书" />
+									<!-- 添加更多条件根据需要显示不同的图片 -->
+								</span>
 							</template>
 							<template v-if="column.key === 'messageType'">
 								<span>{{ getMessageTypeArr(record.messageType) }}</span>

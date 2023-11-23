@@ -40,11 +40,6 @@ export const getUsersType = (s: number): string => {
 	return usersarr[s]
 }
 
-export const getChannelType = (s: number): string => {
-	const ChannelType = ['', '电话', '短信', '邮件', '钉钉', '企业微信', '飞书']
-	return ChannelType[s]
-}
-
 export const getMessageTypeArr = (s: string): string | undefined => {
 	const arr = [
 		{ id: '1', name: 'text 消息' },
