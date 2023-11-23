@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -46,7 +47,10 @@ public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, Pla
     private final AppService appService;
 
     @Override
-    public void uploadFile(PlatformFileUploadRequestDto dto, MultipartFile platformFile) throws IOException {
+    public void uploadFile(PlatformFileUploadRequestDto dto) throws IOException {
+        // 获取文件
+        MultipartFile platformFile = dto.getPlatformFile();
+
         // 获取 APP 类型枚举
         Integer appType = dto.getAppType();
         AppTypeEnum appTypeEnum = AppTypeEnum.getInstanceByCode(appType);
@@ -78,7 +82,7 @@ public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, Pla
         // 设置 PlatformFile 实体
         PlatformFile platformFileEntity = new PlatformFile();
         platformFileEntity.setFileName(dto.getFileName());
-        platformFileEntity.setFileType(dto.getFileType());
+        platformFileEntity.setFileType(dto.getAppType() + "-" + dto.getFileType());
         platformFileEntity.setAppType(dto.getAppType());
         platformFileEntity.setAppId(dto.getAppId());
         String fileKey = "";
@@ -91,23 +95,21 @@ public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, Pla
                 String accessToken = dingUtils.getAccessToken(dingApp);
 
                 if (PlatformFileTypeEnum.DING_VOICE.getFileType().equals(dto.getFileType())) {
-                    if (!PlatformFileConstant.DING_FILE_FORMAT_SET.contains(fileFormat)) {
+                    if (!PlatformFileConstant.DING_FILE_FORMAT_SET.contains(fileFormat.toLowerCase(Locale.ROOT))) {
                         throw new BusinessException("不支持 " + fileFormat + " 格式的语音！！！");
                     }
                     if (fileSize > PlatformFileConstant.DING_VOICE_MAX_SIZE) {
                         throw new BusinessException("图片最大为：2M！！！");
                     }
-                    fileKey = dingUtils.uploadDingFile(accessToken, platformFileDto);
                 } else {
-                    if (!PlatformFileConstant.DING_FILE_FORMAT_SET.contains(fileFormat)) {
+                    if (!PlatformFileConstant.DING_FILE_FORMAT_SET.contains(fileFormat.toLowerCase(Locale.ROOT))) {
                         throw new BusinessException("不支持 " + fileFormat + " 格式的文件！！！");
                     }
                     if (fileSize > PlatformFileConstant.DING_FILE_MAX_SIZE) {
                         throw new BusinessException("图片最大为：20M！！！");
                     }
-
-                    fileKey = dingUtils.uploadDingFile(accessToken, platformFileDto);
                 }
+                fileKey = dingUtils.uploadDingFile(accessToken, platformFileDto);
                 break;
             }
             case WECHAT: {
@@ -122,7 +124,7 @@ public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, Pla
                 String tenantAccessToken = feiShuUtils.getTenantAccessToken(feiShuApp);
                 // 发送
                 if (PlatformFileTypeEnum.FEI_SHU_IMAGE.getFileType().equals(dto.getFileType())) {
-                    if (!PlatformFileConstant.FEI_SHU_IMAGE_FORMAT_SET.contains(fileFormat)) {
+                    if (!PlatformFileConstant.FEI_SHU_IMAGE_FORMAT_SET.contains(fileFormat.toLowerCase(Locale.ROOT))) {
                         throw new BusinessException("不支持 " + fileFormat + " 格式的图片！！！");
                     }
                     if (fileSize > PlatformFileConstant.FEI_SHU_IMAGE_FILE_MAX_SIZE) {
@@ -130,7 +132,7 @@ public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, Pla
                     }
                     fileKey = feiShuUtils.uploadFeiShuImageFile(tenantAccessToken, platformFileDto);
                 } else {
-                    if (!PlatformFileConstant.FEI_SHU_FILE_FORMAT_SET.contains(fileFormat)) {
+                    if (!PlatformFileConstant.FEI_SHU_FILE_FORMAT_SET.contains(fileFormat.toLowerCase(Locale.ROOT))) {
                         throw new BusinessException("不支持 " + fileFormat + " 格式的文件！！！");
                     }
                     if (fileSize > PlatformFileConstant.FEI_SHU_FILE_MAX_SIZE) {
@@ -158,7 +160,8 @@ public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, Pla
                 .like(StrUtil.isNotBlank(dto.getFileKey()), PlatformFile::getFileKey, dto.getFileKey())
                 .eq(!Objects.isNull(dto.getAppId()), PlatformFile::getAppId, dto.getAppId())
                 .ge(!Objects.isNull(dto.getStartTime()), PlatformFile::getCreateTime, dto.getStartTime())
-                .le(!Objects.isNull(dto.getEndTime()), PlatformFile::getCreateTime, dto.getStartTime());
+                .le(!Objects.isNull(dto.getEndTime()), PlatformFile::getCreateTime, dto.getStartTime())
+                .orderByDesc(PlatformFile::getCreateTime);
         Page<PlatformFile> platformFilePage = new Page<>(dto.getCurrentPage(), dto.getPageSize());
         this.page(platformFilePage, wrapper);
 

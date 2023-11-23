@@ -1,6 +1,7 @@
 package com.oszero.deliver.admin.model.dto.request;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -37,4 +38,10 @@ public class PlatformFileUploadRequestDto {
      */
     @NotNull
     private Long appId;
+
+    /**
+     * 平台文件
+     */
+    @NotNull
+    private MultipartFile platformFile;
 }

@@ -6,7 +6,6 @@ import com.oszero.deliver.admin.model.dto.request.PlatformFileSearchRequestDto;
 import com.oszero.deliver.admin.model.dto.request.PlatformFileUploadRequestDto;
 import com.oszero.deliver.admin.model.dto.response.PlatformFileSearchResponseDto;
 import com.oszero.deliver.admin.model.entity.PlatformFile;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -20,11 +19,10 @@ public interface PlatformFileService extends IService<PlatformFile> {
     /**
      * 上传平台文件
      *
-     * @param dto          参数
-     * @param platformFile 文件
+     * @param dto 参数
      * @throws IOException 异常
      */
-    void uploadFile(PlatformFileUploadRequestDto dto, MultipartFile platformFile) throws IOException;
+    void uploadFile(PlatformFileUploadRequestDto dto) throws IOException;
 
     /**
      * 分页搜索平台文件

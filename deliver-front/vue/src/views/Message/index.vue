@@ -345,8 +345,8 @@ const searchTemplate = ({ page, pageSize, opt }: SearchOptions = {}): void => {
 	getTemplatePages(searchNeedMes)
 		.then((res) => {
 			templateTable.length = 0
+			total.value = res.data.total
 			if (res.data.records.length > 0) {
-				total.value = res.data.total
 				res.data.records.forEach((item: any) => {
 					item = changeTable(item)
 					templateTable.push(item)
