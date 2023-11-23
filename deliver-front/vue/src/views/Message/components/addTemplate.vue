@@ -295,9 +295,11 @@ defineExpose({
 					checked-children="启用"
 					un-checked-children="禁用" />
 			</a-form-item>
-			<a-form-item :wrapper-col="{ span: 15, offset: 16 }" class="tem-item">
-				<a-button type="primary" @click="handleOk" :loading="iconLoading">确认新建</a-button>
-				<a-button style="margin-left: 10px" @click="handleCancel">重置</a-button>
+			<a-form-item :wrapper-col="{ span: 25, offset: 6 }" class="tem-item">
+				<a-button @click="handleCancel">重置</a-button>
+				<a-button style="margin-left: 10px" type="primary" @click="handleOk" :loading="iconLoading">
+					确认新建
+				</a-button>
 			</a-form-item>
 		</a-form>
 	</a-modal>
