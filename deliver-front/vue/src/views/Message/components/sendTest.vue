@@ -59,14 +59,18 @@ const onClose = (): void => {
 const addUserFlag = ref<boolean>(true)
 
 const addUser = (): void => {
-	if (userItem.value !== '') {
+	if (userItem.value.trim() !== '') {
 		if (!sendTestTable.users.includes(userItem.value) || sendTestTable.users.length === 0) {
 			sendTestTable.users.push(userItem.value)
 			// 模拟提交，更新视图
 			sendtest.value?.validate().then(() => {})
+			addUserFlag.value = true
+		} else {
+			message.warn('已存在此用户 ID')
 		}
 		userItem.value = ''
-		addUserFlag.value = true
+	} else {
+		message.error('请输入用户 ID')
 	}
 }
 
@@ -155,20 +159,19 @@ const rules: Record<string, Rule[]> = {
 				<a-input-group compact v-if="!addUserFlag">
 					<a-input
 						v-model:value="userItem"
+						:maxlength="100"
 						placeholder="请输入用户 ID 添加至用户列表"
 						style="width: 452px"></a-input>
 					<a-button type="primary" @click="addUser">添加</a-button>
 				</a-input-group>
 			</a-form-item>
 			<a-form-item label="用户列表" name="users">
-				<a-list
-					size="small"
-					bordered
-					v-model:value="sendTestTable.users"
-					:data-source="sendTestTable.users">
+				<a-list bordered v-model:value="sendTestTable.users" :data-source="sendTestTable.users">
 					<template #renderItem="{ item }">
 						<a-list-item>
-							{{ item }}
+							<div style="width: 80%; word-wrap: break-word; overflow-wrap: break-word">
+								{{ item }}
+							</div>
 							<template #actions>
 								<a @click="deleteUserItem(item)">删除</a>
 							</template>

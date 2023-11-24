@@ -33,8 +33,8 @@ const clearForm = (): void => {
 	searchPage.appName = undefined
 	searchPage.channelType = undefined
 	selectedRange.value = [null, null]
-	searchPage.startTime = ''
-	searchPage.endTime = ''
+	searchPage.startTime = undefined
+	searchPage.endTime = undefined
 	formRef.value?.resetFields()
 }
 

@@ -20,7 +20,7 @@ service.interceptors.response.use(
 		if (res?.data.code === 200) return res.data
 		else {
 			void message.error(`操作失败，${res?.data.errorMessage} (＞︿＜)`)
-			return res?.data.errorMessage
+			return res?.data
 		}
 	},
 	async (err) => {
