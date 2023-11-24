@@ -63,7 +63,7 @@ const addUser = (): void => {
 		if (!sendTestTable.users.includes(userItem.value) || sendTestTable.users.length === 0) {
 			sendTestTable.users.push(userItem.value)
 			// 模拟提交，更新视图
-			sendtest.value?.validate().then(() => {})
+			sendtest.value?.validate('users').then(() => {})
 			addUserFlag.value = true
 		} else {
 			message.warn('已存在此用户 ID')

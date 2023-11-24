@@ -36,6 +36,7 @@ const clearForm = (): void => {
 	searchPage.startTime = undefined
 	searchPage.endTime = undefined
 	formRef.value?.resetFields()
+	emit('mes')
 }
 
 const onRangeChange = (
@@ -67,7 +68,10 @@ defineExpose({
 		<a-row :gutter="24">
 			<a-col :span="8">
 				<a-form-item name="templateName" label="APP 名称">
-					<a-input v-model:value="searchPage.appName" placeholder="请输入 APP 名称"></a-input>
+					<a-input
+						:maxlength="20"
+						v-model:value="searchPage.appName"
+						placeholder="请输入 APP 名称"></a-input>
 				</a-form-item>
 			</a-col>
 			<a-col :span="8">
