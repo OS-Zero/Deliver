@@ -82,6 +82,11 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>
 
     @Override
     public void updateById(AppSaveAndUpdateRequestDto dto) {
+        // 去掉两边空格
+        dto.setAppName(dto.getAppName().trim());
+        // 去重判断
+        checkAppNameIsDuplicate(dto);
+
         App app = new App();
         BeanUtil.copyProperties(dto, app);
         boolean update = this.updateById(app);
@@ -92,7 +97,11 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>
 
     @Override
     public void save(AppSaveAndUpdateRequestDto dto) {
+        // 去掉两边空格
+        dto.setAppName(dto.getAppName().trim());
+        // 去重判断
         checkAppNameIsDuplicate(dto);
+
         App app = new App();
         BeanUtil.copyProperties(dto, app);
         boolean save = this.save(app);
@@ -126,7 +135,7 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>
     }
 
     private void checkAppNameIsDuplicate(AppSaveAndUpdateRequestDto dto) {
-        String appName = dto.getAppName().trim();
+        String appName = dto.getAppName();
         Long appId = dto.getAppId();
 
         LambdaQueryWrapper<App> wrapper = new LambdaQueryWrapper<>();

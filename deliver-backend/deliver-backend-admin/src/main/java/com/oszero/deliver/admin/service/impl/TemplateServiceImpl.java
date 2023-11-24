@@ -99,6 +99,9 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template>
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateById(TemplateSaveAndUpdateRequestDto dto) {
+        // 去掉两边空格
+        dto.setTemplateName(dto.getTemplateName().trim());
+
         checkTemplateNameIsDuplicate(dto);
 
         Template template = new Template();
@@ -132,6 +135,9 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template>
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void save(TemplateSaveAndUpdateRequestDto dto) {
+        // 去掉两边空格
+        dto.setTemplateName(dto.getTemplateName().trim());
+
         checkTemplateNameIsDuplicate(dto);
 
         Template template = new Template();
@@ -151,7 +157,7 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template>
     }
 
     private void checkTemplateNameIsDuplicate(TemplateSaveAndUpdateRequestDto dto) {
-        String templateName = dto.getTemplateName().trim();
+        String templateName = dto.getTemplateName();
         Long templateId = dto.getTemplateId();
 
         LambdaQueryWrapper<Template> wrapper = new LambdaQueryWrapper<>();

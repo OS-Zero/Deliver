@@ -79,6 +79,15 @@ const rules: Record<string, Rule[]> = {
 const templateForm = ref()
 
 const addModules = (): void => {
+	// 重置初始值
+	templateItem.templateName = ''
+	templateItem.pushRange = undefined
+	templateItem.usersType = undefined
+	templateItem.pushWays = ''
+	templateItem.templateStatus = 0
+	templateItem.appId = undefined
+	templateItem.channelType = undefined
+	templateItem.messageType = ''
 	open.value = true
 }
 
@@ -181,12 +190,9 @@ const handleOk = (): void => {
 	templateForm.value
 		.validate()
 		.then(() => {
-			// eslint-disable-next-line
-			templateItem.templateStatus = templateItem.templateStatus === true ? 1 : 0
 			// 处理templateItem的pushways
 			templateItem.pushWays = getPushWays(templateItem.channelType, templateItem.messageType)
 			emit('add')
-			handleCancel()
 		})
 		.catch((error) => {
 			console.log('error', error)
@@ -194,6 +200,7 @@ const handleOk = (): void => {
 }
 
 const handleCancel = (): void => {
+	iconLoading.value = false
 	templateForm.value.resetFields()
 	userdisabled.value = userdisabled.value.map((item) => ({ ...item, disabled: true }))
 	templateItem.channelType = undefined
@@ -299,7 +306,9 @@ defineExpose({
 				<a-switch
 					v-model:checked="templateItem.templateStatus"
 					checked-children="启用"
-					un-checked-children="禁用" />
+					un-checked-children="禁用"
+					:checkedValue="1"
+					:unCheckedValue="0" />
 			</a-form-item>
 			<a-form-item :wrapper-col="{ span: 25, offset: 6 }" class="tem-item">
 				<a-button @click="handleCancel">重置</a-button>

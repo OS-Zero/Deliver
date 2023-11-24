@@ -2,7 +2,6 @@
 import type { Rule } from 'ant-design-vue/es/form'
 import { ref, reactive, watch } from 'vue'
 import type { modiTemp } from '../type'
-import { getPushWays } from '@/utils/date'
 import { getApp, getMessageType } from '@/api/message'
 
 // 新增操作
@@ -192,13 +191,7 @@ const handleOk = (): void => {
 	templateForm.value
 		.validate()
 		.then(() => {
-			// eslint-disable-next-line
-			updateTemp.templateStatus = updateTemp.templateStatus ? 1 : 0
-			// 处理templateItem的pushways
-			updateTemp.pushWays = getPushWays(updateTemp.channelType as string, updateTemp.messageType)
-			updateiconLoading.value = true
 			emit('update')
-			handleCancel()
 		})
 		.catch((error) => {
 			console.log('error', error)
@@ -206,6 +199,7 @@ const handleOk = (): void => {
 }
 
 const handleCancel = (): void => {
+	updateiconLoading.value = false
 	channelDisabled.value = false
 	messageDisabled.value = false
 	appDisabled.value = false
@@ -228,10 +222,6 @@ const reset = (): void => {
 	channelDisabled.value = true
 	userdisabled.value = userdisabled.value.map((item) => ({ ...item, disabled: true }))
 }
-
-// const getComChannel = computed(() => {
-//   return getChannelType(updateTemp.channelType as number)
-// })
 
 watch(
 	() => updateTemp.channelType,
@@ -338,6 +328,8 @@ defineExpose({
 			<a-form-item label="模板状态" name="templateStatus" class="tem-item">
 				<a-switch
 					v-model:checked="updateTemp.templateStatus"
+					:checkedValue="1"
+					:unCheckedValue="0"
 					checked-children="启用"
 					un-checked-children="禁用" />
 			</a-form-item>
