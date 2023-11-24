@@ -35,9 +35,9 @@ const wrapperCol = { span: 36 }
 
 const updateDate = ref<updateTemp>({})
 
-const jsonstr = ref<string>('')
+const jsonstr = ref<string>('{}')
 
-const jsonobj = ref<object>({})
+const jsonobj = ref<object>(JSON.parse(jsonstr.value))
 
 const update = (appData): void => {
 	open.value = true
@@ -137,13 +137,12 @@ const addtemplate = ref()
 /// 新增操作
 const saveApp = (): void => {
 	const saveApp = addtemplate.value.templateItem
-	console.warn(saveApp)
 	addAppItem(saveApp)
 		.then((res) => {
 			if (res.code === 200) {
 				void message.success('新增成功~ (*^▽^*)')
 				addtemplate.value.open = false
-				searchTemplate({ opt: 2 }) // 更新表单
+				searchTemplate({ page: 1, pageSize: pageSize.value, opt: 2 }) // 更新表单
 				addtemplate.value.iconLoading = false
 			}
 		})
@@ -181,7 +180,7 @@ const startDelete = (): void => {
 		.then((res) => {
 			if (res.code === 200) {
 				void message.success('删除成功~ (*^▽^*)')
-				searchTemplate({ opt: 4 }) //
+				searchTemplate({ page: 1, pageSize: pageSize.value, opt: 2 }) //
 			}
 			state.loading = false
 		})
@@ -215,7 +214,7 @@ const onDelete = (id: number): void => {
 		.then((res) => {
 			if (res.code === 200) {
 				void message.success('删除成功~ (*^▽^*)')
-				searchTemplate({ opt: 4 }) //
+				searchTemplate({ page: 1, pageSize: pageSize.value, opt: 2 }) //
 			}
 			state.loading = false
 		})
@@ -242,27 +241,6 @@ const showDeleteConfirm = (): void => {
 	})
 }
 
-/// 修改操作
-const changeStatus = (id: number, status: number | boolean): void => {
-	// eslint-disable-next-line
-	const sta = status === true ? 1 : 0
-	const obj = {
-		appId: id,
-		appStatus: sta
-	}
-	updateAppStatus(obj)
-		.then((res) => {
-			if (res.code === 200) {
-				void message.success('修改成功~ (*^▽^*)')
-				searchTemplate({ opt: 3 }) // 更新表单
-			}
-		})
-		.catch((err) => {
-			void message.error('修改失败，请检查网络~ (＞︿＜)')
-			console.error('An error occurred:', err)
-		})
-}
-
 /// 查询操作
 const searchItem: searchMessage = reactive({
 	appName: undefined,
@@ -272,13 +250,17 @@ const searchItem: searchMessage = reactive({
 	startTime: undefined,
 	endTime: undefined
 })
-
+// 表格加载中标志
+const tableLoadFlag = ref<boolean>(true)
+/// 分页参数
 const total = ref()
 
 const current = ref()
 
+const pageSize = ref()
+
 const change = (page: number, pageSize: number): void => {
-	searchTemplate({ page, pageSize })
+	searchTemplate({ page, pageSize, opt: 1 })
 }
 
 const locale = {
@@ -291,22 +273,22 @@ const locale = {
 
 // 条件查询
 const searchTemplate = ({ page, pageSize, opt }: SearchOptions = {}): void => {
+	tableLoadFlag.value = true
 	// 对象解构
 	const { perid, ...rest } = searchform.value.searchPage
 	console.log(perid)
 	const searchNeedMes = { ...rest }
-	console.warn(searchNeedMes)
 	searchNeedMes.currentPage = page
 	searchNeedMes.pageSize = pageSize
 	getAppInfo(searchNeedMes)
 		.then((res) => {
 			templateTable.length = 0
+			current.value = page
+			tableLoadFlag.value = false
 			if (res.data.records.length > 0) {
 				total.value = res.data.total
 				res.data.records.forEach((item: any) => {
 					item.createTime = getDate(item.createTime)
-					// eslint-disable-next-line
-					item.appStatus = item.appStatus === 1 ? true : false
 					item.key = item.appId
 					const i = item
 					templateTable.push(i)
@@ -319,7 +301,6 @@ const searchTemplate = ({ page, pageSize, opt }: SearchOptions = {}): void => {
 					void message.success('未查询到任何数据   ≧ ﹏ ≦')
 				}
 			}
-			console.warn('查询数据', templateTable)
 			searchform.value.iconLoading = false
 		})
 		.catch((err) => {
@@ -329,21 +310,30 @@ const searchTemplate = ({ page, pageSize, opt }: SearchOptions = {}): void => {
 		})
 }
 
-const handleCancel = (): void => {
-	// userdisabled.value = userdisabled.value.map(item => ({ ...item, disabled: true }))
-	updateDate.value.channelType = undefined
-	updateDate.value.appName = ''
-	updateDate.value.appStatus = 1
-	updateDate.value.appConfig = ''
-	open.value = false
+/// 修改操作
+const changeStatus = (id: number, status: number): void => {
+	// eslint-disable-next-line
+	const obj = {
+		appId: id,
+		appStatus: status
+	}
+	updateAppStatus(obj)
+		.then((res) => {
+			if (res.code === 200) {
+				message.success('修改成功~ (*^▽^*)')
+			}
+		})
+		.catch((err) => {
+			void message.error('修改失败，请检查网络~ (＞︿＜)')
+			console.error('An error occurred:', err)
+		})
 }
-
+/// 修改 APP
 const templateForm = ref()
 
 interface DelayLoading {
 	delay: number
 }
-
 const iconLoading = ref<boolean | DelayLoading>(false)
 
 const handleOk = (): void => {
@@ -351,14 +341,12 @@ const handleOk = (): void => {
 	templateForm.value
 		.validate()
 		.then(() => {
-			// eslint-disable-next-line
-			updateDate.value.appStatus = updateDate.value.appStatus === true ? 1 : 0
 			updateDate.value.appConfig = JSON.stringify(jsonobj.value)
 			updateAppItem(updateDate.value)
 				.then((res) => {
 					if (res.code === 200) {
 						void message.success('修改成功~ (*^▽^*)')
-						searchTemplate({ opt: 3 }) // 更新表单
+						searchTemplate({ page: current.value, pageSize: pageSize.value, opt: 2 }) // 更新表单
 					}
 				})
 				.catch((err) => {
@@ -372,9 +360,29 @@ const handleOk = (): void => {
 		})
 }
 
+const handleCancel = (): void => {
+	// userdisabled.value = userdisabled.value.map(item => ({ ...item, disabled: true }))
+	updateDate.value.channelType = undefined
+	updateDate.value.appName = ''
+	updateDate.value.appStatus = 1
+	updateDate.value.appConfig = ''
+	open.value = false
+}
+const jsonChange = () => {
+	templateForm.value?.validate('appConfig').then(() => {})
+}
+
+const appConfigValidate = async (): Promise<any> => {
+	const newjsonstr = JSON.stringify(jsonobj.value)
+	if (newjsonstr == '{}') {
+		throw new Error('请正确输入 APP 配置')
+	}
+	await Promise.resolve()
+}
+
 const rules: Record<string, Rule[]> = {
 	appName: [
-		{ required: true, message: '请输入模板名', trigger: 'change' },
+		{ required: true, message: '请输入 APP 名', trigger: 'change' },
 		{ min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
 	],
 	channelType: [
@@ -384,7 +392,7 @@ const rules: Record<string, Rule[]> = {
 			trigger: 'change'
 		}
 	],
-	appConfig: [{ required: true, message: '请输入 APP 配置', trigger: 'change' }],
+	appConfig: [{ required: true, validator: appConfigValidate, trigger: 'change' }],
 	appStatus: [{ required: true, message: '请选择 APP 状态', trigger: 'change' }]
 }
 
@@ -394,25 +402,14 @@ const options = ref({
 })
 const modeList = ref(['code']) // 可选模式
 
-const remarkValidate = (): void => {
-	const newjsonstr = JSON.stringify(jsonobj.value)
-	console.log('remarkValidate', jsonobj.value, newjsonstr, updateDate.value.appConfig)
-	if (jsonstr.value === newjsonstr) {
-		console.log('no change')
-	} else {
-		jsonstr.value = newjsonstr
-	}
-}
-
 onMounted(() => {
 	getAppInfo(searchItem)
 		.then((res) => {
+			total.value = res.data.total
+			tableLoadFlag.value = false
 			if (res.data.records.length > 0) {
-				total.value = res.data.total
 				res.data.records.forEach((item: any) => {
 					item.createTime = getDate(item.createTime)
-					// eslint-disable-next-line
-					item.appStatus = item.appStatus === 1 ? true : false
 					item.key = item.appId
 					templateTable.push(item)
 				})
@@ -431,13 +428,16 @@ const a = computed(() => {
 
 <template>
 	<!-- 搜索部分 -->
-	<searchForm ref="searchform" @mes="searchTemplate({ opt: 1 })" />
+	<searchForm ref="searchform" @mes="searchTemplate({ page: 1, pageSize, opt: 1 })" />
 	<!-- 表格部分 -->
 	<div id="message-container" :style="{ height: hasSelected ? '100%' : 'auto' }">
 		<div class="message-section">
 			<div class="splitter">
 				<a-tooltip title="刷新">
-					<a-button shape="circle" :icon="h(ReloadOutlined)" @click="searchTemplate({ opt: 1 })" />
+					<a-button
+						shape="circle"
+						:icon="h(ReloadOutlined)"
+						@click="searchTemplate({ page: 1, pageSize, opt: 1 })" />
 				</a-tooltip>
 				<addTemplate ref="addtemplate" @add="saveApp()" />
 			</div>
@@ -461,6 +461,7 @@ const a = computed(() => {
 				:expandIconAsCell="false"
 				:pagination="false"
 				:expandedRowKeys="expandedRowKeys"
+				:loading="tableLoadFlag"
 				:row-selection="{ selectedRowKeys: state.selectedRowKeys, onChange: onSelectChange }">
 				>
 
@@ -507,6 +508,8 @@ const a = computed(() => {
 								v-model:checked="record.appStatus"
 								checked-children="启用"
 								un-checked-children="禁用"
+								:checkedValue="1"
+								:unCheckedValue="0"
 								@change="changeStatus(record.appId, record.appStatus)" />
 						</span>
 					</template>
@@ -561,6 +564,7 @@ const a = computed(() => {
 			</a-table>
 			<a-pagination
 				v-model:current="current"
+				v-model:pageSize="pageSize"
 				class="pagination"
 				show-quick-jumper
 				:total="total"
@@ -599,8 +603,9 @@ const a = computed(() => {
 			:rules="rules">
 			<a-form-item ref="appName" label="APP 名称" name="appName" class="tem-item">
 				<a-input
+					:maxlength="20"
 					v-model:value="updateDate.appName"
-					placeholder="请填写长度在3到20个字符的模板名"
+					placeholder="请填写长度在 3 到 20 个字符的 APP 名"
 					style="width: 70%" />
 			</a-form-item>
 
@@ -614,17 +619,19 @@ const a = computed(() => {
 				<json-editor-vue
 					class="editor"
 					v-model="jsonobj"
-					@blur="remarkValidate"
 					currentMode="code"
 					:modeList="modeList"
 					:options="options"
+					@change="jsonChange"
 					language="cn" />
 			</a-form-item>
 			<a-form-item label="APP 状态" name="appStatus" class="tem-item">
 				<a-switch
 					v-model:checked="updateDate.appStatus"
 					checked-children="启用"
-					un-checked-children="禁用" />
+					un-checked-children="禁用"
+					:checkedValue="1"
+					:unCheckedValue="0" />
 			</a-form-item>
 			<a-form-item :wrapper-col="{ span: 20, offset: 17 }" class="tem-item">
 				<div class="between">
