@@ -156,11 +156,11 @@ const saveTemplate = (): void => {
 	addTemplatePages(savetemplate)
 		.then((res) => {
 			if (res.code === 200) {
-				addtemplate.value.iconLoading = false
 				addtemplate.value.open = false
 				void message.success('新增成功~ (*^▽^*)')
 				searchTemplate({ opt: 2 }) // 更新表单
 			}
+			addtemplate.value.iconLoading = false
 		})
 		.catch((err) => {
 			addtemplate.value.open = false
@@ -285,13 +285,11 @@ const updateTemplate = (): void => {
 	updatetemplate(obj)
 		.then((res) => {
 			if (res.code === 200) {
-				modifytemplate.value.updateiconLoading = false
 				modifytemplate.value.openModify = false
 				void message.success('修改成功~ (*^▽^*)')
 				searchTemplate({ opt: 3 }) // 更新表单
-			} else {
-				modifytemplate.value.updateiconLoading = false
 			}
+			modifytemplate.value.updateiconLoading = false
 		})
 		.catch((err) => {
 			void message.error('查询失败，请检查网络~ (＞︿＜)')
@@ -338,7 +336,6 @@ const searchTemplate = ({ page, pageSize, opt }: SearchOptions = {}): void => {
 	// eslint-disable-next-line
 	const { perid, ...rest } = searchform.value.searchPage
 	const searchNeedMes = { ...rest }
-	console.warn(searchNeedMes)
 	searchNeedMes.currentPage = page
 	searchNeedMes.pageSize = pageSize
 	getTemplatePages(searchNeedMes)
@@ -358,7 +355,9 @@ const searchTemplate = ({ page, pageSize, opt }: SearchOptions = {}): void => {
 					void message.success('未查询到任何数据   ≧ ﹏ ≦')
 				}
 			}
-			console.warn('查询数据', templateTable)
+			if (opt === 3) {
+				current.value = res.data.page
+			}
 			searchform.value.iconLoading = false
 		})
 		.catch((err) => {
@@ -371,13 +370,12 @@ const searchTemplate = ({ page, pageSize, opt }: SearchOptions = {}): void => {
 onMounted(() => {
 	getTemplatePages(searchItem)
 		.then((res) => {
+			total.value = res.data.total
 			if (res.data.records.length > 0) {
-				total.value = res.data.total
 				res.data.records.forEach((item: any) => {
 					item = changeTable(item)
 					templateTable.push(item)
 				})
-				console.warn('初始化数据', templateTable)
 			}
 		})
 		.catch((err) => {
