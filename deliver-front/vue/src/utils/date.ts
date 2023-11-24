@@ -78,21 +78,12 @@ export const changeTable = (item): any => {
 	item.channelType = JSON.parse(item.pushWays).channelType
 	item.messageType = JSON.parse(item.pushWays).messageType
 	item.createTime = getDate(item.createTime)
-	// eslint-disable-next-line
-	item.templateStatus = item.templateStatus === 1 ? true : false
 	item.key = item.templateId
 	return item
 }
 ///
 
 export const getAllMessage = (mod, record: messageTemplate): void => {
-	// 修改界面渲染数据
-	// const { pushRange, usersType } = record
-	// mod.updateTemp = {
-	//   ...record,
-	//   pushRange: Number(pushRange),
-	//   usersType: Number(usersType)
-	// }
 	mod.updateTemp.templateId = record.templateId
 	mod.updateTemp.templateName = record.templateName
 	mod.updateTemp.pushRange = Number(record.pushRange)

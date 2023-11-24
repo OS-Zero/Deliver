@@ -29,7 +29,7 @@ import {
 	getAllMessage
 } from '@/utils/date'
 import { useStore } from '@/store'
-
+import { getPushWays } from '@/utils/date'
 /**
  * 表格初始化
  */
@@ -157,7 +157,7 @@ const saveTemplate = (): void => {
 			if (res.code === 200) {
 				addtemplate.value.open = false
 				void message.success('新增成功~ (*^▽^*)')
-				searchTemplate({ opt: 2 }) // 更新表单
+				searchTemplate({ page: 1, pageSize: pageSize.value, opt: 2 }) // 更新表单
 			}
 			addtemplate.value.iconLoading = false
 		})
@@ -195,8 +195,7 @@ const startDelete = (): void => {
 		.then((res) => {
 			if (res.code === 200) {
 				void message.success('删除成功~ (*^▽^*)')
-				searchTemplate({ page: 1, pageSize: 10, opt: 4 })
-				current.value = 1
+				searchTemplate({ page: 1, pageSize: pageSize.value, opt: 2 })
 				cancelSelect()
 			}
 			state.loading = false
@@ -230,8 +229,7 @@ const onDelete = (id: number): void => {
 		.then((res) => {
 			if (res.code === 200) {
 				void message.success('删除成功~ (*^▽^*)')
-				searchTemplate({ page: 1, pageSize: 10, opt: 4 })
-				current.value = 1
+				searchTemplate({ page: 1, pageSize: pageSize.value, opt: 2 })
 			}
 			state.loading = false
 		})
@@ -259,18 +257,16 @@ const showDeleteConfirm = (): void => {
 }
 
 /// 修改操作
-const changeStatus = (id: number, status: number | boolean): void => {
+const changeStatus = (id: number, status: number): void => {
 	// eslint-disable-next-line
-	const sta = status === true ? 1 : 0
 	const obj = {
 		templateId: id,
-		templateStatus: sta
+		templateStatus: status
 	}
 	updateStatus(obj)
 		.then((res) => {
 			if (res.code === 200) {
 				void message.success('修改成功~ (*^▽^*)')
-				searchTemplate({ page: current.value, pageSize: 10, opt: 3 }) // 更新表单
 			}
 		})
 		.catch((err) => {
@@ -280,23 +276,32 @@ const changeStatus = (id: number, status: number | boolean): void => {
 }
 
 const updateTemplate = (): void => {
+	modifytemplate.value.updateiconLoading = true
+	// 处理templateItem的pushways
+	modifytemplate.value.updateTemp.pushWays = getPushWays(
+		modifytemplate.value.updateTemp.channelType as string,
+		modifytemplate.value.updateTemp.messageType
+	)
+
 	const m = modifytemplate.value
 	// eslint-disable-next-line
 	const { messageType, channelType, ...rest } = m.updateTemp
+	// 浅拷贝
 	const obj = { ...rest }
 	updatetemplate(obj)
 		.then((res) => {
 			if (res.code === 200) {
+				message.success('修改成功~ (*^▽^*)')
+				modifytemplate.value.updateiconLoading = false
 				modifytemplate.value.openModify = false
-				modifytemplate.value = {}
-				void message.success('修改成功~ (*^▽^*)')
-				searchTemplate({ page: current.value, pageSize: 10, opt: 3 }) // 更新表单
+				searchTemplate({ page: current.value, pageSize: pageSize.value, opt: 2 }) // 更新表单
+			} else {
+				modifytemplate.value.updateiconLoading = false
 			}
-			modifytemplate.value.updateiconLoading = false
 		})
 		.catch((err) => {
 			modifytemplate.value.updateiconLoading = false
-			void message.error('修改失败，请检查网络~ (＞︿＜)')
+			message.error('修改失败，请检查网络~ (＞︿＜)')
 			console.error('An error occurred:', err)
 		})
 }
@@ -325,9 +330,10 @@ const searchItem: searchMessage = reactive({
 const total = ref()
 
 const current = ref()
+const pageSize = ref()
 
 const change = (page: number, pageSize: number): void => {
-	searchTemplate({ page, pageSize })
+	searchTemplate({ page, pageSize, opt: 1 })
 }
 
 const locale = {
@@ -351,6 +357,7 @@ const searchTemplate = ({ page, pageSize, opt }: SearchOptions = {}): void => {
 		.then((res) => {
 			templateTable.length = 0
 			total.value = res.data.total
+			current.value = page
 			if (res.data.records.length > 0) {
 				res.data.records.forEach((item: any) => {
 					item = changeTable(item)
@@ -398,13 +405,16 @@ const a = computed(() => {
 
 <template>
 	<!-- 搜索部分 -->
-	<searchForm ref="searchform" @mes="searchTemplate({ opt: 1 })" />
+	<searchForm ref="searchform" @mes="searchTemplate({ page: 1, pageSize, opt: 1 })" />
 	<!-- 表格部分 -->
 	<div id="message-container" :style="{ height: hasSelected ? '100%' : 'auto' }">
 		<div class="message-section">
 			<div class="splitter">
 				<a-tooltip title="刷新">
-					<a-button shape="circle" :icon="h(ReloadOutlined)" @click="searchTemplate({ opt: 1 })" />
+					<a-button
+						shape="circle"
+						:icon="h(ReloadOutlined)"
+						@click="searchTemplate({ page: 1, pageSize, opt: 2 })" />
 				</a-tooltip>
 				<addTemplate ref="addtemplate" @add="saveTemplate()" />
 			</div>
@@ -448,7 +458,9 @@ const a = computed(() => {
 								v-model:checked="record.templateStatus"
 								checked-children="启用"
 								un-checked-children="禁用"
-								@change="changeStatus(record.templateId, record.templateStatus)" />
+								:checkedValue="1"
+								:unCheckedValue="0"
+								@click="changeStatus(record.templateId, record.templateStatus)" />
 						</span>
 					</template>
 					<template v-if="column.key === 'operation'">
@@ -539,6 +551,7 @@ const a = computed(() => {
 			</a-table>
 			<a-pagination
 				v-model:current="current"
+				v-model:pageSize="pageSize"
 				class="pagination"
 				show-quick-jumper
 				:total="total"
