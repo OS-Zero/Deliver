@@ -1,5 +1,8 @@
 package com.oszero.deliver.server.config;
 
+import com.oszero.deliver.server.pretreatment.constant.PretreatmentCodeConstant;
+import com.oszero.deliver.server.pretreatment.link.LinkHandler;
+import com.oszero.deliver.server.pretreatment.link.LinkTemplate;
 import com.oszero.deliver.server.pretreatment.link.idcheck.*;
 import com.oszero.deliver.server.pretreatment.link.paramcheck.ding.DingParamCheck;
 import com.oszero.deliver.server.pretreatment.link.paramcheck.feishu.FeiShuParamCheck;
@@ -9,9 +12,6 @@ import com.oszero.deliver.server.pretreatment.link.paramcheck.sms.SmsParamCheck;
 import com.oszero.deliver.server.pretreatment.link.paramcheck.wechat.WeChatParamCheck;
 import com.oszero.deliver.server.pretreatment.link.pushrangecheck.PushRangeCheck;
 import com.oszero.deliver.server.pretreatment.link.send.*;
-import com.oszero.deliver.server.pretreatment.constant.PretreatmentCodeConstant;
-import com.oszero.deliver.server.pretreatment.link.LinkHandler;
-import com.oszero.deliver.server.pretreatment.link.LinkTemplate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -111,6 +111,20 @@ public class LinkConfig {
                 pushRangeCheck, phoneCheck, feiShuParamCheck, feiShuSend
         ));
         map.put(PretreatmentCodeConstant.PHONE_FEI_SHU, phone2FeiShuTemplate);
+
+        // 企业账号-打电话
+        LinkTemplate companyAccount2CallTemplate = new LinkTemplate();
+        companyAccount2CallTemplate.setProcessList(Arrays.asList(
+                pushRangeCheck, companyAccountCheck, phoneCheck, phoneParamCheck, callSend
+        ));
+        map.put(PretreatmentCodeConstant.COMPANY_ACCOUNT_CALL, companyAccount2CallTemplate);
+
+        // 企业账号-短信
+        LinkTemplate companyAccount2SmsTemplate = new LinkTemplate();
+        companyAccount2SmsTemplate.setProcessList(Arrays.asList(
+                pushRangeCheck, companyAccountCheck, phoneCheck, smsParamCheck, smsSendAction
+        ));
+        map.put(PretreatmentCodeConstant.COMPANY_ACCOUNT_SMS, companyAccount2SmsTemplate);
 
         // 企业账号-钉钉
         LinkTemplate companyAccount2DingTemplate = new LinkTemplate();
