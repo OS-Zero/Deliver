@@ -109,9 +109,10 @@ const searchItem: searchPlatformFile = reactive({
 const total = ref()
 
 const current = ref()
+const pageSize = ref()
 
 const change = (page: number, pageSize: number): void => {
-	getPagesPlatformFile({ page, pageSize })
+	getPagesPlatformFile({ page, pageSize, opt: 1 })
 }
 
 const locale = {
@@ -136,7 +137,7 @@ const getPagesPlatformFile = ({ page, pageSize, opt }: SearchOptions = {}): void
 		.then((res) => {
 			platformFileTable.length = 0
 			total.value = res.data.total
-			current.value = res.data.page
+			current.value = page
 			tableLoadFlag.value = false
 			if (res.data.records.length > 0) {
 				res.data.records.forEach((item: any) => {
@@ -151,7 +152,6 @@ const getPagesPlatformFile = ({ page, pageSize, opt }: SearchOptions = {}): void
 					void message.success('未查询到任何数据   ≧ ﹏ ≦')
 				}
 			}
-			console.warn('查询数据', platformFileTable)
 			searchform.value.iconLoading = false
 		})
 		.catch((err) => {
@@ -163,7 +163,6 @@ const getPagesPlatformFile = ({ page, pageSize, opt }: SearchOptions = {}): void
 
 // copy 文件 Key
 const copyFileKey = (fileKey: string): void => {
-	console.log(fileKey)
 	navigator.clipboard.writeText(fileKey)
 	message.success('复制成功')
 }
@@ -179,7 +178,6 @@ onMounted(() => {
 					item.key = item.id
 					platformFileTable.push(item)
 				})
-				console.warn('初始化数据', platformFileTable)
 			}
 		})
 		.catch((err) => {
@@ -190,7 +188,7 @@ onMounted(() => {
 
 <template>
 	<!-- 搜索部分 -->
-	<searchForm ref="searchform" @mes="getPagesPlatformFile({ opt: 1 })" />
+	<searchForm ref="searchform" @mes="getPagesPlatformFile({ page: 1, pageSize, opt: 1 })" />
 	<!-- 表格部分 -->
 	<div id="message-container">
 		<div class="message-section">
@@ -199,9 +197,9 @@ onMounted(() => {
 					<a-button
 						shape="circle"
 						:icon="h(ReloadOutlined)"
-						@click="getPagesPlatformFile({ opt: 1 })" />
+						@click="getPagesPlatformFile({ page: current, pageSize, opt: 1 })" />
 				</a-tooltip>
-				<uploadFile @mes="getPagesPlatformFile({ opt: 1 })" />
+				<uploadFile @mes="getPagesPlatformFile({ page: 1, pageSize, opt: 1 })" />
 			</div>
 			<!-- 表格部分 -->
 			<a-table
@@ -277,6 +275,7 @@ onMounted(() => {
 			</a-table>
 			<a-pagination
 				v-model:current="current"
+				v-model:pageSize="pageSize"
 				class="pagination"
 				show-quick-jumper
 				:total="total"

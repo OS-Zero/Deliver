@@ -35,6 +35,8 @@ const iconLoading = ref<boolean | DelayLoading>(false)
 const clearForm = (): void => {
 	selectedRange.value = [null, null]
 	formRef.value?.resetFields()
+	searchPage.startTime = undefined
+	searchPage.endTime = undefined
 	searchMes()
 }
 
