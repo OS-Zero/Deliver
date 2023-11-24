@@ -54,7 +54,7 @@ const validatePass = async (): Promise<any> => {
 const rules: Record<string, Rule[]> = {
 	templateName: [
 		{ required: true, message: '请输入模板名', trigger: 'change' },
-		{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
+		{ min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
 	],
 	pushRange: [{ required: true, message: '请选择推送范围', trigger: 'change' }],
 	usersType: [{ required: true, message: '请选择用户类型', trigger: 'change' }],
@@ -121,7 +121,11 @@ const pickChannel = (e): void => {
 	if (e.target.value === 1) {
 		channelData.value = [...Data]
 	} else if (e.target.value === 2) {
-		channelData.value = Data.filter((item) => item.value !== '3')
+		if (templateItem.pushRange === 2) {
+			channelData.value = Data.splice(0, 2)
+		} else {
+			channelData.value = Data.filter((item) => item.value !== '3')
+		}
 	} else if (e.target.value === 3) {
 		channelData.value = Data.filter((item) => item.value === '3')
 	} else if (e.target.value === 4) {
@@ -182,6 +186,7 @@ const handleOk = (): void => {
 			// 处理templateItem的pushways
 			templateItem.pushWays = getPushWays(templateItem.channelType, templateItem.messageType)
 			emit('add')
+			handleCancel()
 		})
 		.catch((error) => {
 			console.log('error', error)
@@ -232,6 +237,7 @@ defineExpose({
 			class="temform">
 			<a-form-item ref="templateName" label="模板名" name="templateName" class="tem-item">
 				<a-input
+					:maxlength="20"
 					v-model:value="templateItem.templateName"
 					placeholder="请填写长度在3到20个字符的模板名"
 					style="width: 70%" />

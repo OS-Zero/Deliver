@@ -33,6 +33,9 @@ const iconLoading = ref<boolean | DelayLoading>(false)
 const clearForm = (): void => {
 	selectedRange.value = [null, null]
 	formRef.value?.resetFields()
+	searchPage.startTime = undefined
+	searchPage.endTime = undefined
+	emit('mes')
 }
 
 const onRangeChange = (
@@ -64,7 +67,10 @@ defineExpose({
 		<a-row :gutter="24">
 			<a-col :span="8">
 				<a-form-item name="templateName" label="模板名">
-					<a-input v-model:value="searchPage.templateName" placeholder="请输入模板名"></a-input>
+					<a-input
+						:maxlength="20"
+						v-model:value="searchPage.templateName"
+						placeholder="请输入模板名"></a-input>
 				</a-form-item>
 			</a-col>
 			<a-col :span="8">

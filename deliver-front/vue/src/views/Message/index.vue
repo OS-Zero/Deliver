@@ -151,7 +151,6 @@ const saveTemplate = (): void => {
 	// eslint-disable-next-line
 	const { channelType, messageType, ...rest } = addtemplate.value.templateItem
 	const savetemplate = { ...rest }
-	console.warn(savetemplate)
 	addtemplate.value.iconLoading = true
 	addTemplatePages(savetemplate)
 		.then((res) => {
@@ -196,7 +195,9 @@ const startDelete = (): void => {
 		.then((res) => {
 			if (res.code === 200) {
 				void message.success('删除成功~ (*^▽^*)')
-				searchTemplate({ opt: 4 }) //
+				searchTemplate({ page: 1, pageSize: 10, opt: 4 })
+				current.value = 1
+				cancelSelect()
 			}
 			state.loading = false
 		})
@@ -229,7 +230,8 @@ const onDelete = (id: number): void => {
 		.then((res) => {
 			if (res.code === 200) {
 				void message.success('删除成功~ (*^▽^*)')
-				searchTemplate({ opt: 4 }) //
+				searchTemplate({ page: 1, pageSize: 10, opt: 4 })
+				current.value = 1
 			}
 			state.loading = false
 		})
@@ -268,7 +270,7 @@ const changeStatus = (id: number, status: number | boolean): void => {
 		.then((res) => {
 			if (res.code === 200) {
 				void message.success('修改成功~ (*^▽^*)')
-				searchTemplate({ opt: 3 }) // 更新表单
+				searchTemplate({ page: current.value, pageSize: 10, opt: 3 }) // 更新表单
 			}
 		})
 		.catch((err) => {
@@ -286,13 +288,15 @@ const updateTemplate = (): void => {
 		.then((res) => {
 			if (res.code === 200) {
 				modifytemplate.value.openModify = false
+				modifytemplate.value = {}
 				void message.success('修改成功~ (*^▽^*)')
-				searchTemplate({ opt: 3 }) // 更新表单
+				searchTemplate({ page: current.value, pageSize: 10, opt: 3 }) // 更新表单
 			}
 			modifytemplate.value.updateiconLoading = false
 		})
 		.catch((err) => {
-			void message.error('查询失败，请检查网络~ (＞︿＜)')
+			modifytemplate.value.updateiconLoading = false
+			void message.error('修改失败，请检查网络~ (＞︿＜)')
 			console.error('An error occurred:', err)
 		})
 }
@@ -304,6 +308,10 @@ const startModify = (record): void => {
 }
 
 /// 查询操作
+
+// 表格加载中标志
+const tableLoadFlag = ref<boolean>(true)
+
 const searchItem: searchMessage = reactive({
 	templateName: undefined,
 	pushRange: undefined,
@@ -338,6 +346,7 @@ const searchTemplate = ({ page, pageSize, opt }: SearchOptions = {}): void => {
 	const searchNeedMes = { ...rest }
 	searchNeedMes.currentPage = page
 	searchNeedMes.pageSize = pageSize
+	tableLoadFlag.value = true
 	getTemplatePages(searchNeedMes)
 		.then((res) => {
 			templateTable.length = 0
@@ -355,9 +364,7 @@ const searchTemplate = ({ page, pageSize, opt }: SearchOptions = {}): void => {
 					void message.success('未查询到任何数据   ≧ ﹏ ≦')
 				}
 			}
-			if (opt === 3) {
-				current.value = res.data.page
-			}
+			tableLoadFlag.value = false
 			searchform.value.iconLoading = false
 		})
 		.catch((err) => {
@@ -377,6 +384,7 @@ onMounted(() => {
 					templateTable.push(item)
 				})
 			}
+			tableLoadFlag.value = false
 		})
 		.catch((err) => {
 			console.error('An error occurred:', err)
@@ -416,6 +424,7 @@ const a = computed(() => {
 				:scroll="{ x: 1200, y: undefined, scrollToFirstRowOnChange: true }"
 				class="components-table-demo-nested"
 				@expand="getInnerData"
+				:loading="tableLoadFlag"
 				:expandIconColumnIndex="-1"
 				:expandIconAsCell="false"
 				:pagination="false"
