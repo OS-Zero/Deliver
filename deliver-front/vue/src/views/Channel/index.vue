@@ -413,7 +413,6 @@ onMounted(() => {
 					item.key = item.appId
 					templateTable.push(item)
 				})
-				console.warn('初始化数据', templateTable)
 			}
 		})
 		.catch((err) => {
