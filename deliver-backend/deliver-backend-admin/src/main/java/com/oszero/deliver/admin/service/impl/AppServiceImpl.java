@@ -126,7 +126,7 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>
     }
 
     private void checkAppNameIsDuplicate(AppSaveAndUpdateRequestDto dto) {
-        String appName = dto.getAppName();
+        String appName = dto.getAppName().trim();
         Long appId = dto.getAppId();
 
         LambdaQueryWrapper<App> wrapper = new LambdaQueryWrapper<>();

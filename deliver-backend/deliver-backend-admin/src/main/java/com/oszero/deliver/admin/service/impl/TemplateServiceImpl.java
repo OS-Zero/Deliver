@@ -151,7 +151,7 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template>
     }
 
     private void checkTemplateNameIsDuplicate(TemplateSaveAndUpdateRequestDto dto) {
-        String templateName = dto.getTemplateName();
+        String templateName = dto.getTemplateName().trim();
         Long templateId = dto.getTemplateId();
 
         LambdaQueryWrapper<Template> wrapper = new LambdaQueryWrapper<>();
