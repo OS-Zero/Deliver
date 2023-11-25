@@ -21,7 +21,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class CompanyAccountCheck implements BusinessLink<SendTaskDto> {
 
-    private CheckCompanyAccount checkCompanyAccount;
+    private final CheckCompanyAccount checkCompanyAccount;
 
     @Override
     public void process(LinkContext<SendTaskDto> context) {
