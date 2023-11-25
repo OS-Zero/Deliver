@@ -25,8 +25,8 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class CompanyAccountConvert implements BusinessLink<SendTaskDto> {
 
-    private CompanyAccount2Phone companyAccount2Phone;
-    private CompanyAccount2Mail companyAccount2Mail;
+    private final CompanyAccount2Phone companyAccount2Phone;
+    private final CompanyAccount2Mail companyAccount2Mail;
 
     private static final Map<String, String> codeUpdateMap = new HashMap<>();
 
@@ -44,7 +44,7 @@ public class CompanyAccountConvert implements BusinessLink<SendTaskDto> {
         String code = context.getCode();
         SendTaskDto sendTaskDto = context.getProcessModel();
         List<String> users = sendTaskDto.getUsers();
-        // 策略模式实现企业账号转换
+        // 企业账号转换
         if (PretreatmentCodeConstant.COMPANY_ACCOUNT_MAIL.equals(code)) {
             sendTaskDto.setUsers(companyAccount2Mail.convert(users));
         } else {

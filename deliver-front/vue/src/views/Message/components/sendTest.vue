@@ -99,7 +99,6 @@ const searchMes = (): void => {
 				.then((res) => {
 					if (res.code === 200) {
 						void message.success('发送成功~ (*^▽^*)')
-						// onClose()
 					}
 					showTime.value = true
 					const setIntervals = setInterval(() => {
