@@ -1,10 +1,5 @@
 <script lang="ts" setup>
-import {
-	ReloadOutlined,
-	DownOutlined,
-	UpOutlined,
-	ExclamationCircleOutlined
-} from '@ant-design/icons-vue'
+import { ReloadOutlined, ExclamationCircleOutlined } from '@ant-design/icons-vue'
 import { ref, reactive, h, onMounted, computed } from 'vue'
 import type { UnwrapRef } from 'vue'
 import type { TableColumnsType } from 'ant-design-vue'
@@ -30,6 +25,13 @@ import {
 } from '@/utils/date'
 import { useStore } from '@/store'
 import { getPushWays } from '@/utils/date'
+import {
+	CopyTwoTone,
+	EditTwoTone,
+	DeleteTwoTone,
+	DownCircleTwoTone,
+	UpCircleTwoTone
+} from '@ant-design/icons-vue'
 /**
  * 表格初始化
  */
@@ -57,11 +59,6 @@ const columns: TableColumnsType = [
 		key: 'usersType'
 	},
 	{
-		title: '模板累计使用数',
-		dataIndex: 'useCount',
-		key: 'useCount'
-	},
-	{
 		title: '模板状态',
 		dataIndex: 'templateStatus',
 		key: 'templateStatus'
@@ -71,39 +68,6 @@ const columns: TableColumnsType = [
 		key: 'operation',
 		fixed: 'right',
 		width: 270
-	}
-]
-
-const innerColumns = [
-	{
-		title: '渠道类型',
-		dataIndex: 'channelType',
-		key: 'channelType'
-	},
-	{
-		title: '消息类型',
-		dataIndex: 'messageType',
-		key: 'messageType'
-	},
-	{
-		title: '创建用户',
-		dataIndex: 'createUser',
-		key: 'createUser'
-	},
-	{
-		title: '创建时间',
-		dataIndex: 'createTime',
-		key: 'createTime'
-	},
-	{
-		title: '渠道 AppId',
-		dataIndex: 'appId',
-		key: 'appId'
-	},
-	{
-		title: '渠道 APP 名',
-		dataIndex: 'appName',
-		key: 'appName'
 	}
 ]
 
@@ -290,10 +254,11 @@ const updateTemplate = (): void => {
 	const obj = { ...rest }
 	updatetemplate(obj)
 		.then((res) => {
+			console.log(res)
 			if (res.code === 200) {
-				message.success('修改成功~ (*^▽^*)')
 				modifytemplate.value.updateiconLoading = false
 				modifytemplate.value.openModify = false
+				message.success('修改成功~ (*^▽^*)')
 				searchTemplate({ page: current.value, pageSize: pageSize.value, opt: 2 }) // 更新表单
 			} else {
 				modifytemplate.value.updateiconLoading = false
@@ -380,7 +345,11 @@ const searchTemplate = ({ page, pageSize, opt }: SearchOptions = {}): void => {
 			console.error('An error occurred:', err)
 		})
 }
-
+// copy 文件 Key
+const copyTemplateId = (fileKey: string): void => {
+	navigator.clipboard.writeText(fileKey)
+	message.success('复制成功')
+}
 onMounted(() => {
 	getTemplatePages(searchItem)
 		.then((res) => {
@@ -444,13 +413,59 @@ const a = computed(() => {
 				<template #bodyCell="{ column, record }">
 					<!-- 表格数据渲染 -->
 					<template v-if="column.key === 'templateId'">
-						<span style="font-weight: bold">{{ record.templateId }}</span>
+						<span style="font-weight: bold">
+							{{ record.templateId }}
+							<a-tooltip :color="'blue'">
+								<template #title>复制 TemplateId 发送消息吧~</template>
+								<CopyTwoTone @click="copyTemplateId(record.templateId)" />
+							</a-tooltip>
+						</span>
 					</template>
 					<template v-if="column.key === 'pushRange'">
-						<span>{{ getPushRange(Number(record.pushRange)) }}</span>
+						<a-tag
+							color="green"
+							v-if="record.pushRange == 0"
+							style="width: 70px; text-align: center">
+							<span>{{ getPushRange(Number(record.pushRange)) }}</span>
+						</a-tag>
+						<a-tag
+							color="blue"
+							v-if="record.pushRange == 1"
+							style="width: 70px; text-align: center">
+							<span>{{ getPushRange(Number(record.pushRange)) }}</span>
+						</a-tag>
+						<a-tag
+							color="purple"
+							v-if="record.pushRange == 2"
+							style="width: 70px; text-align: center">
+							<span>{{ getPushRange(Number(record.pushRange)) }}</span>
+						</a-tag>
 					</template>
 					<template v-if="column.key === 'usersType'">
-						<span>{{ getUsersType(Number(record.usersType)) }}</span>
+						<a-tag
+							color="#2db7f5"
+							v-if="record.usersType == 1"
+							style="width: 80px; text-align: center">
+							<span>{{ getUsersType(Number(record.usersType)) }}</span>
+						</a-tag>
+						<a-tag
+							color="#87d068"
+							v-if="record.usersType == 2"
+							style="width: 80px; text-align: center">
+							<span>{{ getUsersType(Number(record.usersType)) }}</span>
+						</a-tag>
+						<a-tag
+							color="#f50"
+							v-if="record.usersType == 3"
+							style="width: 80px; text-align: center">
+							<span>{{ getUsersType(Number(record.usersType)) }}</span>
+						</a-tag>
+						<a-tag
+							color="#108ee1"
+							v-if="record.usersType == 4"
+							style="width: 80px; text-align: center">
+							<span>{{ getUsersType(Number(record.usersType)) }}</span>
+						</a-tag>
 					</template>
 					<template v-if="column.key === 'templateStatus'">
 						<span>
@@ -470,83 +485,107 @@ const a = computed(() => {
 							style="font-size: 14px"
 							@click="getInnerData(false, record)"
 							v-if="judgeInclude(record)">
-							<UpOutlined />
-							收起
+							<UpCircleTwoTone />
 						</a-button>
-						<a-button
-							type="link"
-							size="small"
-							style="font-size: 14px"
-							@click="getInnerData(true, record)"
-							v-if="!judgeInclude(record)">
-							<DownOutlined />
-							展开
-						</a-button>
-						<a-button
-							type="link"
-							class="btn-manager"
-							size="small"
-							style="font-size: 14px"
-							@click="startModify(record)">
-							编辑
-						</a-button>
+						<a-tooltip>
+							<template v-if="!judgeInclude(record)" #title>查看消息模版更多信息</template>
+							<a-button
+								type="link"
+								size="small"
+								style="font-size: 14px"
+								@click="getInnerData(true, record)"
+								v-if="!judgeInclude(record)">
+								<DownCircleTwoTone />
+							</a-button>
+						</a-tooltip>
+
+						<a-divider type="vertical" />
+						<a-tooltip>
+							<template #title>修改消息模版</template>
+							<a-button
+								type="link"
+								class="btn-manager"
+								size="small"
+								style="font-size: 14px"
+								@click="startModify(record)">
+								<EditTwoTone two-tone-color="#1677FF" />
+							</a-button>
+						</a-tooltip>
 						<modifyTemplate ref="modifytemplate" :mod="record" @update="updateTemplate()" />
+						<a-divider type="vertical" />
 						<sendTest :test="record.templateId" />
+						<a-divider type="vertical" />
 						<a-popconfirm
 							title="确认删除吗?"
 							@confirm="onDelete(record.templateId)"
 							ok-text="确定"
 							cancel-text="取消">
-							<a-button type="link" danger size="small" style="font-size: 14px; margin-left: -5px">
-								删除
-							</a-button>
+							<a-tooltip placement="bottom">
+								<template #title>删除消息模版</template>
+								<a-button
+									type="link"
+									danger
+									size="small"
+									style="font-size: 14px; margin-left: -5px">
+									<DeleteTwoTone two-tone-color="red" />
+								</a-button>
+							</a-tooltip>
 						</a-popconfirm>
 					</template>
 				</template>
-				<template #expandedRowRender>
-					<a-table :columns="innerColumns" :data-source="innertemplatedata" :pagination="false">
-						<template #bodyCell="{ column, record }">
-							<template v-if="column.key === 'channelType'">
-								<span>
-									<!-- 根据 appType 的值显示不同的图片 -->
-									<img
-										style="height: 30px; width: 30px"
-										v-if="record.channelType === 1"
-										src="电话.png"
-										alt="电话" />
-									<img
-										style="height: 30px; width: 30px"
-										v-else-if="record.channelType === 2"
-										src="短信.png"
-										alt="短信" />
-									<img
-										style="height: 30px; width: 30px"
-										v-else-if="record.channelType === 3"
-										src="邮件.png"
-										alt="邮件" />
-									<img
-										style="height: 30px; width: 30px"
-										v-else-if="record.channelType === 4"
-										src="钉钉.png"
-										alt="钉钉" />
-									<img
-										style="height: 30px; width: 30px"
-										v-else-if="record.channelType === 5"
-										src="企业微信.png"
-										alt="企业微信" />
-									<img
-										style="height: 30px; width: 30px"
-										v-else-if="record.channelType === 6"
-										src="飞书.png"
-										alt="飞书" />
-									<!-- 添加更多条件根据需要显示不同的图片 -->
-								</span>
-							</template>
-							<template v-if="column.key === 'messageType'">
-								<span>{{ getMessageTypeArr(record.messageType) }}</span>
-							</template>
-						</template>
-					</a-table>
+				<template #expandedRowRender="{ record }">
+					<a-descriptions :column="4">
+						<a-descriptions-item label="渠道类型">
+							<span>
+								<!-- 根据 appType 的值显示不同的图片 -->
+								<img
+									style="height: 30px; width: 30px"
+									v-if="record.channelType === 1"
+									src="电话.png"
+									alt="电话" />
+								<img
+									style="height: 30px; width: 30px"
+									v-else-if="record.channelType === 2"
+									src="短信.png"
+									alt="短信" />
+								<img
+									style="height: 30px; width: 30px"
+									v-else-if="record.channelType === 3"
+									src="邮件.png"
+									alt="邮件" />
+								<img
+									style="height: 30px; width: 30px"
+									v-else-if="record.channelType === 4"
+									src="钉钉.png"
+									alt="钉钉" />
+								<img
+									style="height: 30px; width: 30px"
+									v-else-if="record.channelType === 5"
+									src="企业微信.png"
+									alt="企业微信" />
+								<img
+									style="height: 30px; width: 30px"
+									v-else-if="record.channelType === 6"
+									src="飞书.png"
+									alt="飞书" />
+								<!-- 添加更多条件根据需要显示不同的图片 -->
+							</span>
+						</a-descriptions-item>
+						<a-descriptions-item label="消息类型">
+							<span>{{ getMessageTypeArr(record.messageType) }}</span>
+						</a-descriptions-item>
+						<a-descriptions-item label="模板累计使用数" :span="2">
+							<span>{{ record.useCount }}</span>
+						</a-descriptions-item>
+						<a-descriptions-item label="关联 AppId">
+							{{ record.appId }}
+						</a-descriptions-item>
+						<a-descriptions-item label="关联 AppName">
+							{{ record.appName }}
+						</a-descriptions-item>
+						<a-descriptions-item label="创建者">{{ record.createUser }}</a-descriptions-item>
+						<a-descriptions-item label="创建时间">{{ record.createTime }}</a-descriptions-item>
+					</a-descriptions>
 				</template>
 			</a-table>
 			<a-pagination
@@ -606,7 +645,7 @@ const a = computed(() => {
 	.message-section {
 		padding: 12px;
 		margin-top: 12px;
-		background: #fff;
+		background: rgb(255, 255, 255);
 		border-radius: 6px;
 
 		.btn-manager {
@@ -624,7 +663,7 @@ const a = computed(() => {
 			height: 40px;
 			margin-bottom: 20px;
 			line-height: 40px;
-			background-color: rgb(248 248 248);
+			background-color: rgb(248, 248, 248);
 			border-radius: 10px;
 
 			.count {

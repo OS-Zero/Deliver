@@ -58,8 +58,6 @@ public enum MessageTypeEnum {
     FEI_SHU_MEDIA("6-7", "media", "视频 media"),
     FEI_SHU_FILE("6-8", "file", "文件 file"),
     FEI_SHU_STICKER("6-9", "sticker", "表情包 sticker"),
-
-    // todo: 后续添加群聊、机器人、批量消息
     ;
     private final String code;
     private final String msgType;
