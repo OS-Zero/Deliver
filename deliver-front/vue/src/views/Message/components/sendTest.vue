@@ -5,7 +5,7 @@ import type { sendMessageTest } from '../type'
 import type { Rule } from 'ant-design-vue/es/form'
 import JsonEditorVue from 'json-editor-vue3'
 import { sendTestMes } from '@/api/message'
-
+import { ApiTwoTone, PlusOutlined } from '@ant-design/icons-vue'
 const props = defineProps({
 	test: Number
 })
@@ -120,6 +120,7 @@ const searchMes = (): void => {
 
 const clearForm = (): void => {
 	userItem.value = ''
+	addUserFlag.value = true
 	sendtest.value?.resetFields()
 }
 
@@ -143,7 +144,9 @@ const rules: Record<string, Rule[]> = {
 		size="small"
 		style="font-size: 14px; margin-left: -5px"
 		@click="showDrawer">
-		测试发送
+		<a-tooltip title="测试消息模版发送">
+			<ApiTwoTone />
+		</a-tooltip>
 	</a-button>
 	<a-drawer
 		title="测试消息模版发送"
@@ -153,19 +156,12 @@ const rules: Record<string, Rule[]> = {
 		@close="onClose"
 		:width="660">
 		<a-form ref="sendtest" :model="sendTestTable" :rules="rules">
-			<a-form-item label="添加用户" name="userItem" style="margin-left: 10px">
-				<a-button type="primary" v-if="addUserFlag" @click="changeAddUser">添加发送用户</a-button>
-				<a-input-group compact v-if="!addUserFlag">
-					<a-input
-						v-model:value="userItem"
-						:maxlength="100"
-						placeholder="请输入用户 ID 添加至用户列表"
-						style="width: 452px"></a-input>
-					<a-button type="primary" @click="addUser">添加</a-button>
-				</a-input-group>
-			</a-form-item>
 			<a-form-item label="用户列表" name="users">
-				<a-list bordered v-model:value="sendTestTable.users" :data-source="sendTestTable.users">
+				<a-list
+					:locale="{ emptyText: '暂无数据' }"
+					bordered
+					v-model:value="sendTestTable.users"
+					:data-source="sendTestTable.users">
 					<template #renderItem="{ item }">
 						<a-list-item>
 							<div style="width: 80%; word-wrap: break-word; overflow-wrap: break-word">
@@ -176,8 +172,22 @@ const rules: Record<string, Rule[]> = {
 							</template>
 						</a-list-item>
 					</template>
-					<template #header>
-						<div style="color: #1677ff">用户 ID 列表</div>
+					<template #header><span style="color: #3883fa">用户 ID 列表</span></template>
+					<template #footer>
+						<a-form-item label="" name="userItem">
+							<a v-if="addUserFlag" @click="changeAddUser">
+								<PlusOutlined style="color: #3883fa" />
+								<span style="color: #3883fa; margin-left: 5px">添加</span>
+							</a>
+							<a-input-group compact v-if="!addUserFlag">
+								<a-input
+									v-model:value="userItem"
+									:maxlength="100"
+									placeholder="请输入用户 ID 添加至用户列表"
+									style="width: 382px"></a-input>
+								<a-button type="primary" @click="addUser">添加</a-button>
+							</a-input-group>
+						</a-form-item>
 					</template>
 				</a-list>
 			</a-form-item>
