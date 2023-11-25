@@ -3,6 +3,8 @@ package com.oszero.deliver.server.config;
 import com.oszero.deliver.server.pretreatment.constant.PretreatmentCodeConstant;
 import com.oszero.deliver.server.pretreatment.link.LinkHandler;
 import com.oszero.deliver.server.pretreatment.link.LinkTemplate;
+import com.oszero.deliver.server.pretreatment.link.convert.CompanyAccountConvert;
+import com.oszero.deliver.server.pretreatment.link.convert.Phone2UserIdConvert;
 import com.oszero.deliver.server.pretreatment.link.idcheck.*;
 import com.oszero.deliver.server.pretreatment.link.paramcheck.ding.DingParamCheck;
 import com.oszero.deliver.server.pretreatment.link.paramcheck.feishu.FeiShuParamCheck;
@@ -35,7 +37,7 @@ public class LinkConfig {
     private final PushRangeCheck pushRangeCheck;
 
     /**
-     * idCheck
+     * idCheck 发送人检查
      */
     private final CompanyAccountCheck companyAccountCheck;
     private final MailCheck mailCheck;
@@ -45,7 +47,13 @@ public class LinkConfig {
     private final FeiShuUserIdCheck feiShuUserIdCheck;
 
     /**
-     * paramCheck
+     * convert 转换
+     */
+    private final CompanyAccountConvert companyAccountConvert;
+    private final Phone2UserIdConvert phone2UserIdConvert;
+
+    /**
+     * paramCheck 参数校验
      */
     private final PhoneParamCheck phoneParamCheck;
     private final SmsParamCheck smsParamCheck;
@@ -55,7 +63,7 @@ public class LinkConfig {
     private final FeiShuParamCheck feiShuParamCheck;
 
     /**
-     * send
+     * send 渠道发送
      */
     private final CallSend callSend;
     private final SmsSend smsSendAction;
@@ -64,12 +72,68 @@ public class LinkConfig {
     private final DingSend dingSendAction;
     private final FeiShuSend feiShuSend;
 
-
     @Bean
     public LinkHandler processHandler() {
-
         HashMap<String, LinkTemplate> map = new HashMap<>();
 
+        // 企业账号配置
+        companyAccountUsersType(map);
+        // 电话
+        phoneUsersType(map);
+        // 邮箱
+        mailUsersType(map);
+        // 平台 ID
+        userIdUsersType(map);
+
+        return new LinkHandler().setTemplateConfig(map);
+    }
+
+    private void companyAccountUsersType(HashMap<String, LinkTemplate> map) {
+        // 企业账号-打电话
+        LinkTemplate companyAccount2CallTemplate = new LinkTemplate();
+        companyAccount2CallTemplate.setProcessList(Arrays.asList(
+                pushRangeCheck, companyAccountCheck, companyAccountConvert, phoneCheck, phoneParamCheck, callSend
+        ));
+        map.put(PretreatmentCodeConstant.COMPANY_ACCOUNT_CALL, companyAccount2CallTemplate);
+
+        // 企业账号-短信
+        LinkTemplate companyAccount2SmsTemplate = new LinkTemplate();
+        companyAccount2SmsTemplate.setProcessList(Arrays.asList(
+                pushRangeCheck, companyAccountCheck, companyAccountConvert, phoneCheck, smsParamCheck, smsSendAction
+        ));
+        map.put(PretreatmentCodeConstant.COMPANY_ACCOUNT_SMS, companyAccount2SmsTemplate);
+
+        // 企业账号-邮件
+        LinkTemplate companyAccount2MailTemplate = new LinkTemplate();
+        companyAccount2MailTemplate.setProcessList(Arrays.asList(
+                pushRangeCheck, companyAccountCheck, companyAccountConvert, mailCheck, mailParamCheck, mailSendAction
+        ));
+        map.put(PretreatmentCodeConstant.COMPANY_ACCOUNT_MAIL, companyAccount2MailTemplate);
+
+        // 企业账号-钉钉
+        LinkTemplate companyAccount2DingTemplate = new LinkTemplate();
+        companyAccount2DingTemplate.setProcessList(Arrays.asList(
+                pushRangeCheck, companyAccountCheck, companyAccountConvert, phone2UserIdConvert, dingParamCheck, dingSendAction
+        ));
+        map.put(PretreatmentCodeConstant.COMPANY_ACCOUNT_DING, companyAccount2DingTemplate);
+
+        // 企业账号-企业微信
+        LinkTemplate companyAccount2WeChatTemplate = new LinkTemplate();
+        companyAccount2WeChatTemplate.setProcessList(Arrays.asList(
+                pushRangeCheck, companyAccountCheck, companyAccountConvert, phone2UserIdConvert, weChatParamCheck, weChatSendAction
+        ));
+        map.put(PretreatmentCodeConstant.COMPANY_ACCOUNT_WECHAT, companyAccount2WeChatTemplate);
+
+        // 企业账号-飞书
+        LinkTemplate companyAccount2FeiShuTemplate = new LinkTemplate();
+        companyAccount2FeiShuTemplate.setProcessList(Arrays.asList(
+                pushRangeCheck, companyAccountCheck, companyAccountConvert, phone2UserIdConvert, feiShuParamCheck, feiShuSend
+        ));
+        map.put(PretreatmentCodeConstant.COMPANY_ACCOUNT_FEI_SHU, companyAccount2FeiShuTemplate);
+
+    }
+
+    private void phoneUsersType(HashMap<String, LinkTemplate> map) {
         // 电话-打电话
         LinkTemplate phone2CallTemplate = new LinkTemplate();
         phone2CallTemplate.setProcessList(Arrays.asList(
@@ -84,69 +148,38 @@ public class LinkConfig {
         ));
         map.put(PretreatmentCodeConstant.PHONE_SMS, phone2SmsTemplate);
 
-        // 邮箱-发邮件
-        LinkTemplate mail2MailTemplate = new LinkTemplate();
-        mail2MailTemplate.setProcessList(Arrays.asList(
-                pushRangeCheck, mailCheck, mailParamCheck, mailSendAction
-        ));
-        map.put(PretreatmentCodeConstant.MAIL_MAIL, mail2MailTemplate);
-
         // 电话-钉钉
         LinkTemplate phone2DingTemplate = new LinkTemplate();
         phone2DingTemplate.setProcessList(Arrays.asList(
-                pushRangeCheck, phoneCheck, dingParamCheck, dingSendAction
+                pushRangeCheck, phoneCheck, phone2UserIdConvert, dingParamCheck, dingSendAction
         ));
         map.put(PretreatmentCodeConstant.PHONE_DING, phone2DingTemplate);
 
         // 电话-企业微信
         LinkTemplate phone2WeChatTemplate = new LinkTemplate();
         phone2WeChatTemplate.setProcessList(Arrays.asList(
-                pushRangeCheck, phoneCheck, weChatParamCheck, weChatSendAction
+                pushRangeCheck, phoneCheck, phone2UserIdConvert, weChatParamCheck, weChatSendAction
         ));
         map.put(PretreatmentCodeConstant.PHONE_WECHAT, phone2WeChatTemplate);
 
         // 电话-飞书
         LinkTemplate phone2FeiShuTemplate = new LinkTemplate();
         phone2FeiShuTemplate.setProcessList(Arrays.asList(
-                pushRangeCheck, phoneCheck, feiShuParamCheck, feiShuSend
+                pushRangeCheck, phoneCheck, phone2UserIdConvert, feiShuParamCheck, feiShuSend
         ));
         map.put(PretreatmentCodeConstant.PHONE_FEI_SHU, phone2FeiShuTemplate);
+    }
 
-        // 企业账号-打电话
-        LinkTemplate companyAccount2CallTemplate = new LinkTemplate();
-        companyAccount2CallTemplate.setProcessList(Arrays.asList(
-                pushRangeCheck, companyAccountCheck, phoneCheck, phoneParamCheck, callSend
+    private void mailUsersType(HashMap<String, LinkTemplate> map) {
+        // 邮箱-发邮件
+        LinkTemplate mail2MailTemplate = new LinkTemplate();
+        mail2MailTemplate.setProcessList(Arrays.asList(
+                pushRangeCheck, mailCheck, mailParamCheck, mailSendAction
         ));
-        map.put(PretreatmentCodeConstant.COMPANY_ACCOUNT_CALL, companyAccount2CallTemplate);
+        map.put(PretreatmentCodeConstant.MAIL_MAIL, mail2MailTemplate);
+    }
 
-        // 企业账号-短信
-        LinkTemplate companyAccount2SmsTemplate = new LinkTemplate();
-        companyAccount2SmsTemplate.setProcessList(Arrays.asList(
-                pushRangeCheck, companyAccountCheck, phoneCheck, smsParamCheck, smsSendAction
-        ));
-        map.put(PretreatmentCodeConstant.COMPANY_ACCOUNT_SMS, companyAccount2SmsTemplate);
-
-        // 企业账号-钉钉
-        LinkTemplate companyAccount2DingTemplate = new LinkTemplate();
-        companyAccount2DingTemplate.setProcessList(Arrays.asList(
-                pushRangeCheck, companyAccountCheck, phoneCheck, dingParamCheck, dingSendAction
-        ));
-        map.put(PretreatmentCodeConstant.COMPANY_ACCOUNT_DING, companyAccount2DingTemplate);
-
-        // 企业账号-企业微信
-        LinkTemplate companyAccount2WeChatTemplate = new LinkTemplate();
-        companyAccount2WeChatTemplate.setProcessList(Arrays.asList(
-                pushRangeCheck, companyAccountCheck, phoneCheck, weChatParamCheck, weChatSendAction
-        ));
-        map.put(PretreatmentCodeConstant.COMPANY_ACCOUNT_WECHAT, companyAccount2WeChatTemplate);
-
-        // 企业账号-飞书
-        LinkTemplate companyAccount2FeiShuTemplate = new LinkTemplate();
-        companyAccount2FeiShuTemplate.setProcessList(Arrays.asList(
-                pushRangeCheck, companyAccountCheck, phoneCheck, feiShuParamCheck, feiShuSend
-        ));
-        map.put(PretreatmentCodeConstant.COMPANY_ACCOUNT_FEI_SHU, companyAccount2FeiShuTemplate);
-
+    private void userIdUsersType(HashMap<String, LinkTemplate> map) {
         // 平台userId-钉钉
         LinkTemplate userId2DingTemplate = new LinkTemplate();
         userId2DingTemplate.setProcessList(Arrays.asList(
@@ -167,7 +200,5 @@ public class LinkConfig {
                 pushRangeCheck, feiShuUserIdCheck, feiShuParamCheck, feiShuSend
         ));
         map.put(PretreatmentCodeConstant.USERID_FEI_SHU, userId2FeiShuTemplate);
-
-        return new LinkHandler().setTemplateConfig(map);
     }
 }
