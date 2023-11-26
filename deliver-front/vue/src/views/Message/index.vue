@@ -41,12 +41,18 @@ const columns: TableColumnsType = [
 	{
 		title: 'TemplateId',
 		dataIndex: 'templateId',
-		key: 'templateId'
+		key: 'templateId',
+		width: 106
 	},
 	{
 		title: '模板名',
 		dataIndex: 'templateName',
 		key: 'templateName'
+	},
+	{
+		title: '消息类型',
+		dataIndex: 'messageType',
+		key: 'messageType'
 	},
 	{
 		title: '推送范围',
@@ -57,6 +63,11 @@ const columns: TableColumnsType = [
 		title: '用户类型',
 		dataIndex: 'usersType',
 		key: 'usersType'
+	},
+	{
+		title: '渠道类型',
+		dataIndex: 'channelType',
+		key: 'channelType'
 	},
 	{
 		title: '模板状态',
@@ -443,29 +454,65 @@ const a = computed(() => {
 					</template>
 					<template v-if="column.key === 'usersType'">
 						<a-tag
-							color="#2db7f5"
+							color="cyan"
 							v-if="record.usersType == 1"
 							style="width: 80px; text-align: center">
 							<span>{{ getUsersType(Number(record.usersType)) }}</span>
 						</a-tag>
 						<a-tag
-							color="#87d068"
+							color="orange"
 							v-if="record.usersType == 2"
 							style="width: 80px; text-align: center">
 							<span>{{ getUsersType(Number(record.usersType)) }}</span>
 						</a-tag>
 						<a-tag
-							color="#f50"
+							color="pink"
 							v-if="record.usersType == 3"
 							style="width: 80px; text-align: center">
 							<span>{{ getUsersType(Number(record.usersType)) }}</span>
 						</a-tag>
-						<a-tag
-							color="#108ee1"
-							v-if="record.usersType == 4"
-							style="width: 80px; text-align: center">
+						<a-tag color="red" v-if="record.usersType == 4" style="width: 80px; text-align: center">
 							<span>{{ getUsersType(Number(record.usersType)) }}</span>
 						</a-tag>
+					</template>
+					<template v-if="column.key === 'channelType'">
+						<span>
+							<!-- 根据 appType 的值显示不同的图片 -->
+							<img
+								style="height: 30px; width: 30px"
+								v-if="record.channelType === 1"
+								src="电话.png"
+								alt="电话" />
+							<img
+								style="height: 30px; width: 30px"
+								v-else-if="record.channelType === 2"
+								src="短信.png"
+								alt="短信" />
+							<img
+								style="height: 30px; width: 30px"
+								v-else-if="record.channelType === 3"
+								src="邮件.png"
+								alt="邮件" />
+							<img
+								style="height: 30px; width: 30px"
+								v-else-if="record.channelType === 4"
+								src="钉钉.png"
+								alt="钉钉" />
+							<img
+								style="height: 30px; width: 30px"
+								v-else-if="record.channelType === 5"
+								src="企业微信.png"
+								alt="企业微信" />
+							<img
+								style="height: 30px; width: 30px"
+								v-else-if="record.channelType === 6"
+								src="飞书.png"
+								alt="飞书" />
+							<!-- 添加更多条件根据需要显示不同的图片 -->
+						</span>
+					</template>
+					<template v-if="column.key === 'messageType'">
+						<span>{{ getMessageTypeArr(record.messageType) }}</span>
 					</template>
 					<template v-if="column.key === 'templateStatus'">
 						<span>
@@ -535,50 +582,13 @@ const a = computed(() => {
 				</template>
 				<template #expandedRowRender="{ record }">
 					<a-descriptions :column="4">
-						<a-descriptions-item label="渠道类型">
-							<span>
-								<!-- 根据 appType 的值显示不同的图片 -->
-								<img
-									style="height: 30px; width: 30px"
-									v-if="record.channelType === 1"
-									src="电话.png"
-									alt="电话" />
-								<img
-									style="height: 30px; width: 30px"
-									v-else-if="record.channelType === 2"
-									src="短信.png"
-									alt="短信" />
-								<img
-									style="height: 30px; width: 30px"
-									v-else-if="record.channelType === 3"
-									src="邮件.png"
-									alt="邮件" />
-								<img
-									style="height: 30px; width: 30px"
-									v-else-if="record.channelType === 4"
-									src="钉钉.png"
-									alt="钉钉" />
-								<img
-									style="height: 30px; width: 30px"
-									v-else-if="record.channelType === 5"
-									src="企业微信.png"
-									alt="企业微信" />
-								<img
-									style="height: 30px; width: 30px"
-									v-else-if="record.channelType === 6"
-									src="飞书.png"
-									alt="飞书" />
-								<!-- 添加更多条件根据需要显示不同的图片 -->
-							</span>
-						</a-descriptions-item>
-						<a-descriptions-item label="消息类型">
-							<span>{{ getMessageTypeArr(record.messageType) }}</span>
-						</a-descriptions-item>
 						<a-descriptions-item label="模板累计使用数" :span="2">
-							<span>{{ record.useCount }}</span>
+							<a-tag color="red">
+								<span>{{ record.useCount }}</span>
+							</a-tag>
 						</a-descriptions-item>
 						<a-descriptions-item label="关联 AppId">
-							{{ record.appId }}
+							<strong>{{ record.appId }}</strong>
 						</a-descriptions-item>
 						<a-descriptions-item label="关联 AppName">
 							{{ record.appName }}
