@@ -42,34 +42,34 @@ export const getUsersType = (s: number): string => {
 
 export const getMessageTypeArr = (s: string): string | undefined => {
 	const arr = [
-		{ id: '1', name: 'text 消息' },
+		{ id: '1', name: 'Text 消息' },
 		//
-		{ id: '4-1', name: '钉钉图片消息' },
-		{ id: '4-2', name: '钉钉语音消息' },
-		{ id: '4-3', name: '钉钉文件消息' },
-		{ id: '4-4', name: '钉钉链接消息' },
-		{ id: '4-5', name: '钉钉 OA 消息' },
-		{ id: '4-6', name: '钉钉 markdown 消息' },
-		{ id: '4-7', name: '钉钉卡片消息' },
+		{ id: '4-1', name: '钉钉-图片消息' },
+		{ id: '4-2', name: '钉钉-语音消息' },
+		{ id: '4-3', name: '钉钉-文件消息' },
+		{ id: '4-4', name: '钉钉-链接消息' },
+		{ id: '4-5', name: '钉钉-OA 消息' },
+		{ id: '4-6', name: '钉钉-markdown 消息' },
+		{ id: '4-7', name: '钉钉-卡片消息' },
 		//
-		{ id: '5-1', name: '企业微信图片消息' },
-		{ id: '5-2', name: '企业微信语音消息' },
-		{ id: '5-3', name: '企业微信视频消息' },
-		{ id: '5-4', name: '企业微信文件消息' },
-		{ id: '5-5', name: '企业微信文本卡片消息' },
-		{ id: '5-6', name: '企业微信图文消息（mpnews）' },
-		{ id: '5-7', name: '企业微信 markdown 消息' },
-		{ id: '5-8', name: '企业微信小程序通知消息' },
+		{ id: '5-1', name: '企业微信-图片消息' },
+		{ id: '5-2', name: '企业微信-语音消息' },
+		{ id: '5-3', name: '企业微信-视频消息' },
+		{ id: '5-4', name: '企业微信-文件消息' },
+		{ id: '5-5', name: '企业微信-文本卡片消息' },
+		{ id: '5-6', name: '企业微信-图文消息(mpnews)' },
+		{ id: '5-7', name: '企业微信-markdown 消息' },
+		{ id: '5-8', name: '企业微信-小程序通知消息' },
 		//
-		{ id: '6-1', name: '富文本 post' },
-		{ id: '6-2', name: '图片 image' },
-		{ id: '6-3', name: '消息卡片 interactive' },
-		{ id: '6-4', name: '分享群名片 share_chat' },
-		{ id: '6-5', name: '分享个人名片 share_user' },
-		{ id: '6-6', name: '语音 audio' },
-		{ id: '6-7', name: '视频 media' },
-		{ id: '6-8', name: '文件 file' },
-		{ id: '6-9', name: '表情包 sticker' }
+		{ id: '6-1', name: '飞书-富文本 post' },
+		{ id: '6-2', name: '飞书-图片 image' },
+		{ id: '6-3', name: '飞书-消息卡片 interactive' },
+		{ id: '6-4', name: '飞书-分享群名片 share_chat' },
+		{ id: '6-5', name: '飞书-分享个人名片 share_user' },
+		{ id: '6-6', name: '飞书-语音 audio' },
+		{ id: '6-7', name: '飞书-视频 media' },
+		{ id: '6-8', name: '飞书-文件 file' },
+		{ id: '6-9', name: '飞书-表情包 sticker' }
 	]
 	return arr.find((it) => it.id === s)?.name
 }
