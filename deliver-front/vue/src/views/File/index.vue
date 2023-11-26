@@ -8,7 +8,12 @@ import { platformFile, searchPlatformFile } from './type'
 import { getPagePlatformFile } from '@/api/platformFile'
 import searchForm from './components/searchForm.vue'
 import uploadFile from './components/uploadFile.vue'
-import { DownOutlined, UpOutlined, CopyTwoTone } from '@ant-design/icons-vue'
+import {
+	UpCircleTwoTone,
+	DownCircleTwoTone,
+	CopyTwoTone,
+	SettingOutlined
+} from '@ant-design/icons-vue'
 /**
  * 表格初始化
  */
@@ -213,6 +218,14 @@ onMounted(() => {
 				:pagination="false"
 				:loading="tableLoadFlag"
 				:expandedRowKeys="expandedRowKeys">
+				<template #headerCell="{ column }">
+					<template v-if="column.key === 'operation'">
+						<span>
+							<SettingOutlined />
+							操作
+						</span>
+					</template>
+				</template>
 				<template #bodyCell="{ column, record }">
 					<!-- 表格数据渲染 -->
 					<template v-if="column.key === 'appType'">
@@ -236,6 +249,11 @@ onMounted(() => {
 							<!-- 添加更多条件根据需要显示不同的图片 -->
 						</span>
 					</template>
+					<template v-if="column.key === 'fileType'">
+						<span style="color: #1677ff">
+							{{ record.fileType }}
+						</span>
+					</template>
 					<template v-if="column.key === 'operation'">
 						<a-button
 							type="link"
@@ -243,28 +261,31 @@ onMounted(() => {
 							style="font-size: 14px"
 							@click="getInnerData(false, record)"
 							v-if="judgeInclude(record)">
-							<UpOutlined />
-							收起
+							<UpCircleTwoTone style="font-size: 18px" />
 						</a-button>
-						<a-button
-							type="link"
-							size="small"
-							style="font-size: 14px"
-							@click="getInnerData(true, record)"
-							v-if="!judgeInclude(record)">
-							<DownOutlined />
-							展开
-						</a-button>
+						<a-tooltip v-if="!judgeInclude(record)">
+							<template #title>查看平台文件更多信息</template>
+							<a-button
+								type="link"
+								size="small"
+								style="font-size: 14px"
+								@click="getInnerData(true, record)"
+								v-if="!judgeInclude(record)">
+								<DownCircleTwoTone style="font-size: 18px" />
+							</a-button>
+						</a-tooltip>
 					</template>
 				</template>
 				<template #expandedRowRender="{ record }">
 					<a-row :gutter="[16, 16]">
 						<a-col :span="24">
 							FileKey：
-							<strong>
+							<span style="color: #1677ff">
 								{{ record.fileKey }}
-								<CopyTwoTone @click="copyFileKey(record.fileKey)" />
-							</strong>
+								<a-tooltip title="复制 fileKey, 发送你的多媒体消息吧~">
+									<CopyTwoTone @click="copyFileKey(record.fileKey)" />
+								</a-tooltip>
+							</span>
 						</a-col>
 						<a-col :span="6">
 							关联 AppId：
