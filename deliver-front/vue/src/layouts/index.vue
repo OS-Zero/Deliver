@@ -6,8 +6,10 @@ import Section from './components/Section/index.vue'
 
 <template>
 	<a-layout style="min-height: 100%">
-		<Banner></Banner>
-		<Header></Header>
+		<div style="position: fixed; z-index: 999; width: 100%">
+			<Banner></Banner>
+			<Header></Header>
+		</div>
 		<a-layout>
 			<Section></Section>
 		</a-layout>

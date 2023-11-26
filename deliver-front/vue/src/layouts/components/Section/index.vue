@@ -14,6 +14,7 @@ import ItemLink from '../ItemLink/index.vue'
 import Breadcrumb from '../Breadcrumb/index.vue'
 import { useRoute } from 'vue-router'
 import { useStore } from '@/store/index'
+
 const route = useRoute()
 const store = useStore()
 const selectedKeys2 = ref<string[]>([`${route.name as string}-1`])
@@ -32,7 +33,7 @@ const toggleCollapsed = (): void => {
 			overflow: 'auto',
 			height: '100vh',
 			position: 'fixed',
-			top: '85px',
+			top: store.$state.showBannerFlag ? '85px' : '60px',
 			bottom: 0,
 			zIndex: 999
 		}"
@@ -41,8 +42,11 @@ const toggleCollapsed = (): void => {
 		<a-button
 			shape="circle"
 			size="small"
-			style="position: fixed; margin-bottom: 16px"
-			:style="{ left: collapsed ? '70px' : '190px', top: '120px' }"
+			style="position: fixed"
+			:style="{
+				left: collapsed ? '70px' : '190px',
+				top: store.$state.showBannerFlag ? '115px' : '90px'
+			}"
 			@click="toggleCollapsed">
 			<RightOutlined v-if="collapsed" />
 			<LeftOutlined v-else />
@@ -106,7 +110,10 @@ const toggleCollapsed = (): void => {
 	</a-layout-sider>
 	<a-layout
 		style="padding: 0 24px 12px; background: #f8f8f8"
-		:style="{ marginLeft: collapsed ? '80px' : '200px', marginTop: '85px' }">
+		:style="{
+			marginLeft: collapsed ? '80px' : '200px',
+			marginTop: store.$state.showBannerFlag ? '85px' : '60px'
+		}">
 		<Breadcrumb style="margin-bottom: 12px"></Breadcrumb>
 		<a-layout-content>
 			<RouterView></RouterView>

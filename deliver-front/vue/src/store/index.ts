@@ -3,7 +3,8 @@ import { defineStore } from 'pinia'
 export const useStore = defineStore('store', {
 	state: () => {
 		return {
-			collapse: false
+			collapse: false,
+			showBannerFlag: true
 		}
 	},
 	getters: {},
@@ -13,6 +14,9 @@ export const useStore = defineStore('store', {
 		},
 		changeCollapse() {
 			this.collapse = !this.collapse
+		},
+		closeBanner() {
+			this.showBannerFlag = false
 		}
 	}
 })
