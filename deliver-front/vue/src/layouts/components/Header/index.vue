@@ -12,12 +12,12 @@ const setShowAbout = (open: boolean): void => {
 }
 </script>
 <template>
-	<a-layout-header
-		class="header"
-		:style="{ position: 'fixed', top: '25px', zIndex: 999, width: '100%' }">
+	<a-layout-header class="header">
 		<div class="left">
-			<RouterLink to="/"><img src="logo.png" style="height: 100%" alt="空" /></RouterLink>
-			<h1>Deliver 企业消息推送平台</h1>
+			<RouterLink to="/">
+				<img src="logo.png" style="height: 42px; width: 42px; margin-top: 8px" alt="空" />
+			</RouterLink>
+			<RouterLink to="/"><h1>Deliver 企业消息推送平台</h1></RouterLink>
 		</div>
 		<div class="right">
 			<a style="color: #8b8b8b" @click="showAbout = true"><ExclamationCircleOutlined /></a>
@@ -62,13 +62,13 @@ const setShowAbout = (open: boolean): void => {
 .header {
 	display: flex;
 	justify-content: space-between;
-	height: 60px;
 	background-color: #fff;
-
+	height: 60px;
 	.left {
 		display: flex;
-
 		h1 {
+			color: #000;
+			font-size: 20px;
 			height: 60px;
 			line-height: 60px;
 		}
