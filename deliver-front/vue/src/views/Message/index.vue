@@ -30,7 +30,9 @@ import {
 	EditTwoTone,
 	DeleteTwoTone,
 	DownCircleTwoTone,
-	UpCircleTwoTone
+	UpCircleTwoTone,
+	SettingOutlined,
+	ThunderboltOutlined
 } from '@ant-design/icons-vue'
 /**
  * 表格初始化
@@ -421,6 +423,20 @@ const a = computed(() => {
 				:expandedRowKeys="expandedRowKeys"
 				:row-selection="{ selectedRowKeys: state.selectedRowKeys, onChange: onSelectChange }">
 				>
+				<template #headerCell="{ column }">
+					<template v-if="column.key === 'templateId'">
+						<span>
+							<ThunderboltOutlined />
+							模版 ID
+						</span>
+					</template>
+					<template v-if="column.key === 'operation'">
+						<span>
+							<SettingOutlined />
+							操作
+						</span>
+					</template>
+				</template>
 				<template #bodyCell="{ column, record }">
 					<!-- 表格数据渲染 -->
 					<template v-if="column.key === 'templateId'">
@@ -534,8 +550,8 @@ const a = computed(() => {
 							v-if="judgeInclude(record)">
 							<UpCircleTwoTone style="font-size: 18px" />
 						</a-button>
-						<a-tooltip>
-							<template v-if="!judgeInclude(record)" #title>查看消息模版更多信息</template>
+						<a-tooltip v-if="!judgeInclude(record)">
+							<template #title>查看消息模版更多信息</template>
 							<a-button
 								type="link"
 								size="small"

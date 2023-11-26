@@ -17,7 +17,8 @@ onMounted(() => {
 </script>
 <template>
 	<pre>
-    <code :class="'language-'+ type" v-html="Prism.highlight(code, Prism.languages[type], type)"  data-prismjs-copy="复制"></code>
+    <code :class="'language-'+ type" data-prismjs-copy="复制">
+	{{ code }}</code>
  </pre>
 </template>
 <style lang="scss" scoped>
@@ -29,6 +30,6 @@ pre[class*='language-']::selection,
 pre[class*='language-'] ::selection,
 code[class*='language-']::selection,
 code[class*='language-'] ::selection {
-	background: #f8f8f8;
+	background: #282c34;
 }
 </style>

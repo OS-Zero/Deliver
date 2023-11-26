@@ -5,7 +5,8 @@ import {
 	DeleteTwoTone,
 	DownCircleTwoTone,
 	UpCircleTwoTone,
-	ExclamationCircleOutlined
+	ExclamationCircleOutlined,
+	SettingOutlined
 } from '@ant-design/icons-vue'
 import { ref, reactive, h, onMounted, computed } from 'vue'
 import type { UnwrapRef } from 'vue'
@@ -25,6 +26,7 @@ import {
 } from '@/api/channel'
 import JsonEditorVue from 'json-editor-vue3'
 import type { Rule } from 'ant-design-vue/es/form'
+
 /**
  * 表格初始化
  */
@@ -465,7 +467,14 @@ const a = computed(() => {
 				:loading="tableLoadFlag"
 				:row-selection="{ selectedRowKeys: state.selectedRowKeys, onChange: onSelectChange }">
 				>
-
+				<template #headerCell="{ column }">
+					<template v-if="column.key === 'operation'">
+						<span>
+							<SettingOutlined />
+							操作
+						</span>
+					</template>
+				</template>
 				<template #bodyCell="{ column, record }">
 					<template v-if="column.key === 'channelType'">
 						<span>
@@ -528,8 +537,8 @@ const a = computed(() => {
 							v-if="judgeInclude(record)">
 							<UpCircleTwoTone style="font-size: 18px" />
 						</a-button>
-						<a-tooltip>
-							<template v-if="!judgeInclude(record)" #title>查看 APP 更多信息</template>
+						<a-tooltip v-if="!judgeInclude(record)">
+							<template #title>查看 APP 更多信息</template>
 							<a-button
 								type="link"
 								size="small"
