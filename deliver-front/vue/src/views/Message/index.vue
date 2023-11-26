@@ -532,7 +532,7 @@ const a = computed(() => {
 							style="font-size: 14px"
 							@click="getInnerData(false, record)"
 							v-if="judgeInclude(record)">
-							<UpCircleTwoTone />
+							<UpCircleTwoTone style="font-size: 18px" />
 						</a-button>
 						<a-tooltip>
 							<template v-if="!judgeInclude(record)" #title>查看消息模版更多信息</template>
@@ -542,7 +542,7 @@ const a = computed(() => {
 								style="font-size: 14px"
 								@click="getInnerData(true, record)"
 								v-if="!judgeInclude(record)">
-								<DownCircleTwoTone />
+								<DownCircleTwoTone style="font-size: 18px" />
 							</a-button>
 						</a-tooltip>
 
@@ -555,7 +555,7 @@ const a = computed(() => {
 								size="small"
 								style="font-size: 14px"
 								@click="startModify(record)">
-								<EditTwoTone two-tone-color="#1677FF" />
+								<EditTwoTone two-tone-color="#1677FF" style="font-size: 18px" />
 							</a-button>
 						</a-tooltip>
 						<modifyTemplate ref="modifytemplate" :mod="record" @update="updateTemplate()" />
@@ -574,7 +574,7 @@ const a = computed(() => {
 									danger
 									size="small"
 									style="font-size: 14px; margin-left: -5px">
-									<DeleteTwoTone two-tone-color="red" />
+									<DeleteTwoTone two-tone-color="red" style="font-size: 18px" />
 								</a-button>
 							</a-tooltip>
 						</a-popconfirm>

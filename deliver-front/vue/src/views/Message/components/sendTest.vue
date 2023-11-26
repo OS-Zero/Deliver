@@ -149,7 +149,7 @@ const rules: Record<string, Rule[]> = {
 		style="font-size: 14px; margin-left: -5px"
 		@click="showDrawer">
 		<a-tooltip title="测试消息模版发送">
-			<ApiTwoTone />
+			<ApiTwoTone style="font-size: 18px" />
 		</a-tooltip>
 	</a-button>
 	<a-drawer
