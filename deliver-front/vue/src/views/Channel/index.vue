@@ -1,8 +1,10 @@
 <script lang="ts" setup>
 import {
 	ReloadOutlined,
-	DownOutlined,
-	UpOutlined,
+	EditTwoTone,
+	DeleteTwoTone,
+	DownCircleTwoTone,
+	UpCircleTwoTone,
 	ExclamationCircleOutlined
 } from '@ant-design/icons-vue'
 import { ref, reactive, h, onMounted, computed } from 'vue'
@@ -512,6 +514,11 @@ const a = computed(() => {
 								@change="changeStatus(record.appId, record.appStatus)" />
 						</span>
 					</template>
+					<template v-if="column.key === 'useCount'">
+						<a-tag color="red">
+							{{ record.useCount }}
+						</a-tag>
+					</template>
 					<template v-if="column.key === 'operation'">
 						<a-button
 							type="link"
@@ -519,34 +526,47 @@ const a = computed(() => {
 							style="font-size: 14px"
 							@click="getInnerData(false, record)"
 							v-if="judgeInclude(record)">
-							<UpOutlined />
-							收起
+							<UpCircleTwoTone />
 						</a-button>
-						<a-button
-							type="link"
-							size="small"
-							style="font-size: 14px"
-							@click="getInnerData(true, record)"
-							v-if="!judgeInclude(record)">
-							<DownOutlined />
-							展开
-						</a-button>
-						<a-button
-							type="link"
-							class="btn-manager"
-							size="small"
-							style="font-size: 14px"
-							@click="update(record)">
-							编辑
-						</a-button>
+						<a-tooltip>
+							<template v-if="!judgeInclude(record)" #title>查看 APP 更多信息</template>
+							<a-button
+								type="link"
+								size="small"
+								style="font-size: 14px"
+								@click="getInnerData(true, record)"
+								v-if="!judgeInclude(record)">
+								<DownCircleTwoTone />
+							</a-button>
+						</a-tooltip>
+						<a-divider type="vertical" />
+						<a-tooltip>
+							<template #title>修改 APP</template>
+							<a-button
+								type="link"
+								class="btn-manager"
+								size="small"
+								style="font-size: 14px"
+								@click="update(record)">
+								<EditTwoTone two-tone-color="#1677FF" />
+							</a-button>
+						</a-tooltip>
+						<a-divider type="vertical" />
 						<a-popconfirm
 							title="确认删除吗?"
 							@confirm="onDelete(record.appId)"
 							ok-text="确定"
 							cancel-text="取消">
-							<a-button type="link" danger size="small" style="font-size: 14px; margin-left: -5px">
-								删除
-							</a-button>
+							<a-tooltip placement="bottom">
+								<template #title>删除 APP</template>
+								<a-button
+									type="link"
+									danger
+									size="small"
+									style="font-size: 14px; margin-left: -5px">
+									<DeleteTwoTone two-tone-color="red" />
+								</a-button>
+							</a-tooltip>
 						</a-popconfirm>
 					</template>
 				</template>

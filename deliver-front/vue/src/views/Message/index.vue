@@ -512,7 +512,7 @@ const a = computed(() => {
 						</span>
 					</template>
 					<template v-if="column.key === 'messageType'">
-						<span>{{ getMessageTypeArr(record.messageType) }}</span>
+						<span style="color: #1677ff">{{ getMessageTypeArr(record.messageType) }}</span>
 					</template>
 					<template v-if="column.key === 'templateStatus'">
 						<span>
