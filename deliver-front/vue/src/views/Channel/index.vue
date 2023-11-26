@@ -526,7 +526,7 @@ const a = computed(() => {
 							style="font-size: 14px"
 							@click="getInnerData(false, record)"
 							v-if="judgeInclude(record)">
-							<UpCircleTwoTone />
+							<UpCircleTwoTone style="font-size: 18px" />
 						</a-button>
 						<a-tooltip>
 							<template v-if="!judgeInclude(record)" #title>查看 APP 更多信息</template>
@@ -536,7 +536,7 @@ const a = computed(() => {
 								style="font-size: 14px"
 								@click="getInnerData(true, record)"
 								v-if="!judgeInclude(record)">
-								<DownCircleTwoTone />
+								<DownCircleTwoTone style="font-size: 18px" />
 							</a-button>
 						</a-tooltip>
 						<a-divider type="vertical" />
@@ -548,7 +548,7 @@ const a = computed(() => {
 								size="small"
 								style="font-size: 14px"
 								@click="update(record)">
-								<EditTwoTone two-tone-color="#1677FF" />
+								<EditTwoTone two-tone-color="#1677FF" style="font-size: 18px" />
 							</a-button>
 						</a-tooltip>
 						<a-divider type="vertical" />
