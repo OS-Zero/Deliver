@@ -17,7 +17,7 @@ public enum MessageTypeEnum {
     /**
      * 通用 text 消息 (电话、短信、邮件、钉钉、企微、飞书)
      */
-    TEXT("1", "text", "text消息", -1),
+    TEXT("1", "text", "Text 消息", -1),
 
     /**
      * 钉钉消息 4 代表钉钉渠道 1 代表序号
@@ -26,8 +26,8 @@ public enum MessageTypeEnum {
     DING_VOICE("4-2", "voice", "钉钉-语音消息", 4),
     DING_FILE("4-3", "file", "钉钉-文件消息", 4),
     DING_LINK("4-4", "link", "钉钉-链接消息", 4),
-    DING_OA("4-5", "oa", "钉钉-OA消息", 4),
-    DING_MARKDOWN("4-6", "markdown", "钉钉-markdown消息", 4),
+    DING_OA("4-5", "oa", "钉钉-OA 消息", 4),
+    DING_MARKDOWN("4-6", "markdown", "钉钉-markdown 消息", 4),
     DING_CARD("4-7", "action_card", "钉钉-卡片消息", 4),
 
     // todo: 后续添加群聊、机器人消息
@@ -40,8 +40,8 @@ public enum MessageTypeEnum {
     WECHAT_VIDEO("5-3", "video", "企业微信-视频消息", 5),
     WECHAT_FILE("5-4", "file", "企业微信-文件消息", 5),
     WECHAT_TEXT_CARD("5-5", "textcard", "企业微信-文本卡片消息", 5),
-    WECHAT_MPNEWS("5-6", "mpnews", "企业微信-图文消息（mpnews）", 5),
-    WECHAT_MARKDOWN("5-7", "markdown", "企业微信-markdown消息", 5),
+    WECHAT_MPNEWS("5-6", "mpnews", "企业微信-图文消息(mpnews)", 5),
+    WECHAT_MARKDOWN("5-7", "markdown", "企业微信-markdown 消息", 5),
     WECHAT_MINIPROGRAM_NOTICE("5-8", "miniprogram_notice", "企业微信-小程序通知消息", 5),
 
     // todo: 后续添加群聊、机器人消息
