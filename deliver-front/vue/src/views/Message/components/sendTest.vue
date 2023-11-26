@@ -5,14 +5,14 @@ import type { sendMessageTest } from '../type'
 import type { Rule } from 'ant-design-vue/es/form'
 import JsonEditorVue from 'json-editor-vue3'
 import { sendTestMes } from '@/api/message'
-import { ApiTwoTone, PlusOutlined } from '@ant-design/icons-vue'
+import { ApiTwoTone, PlusSquareOutlined } from '@ant-design/icons-vue'
 const props = defineProps({
 	test: Number
 })
 
 const placement = ref<DrawerProps['placement']>('right')
 
-const jsonstr = ref('{ "content": {} }')
+const jsonstr = ref('{"content":{}}')
 
 const jsonobj = ref(JSON.parse(jsonstr.value))
 
@@ -39,13 +39,6 @@ const options = ref({
 })
 
 const modeList = ref(['code']) // 可选模式
-
-const remarkValidate = (): void => {
-	const newjsonstr = JSON.stringify(jsonobj.value)
-	if (jsonstr.value !== newjsonstr) {
-		jsonstr.value = newjsonstr
-	}
-}
 
 const showDrawer = (): void => {
 	open.value = true
@@ -81,8 +74,11 @@ const deleteUserItem = (userItem): void => {
 	}
 }
 
-const changeAddUser = (): void => {
-	addUserFlag.value = false
+const changeAddUser = (flag: boolean): void => {
+	addUserFlag.value = flag
+	if (flag == true) {
+		userItem.value = ''
+	}
 }
 
 const timeOut = ref<number>(3)
@@ -123,17 +119,25 @@ const clearForm = (): void => {
 	addUserFlag.value = true
 	sendtest.value?.resetFields()
 }
-
+const jsonChange = () => {
+	sendtest.value?.validate('paramMap').then(() => {})
+}
 const validatePass = async (): Promise<any> => {
 	if (sendTestTable.users.length === 0) {
 		throw new Error('请添加至少一个用户')
 	}
 	await Promise.resolve()
 }
-
+const remarkValidate = async (): Promise<any> => {
+	const newjsonstr = JSON.stringify(sendTestTable.paramMap)
+	if ('{}' == newjsonstr || newjsonstr == jsonstr.value) {
+		throw new Error('请输入正确的请求参数')
+	}
+	await Promise.resolve()
+}
 const rules: Record<string, Rule[]> = {
 	users: [{ required: true, validator: validatePass, trigger: 'change' }],
-	paramMap: [{ required: true, message: '请输入请求参数', trigger: 'change' }]
+	paramMap: [{ required: true, validator: remarkValidate, trigger: 'change' }]
 }
 </script>
 
@@ -158,7 +162,7 @@ const rules: Record<string, Rule[]> = {
 		<a-form ref="sendtest" :model="sendTestTable" :rules="rules">
 			<a-form-item label="用户列表" name="users">
 				<a-list
-					:locale="{ emptyText: '暂无数据' }"
+					:locale="{ emptyText: ' ' }"
 					bordered
 					v-model:value="sendTestTable.users"
 					:data-source="sendTestTable.users">
@@ -174,18 +178,21 @@ const rules: Record<string, Rule[]> = {
 					</template>
 					<template #header><span style="color: #3883fa">用户 ID 列表</span></template>
 					<template #footer>
-						<a-form-item label="" name="userItem">
-							<a v-if="addUserFlag" @click="changeAddUser">
-								<PlusOutlined style="color: #3883fa" />
-								<span style="color: #3883fa; margin-left: 5px">添加</span>
+						<a-form-item label="" name="userItem" style="text-align: center">
+							<a v-if="addUserFlag" @click="changeAddUser(false)">
+								<a-tooltip title="添加用户">
+									<PlusSquareOutlined style="font-size: 40px; color: #c4c3c3" />
+								</a-tooltip>
 							</a>
+
 							<a-input-group compact v-if="!addUserFlag">
 								<a-input
 									v-model:value="userItem"
 									:maxlength="100"
 									placeholder="请输入用户 ID 添加至用户列表"
-									style="width: 382px"></a-input>
-								<a-button type="primary" @click="addUser">添加</a-button>
+									style="width: 332px; text-align: left"></a-input>
+								<a-button @click="changeAddUser(true)">取消</a-button>
+								<a-button type="primary" @click="addUser">确认</a-button>
 							</a-input-group>
 						</a-form-item>
 					</template>
@@ -195,10 +202,10 @@ const rules: Record<string, Rule[]> = {
 				<json-editor-vue
 					class="editor"
 					v-model="sendTestTable.paramMap"
-					@blur="remarkValidate"
 					currentMode="code"
 					:modeList="modeList"
 					:options="options"
+					@change="jsonChange"
 					language="cn" />
 			</a-form-item>
 			<a-form-item label="重试次数" name="retry" style="margin-left: 10px">
