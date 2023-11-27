@@ -3,8 +3,7 @@ import { ref } from 'vue'
 import {
 	ExclamationCircleOutlined,
 	QuestionCircleOutlined,
-	GithubOutlined,
-	UserOutlined
+	GithubOutlined
 } from '@ant-design/icons-vue'
 const showAbout = ref(false)
 const setShowAbout = (open: boolean): void => {
@@ -15,12 +14,19 @@ const setShowAbout = (open: boolean): void => {
 	<a-layout-header class="header">
 		<div class="left">
 			<RouterLink to="/">
-				<img src="logo.png" style="height: 42px; width: 42px; margin-top: 8px" alt="空" />
+				<img
+					src="logo.png"
+					style="height: 28px; width: 33px; margin-top: 16px; margin-right: 8px"
+					alt="空" />
 			</RouterLink>
 			<RouterLink to="/"><h1>Deliver 企业消息推送平台</h1></RouterLink>
 		</div>
 		<div class="right">
-			<a style="color: #8b8b8b" @click="showAbout = true"><ExclamationCircleOutlined /></a>
+			<a-tooltip title="关于">
+				<a style="color: #8b8b8b; font-size: 16px" @click="showAbout = true">
+					<ExclamationCircleOutlined />
+				</a>
+			</a-tooltip>
 			<a-modal
 				v-model:open="showAbout"
 				title="关于"
@@ -31,7 +37,7 @@ const setShowAbout = (open: boolean): void => {
 				:footer="null">
 				<div style="display: flex; margin-top: 20px">
 					<div style="display: flex">
-						<img src="logo.png" style="width: 60px; height: 60px" alt="" />
+						<img src="logo.png" style="width: 66px; height: 56px" alt="" />
 						<h1 style="display: inline-block; height: 60px; line-height: 60px">Deliver</h1>
 					</div>
 					<div style="margin-left: 60px">
@@ -43,17 +49,25 @@ const setShowAbout = (open: boolean): void => {
 					</div>
 				</div>
 			</a-modal>
-			<a target="_blank" href="https://os-zero.gitee.io/deliver-website" style="color: #8b8b8b">
-				<QuestionCircleOutlined />
-			</a>
-			<a href="https://gitee.com/OS-Zero/deliver" target="_blank" style="color: #8b8b8b">
-				<GithubOutlined />
-			</a>
+			<a-tooltip title="疑问">
+				<a
+					target="_blank"
+					href="https://os-zero.gitee.io/deliver-website"
+					style="color: #8b8b8b; font-size: 16px">
+					<QuestionCircleOutlined />
+				</a>
+			</a-tooltip>
+			<a-tooltip title="Gitee">
+				<a
+					href="https://gitee.com/OS-Zero/deliver"
+					target="_blank"
+					style="color: #8b8b8b; font-size: 16px">
+					<GithubOutlined />
+				</a>
+			</a-tooltip>
 			<span class="avatar">
-				<a-avatar style="width: 30px; height: 30px">
-					<template #icon><UserOutlined /></template>
-				</a-avatar>
-				<span class="name">admin</span>
+				<a-avatar style="width: 30px; height: 30px; font-size: 16px" src="mayi.png"></a-avatar>
+				<span class="name">Deliver</span>
 			</span>
 		</div>
 	</a-layout-header>
@@ -64,11 +78,13 @@ const setShowAbout = (open: boolean): void => {
 	justify-content: space-between;
 	background-color: #fff;
 	height: 60px;
+	margin-left: -28px;
+	margin-right: -28px;
 	.left {
 		display: flex;
 		h1 {
 			color: #000;
-			font-size: 20px;
+			font-size: 18px;
 			height: 60px;
 			line-height: 60px;
 		}
@@ -79,19 +95,18 @@ const setShowAbout = (open: boolean): void => {
 		color: #8b8b8b;
 
 		a {
-			margin-right: 10px;
+			margin-right: 12px;
 		}
 
 		.avatar {
 			display: inline-block;
 			height: 100%;
 			padding-right: 20px;
-			//border-left: 1px solid #c0c0c0;
 			padding-left: 20px;
 
 			.name {
 				margin-left: 10px;
-				font-size: 16px;
+				font-size: 15px;
 			}
 		}
 
