@@ -6,7 +6,8 @@ import {
 	LeftOutlined,
 	RightOutlined,
 	SmileOutlined,
-	AppstoreOutlined
+	AppstoreOutlined,
+	GithubOutlined
 } from '@ant-design/icons-vue'
 import { ref } from 'vue'
 import ItemLink from '../ItemLink/index.vue'
@@ -122,6 +123,23 @@ const toggleCollapsed = (): void => {
 		<a-layout-content>
 			<RouterView></RouterView>
 		</a-layout-content>
+		<a-layout-footer
+			:style="{
+				textAlign: 'center',
+				backgroundColor: '#F8F8F8'
+			}">
+			<div style="margin-bottom: 6px">
+				Deliver 企业消息推送平台
+				<a
+					href="https://gitee.com/OS-Zero"
+					target="_blank"
+					style="color: #636363; font-size: 16px; margin: 0 5px 0">
+					<GithubOutlined />
+				</a>
+				OSZero 开源社区出品
+			</div>
+			<div>Copyright © 2023 OSZero. All rights reserved.</div>
+		</a-layout-footer>
 	</a-layout>
 </template>
 <style lang="scss" scoped></style>
