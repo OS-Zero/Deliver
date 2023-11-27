@@ -6,7 +6,7 @@ spring:
   application:
     name: deliver-admin
   profiles:
-    active: local
+    active: dev
   servlet:
     multipart:
       max-file-size: 30MB
