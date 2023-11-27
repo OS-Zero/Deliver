@@ -126,14 +126,15 @@ const toggleCollapsed = (): void => {
 		<a-layout-footer
 			:style="{
 				textAlign: 'center',
-				backgroundColor: '#F8F8F8'
+				backgroundColor: '#F8F8F8',
+				color: '#1E1E1E'
 			}">
 			<div style="margin-bottom: 6px">
 				Deliver 企业消息推送平台
 				<a
 					href="https://gitee.com/OS-Zero"
 					target="_blank"
-					style="color: #636363; font-size: 16px; margin: 0 5px 0">
+					style="color: #1e1e1e; font-size: 16px; margin: 0 5px 0">
 					<GithubOutlined />
 				</a>
 				OSZero 开源社区出品

@@ -46,14 +46,17 @@ const cards = ref<Card[]>([
 			是一个面向企业的全面消息推送平台，旨在提供企业内部沟通和协作的便捷解决方案。它以轻量级部署、简单易用、支持多种通信渠道为特点，为企业提供高效的消息传递和通知功能。
 		</p>
 		<a-row :gutter="[16, 16]">
-			<a-col class="gutter-row" :span="8" v-for="item in cards" :key="item.title">
-				<a-card style="height: 100%">
+			<a-col :span="8" v-for="(item, index) in cards" :key="item.title">
+				<a-card style="height: 100%; border: 0px solid #ececec" class="gutter-row">
 					<a-card-meta :title="item.title" :description="item.desc" style="height: 100px">
 						<template #avatar>
 							<a-avatar
 								:size="40"
 								class="avatar"
 								src="https://gw.alipayobjects.com/zos/bmw-prod/daaf8d50-8e6d-4251-905d-676a24ddfa12.svg" />
+							<span style="position: absolute; top: 24.5px; left: 38.5px; color: #fff">
+								{{ index + 1 }}
+							</span>
 						</template>
 					</a-card-meta>
 					<template #actions>
@@ -68,7 +71,15 @@ const cards = ref<Card[]>([
 #welcome-container {
 	padding: 24px;
 	background-image: linear-gradient(to bottom, #eff3ff, #f0f5ff);
-	border-radius: 6px;
+	border-radius: 12px;
+	border: 1px solid #ececec;
+	.gutter-row {
+		box-shadow:
+			rgba(0, 0, 0, 0.08) 0px 6px 16px 0px,
+			rgba(0, 0, 0, 0.12) 0px 3px 6px -4px,
+			rgba(0, 0, 0, 0.05) 0px 9px 28px 8px;
+		border-radius: 8px;
+	}
 
 	h1 {
 		font-size: 20px;
