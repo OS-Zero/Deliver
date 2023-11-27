@@ -1,25 +1,25 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { onMounted, reactive, ref, watch } from 'vue'
 import { message, type DrawerProps, type FormInstance } from 'ant-design-vue'
 import type { sendMessageTest } from '../type'
 import type { Rule } from 'ant-design-vue/es/form'
 import JsonEditorVue from 'json-editor-vue3'
-import { sendTestMes } from '@/api/message'
+import { getMessageParamByMessageType, sendTestMes } from '@/api/message'
 import { ApiTwoTone, PlusSquareOutlined } from '@ant-design/icons-vue'
 const props = defineProps({
-	test: Number
+	test: Number,
+	messageType: String,
+	channelType: String
 })
 
 const placement = ref<DrawerProps['placement']>('right')
 
-const jsonstr = ref('{"content":{}}')
-
-const jsonobj = ref(JSON.parse(jsonstr.value))
+const jsonstr = ref('{}')
 
 const sendTestTable = reactive<sendMessageTest>({
 	templateId: Number(props.test),
 	users: [] as string[],
-	paramMap: jsonobj.value,
+	paramMap: JSON.parse(jsonstr.value),
 	retry: undefined
 })
 
@@ -118,6 +118,7 @@ const clearForm = (): void => {
 	userItem.value = ''
 	addUserFlag.value = true
 	sendtest.value?.resetFields()
+	sendTestTable.paramMap = JSON.parse(jsonstr.value)
 }
 const jsonChange = () => {
 	sendtest.value?.validate('paramMap').then(() => {})
@@ -139,6 +140,22 @@ const rules: Record<string, Rule[]> = {
 	users: [{ required: true, validator: validatePass, trigger: 'change' }],
 	paramMap: [{ required: true, validator: remarkValidate, trigger: 'change' }]
 }
+onMounted(() => {})
+watch(open, (newValue) => {
+	if (newValue == true) {
+		getMessageParamByMessageType({
+			messageType: props.messageType ? props.messageType : '',
+			channelType: props.channelType ? props.channelType : ''
+		})
+			.then((res) => {
+				sendTestTable.paramMap = JSON.parse(res.data)
+				jsonstr.value = JSON.stringify(sendTestTable.paramMap)
+			})
+			.catch((err) => {
+				console.error('An error occurred:', err)
+			})
+	}
+})
 </script>
 
 <template>

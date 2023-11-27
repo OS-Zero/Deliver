@@ -576,7 +576,10 @@ const a = computed(() => {
 						</a-tooltip>
 						<modifyTemplate ref="modifytemplate" :mod="record" @update="updateTemplate()" />
 						<a-divider type="vertical" />
-						<sendTest :test="record.templateId" />
+						<sendTest
+							:test="record.templateId"
+							:message-type="record.messageType"
+							:channel-type="record.channelType" />
 						<a-divider type="vertical" />
 						<a-popconfirm
 							title="确认删除吗?"

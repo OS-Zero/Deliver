@@ -67,4 +67,12 @@ public interface TemplateService extends IService<Template> {
      * @param sendTestRequestDto 参数
      */
     void testSendMessage(SendTestRequestDto sendTestRequestDto);
+
+    /**
+     * 获取消息参数模版通过消息类型
+     *
+     * @param dto dto
+     * @return 消息参数
+     */
+    String getMessageParamByMessageType(TemplateMessageParamByMessageTypeRequestDto dto);
 }
