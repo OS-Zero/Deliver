@@ -39,3 +39,11 @@ export async function updateAppItem(data: updateTemp): Promise<any> {
 		data
 	})
 }
+
+export async function getAppConfigByChannelType(data: { channelType: number }): Promise<any> {
+	return await request({
+		url: '/app/getAppConfigByChannelType',
+		method: 'post',
+		data
+	})
+}

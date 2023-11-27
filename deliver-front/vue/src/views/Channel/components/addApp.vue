@@ -3,6 +3,7 @@ import type { Rule } from 'ant-design-vue/es/form'
 import { ref, reactive } from 'vue'
 import type { addTemp } from '../type'
 import JsonEditorVue from 'json-editor-vue3'
+import { getAppConfigByChannelType } from '@/api/channel'
 // 新增操作
 interface DelayLoading {
 	delay: number
@@ -52,7 +53,7 @@ const modeList = ref(['code']) // 可选模式
 
 const appConfigValidate = async (): Promise<any> => {
 	const newjsonstr = JSON.stringify(jsonobj.value)
-	if (jsonstr.value === newjsonstr) {
+	if (jsonstr.value == newjsonstr) {
 		throw new Error('请正确输入 APP 配置')
 	}
 	await Promise.resolve()
@@ -67,6 +68,13 @@ channelData.value = [
 	{ value: '5', label: '企业微信' },
 	{ value: '6', label: '飞书' }
 ]
+
+const channelTypeSelect = (value) => {
+	getAppConfigByChannelType({ channelType: value }).then((res) => {
+		jsonobj.value = JSON.parse(res.data)
+		jsonstr.value = JSON.stringify(jsonobj.value)
+	})
+}
 
 // 提交并传递
 const emit = defineEmits(['add'])
@@ -141,6 +149,7 @@ defineExpose({
 				<a-select
 					v-model:value="templateItem.channelType"
 					:options="channelData.map((pro) => ({ value: pro.value, label: pro.label }))"
+					@select="channelTypeSelect"
 					style="width: 70%" />
 			</a-form-item>
 			<a-form-item label="APP 配置" name="appConfig" class="tem-item" :wrapper-col="{ span: 16 }">

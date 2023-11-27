@@ -22,7 +22,8 @@ import {
 	getAppInfo,
 	deleteAppInfo,
 	updateAppStatus,
-	updateAppItem
+	updateAppItem,
+	getAppConfigByChannelType
 } from '@/api/channel'
 import JsonEditorVue from 'json-editor-vue3'
 import type { Rule } from 'ant-design-vue/es/form'
@@ -332,6 +333,7 @@ const changeStatus = (id: number, status: number): void => {
 			console.error('An error occurred:', err)
 		})
 }
+
 /// 修改 APP
 const templateForm = ref()
 
@@ -375,10 +377,15 @@ const handleCancel = (): void => {
 const jsonChange = () => {
 	templateForm.value?.validate('appConfig').then(() => {})
 }
-
+const channelTypeSelect = (value) => {
+	getAppConfigByChannelType({ channelType: value }).then((res) => {
+		jsonobj.value = JSON.parse(res.data)
+		jsonstr.value = JSON.stringify(jsonobj.value)
+	})
+}
 const appConfigValidate = async (): Promise<any> => {
 	const newjsonstr = JSON.stringify(jsonobj.value)
-	if (newjsonstr == '{}') {
+	if (jsonstr.value == newjsonstr) {
 		throw new Error('请正确输入 APP 配置')
 	}
 	await Promise.resolve()
@@ -641,6 +648,7 @@ const a = computed(() => {
 				<a-select
 					v-model:value="updateDate.channelType"
 					:options="channelData.map((pro) => ({ value: pro.value, label: pro.label }))"
+					@select="channelTypeSelect"
 					style="width: 70%" />
 			</a-form-item>
 			<a-form-item label="APP 配置" name="appConfig" class="tem-item" :wrapper-col="{ span: 16 }">
