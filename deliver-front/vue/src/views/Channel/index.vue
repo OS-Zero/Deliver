@@ -46,8 +46,7 @@ const jsonobj = ref<object>(JSON.parse(jsonstr.value))
 
 const update = (appData): void => {
 	open.value = true
-	jsonstr.value = appData.appConfig ?? '{}'
-	jsonobj.value = JSON.parse(jsonstr.value)
+	jsonobj.value = JSON.parse(appData.appConfig)
 	updateDate.value = JSON.parse(JSON.stringify(appData))
 }
 
