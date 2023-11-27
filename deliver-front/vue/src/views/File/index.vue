@@ -113,8 +113,8 @@ const searchItem: searchPlatformFile = reactive({
 
 const total = ref()
 
-const current = ref()
-const pageSize = ref()
+const current = ref(1)
+const pageSize = ref(10)
 
 const change = (page: number, pageSize: number): void => {
 	getPagesPlatformFile({ page, pageSize, opt: 1 })

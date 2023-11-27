@@ -307,8 +307,8 @@ const searchItem: searchMessage = reactive({
 
 const total = ref()
 
-const current = ref()
-const pageSize = ref()
+const current = ref(1)
+const pageSize = ref(10)
 
 const change = (page: number, pageSize: number): void => {
 	searchTemplate({ page, pageSize, opt: 1 })
