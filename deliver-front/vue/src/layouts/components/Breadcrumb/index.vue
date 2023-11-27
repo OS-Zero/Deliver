@@ -25,7 +25,7 @@ watch(
 )
 </script>
 <template>
-	<a-breadcrumb :routes="routes" separator=">" style="margin-top: 12px">
+	<a-breadcrumb :routes="routes" separator="/" style="margin-top: 28px">
 		<template #itemRender="{ route, paths }">
 			<span v-if="routes.indexOf(route) === routes.length - 1">
 				{{ route.breadcrumbName }}
