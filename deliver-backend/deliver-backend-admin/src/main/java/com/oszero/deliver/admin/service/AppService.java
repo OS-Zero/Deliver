@@ -60,4 +60,12 @@ public interface AppService extends IService<App> {
      * @param dto 参数
      */
     void updateStatusById(AppUpdateStatusRequestDto dto);
+
+    /**
+     * 获取 APP 配置通过渠道
+     *
+     * @param dto 渠道 dto
+     * @return APP 配置
+     */
+    String getAppConfigByChannelType(AppConfigByChannelRequestDto dto);
 }

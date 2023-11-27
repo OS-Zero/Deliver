@@ -6,6 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.oszero.deliver.admin.constant.AppConfigConstant;
 import com.oszero.deliver.admin.exception.BusinessException;
 import com.oszero.deliver.admin.mapper.AppMapper;
 import com.oszero.deliver.admin.model.dto.request.*;
@@ -155,6 +156,32 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>
                 throw new BusinessException("此 APP 名(" + appName + ")已存在！！！");
             }
         }
+    }
+
+    @Override
+    public String getAppConfigByChannelType(AppConfigByChannelRequestDto dto) {
+        Integer channelType = dto.getChannelType();
+        switch (channelType) {
+            case 1: {
+                return AppConfigConstant.CALL_CONFIG;
+            }
+            case 2: {
+                return AppConfigConstant.SMS_CONFIG;
+            }
+            case 3: {
+                return AppConfigConstant.MAIL_CONFIG;
+            }
+            case 4: {
+                return AppConfigConstant.DING_CONFIG;
+            }
+            case 5: {
+                return AppConfigConstant.WECHAT_CONFIG;
+            }
+            case 6: {
+                return AppConfigConstant.FEI_SHU_CONFIG;
+            }
+        }
+        return "{}";
     }
 }
 

@@ -101,4 +101,9 @@ public class AppController {
         List<AppByChannelResponseDto> appList = appService.getAppByChannelType(dto);
         return CommonResult.success(appList);
     }
+
+    @PostMapping("/getAppConfigByChannelType")
+    public CommonResult<String> getAppConfigByChannelType(@Valid @RequestBody AppConfigByChannelRequestDto dto) {
+        return CommonResult.success(appService.getAppConfigByChannelType(dto));
+    }
 }
