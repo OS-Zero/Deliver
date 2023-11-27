@@ -26,8 +26,8 @@
 ![](image/architecture_diagram.png)
 
 ## 消息发送时序图
-<img alt="消息时序图-生产者" src="img/消息时序图-生产者.png">
-<img alt="消息时序图-消费者" src="img/消息时序图-消费者.png">
+<img alt="消息时序图-生产者" src="image/消息时序图-生产者.png">
+<img alt="消息时序图-消费者" src="image/消息时序图-消费者.png">
 
 ## 核心特性
 
