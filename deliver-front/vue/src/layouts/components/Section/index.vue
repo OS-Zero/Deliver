@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import {
 	MessageOutlined,
-	// FunnelPlotOutlined,
 	FileTextOutlined,
 	DashboardOutlined,
 	LeftOutlined,
@@ -35,7 +34,8 @@ const toggleCollapsed = (): void => {
 			position: 'fixed',
 			top: store.$state.showBannerFlag ? '85px' : '60px',
 			bottom: 0,
-			zIndex: 999
+			zIndex: 998,
+			borderRight: '1px solid #ececec'
 		}"
 		style="background: #fff"
 		:collapsed="collapsed">
@@ -51,70 +51,74 @@ const toggleCollapsed = (): void => {
 			<RightOutlined v-if="collapsed" />
 			<LeftOutlined v-else />
 		</a-button>
-		<a-menu v-model:selectedKeys="selectedKeys2" v-model:openKeys="openKeys" mode="inline">
-			<a-sub-menu key="welcome">
+		<a-menu
+			v-model:selectedKeys="selectedKeys2"
+			v-model:openKeys="openKeys"
+			mode="inline"
+			style="border-right: 0px solid #ececec">
+			<a-sub-menu key="欢迎">
 				<template #title>
 					<span>
 						<SmileOutlined />
 						<span>欢迎</span>
 					</span>
 				</template>
-				<ItemLink itemKey="welcome-1" info="欢迎" to="welcome" />
+				<ItemLink itemKey="欢迎-1" info="欢迎" to="welcome" />
 			</a-sub-menu>
-			<a-sub-menu key="dashboard">
+			<a-sub-menu key="控制面板">
 				<template #title>
 					<span>
 						<DashboardOutlined />
 						<span>系统监控看板</span>
 					</span>
 				</template>
-				<ItemLink itemKey="dashboard-1" info="平台数据看板" to="dashboard" />
+				<ItemLink itemKey="控制面板-1" info="平台数据看板" to="dashboard" />
 			</a-sub-menu>
-			<a-sub-menu key="message">
+			<a-sub-menu key="消息配置">
 				<template #title>
 					<span>
 						<MessageOutlined />
 						<span>消息模板配置</span>
 					</span>
 				</template>
-				<ItemLink itemKey="message-1" info="消息模板" to="message" />
+				<ItemLink itemKey="消息配置-1" info="消息模板" to="message" />
 			</a-sub-menu>
-			<a-sub-menu key="channel">
+			<a-sub-menu key="APP 配置">
 				<template #title>
 					<span>
 						<AppstoreOutlined />
 						<span>渠道 APP 配置</span>
 					</span>
 				</template>
-				<ItemLink itemKey="channel-1" info="APP 配置" to="channel" />
+				<ItemLink itemKey="APP 配置-1" info="APP 配置" to="channel" />
 			</a-sub-menu>
-			<a-sub-menu key="file">
+			<a-sub-menu key="文件管理">
 				<template #title>
 					<span>
 						<FileTextOutlined />
 						<span>平台文件管理</span>
 					</span>
 				</template>
-				<ItemLink itemKey="file-1" info="文件管理" to="file" />
+				<ItemLink itemKey="文件管理-1" info="文件管理" to="file" />
 			</a-sub-menu>
-			<!-- <a-sub-menu key="flowControlRule">
+			<!-- <a-sub-menu key="规则配置">
 				<template #title>
 					<span>
 						<FunnelPlotOutlined />
 						<span>流控规则配置</span>
 					</span>
 				</template>
-				<ItemLink itemKey="flowControlRule-1" info="规则配置" to="flowControlRule" />
+				<ItemLink itemKey="规则配置-1" info="规则配置" to="flowControlRule" />
 			</a-sub-menu> -->
 		</a-menu>
 	</a-layout-sider>
 	<a-layout
-		style="padding: 0 24px 12px; background: #f8f8f8"
+		style="padding: 0 42px 24px; background: #f8f8f8"
 		:style="{
 			marginLeft: collapsed ? '80px' : '200px',
 			marginTop: store.$state.showBannerFlag ? '85px' : '60px'
 		}">
-		<Breadcrumb style="margin-bottom: 12px"></Breadcrumb>
+		<Breadcrumb style="margin-bottom: 24px"></Breadcrumb>
 		<a-layout-content>
 			<RouterView></RouterView>
 		</a-layout-content>
