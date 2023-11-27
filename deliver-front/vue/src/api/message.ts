@@ -67,3 +67,14 @@ export async function sendTestMes(data: sendMessageTest): Promise<any> {
 		data
 	})
 }
+
+export async function getMessageParamByMessageType(data: {
+	messageType: string
+	channelType: string
+}): Promise<any> {
+	return await request({
+		url: '/template/getMessageParamByMessageType',
+		method: 'post',
+		data
+	})
+}

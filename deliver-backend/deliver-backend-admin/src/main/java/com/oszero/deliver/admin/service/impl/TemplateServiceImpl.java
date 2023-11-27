@@ -8,6 +8,7 @@ import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.oszero.deliver.admin.constant.MessageParamConstant;
 import com.oszero.deliver.admin.enums.MessageTypeEnum;
 import com.oszero.deliver.admin.exception.BusinessException;
 import com.oszero.deliver.admin.mapper.TemplateMapper;
@@ -205,7 +206,9 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template>
     @Override
     public void testSendMessage(SendTestRequestDto sendTestRequestDto) {
         try {
-            HttpResponse response = HttpRequest.post("http://localhost:7070/open/sendMessage")
+            // 修改为自己的地址
+            String serverUrl = "http://localhost:7070/open/sendMessage";
+            HttpResponse response = HttpRequest.post(serverUrl)
                     .header("ContentType", "application/json")
                     .body(JSONUtil.toJsonStr(sendTestRequestDto))
                     .execute();
@@ -216,6 +219,13 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template>
         } catch (Exception exception) {
             throw new BusinessException("测试发送接口失败！！！");
         }
+    }
+
+    @Override
+    public String getMessageParamByMessageType(TemplateMessageParamByMessageTypeRequestDto dto) {
+        String messageType = dto.getMessageType();
+        Integer channelType = dto.getChannelType();
+        return MessageParamConstant.MESSAGE_PARAM_MAP.getOrDefault(channelType + MessageParamConstant.H + messageType, "{}");
     }
 }
 

@@ -112,6 +112,11 @@ public class TemplateController {
         return CommonResult.success();
     }
 
+    @PostMapping("/getMessageParamByMessageType")
+    public CommonResult<String> getMessageParamByMessageType(@Valid @RequestBody TemplateMessageParamByMessageTypeRequestDto dto) {
+        return CommonResult.success(templateService.getMessageParamByMessageType(dto));
+    }
+
     /**
      * excel 批量导入模板
      *
