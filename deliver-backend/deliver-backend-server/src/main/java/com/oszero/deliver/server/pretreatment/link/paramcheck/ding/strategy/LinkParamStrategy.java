@@ -23,10 +23,14 @@ public class LinkParamStrategy implements ParamStrategy {
     @Override
     public void paramCheck(SendTaskDto sendTaskDto) throws Exception {
         Map<String, Object> paramMap = sendTaskDto.getParamMap();
-        String msg = JSONUtil.toJsonStr(paramMap.get("msg"));
-        DingLinkParam.LinkMessage linkMessage = JSONUtil.toBean(msg, DingLinkParam.LinkMessage.class);
-        linkMessage.setMsgtype(MessageTypeEnum.DING_LINK.getMsgType());
-        paramMap.put("msg", linkMessage);
+        String pushSubject = paramMap.get("pushSubject").toString();
+        if ("robot".equals(pushSubject)) {
+            paramMap.put("msgKey", "sampleLink");
+        } else {
+            Map<String, Object> msg = (Map<String, Object>) paramMap.get("msg");
+            msg.put("msgtype", MessageTypeEnum.DING_LINK.getMsgType());
+        }
+
         String json = JSONUtil.toJsonStr(paramMap);
         JSONUtil.toBean(json, DingLinkParam.class);
         sendTaskDto.setParamJson(json);

@@ -24,10 +24,14 @@ public class FileParamStrategy implements ParamStrategy {
     @Override
     public void paramCheck(SendTaskDto sendTaskDto) throws Exception {
         Map<String, Object> paramMap = sendTaskDto.getParamMap();
-        String msg = JSONUtil.toJsonStr(paramMap.get("msg"));
-        DingFileParam.FileMessage  fileMessage = JSONUtil.toBean(msg, DingFileParam.FileMessage.class);
-        fileMessage.setMsgtype(MessageTypeEnum.DING_FILE.getMsgType());
-        paramMap.put("msg", fileMessage);
+        String pushSubject = paramMap.get("pushSubject").toString();
+        if ("robot".equals(pushSubject)) {
+            paramMap.put("msgKey", "sampleFile");
+        } else {
+            Map<String, Object> msg = (Map<String, Object>) paramMap.get("msg");
+            msg.put("msgtype", MessageTypeEnum.DING_FILE.getMsgType());
+        }
+
         String json = JSONUtil.toJsonStr(paramMap);
         JSONUtil.toBean(json, DingFileParam.class);
         sendTaskDto.setParamJson(json);

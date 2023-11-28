@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,15 +32,30 @@ public class DingParamCheck implements BusinessLink<SendTaskDto> {
         SendTaskDto sendTaskDto = context.getProcessModel();
         String dingDingApp = sendTaskDto.getAppConfigJson();
         DingApp dingApp = JSONUtil.toBean(dingDingApp, DingApp.class);
+
+        // 得到参数 Map
         Map<String, Object> paramMap = sendTaskDto.getParamMap();
 
-        String s = sendTaskDto.getUsers().toString();
-        String substring = s.substring(1, s.length() - 1);
+        String pushSubject = paramMap.get("pushSubject").toString();
+        String dingUserIdType = paramMap.get("dingUserIdType").toString();
+        List<String> users = sendTaskDto.getUsers();
 
-        // 钉钉 userid_list、agent_id 在请求参数里
-        paramMap.put("userid_list", substring);
-        paramMap.put("agent_id", dingApp.getAgentId());
+        // 封装通用参数
+        if ("robot".equals(pushSubject)) {
+            if ("openConversationId".equals(dingUserIdType)) {
+                paramMap.put(dingUserIdType, users.get(0));
+            } else {
+                paramMap.put(dingUserIdType, users);
+            }
+            paramMap.put("robotCode", dingApp.getRobotCode());
+        } else if ("workNotice".equals(pushSubject)) {
+            paramMap.put(dingUserIdType, String.join(",", users));
+            paramMap.put("agent_id", dingApp.getAgentId());
+        } else {
+            throw new LinkProcessException("钉钉消息校验异常，不支持此推送主体！！！");
+        }
 
+        // 参数校验
         ParamStrategy paramStrategy = dingParamStrategyMap.get(ParamStrategy.DING_STRATEGY_BEAN_PRE_NAME + sendTaskDto.getMessageType());
 
         try {

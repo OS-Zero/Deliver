@@ -23,10 +23,14 @@ public class ImageParamStrategy implements ParamStrategy {
     @Override
     public void paramCheck(SendTaskDto sendTaskDto) throws Exception {
         Map<String, Object> paramMap = sendTaskDto.getParamMap();
-        String msg = JSONUtil.toJsonStr(paramMap.get("msg"));
-        DingImageParam.ImageMessage imageMessage = JSONUtil.toBean(msg, DingImageParam.ImageMessage.class);
-        imageMessage.setMsgtype(MessageTypeEnum.DING_IMAGE.getMsgType());
-        paramMap.put("msg", imageMessage);
+        String pushSubject = paramMap.get("pushSubject").toString();
+        if ("robot".equals(pushSubject)) {
+            paramMap.put("msgKey", "sampleImageMsg");
+        } else {
+            Map<String, Object> msg = (Map<String, Object>) paramMap.get("msg");
+            msg.put("msgtype", MessageTypeEnum.DING_IMAGE.getMsgType());
+        }
+
         String json = JSONUtil.toJsonStr(paramMap);
         JSONUtil.toBean(json, DingImageParam.class);
         sendTaskDto.setParamJson(json);

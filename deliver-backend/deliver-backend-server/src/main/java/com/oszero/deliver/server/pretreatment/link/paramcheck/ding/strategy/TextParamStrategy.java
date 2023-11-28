@@ -21,10 +21,14 @@ public class TextParamStrategy implements ParamStrategy {
     @Override
     public void paramCheck(SendTaskDto sendTaskDto) throws Exception {
         Map<String, Object> paramMap = sendTaskDto.getParamMap();
-        String msg = JSONUtil.toJsonStr(paramMap.get("msg"));
-        DingTextParam.TextMessage textMessage = JSONUtil.toBean(msg, DingTextParam.TextMessage.class);
-        textMessage.setMsgtype(MessageTypeEnum.TEXT.getMsgType());
-        paramMap.put("msg", textMessage);
+        String pushSubject = paramMap.get("pushSubject").toString();
+        if ("robot".equals(pushSubject)) {
+            paramMap.put("msgKey", "sampleText");
+        } else {
+            Map<String, Object> msg = (Map<String, Object>) paramMap.get("msg");
+            msg.put("msgtype", MessageTypeEnum.TEXT.getMsgType());
+        }
+
         String json = JSONUtil.toJsonStr(paramMap);
         JSONUtil.toBean(json, DingTextParam.class);
         sendTaskDto.setParamJson(json);

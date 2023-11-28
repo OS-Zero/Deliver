@@ -91,6 +91,8 @@ public class DingUtils {
                 .body(body)
                 .execute();
 
+        log.info("发送钉钉工作通知消息成功，钉钉响应为：{}", response.body());
+
         DingSendInfoResponseBody dingSendInfoResponseBody = JSONUtil.toBean(response.body(), DingSendInfoResponseBody.class);
         if (dingSendInfoResponseBody.errcode != 0) {
             throw new LinkProcessException("DingDing消息发送失败!!!");
@@ -111,17 +113,20 @@ public class DingUtils {
             private List<String> invalidStaffIdList;
             private List<String> flowControlledStaffIdList;
         }
-
         Map<String, Object> paramMap = sendTaskDto.getParamMap();
+        
+        // 选择请求地址
+        String url = "https://api.dingtalk.com" + (paramMap.containsKey("userIds") ? "/v1.0/robot/oToMessages/batchSend" : "/v1.0/robot/groupMessages/send");
         String body = JSONUtil.toJsonStr(paramMap);
-        HttpResponse response = HttpRequest.post("https://api.dingtalk.com//v1.0/robot/oToMessages/batchSend")
+        HttpResponse response = HttpRequest.post(url)
                 .header("x-acs-dingtalk-access-token", accessToken)
                 .header("Content-Type", "application/json")
                 .body(body).execute();
+        log.info("发送钉钉机器人消息成功，钉钉响应为：{}", response.body());
 
         DingSendInfoResponseBody dingSendInfoResponseBody = JSONUtil.toBean(response.body(), DingSendInfoResponseBody.class);
         if (!(dingSendInfoResponseBody.invalidStaffIdList.isEmpty() && dingSendInfoResponseBody.flowControlledStaffIdList.isEmpty())) {
-            throw new LinkProcessException("DingDing消息发送失败!!!");
+            throw new LinkProcessException("钉钉消息发送失败!!!");
         }
     }
 
