@@ -23,10 +23,14 @@ public class MarkDownParamStrategy implements ParamStrategy {
     @Override
     public void paramCheck(SendTaskDto sendTaskDto) throws Exception {
         Map<String, Object> paramMap = sendTaskDto.getParamMap();
-        String msg = JSONUtil.toJsonStr(paramMap.get("msg"));
-        DingMarkDownParam.MarkDownMessage markDownMessage = JSONUtil.toBean(msg, DingMarkDownParam.MarkDownMessage.class);
-        markDownMessage.setMsgtype(MessageTypeEnum.DING_MARKDOWN.getMsgType());
-        paramMap.put("msg", markDownMessage);
+        String pushSubject = paramMap.get("pushSubject").toString();
+        if ("robot".equals(pushSubject)) {
+            paramMap.put("msgKey", "sampleMarkdown");
+        } else {
+            Map<String, Object> msg = (Map<String, Object>) paramMap.get("msg");
+            msg.put("msgtype", MessageTypeEnum.DING_MARKDOWN.getMsgType());
+        }
+
         String json = JSONUtil.toJsonStr(paramMap);
         JSONUtil.toBean(json, DingMarkDownParam.class);
         sendTaskDto.setParamJson(json);

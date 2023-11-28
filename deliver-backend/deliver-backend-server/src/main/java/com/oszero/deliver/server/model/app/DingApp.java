@@ -1,9 +1,5 @@
 package com.oszero.deliver.server.model.app;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.*;
 
 /**
@@ -17,9 +13,10 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class DingApp extends AppConfig{
+public class DingApp extends AppConfig {
 
     private Long agentId;
     private String appKey;
     private String appSecret;
+    private String robotCode;
 }

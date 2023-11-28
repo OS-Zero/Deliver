@@ -21,10 +21,14 @@ public class CardParamStrategy implements ParamStrategy {
     @Override
     public void paramCheck(SendTaskDto sendTaskDto) throws Exception {
         Map<String, Object> paramMap = sendTaskDto.getParamMap();
-        String msg = JSONUtil.toJsonStr(paramMap.get("msg"));
-        DingCardParam.DingCardMessage  dingCardMessage = JSONUtil.toBean(msg, DingCardParam.DingCardMessage.class);
-        dingCardMessage.setMsgtype(MessageTypeEnum.DING_CARD.getMsgType());
-        paramMap.put("msg", dingCardMessage);
+        String pushSubject = paramMap.get("pushSubject").toString();
+        if ("robot".equals(pushSubject)) {
+            paramMap.put("msgKey", "sampleActionCard");
+        } else {
+            Map<String, Object> msg = (Map<String, Object>) paramMap.get("msg");
+            msg.put("msgtype", MessageTypeEnum.DING_CARD.getMsgType());
+        }
+
         String json = JSONUtil.toJsonStr(paramMap);
         JSONUtil.toBean(json, DingCardParam.class);
         sendTaskDto.setParamJson(json);

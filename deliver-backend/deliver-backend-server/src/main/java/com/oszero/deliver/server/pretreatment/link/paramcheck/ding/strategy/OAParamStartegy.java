@@ -26,6 +26,7 @@ public class OAParamStartegy implements ParamStrategy {
         DingOAParam.OAMessageDTO oAMessageDTO = JSONUtil.toBean(msg, DingOAParam.OAMessageDTO.class);
         oAMessageDTO.setMsgtype(MessageTypeEnum.DING_OA.getMsgType());
         paramMap.put("msg", oAMessageDTO);
+
         String json = JSONUtil.toJsonStr(paramMap);
         JSONUtil.toBean(json, DingOAParam.class);
         sendTaskDto.setParamJson(json);
