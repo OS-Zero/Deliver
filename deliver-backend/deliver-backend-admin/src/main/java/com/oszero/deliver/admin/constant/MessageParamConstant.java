@@ -26,6 +26,16 @@ public class MessageParamConstant {
                 "  \"toBCC\": \"\"\n" +
                 "}");
 
+        // 钉钉消息参数
+        MESSAGE_PARAM_MAP.put(ChannelTypeEnum.DING.getCode() + H + MessageTypeEnum.TEXT.getCode(), "");
+        MESSAGE_PARAM_MAP.put(ChannelTypeEnum.DING.getCode() + H + MessageTypeEnum.DING_IMAGE.getCode(), "");
+        MESSAGE_PARAM_MAP.put(ChannelTypeEnum.DING.getCode() + H + MessageTypeEnum.DING_VOICE.getCode(), "");
+        MESSAGE_PARAM_MAP.put(ChannelTypeEnum.DING.getCode() + H + MessageTypeEnum.DING_FILE.getCode(), "");
+        MESSAGE_PARAM_MAP.put(ChannelTypeEnum.DING.getCode() + H + MessageTypeEnum.DING_LINK.getCode(), "");
+        MESSAGE_PARAM_MAP.put(ChannelTypeEnum.DING.getCode() + H + MessageTypeEnum.DING_OA.getCode(), "");
+        MESSAGE_PARAM_MAP.put(ChannelTypeEnum.DING.getCode() + H + MessageTypeEnum.DING_MARKDOWN.getCode(), "");
+        MESSAGE_PARAM_MAP.put(ChannelTypeEnum.DING.getCode() + H + MessageTypeEnum.DING_CARD.getCode(), "");
+
         // 飞书消息参数
         MESSAGE_PARAM_MAP.put(ChannelTypeEnum.FEI_SHU.getCode() + H + MessageTypeEnum.TEXT.getCode(), "{\n" +
                 "  \"feiShuUserIdType\": \"\",\n" +

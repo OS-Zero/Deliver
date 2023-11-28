@@ -30,7 +30,7 @@ public class RabbitMQProducer implements Producer {
     public void sendMessage(SendTaskDto sendTaskDto) {
         ChannelTypeEnum channelTypeEnum = ChannelTypeEnum.getInstanceByCode(sendTaskDto.getChannelType());
         if (Objects.isNull(channelTypeEnum)) {
-            throw new BusinessException("[RabbitMQProducer#sendMessage] 渠道类型配置错误！！！");
+            throw new BusinessException("[RabbitMQProducer#sendWorkNoticeMessage] 渠道类型配置错误！！！");
         }
         switch (channelTypeEnum) {
             case CALL: {

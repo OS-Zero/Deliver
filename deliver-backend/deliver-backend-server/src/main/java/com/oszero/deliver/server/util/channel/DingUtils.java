@@ -17,9 +17,9 @@ import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.taobao.api.ApiException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -68,15 +68,15 @@ public class DingUtils {
     }
 
     /**
-     * 发送钉钉消息
+     * 发送钉钉工作通知消息
      *
      * @param accessToken 钉钉accessToken
      * @param sendTaskDto 钉钉DTO
      */
-    public void sendMessage(String accessToken, SendTaskDto sendTaskDto) {
+    public void sendWorkNoticeMessage(String accessToken, SendTaskDto sendTaskDto) {
 
         @Data
-        class DingSendInfoBody {
+        class DingSendInfoResponseBody {
 
             private Integer errcode;
             private String errmsg;
@@ -91,11 +91,38 @@ public class DingUtils {
                 .body(body)
                 .execute();
 
-        DingSendInfoBody dingSendInfoBody = JSONUtil.toBean(response.body(), DingSendInfoBody.class);
-        if (dingSendInfoBody.errcode != 0) {
+        DingSendInfoResponseBody dingSendInfoResponseBody = JSONUtil.toBean(response.body(), DingSendInfoResponseBody.class);
+        if (dingSendInfoResponseBody.errcode != 0) {
             throw new LinkProcessException("DingDing消息发送失败!!!");
         }
+    }
 
+    /**
+     * 发送钉钉机器人消息
+     *
+     * @param accessToken 钉钉accessToken
+     * @param sendTaskDto 钉钉DTO
+     */
+    public void sendRobotMessage(String accessToken, SendTaskDto sendTaskDto) {
+
+        @Data
+        class DingSendInfoResponseBody {
+            private String processQueryKey;
+            private List<String> invalidStaffIdList;
+            private List<String> flowControlledStaffIdList;
+        }
+
+        Map<String, Object> paramMap = sendTaskDto.getParamMap();
+        String body = JSONUtil.toJsonStr(paramMap);
+        HttpResponse response = HttpRequest.post("https://api.dingtalk.com//v1.0/robot/oToMessages/batchSend")
+                .header("x-acs-dingtalk-access-token", accessToken)
+                .header("Content-Type", "application/json")
+                .body(body).execute();
+
+        DingSendInfoResponseBody dingSendInfoResponseBody = JSONUtil.toBean(response.body(), DingSendInfoResponseBody.class);
+        if (!(dingSendInfoResponseBody.invalidStaffIdList.isEmpty() && dingSendInfoResponseBody.flowControlledStaffIdList.isEmpty())) {
+            throw new LinkProcessException("DingDing消息发送失败!!!");
+        }
     }
 
     /**
@@ -137,9 +164,9 @@ public class DingUtils {
     /**
      * 根据电话号码获取userId
      *
-     * @param accessToken    钉钉accessToken
-     * @param phone          电话号码
-     * @return
+     * @param accessToken 钉钉accessToken
+     * @param phone       电话号码
+     * @return userId
      */
 
     public String getUserIdByPhone(String accessToken, String phone) {
@@ -171,8 +198,6 @@ public class DingUtils {
             throw new LinkProcessException("转换 userId 失败 ！！！");
         }
 
-
         return dingResponseBody.getResult().getUserid();
-
     }
 }

@@ -22,6 +22,7 @@ public interface AppConfigConstant {
             "  \"agentId\": 0,\n" +
             "  \"appKey\": \"\",\n" +
             "  \"appSecret\": \"\"\n" +
+            " \"RobotCode\": \"\"\n" +
             "}";
 
     String WECHAT_CONFIG = "{}";
