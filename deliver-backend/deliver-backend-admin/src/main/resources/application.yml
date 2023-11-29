@@ -11,3 +11,7 @@ spring:
     multipart:
       max-file-size: 30MB
       max-request-size: 40MB
+
+# 对称加密
+aes:
+  key: oszero
