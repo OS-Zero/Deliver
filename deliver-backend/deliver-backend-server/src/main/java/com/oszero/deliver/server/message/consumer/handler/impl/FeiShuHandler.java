@@ -5,6 +5,7 @@ import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.message.consumer.handler.BaseHandler;
 import com.oszero.deliver.server.model.app.FeiShuApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.util.AesUtils;
 import com.oszero.deliver.server.util.channel.FeiShuUtils;
 import com.oszero.deliver.server.web.service.MessageRecordService;
 import org.springframework.stereotype.Component;
@@ -24,6 +25,7 @@ import java.util.Set;
 public class FeiShuHandler extends BaseHandler {
 
     private final FeiShuUtils feiShuUtils;
+    private final AesUtils aesUtils;
 
     /**
      * 可以批量发送的消息类型
@@ -31,14 +33,17 @@ public class FeiShuHandler extends BaseHandler {
     private static final Set<String> BATCH_MESSAGE_TYPE =
             new HashSet<>(Arrays.asList("text", "image", "post", "share_chat", "interactive"));
 
-    public FeiShuHandler(FeiShuUtils feiShuUtils, MessageRecordService messageRecordService) {
+    public FeiShuHandler(FeiShuUtils feiShuUtils, MessageRecordService messageRecordService, AesUtils aesUtils) {
         this.feiShuUtils = feiShuUtils;
         this.messageRecordService = messageRecordService;
+        this.aesUtils = aesUtils;
     }
 
     @Override
     protected void handle(SendTaskDto sendTaskDto) {
-        FeiShuApp feiShuApp = JSONUtil.toBean(sendTaskDto.getAppConfigJson(), FeiShuApp.class);
+        String appConfigJson = aesUtils.decrypt(sendTaskDto.getAppConfig());
+        FeiShuApp feiShuApp = JSONUtil.toBean(appConfigJson, FeiShuApp.class);
+
         String tenantAccessToken = feiShuUtils.getTenantAccessToken(feiShuApp);
         Map<String, Object> paramMap = sendTaskDto.getParamMap();
         String feiShuUserIdType = paramMap.get("feiShuUserIdType").toString();

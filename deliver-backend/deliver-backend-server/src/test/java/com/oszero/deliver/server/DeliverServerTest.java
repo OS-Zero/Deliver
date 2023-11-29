@@ -13,7 +13,6 @@ public class DeliverServerTest {
 
     @Test
     public void testAes() {
-        System.out.println(aesUtils.encrypt("oszero"));
-        System.out.println(aesUtils.decrypt(aesUtils.encrypt("oszero")));
+        System.out.println(aesUtils.encrypt(""));
     }
 }

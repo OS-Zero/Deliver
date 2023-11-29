@@ -213,8 +213,11 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template>
                     .body(JSONUtil.toJsonStr(sendTestRequestDto))
                     .execute();
             CommonResult<?> commonResult = JSONUtil.toBean(response.body(), CommonResult.class);
-            if (Objects.isNull(commonResult) || !commonResult.getCode().equals(200)) {
+            if (Objects.isNull(commonResult)) {
                 throw new BusinessException("测试发送接口失败！！！");
+            }
+            if (!commonResult.getCode().equals(200)) {
+                throw new BusinessException(commonResult.getErrorMessage());
             }
         } catch (Exception exception) {
             throw new BusinessException("测试发送接口失败！！！");

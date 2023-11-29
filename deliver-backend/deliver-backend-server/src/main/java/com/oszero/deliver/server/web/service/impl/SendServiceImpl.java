@@ -73,7 +73,7 @@ public class SendServiceImpl implements SendService {
         if (StatusEnum.OFF.getStatus().equals(app.getAppStatus())) {
             throw new BusinessException(ResultEnum.CLIENT_ERROR.getMessage()); // todo: 后续统一设计系统所有异常
         }
-        String appConfigJson = app.getAppConfig();
+        String appConfig = app.getAppConfig();
 
         // 4.得到各级参数
         List<String> users = sendRequestDto.getUsers();
@@ -92,7 +92,7 @@ public class SendServiceImpl implements SendService {
                 .users(users)
                 .usersType(usersType)
                 .pushRange(pushRange)
-                .appConfigJson(appConfigJson)
+                .appConfig(appConfig)
                 .paramMap(paramMap)
                 .channelType(channelType)
                 .messageType(messageType)

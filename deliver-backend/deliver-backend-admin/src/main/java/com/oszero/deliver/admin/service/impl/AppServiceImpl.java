@@ -16,6 +16,7 @@ import com.oszero.deliver.admin.model.entity.App;
 import com.oszero.deliver.admin.model.entity.TemplateApp;
 import com.oszero.deliver.admin.service.AppService;
 import com.oszero.deliver.admin.service.TemplateAppService;
+import com.oszero.deliver.admin.util.AesUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,7 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>
         implements AppService {
 
     private final TemplateAppService templateAppService;
+    private final AesUtils aesUtils;
 
     @Override
     public Page<AppSearchResponseDto> getAppPagesByCondition(AppSearchRequestDto dto) {
@@ -52,6 +54,7 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>
                 .map(app -> {
                     AppSearchResponseDto appSearchResponseDto = new AppSearchResponseDto();
                     BeanUtil.copyProperties(app, appSearchResponseDto);
+                    appSearchResponseDto.setAppConfig(aesUtils.decrypt(app.getAppConfig()));
                     return appSearchResponseDto;
                 }).collect(Collectors.toList());
 
@@ -90,6 +93,7 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>
 
         App app = new App();
         BeanUtil.copyProperties(dto, app);
+        app.setAppConfig(aesUtils.encrypt(dto.getAppConfig()));
         boolean update = this.updateById(app);
         if (!update) {
             throw new BusinessException("app 更新失败！！！");
@@ -105,6 +109,7 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>
 
         App app = new App();
         BeanUtil.copyProperties(dto, app);
+        app.setAppConfig(aesUtils.encrypt(dto.getAppConfig()));
         boolean save = this.save(app);
         if (!save) {
             throw new BusinessException("app 保存失败！！！");

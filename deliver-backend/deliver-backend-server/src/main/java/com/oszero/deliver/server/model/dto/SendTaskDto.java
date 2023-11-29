@@ -45,9 +45,9 @@ public class SendTaskDto extends LinkModel {
     private String paramJson;
 
     /**
-     * appConfig 数据库的 JSON 数据
+     * appConfig 数据库的 JSON 数据加密
      */
-    private String appConfigJson;
+    private String appConfig;
 
     /**
      * 发送范围

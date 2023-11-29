@@ -5,6 +5,7 @@ import com.oszero.deliver.server.model.app.FeiShuApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.BusinessLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
+import com.oszero.deliver.server.util.AesUtils;
 import com.oszero.deliver.server.util.channel.FeiShuUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import java.util.Map;
 public class FeiShuUserIdCheck implements BusinessLink<SendTaskDto> {
 
     private final FeiShuUtils feiShuUtils;
+    private final AesUtils aesUtils;
 
     @Override
     public void process(LinkContext<SendTaskDto> context) {
@@ -32,7 +34,7 @@ public class FeiShuUserIdCheck implements BusinessLink<SendTaskDto> {
         if (!"user_id".equals(feiShuUserIdType)) {
             return;
         }
-        String appConfigJson = sendTaskDto.getAppConfigJson();
+        String appConfigJson = aesUtils.decrypt(sendTaskDto.getAppConfig());
         FeiShuApp feiShuApp = JSONUtil.toBean(appConfigJson, FeiShuApp.class);
         List<String> users = sendTaskDto.getUsers();
         users.forEach(userId -> {
