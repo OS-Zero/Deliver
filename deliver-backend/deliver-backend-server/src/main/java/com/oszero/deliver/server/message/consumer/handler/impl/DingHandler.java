@@ -4,6 +4,7 @@ import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.message.consumer.handler.BaseHandler;
 import com.oszero.deliver.server.model.app.DingApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.util.AesUtils;
 import com.oszero.deliver.server.util.channel.DingUtils;
 import com.oszero.deliver.server.web.service.MessageRecordService;
 import org.springframework.stereotype.Component;
@@ -20,15 +21,18 @@ import java.util.Map;
 public class DingHandler extends BaseHandler {
 
     private final DingUtils dingUtils;
+    private final AesUtils aesUtils;
 
-    public DingHandler(DingUtils dingUtils, MessageRecordService messageRecordService) {
+    public DingHandler(DingUtils dingUtils, MessageRecordService messageRecordService, AesUtils aesUtils) {
         this.dingUtils = dingUtils;
         this.messageRecordService = messageRecordService;
+        this.aesUtils = aesUtils;
     }
 
     @Override
     protected void handle(SendTaskDto sendTaskDto) throws Exception {
-        DingApp dingApp = JSONUtil.toBean(sendTaskDto.getAppConfigJson(), DingApp.class);
+        String appConfigJson = aesUtils.decrypt(sendTaskDto.getAppConfig());
+        DingApp dingApp = JSONUtil.toBean(appConfigJson, DingApp.class);
         String accessToken = dingUtils.getAccessToken(dingApp);
 
         Map<String, Object> paramMap = sendTaskDto.getParamMap();

@@ -7,6 +7,7 @@ import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.BusinessLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
 import com.oszero.deliver.server.pretreatment.link.paramcheck.ParamStrategy;
+import com.oszero.deliver.server.util.AesUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,11 +27,12 @@ import java.util.Map;
 public class DingParamCheck implements BusinessLink<SendTaskDto> {
 
     private final Map<String, ParamStrategy> dingParamStrategyMap;
+    private final AesUtils aesUtils;
 
     @Override
     public void process(LinkContext<SendTaskDto> context) {
         SendTaskDto sendTaskDto = context.getProcessModel();
-        String dingDingApp = sendTaskDto.getAppConfigJson();
+        String dingDingApp = aesUtils.decrypt(sendTaskDto.getAppConfig());
         DingApp dingApp = JSONUtil.toBean(dingDingApp, DingApp.class);
 
         // 得到参数 Map

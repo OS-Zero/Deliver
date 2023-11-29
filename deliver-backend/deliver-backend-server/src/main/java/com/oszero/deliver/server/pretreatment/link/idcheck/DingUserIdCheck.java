@@ -5,6 +5,7 @@ import com.oszero.deliver.server.model.app.DingApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.BusinessLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
+import com.oszero.deliver.server.util.AesUtils;
 import com.oszero.deliver.server.util.channel.DingUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import java.util.Map;
 public class DingUserIdCheck implements BusinessLink<SendTaskDto> {
 
     private final DingUtils dingUtils;
+    private final AesUtils aesUtils;
 
     @Override
     public void process(LinkContext<SendTaskDto> context) {
@@ -32,7 +34,8 @@ public class DingUserIdCheck implements BusinessLink<SendTaskDto> {
         String dingUserIdType = paramMap.get("dingUserIdType").toString();
         // 这两者走 id 校验
         if ("userid_list".equals(dingUserIdType) || "userIds".equals(dingUserIdType)) {
-            String appConfigJson = sendTaskDto.getAppConfigJson();
+
+            String appConfigJson = aesUtils.decrypt(sendTaskDto.getAppConfig());
             DingApp dingApp = JSONUtil.toBean(appConfigJson, DingApp.class);
             String accessToken = dingUtils.getAccessToken(dingApp);
             users.forEach(userId -> dingUtils.checkId(accessToken, userId));
