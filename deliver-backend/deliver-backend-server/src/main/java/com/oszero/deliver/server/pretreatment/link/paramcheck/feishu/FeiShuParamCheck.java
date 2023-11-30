@@ -1,6 +1,7 @@
 package com.oszero.deliver.server.pretreatment.link.paramcheck.feishu;
 
 import com.oszero.deliver.server.exception.LinkProcessException;
+import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.BusinessLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
@@ -37,7 +38,7 @@ public class FeiShuParamCheck implements BusinessLink<SendTaskDto> {
             paramStrategy.paramCheck(sendTaskDto);
         } catch (Exception exception) {
             log.error("[FeiShuParamCheck#process]异常：{}", exception.toString());
-            throw new LinkProcessException("飞书消息参数校验失败！！！");
+            throw new MessageException("飞书消息参数校验失败，" + exception.getMessage() + "！！！");
         }
     }
 }
