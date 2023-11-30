@@ -25,7 +25,10 @@ public interface AppConfigConstant {
             " \"RobotCode\": \"\"\n" +
             "}";
 
-    String WECHAT_CONFIG = "{}";
+    String WECHAT_CONFIG = "{\n" +
+            "  \"corpid\": \"\",\n" +
+            "  \"corpsecret\": \"\"\n" +
+            "}";
 
     String FEI_SHU_CONFIG = "{\n" +
             "  \"appId\": \"\",\n" +
