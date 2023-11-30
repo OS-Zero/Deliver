@@ -1,5 +1,0 @@
-Deliver- 2023-11-30 09:30:47 [main] WARN  [TraceId:] io.undertow.websockets.jsr - UT026010: Buffer pool was not set on WebSocketDeploymentInfo, the default pool will be used
-Deliver- 2023-11-30 09:30:48 [main] WARN  [TraceId:] c.b.m.c.injector.DefaultSqlInjector - class com.oszero.deliver.server.model.entity.MessageRecord ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
-Deliver- 2023-11-30 11:13:41 [main] WARN  [TraceId:] io.undertow.websockets.jsr - UT026010: Buffer pool was not set on WebSocketDeploymentInfo, the default pool will be used
-Deliver- 2023-11-30 11:13:42 [main] WARN  [TraceId:] c.b.m.c.injector.DefaultSqlInjector - class com.oszero.deliver.server.model.entity.MessageRecord ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
-Deliver- 2023-11-30 15:24:35 [AMQP Connection 106.55.231.147:5672] WARN  [TraceId:] c.r.c.impl.ForgivingExceptionHandler - An unexpected connection driver error occurred (Exception message: Connection reset)
