@@ -1,8 +1,8 @@
 spring:
   redis:
     port: 6379
-    host: 106.55.231.147
-    password: 2308850421
+    host: localhost
+    password: 123456
     database: 0
     timeout: 60s
     lettuce:
@@ -12,9 +12,9 @@ spring:
         min-idle: 0
         max-wait: 5s
   datasource:
-    url: jdbc:mysql://106.55.231.147:3306/deliver?serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull
+    url: jdbc:mysql://localhost:3306/deliver?serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull
     username: root
-    password: 2308850421
+    password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 mybatis-plus:
