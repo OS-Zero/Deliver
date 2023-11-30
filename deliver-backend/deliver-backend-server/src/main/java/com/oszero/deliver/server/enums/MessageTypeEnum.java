@@ -30,8 +30,6 @@ public enum MessageTypeEnum {
     DING_MARKDOWN("4-6", "markdown", "钉钉-markdown 消息", 4),
     DING_CARD("4-7", "action_card", "钉钉-卡片消息", 4),
 
-    // todo: 后续添加群聊、机器人消息
-
     /**
      * 企业微信消息 5 代表企业微信渠道 1 代表序号
      */
@@ -43,8 +41,7 @@ public enum MessageTypeEnum {
     WECHAT_MPNEWS("5-6", "mpnews", "企业微信-图文消息(mpnews)", 5),
     WECHAT_MARKDOWN("5-7", "markdown", "企业微信-markdown 消息", 5),
     WECHAT_MINIPROGRAM_NOTICE("5-8", "miniprogram_notice", "企业微信-小程序通知消息", 5),
-
-    // todo: 后续添加群聊、机器人消息
+    WECHAT_TEMPLATE_CARD("5-9", "template_card", "企业微信-模板卡片消息", 5),
 
     /**
      * 飞书消息 6 代表飞书渠道 1 代表序号
