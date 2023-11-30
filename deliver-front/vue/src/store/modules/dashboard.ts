@@ -4,18 +4,9 @@ import {
 	getMessageInfo,
 	getTemplateInfo,
 	getAppInfo,
-	getPushUserInfo,
-	DashboardHeadData
+	getPushUserInfo
 } from '@/api/dashboard'
 import { type EChartsOption } from 'echarts'
-export interface EChartsOptionData {
-	chartsMessageOption?: EChartsOption
-	chartsTemplateOption?: EChartsOption
-	chartsAppOption?: EChartsOption
-	chartsPushUserOption?: EChartsOption
-}
-
-//echarts配置选项
 const chartsMessageOption: EChartsOption = {
 	legend: {
 		top: '20%'
@@ -59,7 +50,7 @@ const chartsTemplateOption: EChartsOption = {
 		}
 	]
 }
-const chartsAppOption: EChartsOption = {
+const chartsChannelOption: EChartsOption = {
 	tooltip: {
 		trigger: 'item'
 	},
@@ -92,7 +83,7 @@ const chartsAppOption: EChartsOption = {
 		}
 	]
 }
-const chartsPushUserOption: EChartsOption = {
+const chartsAccountOption: EChartsOption = {
 	tooltip: {
 		trigger: 'item'
 	},
@@ -127,39 +118,15 @@ const chartsPushUserOption: EChartsOption = {
 
 export const useDashboardStore = defineStore('dashboard', {
 	state: () => {
-		return {}
+		return {
+			num: 0
+		}
 	},
 	actions: {
-		/**
-		 * 同时获取echarts四个数据
-		 * @returns {Promise<any>} 四个echarts配置数据
-		 */
-		async getDashboardData(): Promise<any> {
-			try {
-				const res = await Promise.all([
-					this.getMessageInfo(1),
-					this.getTemplateInfo(1),
-					this.getAppInfo(1),
-					this.getPushUserInfo(1)
-				])
-				return res
-			} catch (error) {
-				console.log('Error:', error)
-				throw error
-			}
-		},
-		/**
-		 * 获取控制面板头部数据
-		 * @returns {Promise<DashboardHeadData>} 控制面板头部数据
-		 */
-		async getDashboardHeadData(): Promise<DashboardHeadData> {
+		async getDashboardHeadData() {
 			const dashboardHeadData = await getDashboardHeadData()
 			return dashboardHeadData.data
 		},
-		/**
-		 * 获取消息配置数据
-		 * @returns {Promise<EChartsOption>} 消息配置数据
-		 */
 		async getMessageInfo(dateSelect: number): Promise<EChartsOption> {
 			const messageData = await getMessageInfo({ dateSelect })
 			if (chartsMessageOption.dataset !== undefined) {
@@ -170,38 +137,26 @@ export const useDashboardStore = defineStore('dashboard', {
 			}
 			return chartsMessageOption
 		},
-		/**
-		 * 获取模板配置数据
-		 * @returns {Promise<EChartsOption>} 模板配置数据
-		 */
 		async getTemplateInfo(dateSelect: number): Promise<EChartsOption> {
-			const templateInfo = await getTemplateInfo({ dateSelect })
+			const messageData = await getTemplateInfo({ dateSelect })
 			if (chartsTemplateOption.series !== undefined) {
-				chartsTemplateOption.series[0].data = templateInfo.data.dashboardInfoList
+				chartsTemplateOption.series[0].data = messageData.data?.dashboardInfoList
 			}
 			return chartsTemplateOption
 		},
-		/**
-		 * 获取 APP 配置数据
-		 * @returns {Promise<EChartsOption>} APP 配置数据
-		 */
 		async getAppInfo(dateSelect: number): Promise<EChartsOption> {
-			const appInfo = await getAppInfo({ dateSelect })
-			if (chartsAppOption.series !== undefined) {
-				chartsAppOption.series[0].data = appInfo.data.dashboardInfoList
+			const messageData = await getAppInfo({ dateSelect })
+			if (chartsChannelOption.series !== undefined) {
+				chartsChannelOption.series[0].data = messageData.data?.dashboardInfoList
 			}
-			return chartsAppOption
+			return chartsChannelOption
 		},
-		/**
-		 * 获取推送用户配置数据
-		 * @returns {Promise<DashboardHeadData>} 推送用户配置数据
-		 */
 		async getPushUserInfo(dateSelect: number): Promise<EChartsOption> {
-			const pushUserInfo = await getPushUserInfo({ dateSelect })
-			if (chartsPushUserOption.series !== undefined) {
-				chartsPushUserOption.series[0].data = pushUserInfo.data.dashboardInfoList
+			const messageData = await getPushUserInfo({ dateSelect })
+			if (chartsAccountOption.series !== undefined) {
+				chartsAccountOption.series[0].data = messageData.data?.dashboardInfoList
 			}
-			return chartsPushUserOption
+			return chartsAccountOption
 		}
 	},
 	getters: {}
