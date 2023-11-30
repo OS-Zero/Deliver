@@ -11,7 +11,7 @@ import com.dingtalk.api.request.OapiV2UserGetbymobileRequest;
 import com.dingtalk.api.response.OapiGettokenResponse;
 import com.dingtalk.api.response.OapiV2UserGetResponse;
 import com.dingtalk.api.response.OapiV2UserGetbymobileResponse;
-import com.oszero.deliver.server.exception.LinkProcessException;
+import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.model.app.DingApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.taobao.api.ApiException;
@@ -60,7 +60,7 @@ public class DingUtils {
             response = client.execute(request);
         } catch (ApiException apiException) {
             // TODO:2023/10/23  后续日志记录
-            throw new LinkProcessException("获取 tenantAccessTokens 失败");
+            throw new MessageException("获取 tenantAccessTokens 失败");
         }
 
         DingAccessTokenBody dingAccessTokenBody = JSONUtil.toBean(response.getBody(), DingAccessTokenBody.class);
@@ -95,7 +95,7 @@ public class DingUtils {
 
         DingSendInfoResponseBody dingSendInfoResponseBody = JSONUtil.toBean(response.body(), DingSendInfoResponseBody.class);
         if (dingSendInfoResponseBody.errcode != 0) {
-            throw new LinkProcessException("DingDing消息发送失败!!!");
+            throw new MessageException("DingDing消息发送失败!!!");
         }
     }
 
@@ -126,7 +126,7 @@ public class DingUtils {
 
         DingSendInfoResponseBody dingSendInfoResponseBody = JSONUtil.toBean(response.body(), DingSendInfoResponseBody.class);
         if (!(dingSendInfoResponseBody.invalidStaffIdList.isEmpty() && dingSendInfoResponseBody.flowControlledStaffIdList.isEmpty())) {
-            throw new LinkProcessException("钉钉消息发送失败!!!");
+            throw new MessageException("钉钉消息发送失败!!!");
         }
     }
 
@@ -155,16 +155,14 @@ public class DingUtils {
         try {
             rsp = client.execute(req, accessToken);
         } catch (ApiException apiException) {
-            // XHYTODO:2023/10/23  后续日志记录
-            throw new LinkProcessException("钉钉用户 userId 校验失败！！！");
+            throw new MessageException("钉钉用户 userId 校验失败！！！");
         }
 
         DingUserInfoBody dingUserInfoBody = JSONUtil.toBean(rsp.getBody(), DingUserInfoBody.class);
         if (dingUserInfoBody.getErrcode() != 0) {
-            throw new LinkProcessException("钉钉用户 userId 校验失败！！！");
+            throw new MessageException("钉钉用户 userId 校验失败！！！");
         }
     }
-
 
     /**
      * 根据电话号码获取userId
@@ -196,11 +194,11 @@ public class DingUtils {
         try {
             rsp = client.execute(req, accessToken);
         } catch (ApiException e) {
-            throw new LinkProcessException("转换 userId 失败 ！！！");
+            throw new MessageException("转换 userId 失败 ！！！");
         }
         DingResponseBody dingResponseBody = JSONUtil.toBean(rsp.getBody(), DingResponseBody.class);
         if (dingResponseBody.getErrcode() != 0) {
-            throw new LinkProcessException("转换 userId 失败 ！！！");
+            throw new MessageException("转换 userId 失败 ！！！");
         }
 
         return dingResponseBody.getResult().getUserid();

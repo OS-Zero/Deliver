@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 public class GlobalExceptionHandler {
 
     /**
-     * 参数校验失败的异常处理
+     * DTO 参数校验失败的异常处理
      *
      * @param e       异常信息
      * @param request 请求
@@ -35,15 +35,15 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 责任链流水线的异常处理
+     * 消息链路异常时的错误处理
      *
      * @param e       异常信息
      * @param request 请求
      * @return ResultVO
      */
-    @ExceptionHandler(LinkProcessException.class)
-    public CommonResult<?> handlePipelineProcessException(LinkProcessException e, HttpServletRequest request) {
-        log.error("[LinkProcessException] ", e);
+    @ExceptionHandler(MessageException.class)
+    public CommonResult<?> handleMessageException(MessageException e, HttpServletRequest request) {
+        log.error("[MessageException] ", e);
         return CommonResult.fail(e.getMessage());
     }
 

@@ -4,7 +4,6 @@ import cn.hutool.core.lang.UUID;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONUtil;
-import com.oszero.deliver.server.exception.LinkProcessException;
 import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.model.app.FeiShuApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
@@ -149,7 +148,7 @@ public class FeiShuUtils {
         }
         FeiShuUserInfoRespBody feiShuUserInfoRespBody = JSONUtil.toBean(execute.body(), FeiShuUserInfoRespBody.class);
         if (feiShuUserInfoRespBody.getCode() != 0) {
-            throw new LinkProcessException("用户: " + userId + " userId 检验失败");
+            throw new MessageException("用户: " + userId + " userId 检验失败");
         }
     }
 
@@ -192,7 +191,7 @@ public class FeiShuUtils {
         log.info("飞书电话转userId，响应为：{}", respBody);
         FeiShuUserIdRespBody feiShuUserIdRespBody = JSONUtil.toBean(respBody, FeiShuUserIdRespBody.class);
         if (feiShuUserIdRespBody.code != 0) {
-            throw new LinkProcessException("转换 userId 失败！！！");
+            throw new MessageException("转换 userId 失败！！！");
         }
         return feiShuUserIdRespBody.data.user_list.stream().map(UserIdAndPhone::getUser_id).collect(Collectors.toList());
     }

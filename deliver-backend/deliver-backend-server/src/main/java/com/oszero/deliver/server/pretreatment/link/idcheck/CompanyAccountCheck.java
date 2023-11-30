@@ -1,6 +1,5 @@
 package com.oszero.deliver.server.pretreatment.link.idcheck;
 
-import com.oszero.deliver.server.exception.LinkProcessException;
 import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.BusinessLink;

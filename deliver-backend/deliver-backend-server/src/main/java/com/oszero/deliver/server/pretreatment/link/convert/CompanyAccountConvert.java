@@ -1,6 +1,6 @@
 package com.oszero.deliver.server.pretreatment.link.convert;
 
-import com.oszero.deliver.server.exception.LinkProcessException;
+import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.constant.PretreatmentCodeConstant;
 import com.oszero.deliver.server.pretreatment.link.BusinessLink;
@@ -39,7 +39,7 @@ public class CompanyAccountConvert implements BusinessLink<SendTaskDto> {
     @Override
     public void process(LinkContext<SendTaskDto> context) {
         if (Objects.isNull(companyAccount2Phone) || Objects.isNull(companyAccount2Mail)) {
-            throw new LinkProcessException("[CompanyAccountConvert#process]错误：请注入相关实现！");
+            throw new MessageException("[CompanyAccountConvert#process]错误：请注入相关实现！");
         }
         String code = context.getCode();
         SendTaskDto sendTaskDto = context.getProcessModel();
