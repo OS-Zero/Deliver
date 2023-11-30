@@ -11,6 +11,9 @@ public class DeliverServerTest {
     @Autowired
     private AesUtils aesUtils;
 
+    /**
+     * 测试 AES 加密功能
+     */
     @Test
     public void testAes() {
         System.out.println(aesUtils.encrypt(""));
