@@ -1,6 +1,6 @@
 package com.oszero.deliver.server.secondarydevelopment;
 
-import com.oszero.deliver.server.exception.LinkProcessException;
+import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.pretreatment.link.convert.CompanyAccountConvert;
 import com.oszero.deliver.server.pretreatment.link.idcheck.CompanyAccountCheck;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +29,7 @@ public class MyCompany {
         @Override
         public void check(String companyAccount) {
             if (!"oszero".equals(companyAccount)) {
-                throw new LinkProcessException("非法的企业账号！！！");
+                throw new MessageException("非法的企业账号！！！");
             }
         }
     }

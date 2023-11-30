@@ -1,7 +1,6 @@
 package com.oszero.deliver.server.pretreatment.link.paramcheck.ding;
 
 import cn.hutool.json.JSONUtil;
-import com.oszero.deliver.server.exception.LinkProcessException;
 import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.model.app.DingApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
@@ -55,7 +54,7 @@ public class DingParamCheck implements BusinessLink<SendTaskDto> {
             paramMap.put(dingUserIdType, String.join(",", users));
             paramMap.put("agent_id", dingApp.getAgentId());
         } else {
-            throw new LinkProcessException("钉钉消息校验异常，不支持此推送主体！！！");
+            throw new MessageException("钉钉消息校验异常，不支持此推送主体！！！");
         }
 
         // 参数校验

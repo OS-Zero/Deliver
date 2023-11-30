@@ -1,7 +1,6 @@
 package com.oszero.deliver.server.pretreatment.link.paramcheck.mail;
 
 import cn.hutool.json.JSONUtil;
-import com.oszero.deliver.server.exception.LinkProcessException;
 import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.message.param.mail.MailParam;
 import com.oszero.deliver.server.model.dto.SendTaskDto;

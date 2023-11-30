@@ -1,8 +1,7 @@
 package com.oszero.deliver.server.pretreatment.link;
 
 import cn.hutool.core.collection.CollUtil;
-import com.oszero.deliver.server.exception.LinkProcessException;
-import com.taobao.api.ApiException;
+import com.oszero.deliver.server.exception.MessageException;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
@@ -55,19 +54,19 @@ public class LinkHandler {
      */
     private void preCheck(LinkContext context) {
         if (Objects.isNull(context)) {
-            throw new LinkProcessException("执行上下文为空！");
+            throw new MessageException("执行上下文为空！");
         }
 
         String businessCode = context.getCode();
 
         LinkTemplate linkTemplate = templateConfig.get(businessCode);
         if (Objects.isNull(linkTemplate)) {
-            throw new LinkProcessException("无法找到执行模板！");
+            throw new MessageException("无法找到执行模板！");
         }
 
         List<BusinessLink> processList = linkTemplate.getProcessList();
         if (CollUtil.isEmpty(processList)) {
-            throw new LinkProcessException("执行链路为空！");
+            throw new MessageException("执行链路为空！");
         }
 
     }

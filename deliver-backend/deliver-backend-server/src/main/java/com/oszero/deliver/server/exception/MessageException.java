@@ -11,7 +11,7 @@ import lombok.Getter;
  */
 @Getter
 public class MessageException extends RuntimeException {
-
+    private final String name = "消息流程处理错误：";
     private String message;
     private final ResultEnum code = ResultEnum.ERROR;
 
@@ -21,6 +21,6 @@ public class MessageException extends RuntimeException {
 
     public MessageException(String message) {
         super(message);
-        this.message = message;
+        this.message = name + message;
     }
 }

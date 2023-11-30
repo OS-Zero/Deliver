@@ -3,7 +3,7 @@ package com.oszero.deliver.server.pretreatment.link.pushrangecheck;
 import com.oszero.deliver.server.enums.ChannelTypeEnum;
 import com.oszero.deliver.server.enums.PushRangeEnum;
 import com.oszero.deliver.server.enums.UsersTypeEnum;
-import com.oszero.deliver.server.exception.LinkProcessException;
+import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.BusinessLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
@@ -38,7 +38,7 @@ public class PushRangeCheck implements BusinessLink<SendTaskDto> {
                 !(UsersTypeEnum.MAIL.getCode().equals(usersType) ||
                         UsersTypeEnum.PHONE.getCode().equals(usersType) && ChannelTypeEnum.CALL.getCode().equals(channelType))
         ) {
-            throw new LinkProcessException("推送范围错误！！！");
+            throw new MessageException("推送范围错误！！！");
         }
     }
 }

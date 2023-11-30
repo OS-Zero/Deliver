@@ -1,7 +1,6 @@
 package com.oszero.deliver.server.pretreatment.link.paramcheck.wechat;
 
 import cn.hutool.core.util.StrUtil;
-import com.oszero.deliver.server.exception.LinkProcessException;
 import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.BusinessLink;
