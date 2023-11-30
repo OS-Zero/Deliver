@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import { R } from '@/types/type'
 
 export interface DashboardHeadData {
 	numberOfMessagesToday?: string
@@ -7,45 +8,75 @@ export interface DashboardHeadData {
 	numberOfApps?: string
 }
 
-type barDataPoint = [string, number, number]
-interface pieDataPoint {
+type MessageInfo = [string, string, string]
+export interface MessageInfoList {
+	messageInfoList: MessageInfo[]
+}
+
+interface DashboardInfo {
 	value: number
 	name: string
 }
+export interface DashboardInfoList {
+	dashboardInfoList: Array<DashboardInfo>
+}
 
-export type messageDataSource = barDataPoint[]
-export type templeteDataSource = pieDataPoint[]
-export type channelDataSource = pieDataPoint[]
-export type userDataSource = pieDataPoint[]
-
-export async function getDashboardHeadData(): Promise<any> {
+/**
+ * 请求控制面板头部数据
+ * @returns {Promise<R<DashboardHeadData>>} 控制面板头部数据
+ */
+export async function getDashboardHeadData(): Promise<R<DashboardHeadData>> {
 	return await request({
 		url: '/dashboard/getDashboardHeadData',
 		method: 'post'
 	})
 }
-export async function getMessageInfo(data: { dateSelect: number }): Promise<any> {
+
+/**
+ * 请求消息配置数据
+ * @param {{dateSelect: number}} data - 0、1、2、3 分别代表 日、周、月、年
+ * @returns {Promise<R<DashboardHeadData>>} 消息配置数据
+ */
+export async function getMessageInfo(data: { dateSelect: number }): Promise<R<MessageInfoList>> {
 	return await request({
 		url: '/dashboard/getMessageInfo/vue',
 		method: 'post',
 		data
 	})
 }
-export async function getTemplateInfo(data: { dateSelect: number }): Promise<any> {
+
+/**
+ * 请求模板配置数据
+ * @param {{dateSelect: number}} data - 0、1、2、3 分别代表 日、周、月、年
+ * @returns {Promise<R<DashboardHeadData>>} 模板配置数据
+ */
+export async function getTemplateInfo(data: { dateSelect: number }): Promise<R<DashboardInfoList>> {
 	return await request({
 		url: '/dashboard/getTemplateInfo',
 		method: 'post',
 		data
 	})
 }
-export async function getAppInfo(data: { dateSelect: number }): Promise<any> {
+
+/**
+ * 请求 APP 配置数据
+ * @param {{dateSelect: number}} data - 0、1、2、3 分别代表 日、周、月、年
+ * @returns {Promise<R<DashboardHeadData>>} APP 配置数据
+ */
+export async function getAppInfo(data: { dateSelect: number }): Promise<R<DashboardInfoList>> {
 	return await request({
 		url: '/dashboard/getAppInfo',
 		method: 'post',
 		data
 	})
 }
-export async function getPushUserInfo(data: { dateSelect: number }): Promise<any> {
+
+/**
+ * 请求推送用户配置数据
+ * @param {{dateSelect: number}} data - 0、1、2、3 分别代表 日、周、月、年
+ * @returns {Promise<R<DashboardHeadData>>} 推送用户数据
+ */
+export async function getPushUserInfo(data: { dateSelect: number }): Promise<R<DashboardInfoList>> {
 	return await request({
 		url: '/dashboard/getPushUserInfo',
 		method: 'post',
