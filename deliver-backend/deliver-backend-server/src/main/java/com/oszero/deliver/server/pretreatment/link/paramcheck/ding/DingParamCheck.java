@@ -2,6 +2,7 @@ package com.oszero.deliver.server.pretreatment.link.paramcheck.ding;
 
 import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.exception.LinkProcessException;
+import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.model.app.DingApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.BusinessLink;
@@ -64,7 +65,7 @@ public class DingParamCheck implements BusinessLink<SendTaskDto> {
             paramStrategy.paramCheck(sendTaskDto);
         } catch (Exception e) {
             log.error("[DingParamCheck#process]异常：{}", e.toString());
-            throw new LinkProcessException("钉钉消息校验异常！！！");
+            throw new MessageException("钉钉消息参数校验失败，" + e.getMessage() + "！！！");
         }
 
     }

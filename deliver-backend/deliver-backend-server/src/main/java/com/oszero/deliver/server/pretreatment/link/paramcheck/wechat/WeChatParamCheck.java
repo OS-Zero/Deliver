@@ -1,10 +1,14 @@
 package com.oszero.deliver.server.pretreatment.link.paramcheck.wechat;
 
 import cn.hutool.core.util.StrUtil;
+import com.oszero.deliver.server.exception.LinkProcessException;
 import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.BusinessLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
+import com.oszero.deliver.server.pretreatment.link.paramcheck.ParamStrategy;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,8 +20,13 @@ import java.util.Map;
  * @author oszero
  * @version 1.0.0
  */
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class WeChatParamCheck implements BusinessLink<SendTaskDto> {
+
+    private final Map<String, ParamStrategy> wechatParamStrategyMap;
+
     @Override
     public void process(LinkContext<SendTaskDto> context) {
         SendTaskDto sendTaskDto = context.getProcessModel();
@@ -61,6 +70,15 @@ public class WeChatParamCheck implements BusinessLink<SendTaskDto> {
             }
         } else {
             throw new MessageException("输入了非法的 pushSubject，应该为 app 或者 robot！！！");
+        }
+
+        String strategyBeanName = ParamStrategy.WECHAT_STRATEGY_BEAN_PRE_NAME + sendTaskDto.getMessageType();
+        ParamStrategy paramStrategy = wechatParamStrategyMap.get(strategyBeanName);
+        try {
+            paramStrategy.paramCheck(sendTaskDto);
+        } catch (Exception exception) {
+            log.error("[WeChatParamCheck#process]异常：{}", exception.toString());
+            throw new MessageException("企微消息参数校验失败，" + exception.getMessage() + "！！！");
         }
     }
 }
