@@ -10,8 +10,11 @@ import lombok.*;
  */
 @Data
 @Builder
-//@AllArgsConstructor
+@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class WeChatApp extends AppConfig {
+    private String corpid;
+    private String corpsecret;
+    private String agentid;
 }

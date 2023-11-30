@@ -27,7 +27,8 @@ public interface AppConfigConstant {
 
     String WECHAT_CONFIG = "{\n" +
             "  \"corpid\": \"\",\n" +
-            "  \"corpsecret\": \"\"\n" +
+            "  \"corpsecret\": \"\",\n" +
+            " \"agentid\": \"\"\n" +
             "}";
 
     String FEI_SHU_CONFIG = "{\n" +
