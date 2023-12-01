@@ -65,7 +65,6 @@ public class DingUtils {
      * @param platformFileDto 文件 dto
      * @return media_id
      */
-
     public String uploadDingFile(String accessToken, PlatformFileDto platformFileDto) {
         @Data
         class DingBody {
