@@ -34,16 +34,16 @@ const initChart = (): void => {
 const dashboardStore = useDashboardStore()
 const selectChange = async (e: any): Promise<void> => {
 	switch (e.target.name) {
-		case 'chartsMessage':
+		case 'chartsMessageOption':
 			myChart.setOption(await dashboardStore.getMessageInfo(e.target.value), { notMerge: true })
 			break
-		case 'chartsTemplate':
+		case 'chartsTemplateOption':
 			myChart.setOption(await dashboardStore.getTemplateInfo(e.target.value), { notMerge: true })
 			break
-		case 'chartsChannel':
+		case 'chartsAppOption':
 			myChart.setOption(await dashboardStore.getAppInfo(e.target.value), { notMerge: true })
 			break
-		case 'chartsAccount':
+		case 'chartsPushUserOption':
 			myChart.setOption(await dashboardStore.getPushUserInfo(e.target.value), { notMerge: true })
 			break
 		default:
