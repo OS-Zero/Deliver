@@ -3,6 +3,7 @@ package com.oszero.deliver.server.pretreatment.link.convert;
 import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.model.app.DingApp;
 import com.oszero.deliver.server.model.app.FeiShuApp;
+import com.oszero.deliver.server.model.app.WeChatApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.constant.PretreatmentCodeConstant;
 import com.oszero.deliver.server.pretreatment.link.BusinessLink;
@@ -75,7 +76,8 @@ public class Phone2UserIdConvert implements BusinessLink<SendTaskDto> {
 
         @Override
         public List<String> convert(String appConfigJson, List<String> phones) {
-            return null;
+            String accessToken = weChatUtils.getAccessToken(JSONUtil.toBean(appConfigJson, WeChatApp.class));
+            return weChatUtils.getUserIdByPhone(accessToken, phones);
         }
     }
 

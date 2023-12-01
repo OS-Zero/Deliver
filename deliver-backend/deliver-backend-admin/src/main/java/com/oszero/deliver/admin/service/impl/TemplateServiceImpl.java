@@ -205,22 +205,23 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template>
 
     @Override
     public void testSendMessage(SendTestRequestDto sendTestRequestDto) {
-        try {
-            // 修改为自己的地址
-            String serverUrl = "http://localhost:7070/open/sendMessage";
-            HttpResponse response = HttpRequest.post(serverUrl)
-                    .header("ContentType", "application/json")
-                    .body(JSONUtil.toJsonStr(sendTestRequestDto))
-                    .execute();
-            CommonResult<?> commonResult = JSONUtil.toBean(response.body(), CommonResult.class);
-            if (Objects.isNull(commonResult)) {
-                throw new BusinessException("测试发送接口失败！！！");
-            }
-            if (!commonResult.getCode().equals(200)) {
-                throw new BusinessException(commonResult.getErrorMessage());
-            }
-        } catch (Exception exception) {
-            throw new BusinessException("测试发送接口失败！！！");
+
+        // 修改为自己的地址
+        String serverUrl = "http://localhost:7070/open/sendMessage";
+        CommonResult<?> commonResult;
+        try (HttpResponse response = HttpRequest.post(serverUrl)
+                .header("ContentType", "application/json")
+                .body(JSONUtil.toJsonStr(sendTestRequestDto))
+                .execute()) {
+            commonResult = JSONUtil.toBean(response.body(), CommonResult.class);
+        } catch (Exception e) {
+            throw new BusinessException("测试发送接口失败，服务端异常，请检查！！！");
+        }
+        if (Objects.isNull(commonResult)) {
+            throw new BusinessException("测试发送接口失败，服务端异常，请检查！！！");
+        }
+        if (!commonResult.getCode().equals(200)) {
+            throw new BusinessException(commonResult.getErrorMessage());
         }
     }
 

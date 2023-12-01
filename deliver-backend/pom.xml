@@ -27,6 +27,8 @@
     </dependencyManagement>
 
     <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
         <hutool.version>5.8.9</hutool.version>
         <mybatis.plus.version>3.5.1</mybatis.plus.version>
         <rocketmq.client.java.version>2.0.4</rocketmq.client.java.version>
