@@ -4,9 +4,9 @@ import {
 	getMessageInfo,
 	getTemplateInfo,
 	getAppInfo,
-	getPushUserInfo,
-	DashboardHeadData
+	getPushUserInfo
 } from '@/api/dashboard'
+import { DashboardHeadData } from '@/views/Dashboard/type'
 import { type EChartsOption } from 'echarts'
 export interface EChartsOptionData {
 	chartsMessageOption?: EChartsOption
