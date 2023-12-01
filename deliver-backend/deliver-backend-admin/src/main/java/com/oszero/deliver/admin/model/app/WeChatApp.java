@@ -1,9 +1,6 @@
 package com.oszero.deliver.admin.model.app;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * 企业微信 APP 配置
@@ -13,8 +10,11 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @Builder
-//@AllArgsConstructor
+@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class WeChatApp extends AppConfig {
+    private String corpid;
+    private String corpsecret;
+    private String agentid;
 }

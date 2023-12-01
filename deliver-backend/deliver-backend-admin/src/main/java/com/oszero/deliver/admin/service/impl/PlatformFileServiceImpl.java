@@ -13,6 +13,7 @@ import com.oszero.deliver.admin.exception.BusinessException;
 import com.oszero.deliver.admin.mapper.PlatformFileMapper;
 import com.oszero.deliver.admin.model.app.DingApp;
 import com.oszero.deliver.admin.model.app.FeiShuApp;
+import com.oszero.deliver.admin.model.app.WeChatApp;
 import com.oszero.deliver.admin.model.dto.app.PlatformFileDto;
 import com.oszero.deliver.admin.model.dto.request.PlatformFileSearchRequestDto;
 import com.oszero.deliver.admin.model.dto.request.PlatformFileUploadRequestDto;
@@ -21,8 +22,10 @@ import com.oszero.deliver.admin.model.entity.App;
 import com.oszero.deliver.admin.model.entity.PlatformFile;
 import com.oszero.deliver.admin.service.AppService;
 import com.oszero.deliver.admin.service.PlatformFileService;
+import com.oszero.deliver.admin.util.AesUtils;
 import com.oszero.deliver.admin.util.app.DingUtils;
 import com.oszero.deliver.admin.util.app.FeiShuUtils;
+import com.oszero.deliver.admin.util.app.WeChatUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,24 +46,11 @@ import java.util.stream.Collectors;
 public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, PlatformFile>
         implements PlatformFileService {
 
-    static {
-        PlatformFileConstant.FILE_TYPE_NAME_MAP.put("1-image", "钉钉图片");
-        PlatformFileConstant.FILE_TYPE_NAME_MAP.put("1-voice", "钉钉语音");
-        PlatformFileConstant.FILE_TYPE_NAME_MAP.put("1-video", "钉钉视频");
-        PlatformFileConstant.FILE_TYPE_NAME_MAP.put("1-file", "钉钉文件");
-        PlatformFileConstant.FILE_TYPE_NAME_MAP.put("3-image", "飞书图片");
-        PlatformFileConstant.FILE_TYPE_NAME_MAP.put("3-opus", "飞书 opus 音频文件");
-        PlatformFileConstant.FILE_TYPE_NAME_MAP.put("3-mp4", "飞书 mp4 视频文件");
-        PlatformFileConstant.FILE_TYPE_NAME_MAP.put("3-pdf", "飞书 pdf 格式文件");
-        PlatformFileConstant.FILE_TYPE_NAME_MAP.put("3-doc", "飞书 doc 格式文件");
-        PlatformFileConstant.FILE_TYPE_NAME_MAP.put("3-xls", "飞书 xls 格式文件");
-        PlatformFileConstant.FILE_TYPE_NAME_MAP.put("3-ppt", "飞书 ppt 格式文件");
-        PlatformFileConstant.FILE_TYPE_NAME_MAP.put("3-stream", "飞书 stream 格式文件");
-    }
-
     private final DingUtils dingUtils;
     private final FeiShuUtils feiShuUtils;
+    private final WeChatUtils weChatUtils;
     private final AppService appService;
+    private final AesUtils aesUtils;
 
     @Override
     public void uploadFile(PlatformFileUploadRequestDto dto) throws IOException {
@@ -103,10 +93,12 @@ public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, Pla
         platformFileEntity.setAppId(dto.getAppId());
         String fileKey = "";
 
+        // 得到 APP 配置
+        String appConfig = aesUtils.decrypt(app.getAppConfig());
         // 具体执行选择
         switch (appTypeEnum) {
             case DING: {
-                String appConfig = app.getAppConfig();
+
                 DingApp dingApp = JSONUtil.toBean(appConfig, DingApp.class);
                 String accessToken = dingUtils.getAccessToken(dingApp);
 
@@ -129,12 +121,44 @@ public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, Pla
                 break;
             }
             case WECHAT: {
+                // 得到 token
+                WeChatApp weChatApp = JSONUtil.toBean(appConfig, WeChatApp.class);
+                String accessToken = weChatUtils.getAccessToken(weChatApp);
 
+                // 发送
+                if (PlatformFileTypeEnum.WECHAT_IMAGE.getFileType().equals(dto.getFileType())) {
+                    if (!PlatformFileConstant.WECHAT_IMAGE_FORMAT_SET.contains(fileFormat.toLowerCase(Locale.ROOT))) {
+                        throw new BusinessException("不支持 " + fileFormat + " 格式的图片！！！");
+                    }
+                    if (fileSize > PlatformFileConstant.WECHAT_IMAGE_MAX_SIZE) {
+                        throw new BusinessException("图片最大为：10M！！！");
+                    }
+                    fileKey = weChatUtils.uploadWeChatFile(accessToken, platformFileDto);
+                } else if (PlatformFileTypeEnum.WECHAT_VOICE.getFileType().equals(dto.getFileType())) {
+                    if (!PlatformFileConstant.WECHAT_VOICE_FORMAT_SET.contains(fileFormat.toLowerCase(Locale.ROOT))) {
+                        throw new BusinessException("不支持 " + fileFormat + " 格式的音频！！！");
+                    }
+                    if (fileSize > PlatformFileConstant.WECHAT_VOICE_MAX_SIZE) {
+                        throw new BusinessException("音频最大为：2M！！！");
+                    }
+                    fileKey = weChatUtils.uploadWeChatFile(accessToken, platformFileDto);
+                } else if (PlatformFileTypeEnum.WECHAT_VIDEO.getFileType().equals(dto.getFileType())) {
+                    if (!PlatformFileConstant.WECHAT_VIDEO_FORMAT_SET.contains(fileFormat.toLowerCase(Locale.ROOT))) {
+                        throw new BusinessException("不支持 " + fileFormat + " 格式的视频！！！");
+                    }
+                    if (fileSize > PlatformFileConstant.WECHAT_VIDEO_MAX_SIZE) {
+                        throw new BusinessException("视频最大为：10M！！！");
+                    }
+                    fileKey = weChatUtils.uploadWeChatFile(accessToken, platformFileDto);
+                } else {
+                    if (fileSize > PlatformFileConstant.WECHAT_FILE_MAX_SIZE) {
+                        throw new BusinessException("文件最大为：20M！！！");
+                    }
+                    fileKey = weChatUtils.uploadWeChatFile(accessToken, platformFileDto);
+                }
                 break;
             }
             case FEI_SHU: {
-                // 得到 APP 配置
-                String appConfig = app.getAppConfig();
                 FeiShuApp feiShuApp = JSONUtil.toBean(appConfig, FeiShuApp.class);
                 // 得到 token
                 String tenantAccessToken = feiShuUtils.getTenantAccessToken(feiShuApp);
