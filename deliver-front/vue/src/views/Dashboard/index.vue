@@ -5,7 +5,7 @@ import { onBeforeMount, reactive, ref } from 'vue'
 import { EChartsOptionData } from '@/store/modules/dashboard'
 import { globalMap } from '@/utils/mapping'
 import { IconFont } from '@/utils/iconFont'
-import { DashboardHeadData } from '@/api/dashboard'
+import { DashboardHeadData } from './type'
 const dashboardStore = useDashboardStore()
 const echartsOptionData = reactive<EChartsOptionData>({
 	chartsMessageOption: {},
