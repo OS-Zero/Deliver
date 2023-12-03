@@ -1,16 +1,23 @@
 package com.oszero.deliver.server.util.channel;
 
 import cn.hutool.json.JSONUtil;
+import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.message.param.mail.MailParam;
 import com.oszero.deliver.server.model.app.MailApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
+import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.io.File;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.Properties;
 
 /**
@@ -22,42 +29,60 @@ import java.util.Properties;
 @Slf4j
 @Component
 public class MailUtils {
-    private static final Properties pro;
 
-    static {
-        pro = System.getProperties(); // 下面各项缺一不可
-        pro.put("mail.smtp.auth", "true");
-        pro.put("mail.smtp.ssl.enable", "true");
-        pro.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+    /**
+     * 发送邮件
+     *
+     * @param mailApp     邮件应用
+     * @param sendTaskDto dto
+     */
+    public void sendMail(MailApp mailApp, SendTaskDto sendTaskDto) {
+        try {
+            String paramJson = sendTaskDto.getParamJson();
+            MailParam mailParam = JSONUtil.toBean(paramJson, MailParam.class);
+
+            //1. 创建 JavaMailSender
+            JavaMailSenderImpl javaMailSender = getJavaMailSender(mailApp);
+
+            //2. 创建 message 对象
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setFrom(mailApp.getUsername());
+            helper.setTo(sendTaskDto.getUsers().toArray(new String[0]));
+            helper.setCc(mailParam.getToCC().toArray(new String[0]));
+            helper.setBcc(mailParam.getToBCC().toArray(new String[0]));
+            helper.setSubject(mailParam.getTitle());
+            helper.setText(mailParam.getContent(), mailParam.isHtmlFlag());
+            // todo：增加邮件附件
+//        helper.addAttachment("", new File(""));
+
+            // 3. 发送邮件
+            javaMailSender.send(message);
+        } catch (Exception e) {
+            throw new MessageException("发送邮件失败，" + e.getMessage());
+        }
+        log.info("邮件消息发送成功，from {}，to {}", mailApp.getUsername(), sendTaskDto.getUsers());
     }
 
-    @SneakyThrows
-    public void sendMail(MailApp mailApp, SendTaskDto sendTaskDto) {
-        String paramJson = sendTaskDto.getParamJson();
-        MailParam mailParam = JSONUtil.toBean(paramJson, MailParam.class);
-
-        //1. 创建 JavaMailSender
+    /**
+     * 获取 JavaMailSender
+     *
+     * @param mailApp 邮件应用
+     * @return JavaMailSender
+     */
+    private static JavaMailSenderImpl getJavaMailSender(MailApp mailApp) {
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
         javaMailSender.setUsername(mailApp.getUsername());
         javaMailSender.setPassword(mailApp.getPassword());
         javaMailSender.setHost(mailApp.getHost());
         javaMailSender.setDefaultEncoding("UTF-8");
         javaMailSender.setProtocol("smtp");
+        Properties pro = new Properties();
+        pro.put("mail.smtp.auth", mailApp.getAuth());
+        pro.put("mail.smtp.ssl.enable", mailApp.getSslEnable());
+        pro.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         javaMailSender.setJavaMailProperties(pro);
-
-        //2. 创建 message 对象
-        MimeMessage message = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setFrom(mailApp.getUsername());
-        helper.setTo(sendTaskDto.getUsers().toArray(new String[0]));
-        helper.setCc(mailParam.getToCC().toArray(new String[0]));
-        helper.setBcc(mailParam.getToBCC().toArray(new String[0]));
-        helper.setSubject(mailParam.getTitle());
-        helper.setText(mailParam.getContent(), mailParam.isHtmlFlag());
-        log.info("[email request] subject={} content={} to={}", mailParam.getTitle(), mailParam.getContent(), sendTaskDto.getUsers());
-
-        // 3. 发送邮件
-        javaMailSender.send(message);
+        return javaMailSender;
     }
 
 }
