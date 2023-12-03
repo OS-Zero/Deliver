@@ -3,8 +3,6 @@ package com.oszero.deliver.server.pretreatment.link.paramcheck.ding.strategy;
 import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.enums.MessageTypeEnum;
 import com.oszero.deliver.server.message.param.ding.DingFileParam;
-import com.oszero.deliver.server.message.param.ding.DingTextParam;
-import com.oszero.deliver.server.message.param.ding.DingVoiceParam;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.paramcheck.ParamStrategy;
 import org.springframework.stereotype.Component;

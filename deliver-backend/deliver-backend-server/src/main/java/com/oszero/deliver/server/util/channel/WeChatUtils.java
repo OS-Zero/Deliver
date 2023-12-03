@@ -3,7 +3,6 @@ package com.oszero.deliver.server.util.channel;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONUtil;
-import com.lark.oapi.service.task.v1.model.UserIdList;
 import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.model.app.WeChatApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
@@ -56,7 +55,7 @@ public class WeChatUtils {
             throw new MessageException("企业微信获取 Token 接口调用失败！！！");
         }
         log.info("获取企微 Token 成功！");
-        return weChatResponse.getAccess_token();
+        return  weChatResponse.getAccess_token();
     }
 
     /**

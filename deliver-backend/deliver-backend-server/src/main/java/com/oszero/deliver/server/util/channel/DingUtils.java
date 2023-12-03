@@ -3,24 +3,16 @@ package com.oszero.deliver.server.util.channel;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONUtil;
-import com.dingtalk.api.DefaultDingTalkClient;
-import com.dingtalk.api.DingTalkClient;
-import com.dingtalk.api.request.OapiGettokenRequest;
-import com.dingtalk.api.request.OapiV2UserGetRequest;
-import com.dingtalk.api.request.OapiV2UserGetbymobileRequest;
-import com.dingtalk.api.response.OapiGettokenResponse;
-import com.dingtalk.api.response.OapiV2UserGetResponse;
-import com.dingtalk.api.response.OapiV2UserGetbymobileResponse;
 import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.model.app.DingApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
-import com.taobao.api.ApiException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 渠道-钉钉工具类
@@ -40,6 +32,9 @@ public class DingUtils {
      */
     public String getAccessToken(DingApp dingApp) {
 
+        String appKey = dingApp.getAppKey();
+        String appSecret = dingApp.getAppSecret();
+
         @Data
         class DingAccessTokenBody {
 
@@ -50,21 +45,22 @@ public class DingUtils {
 
         }
 
-        DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/gettoken");
-        OapiGettokenRequest request = new OapiGettokenRequest();
-        request.setAppkey(dingApp.getAppKey());
-        request.setAppsecret(dingApp.getAppSecret());
-        request.setHttpMethod("GET");
-        OapiGettokenResponse response;
-        try {
-            response = client.execute(request);
-        } catch (ApiException apiException) {
-            // TODO:2023/10/23  后续日志记录
-            throw new MessageException("获取 tenantAccessTokens 失败");
-        }
+        DingAccessTokenBody dingAccessTokenBody;
+        try(HttpResponse response = HttpRequest.get("https://oapi.dingtalk.com/gettoken?appkey="+appKey+"&appsecret="+appSecret)
+                .execute()){
 
-        DingAccessTokenBody dingAccessTokenBody = JSONUtil.toBean(response.getBody(), DingAccessTokenBody.class);
+            dingAccessTokenBody = JSONUtil.toBean(response.body(), DingAccessTokenBody.class);
+
+            if(!Objects.equals(dingAccessTokenBody.getErrcode(),0)){
+                throw new MessageException("获取钉钉 Token 失败：" + dingAccessTokenBody.getErrmsg());
+            }
+        }catch (Exception e){
+            throw new MessageException("钉钉获取 Token 接口调用失败！！！");
+        }
+        log.info("获取钉钉 Token 成功！");
         return dingAccessTokenBody.getAccessToken();
+
+
     }
 
     /**
@@ -86,17 +82,29 @@ public class DingUtils {
 
         Map<String, Object> paramMap = sendTaskDto.getParamMap();
         String body = JSONUtil.toJsonStr(paramMap);
-        HttpResponse response = HttpRequest.post("https://oapi.dingtalk.com/topapi/message/corpconversation/asyncsend_v2?access_token=" + accessToken)
+
+
+        DingSendInfoResponseBody dingSendInfoResponseBody;
+
+        try (HttpResponse response = HttpRequest.post("https://oapi.dingtalk.com/topapi/message/corpconversation/asyncsend_v2?access_token=" + accessToken)
                 .header("Content-Type", "application/json; charset=utf-8")
                 .body(body)
-                .execute();
+                .execute();){
 
-        log.info("发送钉钉工作通知消息成功，钉钉响应为：{}", response.body());
+              dingSendInfoResponseBody = JSONUtil.toBean(response.body(), DingSendInfoResponseBody.class);
 
-        DingSendInfoResponseBody dingSendInfoResponseBody = JSONUtil.toBean(response.body(), DingSendInfoResponseBody.class);
-        if (dingSendInfoResponseBody.errcode != 0) {
-            throw new MessageException("DingDing消息发送失败!!!");
+              if(!Objects.equals(dingSendInfoResponseBody.getErrcode(),0)){
+                  throw new MessageException("获取钉钉 Token 失败：" + dingSendInfoResponseBody.getErrmsg());
+              }
+
+        }catch (Exception e){
+            throw new MessageException("钉钉发送工作通知接口调用失败！！！");
         }
+
+
+        log.info("发送钉钉工作通知消息成功 ！！！");
+
+
     }
 
     /**
@@ -118,16 +126,25 @@ public class DingUtils {
         // 选择请求地址
         String url = "https://api.dingtalk.com" + (paramMap.containsKey("userIds") ? "/v1.0/robot/oToMessages/batchSend" : "/v1.0/robot/groupMessages/send");
         String body = JSONUtil.toJsonStr(paramMap);
-        HttpResponse response = HttpRequest.post(url)
+        DingSendInfoResponseBody dingSendInfoResponseBody;
+
+        try (HttpResponse response = HttpRequest.post(url)
                 .header("x-acs-dingtalk-access-token", accessToken)
                 .header("Content-Type", "application/json")
-                .body(body).execute();
-        log.info("发送钉钉机器人消息成功，钉钉响应为：{}", response.body());
+                .body(body).execute()){
 
-        DingSendInfoResponseBody dingSendInfoResponseBody = JSONUtil.toBean(response.body(), DingSendInfoResponseBody.class);
-        if (!(dingSendInfoResponseBody.invalidStaffIdList.isEmpty() && dingSendInfoResponseBody.flowControlledStaffIdList.isEmpty())) {
-            throw new MessageException("钉钉消息发送失败!!!");
+             dingSendInfoResponseBody = JSONUtil.toBean(response.body(), DingSendInfoResponseBody.class);
+
+
+            if (!(dingSendInfoResponseBody.invalidStaffIdList.isEmpty() && dingSendInfoResponseBody.flowControlledStaffIdList.isEmpty())) {
+                throw new MessageException("发送钉钉机器人消息失败!!!");
+            }
+
+        }catch (Exception e){
+            throw new MessageException("钉钉发送钉钉机器人消息接口调用失败！！！");
         }
+
+        log.info("发送钉钉机器人消息成功 ！！！");
     }
 
     /**
@@ -139,6 +156,13 @@ public class DingUtils {
     public void checkId(String accessToken, String userId) {
 
         @Data
+        class RequestBody{
+            private String language;
+            private String userid;
+        }
+
+
+        @Data
         class DingUserInfoBody {
             private Integer errcode;
             private String errmsg;
@@ -146,22 +170,30 @@ public class DingUtils {
 
         }
 
-        DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/topapi/v2/user/get");
-        OapiV2UserGetRequest req = new OapiV2UserGetRequest();
-        req.setUserid(userId);
-        req.setLanguage("zh_CN");
-        req.setHttpMethod("POST");
-        OapiV2UserGetResponse rsp;
-        try {
-            rsp = client.execute(req, accessToken);
-        } catch (ApiException apiException) {
-            throw new MessageException("钉钉用户 userId 校验失败！！！");
+
+        RequestBody requestBody = new RequestBody();
+        requestBody.setLanguage("zh_CN");
+        requestBody.setUserid(userId);
+
+
+        DingUserInfoBody dingUserInfoBody;
+
+
+        try (HttpResponse response = HttpRequest.post("https://oapi.dingtalk.com/topapi/v2/user/get?access_token="+accessToken).body(JSONUtil.toJsonStr(requestBody))
+                .execute()){
+            dingUserInfoBody = JSONUtil.toBean(response.body(), DingUserInfoBody.class);
+
+            if(!Objects.equals(dingUserInfoBody.getErrcode(),0)){
+                throw new MessageException("钉钉校验 userId 是否存在失败：" + dingUserInfoBody.getErrmsg());
+            }
+
+        }catch (Exception e){
+            throw new MessageException("钉钉校验 userId 是否存在接口调用失败！！！");
         }
 
-        DingUserInfoBody dingUserInfoBody = JSONUtil.toBean(rsp.getBody(), DingUserInfoBody.class);
-        if (dingUserInfoBody.getErrcode() != 0) {
-            throw new MessageException("钉钉用户 userId 校验失败！！！");
-        }
+        log.info("钉钉校验 userId 是否存在成功 ！！！");
+
+
     }
 
     /**
@@ -175,9 +207,15 @@ public class DingUtils {
     public String getUserIdByPhone(String accessToken, String phone) {
 
         @Data
+        class RequestBody{
+            private String mobile;
+            private boolean support_exclusive_account_search;
+        }
+
+        @Data
         class Result {
             private String userid;
-            private String[] exclusiveAccountUseridList;
+            private String[] exclusive_account_userid_list;
         }
         @Data
         class DingResponseBody {
@@ -186,20 +224,27 @@ public class DingUtils {
             private Result result;
             private String errmsg;
         }
-        DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/topapi/v2/user/getbymobile");
-        OapiV2UserGetbymobileRequest req = new OapiV2UserGetbymobileRequest();
-        req.setMobile(phone);
-        req.setSupportExclusiveAccountSearch(true);
-        OapiV2UserGetbymobileResponse rsp;
-        try {
-            rsp = client.execute(req, accessToken);
-        } catch (ApiException e) {
-            throw new MessageException("转换 userId 失败 ！！！");
+
+        RequestBody requestBody = new RequestBody();
+        requestBody.setMobile(phone);
+        requestBody.setSupport_exclusive_account_search(true);
+
+        DingResponseBody dingResponseBody;
+
+        try (HttpResponse response = HttpRequest.post("https://oapi.dingtalk.com/topapi/v2/user/getbymobile?access_token="+accessToken).body(JSONUtil.toJsonStr(requestBody))
+                     .execute()){
+            dingResponseBody = JSONUtil.toBean(response.body(), DingResponseBody.class);
+
+            if(!Objects.equals(dingResponseBody.getErrcode(),0)){
+                throw new MessageException("钉钉根据电话号码获取 userId 失败：" + dingResponseBody.getErrmsg());
+            }
+
+        }catch (Exception e){
+            throw new MessageException("钉钉根据电话号码获取 userId 接口调用失败！！！");
         }
-        DingResponseBody dingResponseBody = JSONUtil.toBean(rsp.getBody(), DingResponseBody.class);
-        if (dingResponseBody.getErrcode() != 0) {
-            throw new MessageException("转换 userId 失败 ！！！");
-        }
+
+
+        log.info("钉钉根据电话号码获取 userId 成功 ！！！");
 
         return dingResponseBody.getResult().getUserid();
     }
