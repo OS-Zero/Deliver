@@ -1,8 +1,10 @@
 package com.oszero.deliver.server.pretreatment.link.send;
 
+import com.oszero.deliver.server.message.producer.Producer;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.BusinessLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,9 +14,10 @@ import org.springframework.stereotype.Service;
  * @version 1.0.0
  */
 @Service
+@RequiredArgsConstructor
 public class WeChatSend extends CommonSend implements BusinessLink<SendTaskDto> {
 
-
+    private final Producer producer;
     /**
      * 真正处理逻辑
      *
@@ -27,6 +30,6 @@ public class WeChatSend extends CommonSend implements BusinessLink<SendTaskDto> 
 
     @Override
     void send(SendTaskDto sendTaskDto) {
-
+        producer.sendMessage(sendTaskDto);
     }
 }

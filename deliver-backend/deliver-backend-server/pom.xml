@@ -76,11 +76,11 @@
         </dependency>
 
         <!--        common-->
-        <dependency>
-            <groupId>com.oszero</groupId>
-            <artifactId>deliver-backend-common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.oszero</groupId>-->
+<!--            <artifactId>deliver-backend-common</artifactId>-->
+<!--            <version>${project.version}</version>-->
+<!--        </dependency>-->
 
         <!--        钉钉-->
         <dependency>

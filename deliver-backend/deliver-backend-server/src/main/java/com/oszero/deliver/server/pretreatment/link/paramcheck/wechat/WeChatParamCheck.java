@@ -1,11 +1,14 @@
 package com.oszero.deliver.server.pretreatment.link.paramcheck.wechat;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.exception.MessageException;
+import com.oszero.deliver.server.model.app.WeChatApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.BusinessLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
 import com.oszero.deliver.server.pretreatment.link.paramcheck.ParamStrategy;
+import com.oszero.deliver.server.util.AesUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,10 +28,15 @@ import java.util.Map;
 public class WeChatParamCheck implements BusinessLink<SendTaskDto> {
 
     private final Map<String, ParamStrategy> wechatParamStrategyMap;
+    private final AesUtils aesUtils;
 
     @Override
     public void process(LinkContext<SendTaskDto> context) {
         SendTaskDto sendTaskDto = context.getProcessModel();
+
+        String appConfig = aesUtils.decrypt(sendTaskDto.getAppConfig());
+        WeChatApp weChatApp = JSONUtil.toBean(appConfig, WeChatApp.class);
+
         Map<String, Object> paramMap = sendTaskDto.getParamMap();
         String pushSubject = paramMap.getOrDefault("pushSubject", "").toString();
         String wechatUserIdType = paramMap.getOrDefault("wechatUserIdType", "").toString();
@@ -43,16 +51,19 @@ public class WeChatParamCheck implements BusinessLink<SendTaskDto> {
                 case "touser":
                 case "toparty":
                 case "totag": {
+                    paramMap.put("agentid", weChatApp.getAgentid());
                     paramMap.put(wechatUserIdType, String.join("|", users));
                     break;
                 }
                 case "to_parent_userid":
                 case "to_student_userid":
                 case "to_party": {
+                    paramMap.put("agentid", weChatApp.getAgentid());
                     paramMap.put(wechatUserIdType, users);
                     break;
                 }
                 case "toall": {
+                    paramMap.put("agentid", weChatApp.getAgentid());
                     break;
                 }
                 case "chatid": {
