@@ -1,6 +1,6 @@
 // import { getApp, getMessageType } from '@/api/message'
 import { getApp, getMessageType } from '@/api/message'
-import type { messageTemplate } from '@/views/Message/type'
+import type { MessageTemplate } from '@/views/Message/type'
 
 interface Channel {
 	value: string
@@ -19,10 +19,7 @@ export const getDate = (d): string => {
 	return `${year}-${month}-${day} ${hour}:${minute}:${second}`
 }
 
-export const getPushWays = (
-	channelType: string | undefined,
-	messageType: string | undefined
-): string => {
+export const getPushWays = (channelType: string | undefined, messageType: string | undefined): string => {
 	const obj = {
 		channelType: Number(channelType),
 		messageType
@@ -83,7 +80,7 @@ export const changeTable = (item): any => {
 }
 ///
 
-export const getAllMessage = (mod, record: messageTemplate): void => {
+export const getAllMessage = (mod, record: MessageTemplate): void => {
 	mod.updateTemp.templateId = record.templateId
 	mod.updateTemp.templateName = record.templateName
 	mod.updateTemp.pushRange = Number(record.pushRange)

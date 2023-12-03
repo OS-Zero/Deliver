@@ -1,5 +1,31 @@
 import type { Dayjs } from 'dayjs'
-export interface messageTemplate {
+
+export interface AppItem {
+	appId: number
+	appName: string
+}
+
+export interface MessageItem {
+	code: string
+	name: string
+}
+
+export interface AddTemplate {
+	templateName: string
+	pushRange: number
+	usersType: number
+	pushWays: string
+	templateStatus: number
+	appId: number
+}
+export interface TemplateItem {
+	templateId: number
+	templateStatus: number
+}
+/**
+ * 消息接口
+ */
+export interface MessageTemplate {
 	/**
 	 * 模板id
 	 */
@@ -20,14 +46,6 @@ export interface messageTemplate {
 	 * 推送方式
 	 */
 	pushWays?: string
-	/**
-	 * 渠道选择
-	 */
-	channelType: number | string
-	/**
-	 * 消息类型
-	 */
-	messageType: string
 	/**
 	 * 模板累计使用数
 	 */
@@ -54,8 +72,10 @@ export interface messageTemplate {
 	appName: string
 }
 
-// 搜索框接口
-export interface searchMessage {
+/**
+ * 搜索框接口
+ */
+export interface SearchMessage {
 	/**
 	 * 模板名
 	 */
@@ -90,7 +110,9 @@ export interface searchMessage {
 	perid?: [Dayjs, Dayjs]
 }
 
-// 新增接口
+/**
+ * 新增接口
+ */
 export interface addTemp {
 	/**
 	 * 模板名
@@ -126,7 +148,9 @@ export interface addTemp {
 	templateStatus: number | boolean
 }
 
-// 修改接口
+/**
+ * 编辑模板接口
+ */
 export interface modiTemp {
 	/**
 	 * 模板id
@@ -166,6 +190,9 @@ export interface modiTemp {
 	appId: number | undefined | string
 }
 
+/**
+ * 发送消息接口
+ */
 export interface sendMessageTest {
 	/**
 	 * 模板id
