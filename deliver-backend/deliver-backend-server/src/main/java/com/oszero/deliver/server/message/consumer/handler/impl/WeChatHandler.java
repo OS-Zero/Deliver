@@ -42,7 +42,7 @@ public class WeChatHandler extends BaseHandler {
         String pushSubject = paramMap.get("pushSubject").toString();
         String wechatUserIdType = paramMap.get("wechatUserIdType").toString();
 
-        if ("app".equals(wechatUserIdType)) {
+        if ("app".equals(pushSubject)) {
             if (new HashSet<>(Arrays.asList("touser", "toparty", "totag")).contains(wechatUserIdType)) {
                 weChatUtils.sendAppMessage(accessToken, sendTaskDto);
             } else if (new HashSet<>(Arrays.asList("to_parent_userid", "to_student_userid", "to_party", "toall")).contains(wechatUserIdType)) {

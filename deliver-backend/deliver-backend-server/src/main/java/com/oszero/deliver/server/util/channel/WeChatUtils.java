@@ -37,18 +37,18 @@ public class WeChatUtils {
         String corpid = weChatApp.getCorpid();
         String corpsecret = weChatApp.getCorpsecret();
         @Data
-        class WeChatResponse {
+        class WechatResponse {
             private Integer errcode;
             private String errmsg;
             private String access_token;
             private Integer expires_in;
         }
 
-        WeChatResponse weChatResponse;
+        WechatResponse weChatResponse;
         try (HttpResponse response = HttpRequest.get("https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=" + corpid + "&corpsecret=" + corpsecret)
                 .execute()) {
 
-            weChatResponse = JSONUtil.toBean(response.body(), WeChatResponse.class);
+            weChatResponse = JSONUtil.toBean(response.body(), WechatResponse.class);
             if (!Objects.equals(weChatResponse.getErrcode(), 0)) {
                 throw new MessageException("获取企业微信 Token 失败：" + weChatResponse.getErrmsg());
             }

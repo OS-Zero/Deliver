@@ -21,8 +21,8 @@ public interface AppConfigConstant {
     String DING_CONFIG = "{\n" +
             "  \"agentId\": 0,\n" +
             "  \"appKey\": \"\",\n" +
-            "  \"appSecret\": \"\"\n" +
-            " \"RobotCode\": \"\"\n" +
+            "  \"appSecret\": \"\",\n" +
+            " \"robotCode\": \"\"\n" +
             "}";
 
     String WECHAT_CONFIG = "{\n" +
