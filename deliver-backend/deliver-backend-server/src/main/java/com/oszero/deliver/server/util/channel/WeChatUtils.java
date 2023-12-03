@@ -92,6 +92,7 @@ public class WeChatUtils {
         } catch (Exception e) {
             throw new MessageException("发送应用消息失败，服务调用异常！！！");
         }
+        log.info("企微发送应用消息成功！");
     }
 
     /**
@@ -121,6 +122,7 @@ public class WeChatUtils {
         } catch (Exception e) {
             throw new MessageException("发送应用消息到群聊会话失败，服务调用异常！！！");
         }
+        log.info("企微发送应用消息到群聊会话成功！");
     }
 
     /**
@@ -153,6 +155,7 @@ public class WeChatUtils {
         } catch (Exception e) {
             throw new MessageException("发送应用家校消息推送失败，服务调用异常！！！");
         }
+        log.info("企微发送应用家校消息推送成功！");
     }
 
     /**
@@ -183,6 +186,7 @@ public class WeChatUtils {
         } catch (Exception e) {
             throw new MessageException("发送群机器人消息失败，服务调用异常！！！");
         }
+        log.info("企微发送群机器人消息成功！");
     }
 
     /**
@@ -212,11 +216,11 @@ public class WeChatUtils {
                 if (!Objects.equals(wechatResponse.getErrcode(), 0)) {
                     throw new MessageException("通过手机号获取 UserId 失败，" + wechatResponse.getErrmsg());
                 }
+                log.info("企微 ID 转换成功");
                 return wechatResponse.getUserid();
             } catch (Exception e) {
                 throw new MessageException("通过手机号获取 UserId 失败，服务异常！！！");
             }
-
         }).collect(Collectors.toList());
     }
 
@@ -244,6 +248,6 @@ public class WeChatUtils {
                 throw new MessageException("校验用户 ID 失败，服务异常！！！");
             }
         });
-
+        log.info("企微校验用户 ID 成功");
     }
 }
