@@ -17,14 +17,7 @@ import searchForm from './components/searchForm.vue'
 import addTemplate from './components/addApp.vue'
 import { getDate } from '@/utils/date'
 import { useStore } from '@/store'
-import {
-	addAppItem,
-	getAppInfo,
-	deleteAppInfo,
-	updateAppStatus,
-	updateAppItem,
-	getAppConfigByChannelType
-} from '@/api/channel'
+import { addAppItem, getAppInfo, deleteAppInfo, updateAppStatus, updateAppItem, getAppConfigByChannelType } from '@/api/channel'
 import JsonEditorVue from 'json-editor-vue3'
 import type { Rule } from 'ant-design-vue/es/form'
 
@@ -443,10 +436,7 @@ const a = computed(() => {
 		<div class="message-section">
 			<div class="splitter">
 				<a-tooltip title="刷新">
-					<a-button
-						shape="circle"
-						:icon="h(ReloadOutlined)"
-						@click="searchTemplate({ page: 1, pageSize, opt: 1 })" />
+					<a-button shape="circle" :icon="h(ReloadOutlined)" @click="searchTemplate({ page: 1, pageSize, opt: 1 })" />
 				</a-tooltip>
 				<addTemplate ref="addtemplate" @add="saveApp()" />
 			</div>
@@ -485,36 +475,12 @@ const a = computed(() => {
 					<template v-if="column.key === 'channelType'">
 						<span>
 							<!-- 根据 appType 的值显示不同的图片 -->
-							<img
-								style="height: 30px; width: 30px"
-								v-if="record.channelType === 1"
-								src="电话.png"
-								alt="电话" />
-							<img
-								style="height: 30px; width: 30px"
-								v-else-if="record.channelType === 2"
-								src="短信.png"
-								alt="短信" />
-							<img
-								style="height: 30px; width: 30px"
-								v-else-if="record.channelType === 3"
-								src="邮件.png"
-								alt="邮件" />
-							<img
-								style="height: 30px; width: 30px"
-								v-else-if="record.channelType === 4"
-								src="钉钉.png"
-								alt="钉钉" />
-							<img
-								style="height: 30px; width: 30px"
-								v-else-if="record.channelType === 5"
-								src="企业微信.png"
-								alt="企业微信" />
-							<img
-								style="height: 30px; width: 30px"
-								v-else-if="record.channelType === 6"
-								src="飞书.png"
-								alt="飞书" />
+							<img style="height: 30px; width: 30px" v-if="record.channelType === 1" src="电话.png" alt="电话" />
+							<img style="height: 30px; width: 30px" v-else-if="record.channelType === 2" src="短信.png" alt="短信" />
+							<img style="height: 30px; width: 30px" v-else-if="record.channelType === 3" src="邮件.png" alt="邮件" />
+							<img style="height: 30px; width: 30px" v-else-if="record.channelType === 4" src="钉钉.png" alt="钉钉" />
+							<img style="height: 30px; width: 30px" v-else-if="record.channelType === 5" src="企业微信.png" alt="企业微信" />
+							<img style="height: 30px; width: 30px" v-else-if="record.channelType === 6" src="飞书.png" alt="飞书" />
 							<!-- 添加更多条件根据需要显示不同的图片 -->
 						</span>
 					</template>
@@ -535,50 +501,27 @@ const a = computed(() => {
 						</a-tag>
 					</template>
 					<template v-if="column.key === 'operation'">
-						<a-button
-							type="link"
-							size="small"
-							style="font-size: 14px"
-							@click="getInnerData(false, record)"
-							v-if="judgeInclude(record)">
+						<a-button type="link" size="small" style="font-size: 14px" @click="getInnerData(false, record)" v-if="judgeInclude(record)">
 							<UpCircleTwoTone style="font-size: 18px" />
 						</a-button>
 						<a-tooltip v-if="!judgeInclude(record)">
 							<template #title>查看 APP 更多信息</template>
-							<a-button
-								type="link"
-								size="small"
-								style="font-size: 14px"
-								@click="getInnerData(true, record)"
-								v-if="!judgeInclude(record)">
+							<a-button type="link" size="small" style="font-size: 14px" @click="getInnerData(true, record)" v-if="!judgeInclude(record)">
 								<DownCircleTwoTone style="font-size: 18px" />
 							</a-button>
 						</a-tooltip>
 						<a-divider type="vertical" />
 						<a-tooltip>
 							<template #title>修改 APP</template>
-							<a-button
-								type="link"
-								class="btn-manager"
-								size="small"
-								style="font-size: 14px"
-								@click="update(record)">
+							<a-button type="link" class="btn-manager" size="small" style="font-size: 14px" @click="update(record)">
 								<EditTwoTone two-tone-color="#1677FF" style="font-size: 18px" />
 							</a-button>
 						</a-tooltip>
 						<a-divider type="vertical" />
-						<a-popconfirm
-							title="确认删除吗?"
-							@confirm="onDelete(record.appId)"
-							ok-text="确定"
-							cancel-text="取消">
+						<a-popconfirm title="确认删除吗?" @confirm="onDelete(record.appId)" ok-text="确定" cancel-text="取消">
 							<a-tooltip placement="bottom">
 								<template #title>删除 APP</template>
-								<a-button
-									type="link"
-									danger
-									size="small"
-									style="font-size: 14px; margin-left: -5px">
+								<a-button type="link" danger size="small" style="font-size: 14px; margin-left: -5px">
 									<DeleteTwoTone two-tone-color="red" />
 								</a-button>
 							</a-tooltip>
@@ -611,36 +554,15 @@ const a = computed(() => {
 		<div class="showDelete" :style="{ width: `calc(100% - ${a}px)` }" v-if="hasSelected">
 			<div class="box">{{ `已选择 ${state.selectedRowKeys.length} 项` }}</div>
 			<div class="del">
-				<a-button
-					type="primary"
-					style="font-size: 14px"
-					:loading="state.loading"
-					@click="showDeleteConfirm">
-					批量删除
-				</a-button>
+				<a-button type="primary" style="font-size: 14px" :loading="state.loading" @click="showDeleteConfirm">批量删除</a-button>
 				<contextHolder />
 			</div>
 		</div>
 	</div>
-	<a-modal
-		v-model:open="open"
-		title="修改 APP "
-		width="650px"
-		:footer="null"
-		@cancel="handleCancel">
-		<a-form
-			ref="templateForm"
-			:model="updateDate"
-			:label-col="labelCol"
-			:wrapper-col="wrapperCol"
-			class="temform"
-			:rules="rules">
+	<a-modal v-model:open="open" title="修改 APP " width="650px" :footer="null" @cancel="handleCancel">
+		<a-form ref="templateForm" :model="updateDate" :label-col="labelCol" :wrapper-col="wrapperCol" class="temform" :rules="rules">
 			<a-form-item ref="appName" label="APP 名称" name="appName" class="tem-item">
-				<a-input
-					:maxlength="20"
-					v-model:value="updateDate.appName"
-					placeholder="请填写长度在 3 到 20 个字符的 APP 名"
-					style="width: 70%" />
+				<a-input :maxlength="20" v-model:value="updateDate.appName" placeholder="请填写长度在 3 到 20 个字符的 APP 名" style="width: 70%" />
 			</a-form-item>
 
 			<a-form-item label="渠道选择" name="channelType" class="tem-item">
@@ -661,12 +583,7 @@ const a = computed(() => {
 					language="cn" />
 			</a-form-item>
 			<a-form-item label="APP 状态" name="appStatus" class="tem-item">
-				<a-switch
-					v-model:checked="updateDate.appStatus"
-					checked-children="启用"
-					un-checked-children="禁用"
-					:checkedValue="1"
-					:unCheckedValue="0" />
+				<a-switch v-model:checked="updateDate.appStatus" checked-children="启用" un-checked-children="禁用" :checkedValue="1" :unCheckedValue="0" />
 			</a-form-item>
 			<a-form-item :wrapper-col="{ span: 20, offset: 17 }" class="tem-item">
 				<div class="between">

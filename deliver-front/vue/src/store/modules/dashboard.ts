@@ -1,11 +1,5 @@
 import { defineStore } from 'pinia'
-import {
-	getDashboardHeadData,
-	getMessageInfo,
-	getTemplateInfo,
-	getAppInfo,
-	getPushUserInfo
-} from '@/api/dashboard'
+import { getDashboardHeadData, getMessageInfo, getTemplateInfo, getAppInfo, getPushUserInfo } from '@/api/dashboard'
 import { DashboardHeadData } from '@/views/Dashboard/type'
 import { type EChartsOption } from 'echarts'
 export interface EChartsOptionData {
@@ -136,12 +130,7 @@ export const useDashboardStore = defineStore('dashboard', {
 		 */
 		async getDashboardData(): Promise<any> {
 			try {
-				const res = await Promise.all([
-					this.getMessageInfo(1),
-					this.getTemplateInfo(1),
-					this.getAppInfo(1),
-					this.getPushUserInfo(1)
-				])
+				const res = await Promise.all([this.getMessageInfo(1), this.getTemplateInfo(1), this.getAppInfo(1), this.getPushUserInfo(1)])
 				return res
 			} catch (error) {
 				console.log('Error:', error)

@@ -52,11 +52,7 @@ const toggleCollapsed = (): void => {
 			<RightOutlined v-if="collapsed" />
 			<LeftOutlined v-else />
 		</a-button>
-		<a-menu
-			v-model:selectedKeys="selectedKeys2"
-			v-model:openKeys="openKeys"
-			mode="inline"
-			style="border-right: 0px solid #ececec">
+		<a-menu v-model:selectedKeys="selectedKeys2" v-model:openKeys="openKeys" mode="inline" style="border-right: 0px solid #ececec">
 			<a-sub-menu key="欢迎">
 				<template #title>
 					<span>
@@ -131,10 +127,7 @@ const toggleCollapsed = (): void => {
 			}">
 			<div style="margin-bottom: 6px">
 				Deliver 企业消息推送平台
-				<a
-					href="https://gitee.com/OS-Zero"
-					target="_blank"
-					style="color: #1e1e1e; font-size: 16px; margin: 0 5px 0">
+				<a href="https://gitee.com/OS-Zero" target="_blank" style="color: #1e1e1e; font-size: 16px; margin: 0 5px 0">
 					<GithubOutlined />
 				</a>
 				OSZero 开源社区出品
