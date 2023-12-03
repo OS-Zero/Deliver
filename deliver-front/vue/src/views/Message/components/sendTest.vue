@@ -159,30 +159,15 @@ watch(open, (newValue) => {
 </script>
 
 <template>
-	<a-button
-		type="link"
-		class="btn-manager"
-		size="small"
-		style="font-size: 14px; margin-left: -5px"
-		@click="showDrawer">
+	<a-button type="link" class="btn-manager" size="small" style="font-size: 14px; margin-left: -5px" @click="showDrawer">
 		<a-tooltip title="测试消息模版发送">
 			<ApiTwoTone style="font-size: 18px" />
 		</a-tooltip>
 	</a-button>
-	<a-drawer
-		title="测试消息模版发送"
-		:placement="placement"
-		:closable="true"
-		:open="open"
-		@close="onClose"
-		:width="660">
+	<a-drawer title="测试消息模版发送" :placement="placement" :closable="true" :open="open" @close="onClose" :width="660">
 		<a-form ref="sendtest" :model="sendTestTable" :rules="rules">
 			<a-form-item label="用户列表" name="users">
-				<a-list
-					:locale="{ emptyText: ' ' }"
-					bordered
-					v-model:value="sendTestTable.users"
-					:data-source="sendTestTable.users">
+				<a-list :locale="{ emptyText: ' ' }" bordered v-model:value="sendTestTable.users" :data-source="sendTestTable.users">
 					<template #renderItem="{ item }">
 						<a-list-item>
 							<div style="width: 80%; word-wrap: break-word; overflow-wrap: break-word">

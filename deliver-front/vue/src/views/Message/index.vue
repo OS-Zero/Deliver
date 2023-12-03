@@ -4,25 +4,13 @@ import { ref, reactive, h, onMounted, computed } from 'vue'
 import type { UnwrapRef } from 'vue'
 import type { TableColumnsType } from 'ant-design-vue'
 import { message, Modal } from 'ant-design-vue'
-import type { messageTemplate, searchMessage } from './type'
+import type { MessageTemplate, SearchMessage } from './type'
 import searchForm from './components/searchForm.vue'
 import addTemplate from './components/addTemplate.vue'
 import modifyTemplate from './components/modifyTemplate.vue'
 import sendTest from './components/sendTest.vue'
-import {
-	addTemplatePages,
-	deleteTemplate,
-	getTemplatePages,
-	updateStatus,
-	updatetemplate
-} from '@/api/message'
-import {
-	changeTable,
-	getPushRange,
-	getUsersType,
-	getMessageTypeArr,
-	getAllMessage
-} from '@/utils/date'
+import { addTemplatePages, deleteTemplate, getTemplatePages, updateStatus, updatetemplate } from '@/api/message'
+import { changeTable, getPushRange, getUsersType, getMessageTypeArr, getAllMessage } from '@/utils/date'
 import { useStore } from '@/store'
 import { getPushWays } from '@/utils/date'
 import {
@@ -393,10 +381,7 @@ const a = computed(() => {
 		<div class="message-section">
 			<div class="splitter">
 				<a-tooltip title="刷新">
-					<a-button
-						shape="circle"
-						:icon="h(ReloadOutlined)"
-						@click="searchTemplate({ page: 1, pageSize, opt: 2 })" />
+					<a-button shape="circle" :icon="h(ReloadOutlined)" @click="searchTemplate({ page: 1, pageSize, opt: 2 })" />
 				</a-tooltip>
 				<addTemplate ref="addtemplate" @add="saveTemplate()" />
 			</div>
@@ -449,42 +434,24 @@ const a = computed(() => {
 						</span>
 					</template>
 					<template v-if="column.key === 'pushRange'">
-						<a-tag
-							color="green"
-							v-if="record.pushRange == 0"
-							style="width: 70px; text-align: center">
+						<a-tag color="green" v-if="record.pushRange == 0" style="width: 70px; text-align: center">
 							<span>{{ getPushRange(Number(record.pushRange)) }}</span>
 						</a-tag>
-						<a-tag
-							color="blue"
-							v-if="record.pushRange == 1"
-							style="width: 70px; text-align: center">
+						<a-tag color="blue" v-if="record.pushRange == 1" style="width: 70px; text-align: center">
 							<span>{{ getPushRange(Number(record.pushRange)) }}</span>
 						</a-tag>
-						<a-tag
-							color="purple"
-							v-if="record.pushRange == 2"
-							style="width: 70px; text-align: center">
+						<a-tag color="purple" v-if="record.pushRange == 2" style="width: 70px; text-align: center">
 							<span>{{ getPushRange(Number(record.pushRange)) }}</span>
 						</a-tag>
 					</template>
 					<template v-if="column.key === 'usersType'">
-						<a-tag
-							color="cyan"
-							v-if="record.usersType == 1"
-							style="width: 80px; text-align: center">
+						<a-tag color="cyan" v-if="record.usersType == 1" style="width: 80px; text-align: center">
 							<span>{{ getUsersType(Number(record.usersType)) }}</span>
 						</a-tag>
-						<a-tag
-							color="orange"
-							v-if="record.usersType == 2"
-							style="width: 80px; text-align: center">
+						<a-tag color="orange" v-if="record.usersType == 2" style="width: 80px; text-align: center">
 							<span>{{ getUsersType(Number(record.usersType)) }}</span>
 						</a-tag>
-						<a-tag
-							color="pink"
-							v-if="record.usersType == 3"
-							style="width: 80px; text-align: center">
+						<a-tag color="pink" v-if="record.usersType == 3" style="width: 80px; text-align: center">
 							<span>{{ getUsersType(Number(record.usersType)) }}</span>
 						</a-tag>
 						<a-tag color="red" v-if="record.usersType == 4" style="width: 80px; text-align: center">
@@ -494,36 +461,12 @@ const a = computed(() => {
 					<template v-if="column.key === 'channelType'">
 						<span>
 							<!-- 根据 appType 的值显示不同的图片 -->
-							<img
-								style="height: 30px; width: 30px"
-								v-if="record.channelType === 1"
-								src="电话.png"
-								alt="电话" />
-							<img
-								style="height: 30px; width: 30px"
-								v-else-if="record.channelType === 2"
-								src="短信.png"
-								alt="短信" />
-							<img
-								style="height: 30px; width: 30px"
-								v-else-if="record.channelType === 3"
-								src="邮件.png"
-								alt="邮件" />
-							<img
-								style="height: 30px; width: 30px"
-								v-else-if="record.channelType === 4"
-								src="钉钉.png"
-								alt="钉钉" />
-							<img
-								style="height: 30px; width: 30px"
-								v-else-if="record.channelType === 5"
-								src="企业微信.png"
-								alt="企业微信" />
-							<img
-								style="height: 30px; width: 30px"
-								v-else-if="record.channelType === 6"
-								src="飞书.png"
-								alt="飞书" />
+							<img style="height: 30px; width: 30px" v-if="record.channelType === 1" src="电话.png" alt="电话" />
+							<img style="height: 30px; width: 30px" v-else-if="record.channelType === 2" src="短信.png" alt="短信" />
+							<img style="height: 30px; width: 30px" v-else-if="record.channelType === 3" src="邮件.png" alt="邮件" />
+							<img style="height: 30px; width: 30px" v-else-if="record.channelType === 4" src="钉钉.png" alt="钉钉" />
+							<img style="height: 30px; width: 30px" v-else-if="record.channelType === 5" src="企业微信.png" alt="企业微信" />
+							<img style="height: 30px; width: 30px" v-else-if="record.channelType === 6" src="飞书.png" alt="飞书" />
 							<!-- 添加更多条件根据需要显示不同的图片 -->
 						</span>
 					</template>
@@ -542,22 +485,12 @@ const a = computed(() => {
 						</span>
 					</template>
 					<template v-if="column.key === 'operation'">
-						<a-button
-							type="link"
-							size="small"
-							style="font-size: 14px"
-							@click="getInnerData(false, record)"
-							v-if="judgeInclude(record)">
+						<a-button type="link" size="small" style="font-size: 14px" @click="getInnerData(false, record)" v-if="judgeInclude(record)">
 							<UpCircleTwoTone style="font-size: 18px" />
 						</a-button>
 						<a-tooltip v-if="!judgeInclude(record)">
 							<template #title>查看消息模版更多信息</template>
-							<a-button
-								type="link"
-								size="small"
-								style="font-size: 14px"
-								@click="getInnerData(true, record)"
-								v-if="!judgeInclude(record)">
+							<a-button type="link" size="small" style="font-size: 14px" @click="getInnerData(true, record)" v-if="!judgeInclude(record)">
 								<DownCircleTwoTone style="font-size: 18px" />
 							</a-button>
 						</a-tooltip>
@@ -565,34 +498,18 @@ const a = computed(() => {
 						<a-divider type="vertical" />
 						<a-tooltip>
 							<template #title>修改消息模版</template>
-							<a-button
-								type="link"
-								class="btn-manager"
-								size="small"
-								style="font-size: 14px"
-								@click="startModify(record)">
+							<a-button type="link" class="btn-manager" size="small" style="font-size: 14px" @click="startModify(record)">
 								<EditTwoTone two-tone-color="#1677FF" style="font-size: 18px" />
 							</a-button>
 						</a-tooltip>
 						<modifyTemplate ref="modifytemplate" :mod="record" @update="updateTemplate()" />
 						<a-divider type="vertical" />
-						<sendTest
-							:test="record.templateId"
-							:message-type="record.messageType"
-							:channel-type="record.channelType" />
+						<sendTest :test="record.templateId" :message-type="record.messageType" :channel-type="record.channelType" />
 						<a-divider type="vertical" />
-						<a-popconfirm
-							title="确认删除吗?"
-							@confirm="onDelete(record.templateId)"
-							ok-text="确定"
-							cancel-text="取消">
+						<a-popconfirm title="确认删除吗?" @confirm="onDelete(record.templateId)" ok-text="确定" cancel-text="取消">
 							<a-tooltip placement="bottom">
 								<template #title>删除消息模版</template>
-								<a-button
-									type="link"
-									danger
-									size="small"
-									style="font-size: 14px; margin-left: -5px">
+								<a-button type="link" danger size="small" style="font-size: 14px; margin-left: -5px">
 									<DeleteTwoTone two-tone-color="red" style="font-size: 18px" />
 								</a-button>
 							</a-tooltip>
@@ -632,13 +549,7 @@ const a = computed(() => {
 		<div class="showDelete" :style="{ width: `calc(100% - ${a}px)` }" v-if="hasSelected">
 			<div class="box">{{ `已选择 ${state.selectedRowKeys.length} 项` }}</div>
 			<div class="del">
-				<a-button
-					type="primary"
-					style="font-size: 14px"
-					:loading="state.loading"
-					@click="showDeleteConfirm">
-					批量删除
-				</a-button>
+				<a-button type="primary" style="font-size: 14px" :loading="state.loading" @click="showDeleteConfirm">批量删除</a-button>
 				<contextHolder />
 			</div>
 		</div>
