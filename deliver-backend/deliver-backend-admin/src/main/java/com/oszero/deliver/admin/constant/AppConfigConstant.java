@@ -13,9 +13,11 @@ public interface AppConfigConstant {
     String SMS_CONFIG = "{}";
 
     String MAIL_CONFIG = "{\n" +
-            "  \"host\": \"\",\n" +
-            "  \"username\": \"\",\n" +
-            "  \"password\": \"\"\n" +
+            "  \"host\": \"xxx\",\n" +
+            "  \"username\": \"xxx\",\n" +
+            "  \"password\": \"xxx\",\n" +
+            "  \"auth\": \"true\",\n" +
+            "  \"sslEnable\": \"true\"\n" +
             "}";
 
     String DING_CONFIG = "{\n" +

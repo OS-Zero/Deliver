@@ -17,4 +17,7 @@ public class MailApp extends AppConfig {
     private String host;
     private String username;
     private String password;
+    // 默认值 true
+    private String auth = "true";
+    private String sslEnable = "true";
 }
