@@ -1,10 +1,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
-import {
-	ExclamationCircleOutlined,
-	QuestionCircleOutlined,
-	GithubOutlined
-} from '@ant-design/icons-vue'
+import { ExclamationCircleOutlined, QuestionCircleOutlined, GithubOutlined } from '@ant-design/icons-vue'
 const showAbout = ref(false)
 const setShowAbout = (open: boolean): void => {
 	showAbout.value = open
@@ -14,10 +10,7 @@ const setShowAbout = (open: boolean): void => {
 	<a-layout-header class="header">
 		<div class="left">
 			<RouterLink to="/">
-				<img
-					src="logo.png"
-					style="height: 28px; width: 33px; margin-top: 16px; margin-right: 8px"
-					alt="空" />
+				<img src="logo.png" style="height: 28px; width: 33px; margin-top: 16px; margin-right: 8px" alt="空" />
 			</RouterLink>
 			<RouterLink to="/"><h1>Deliver 企业消息推送平台</h1></RouterLink>
 		</div>
@@ -43,25 +36,17 @@ const setShowAbout = (open: boolean): void => {
 					<div style="margin-left: 60px">
 						<p>产品：Deliver 企业消息推送平台</p>
 						<p>版本：v1.0.0</p>
-						<a target="_blank" href="https://os-zero.gitee.io/deliver-website">
-							https://os-zero.gitee.io/deliver-website
-						</a>
+						<a target="_blank" href="https://os-zero.gitee.io/deliver-website">https://os-zero.gitee.io/deliver-website</a>
 					</div>
 				</div>
 			</a-modal>
 			<a-tooltip title="疑问">
-				<a
-					target="_blank"
-					href="https://os-zero.gitee.io/deliver-website"
-					style="color: #8b8b8b; font-size: 16px">
+				<a target="_blank" href="https://os-zero.gitee.io/deliver-website" style="color: #8b8b8b; font-size: 16px">
 					<QuestionCircleOutlined />
 				</a>
 			</a-tooltip>
 			<a-tooltip title="Gitee">
-				<a
-					href="https://gitee.com/OS-Zero/deliver"
-					target="_blank"
-					style="color: #8b8b8b; font-size: 16px">
+				<a href="https://gitee.com/OS-Zero/deliver" target="_blank" style="color: #8b8b8b; font-size: 16px">
 					<GithubOutlined />
 				</a>
 			</a-tooltip>
