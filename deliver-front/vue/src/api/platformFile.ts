@@ -12,6 +12,6 @@ export async function uploadFileApi(formData): Promise<any> {
 	return await request({
 		url: '/platformFile/uploadFile',
 		method: 'post',
-		data: formData
+		data: formDatad
 	})
 }

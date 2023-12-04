@@ -59,7 +59,7 @@ export async function addTemplatePages(data: AddTemplate): Promise<R<null>> {
  * @param data
  * @returns
  */
-export async function updateStatus(data: TemplateItem): Promise<any> {
+export async function updateStatus(data: TemplateItem): Promise<R<null>> {
 	return await request({
 		url: '/template/updateStatusById',
 		method: 'post',
@@ -68,11 +68,11 @@ export async function updateStatus(data: TemplateItem): Promise<any> {
 }
 
 /**
- *
+ * 更新模板
  * @param data
  * @returns
  */
-export async function updatetemplate(data: any): Promise<any> {
+export async function updatetemplate(data: any): Promise<R<null>> {
 	return await request({
 		url: '/template/updateById',
 		method: 'post',
@@ -81,11 +81,11 @@ export async function updatetemplate(data: any): Promise<any> {
 }
 
 /**
- *
+ * 删除模板
  * @param data
  * @returns
  */
-export async function deleteTemplate(data: { ids: number[] }): Promise<any> {
+export async function deleteTemplate(data: { ids: number[] }): Promise<R<null>> {
 	return await request({
 		url: '/template/deleteByIds',
 		method: 'post',
@@ -94,11 +94,11 @@ export async function deleteTemplate(data: { ids: number[] }): Promise<any> {
 }
 
 /**
- *
+ * 模板测试发送消息
  * @param data
  * @returns
  */
-export async function sendTestMes(data: sendMessageTest): Promise<any> {
+export async function sendTestMes(data: sendMessageTest): Promise<R<null>> {
 	return await request({
 		url: '/template/testSendMessage',
 		method: 'post',
