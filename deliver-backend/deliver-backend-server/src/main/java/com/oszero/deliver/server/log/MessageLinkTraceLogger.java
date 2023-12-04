@@ -1,24 +1,39 @@
 package com.oszero.deliver.server.log;
 
-import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
  * 消息链路追踪日志类
+ *
+ * @author oszero
+ * @version 1.0.0
  */
-@Getter
 @Component
 public class MessageLinkTraceLogger {
 
     private final Logger logger;
 
-    public MessageLinkTraceLogger(@Value("${message-link-trace.file.path}") String logFilePath, @Value("${message-link-trace.file.name}") String logFileName) {
-        String fullPath = logFilePath + "/" + logFileName;
+    public MessageLinkTraceLogger() {
         // 使用 LoggerFactory 创建 Logger
         this.logger = LoggerFactory.getLogger("MessageLinkTraceLogger");
     }
 
+    public void info(String s) {
+        this.logger.info(s);
+    }
+
+
+    public void info(String s, Object... objects) {
+        this.logger.info(s, objects);
+    }
+
+    public void error(String s) {
+        this.logger.error(s);
+    }
+
+    public void error(String s, Object... objects) {
+        this.logger.error(s, objects);
+    }
 }

@@ -9,8 +9,3 @@ spring:
 # 对称加密
 aes:
   key: oszero
-
-message-link-trace:
-  file:
-    path: /logs/messageLinkTrace
-    name: messageLinkTrace.log
