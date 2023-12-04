@@ -18,6 +18,7 @@ public class DingFileParam extends DingMessageParam {
 
     private FileMessage msg;
 
+
     @Data
     public static class FileMessage {
         private String msgtype;
