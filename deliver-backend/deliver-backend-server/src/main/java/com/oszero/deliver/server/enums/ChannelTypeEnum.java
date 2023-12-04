@@ -24,6 +24,12 @@ public enum ChannelTypeEnum {
     private final Integer code;
     private final String name;
 
+    /**
+     * 通过 code 码，得到实例
+     *
+     * @param code 码
+     * @return 实例
+     */
     public static ChannelTypeEnum getInstanceByCode(Integer code) {
         for (ChannelTypeEnum v : values()) {
             if (v.getCode().equals(code)) {

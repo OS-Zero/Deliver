@@ -18,6 +18,7 @@ public abstract class BaseHandler {
 
     /**
      * 消息处理
+     *
      * @param sendTaskDto 发送 Dto
      * @throws Exception 异常
      */
