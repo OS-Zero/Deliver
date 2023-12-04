@@ -3,7 +3,7 @@ import Echarts from '@/components/Echarts/index.vue'
 import { useDashboardStore } from '@/store/modules/dashboard'
 import { onBeforeMount, reactive, ref } from 'vue'
 import { EChartsOptionData } from '@/store/modules/dashboard'
-import { globalMap } from '@/utils/mapping'
+import { globalMap } from '@/config/mapping'
 import { IconFont } from '@/utils/iconFont'
 import { DashboardHeadData } from './type'
 const dashboardStore = useDashboardStore()

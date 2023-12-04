@@ -5,7 +5,6 @@ import type { UnwrapRef } from 'vue'
 import type { TableColumnsType } from 'ant-design-vue'
 import { message, Modal } from 'ant-design-vue'
 import type { MessageTemplate, SearchMessage } from './type'
-import searchForm from './components/searchForm.vue'
 import addTemplate from './components/addTemplate.vue'
 import modifyTemplate from './components/modifyTemplate.vue'
 import sendTest from './components/sendTest.vue'
@@ -22,10 +21,19 @@ import {
 	SettingOutlined,
 	ThunderboltOutlined
 } from '@ant-design/icons-vue'
+import { searchForm } from '@/config/form'
+//表单搜索数据
+const searchModel = ref<Record<string, any>>({
+	templateName: '',
+	pushRange: undefined,
+	usersType: undefined,
+	creatTmie: undefined
+})
+
 /**
  * 表格初始化
  */
-const templateTable: UnwrapRef<messageTemplate[]> = reactive([])
+const templateTable: UnwrapRef<MessageTemplate[]> = reactive([])
 // 表格数据
 const columns: TableColumnsType = [
 	{
@@ -76,7 +84,7 @@ const columns: TableColumnsType = [
  * 渲染 data
  */
 
-const innertemplatedata: UnwrapRef<messageTemplate[]> = reactive([])
+const innertemplatedata: UnwrapRef<MessageTemplate[]> = reactive([])
 
 const expandedRowKeys: number[] = reactive([])
 
@@ -97,7 +105,6 @@ const getInnerData = (expanded, record): void => {
 const judgeInclude = (record): boolean => {
 	return innertemplatedata.includes(record)
 }
-
 /**
  * 相关操作: 增删改查
  */
@@ -283,7 +290,7 @@ const startModify = (record): void => {
 // 表格加载中标志
 const tableLoadFlag = ref<boolean>(true)
 
-const searchItem: searchMessage = reactive({
+const searchItem: SearchMessage = reactive({
 	templateName: undefined,
 	pushRange: undefined,
 	usersType: undefined,
@@ -371,13 +378,15 @@ onMounted(() => {
 const a = computed(() => {
 	return store.getCollapse() ? 80 : 200 // 计算输入框应该有的高度
 })
+
+const fieldList = searchForm.messageSearchForm
 </script>
 
 <template>
 	<!-- 搜索部分 -->
-	<searchForm ref="searchform" @mes="searchTemplate({ page: 1, pageSize, opt: 1 })" />
+	<SearchForm :fieldList="fieldList" :model="searchModel" @submit="searchTemplate"></SearchForm>
 	<!-- 表格部分 -->
-	<div id="message-container" :style="{ height: hasSelected ? '100%' : 'auto' }">
+	<div id="message-container" :style="{ height: hasSelected ? 'calc(100% + 40px)' : 'auto' }">
 		<div class="message-section">
 			<div class="splitter">
 				<a-tooltip title="刷新">
