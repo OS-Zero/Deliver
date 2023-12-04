@@ -1,30 +1,19 @@
 package com.oszero.deliver.admin.util.app;
 
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONUtil;
-import com.dingtalk.api.DefaultDingTalkClient;
-import com.dingtalk.api.DingTalkClient;
-import com.dingtalk.api.request.OapiMediaUploadRequest;
-import com.dingtalk.api.response.OapiMediaUploadResponse;
 import com.oszero.deliver.admin.exception.BusinessException;
 import com.oszero.deliver.admin.model.app.WeChatApp;
 import com.oszero.deliver.admin.model.dto.app.PlatformFileDto;
-import com.taobao.api.ApiException;
-import com.taobao.api.FileItem;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
- * 渠道-企业微信工具类
+ * App-企业微信工具类
  *
  * @author oszero
  * @version 1.0.0
