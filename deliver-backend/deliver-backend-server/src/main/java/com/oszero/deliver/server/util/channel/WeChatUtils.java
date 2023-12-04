@@ -55,7 +55,7 @@ public class WeChatUtils {
             throw new MessageException("企业微信获取 Token 接口调用失败！！！");
         }
         log.info("获取企微 Token 成功！");
-        return  weChatResponse.getAccess_token();
+        return weChatResponse.getAccess_token();
     }
 
     /**

@@ -1,5 +1,7 @@
 package com.oszero.deliver.admin.util.app;
 
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONUtil;
 import com.dingtalk.api.DefaultDingTalkClient;
 import com.dingtalk.api.DingTalkClient;
@@ -16,8 +18,10 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 /**
- * 获取模版详情
+ * App-钉钉工具类
  *
  * @author oszero
  * @version 1.0.0
@@ -34,27 +38,33 @@ public class DingUtils {
      */
     public String getAccessToken(DingApp dingApp) {
 
+        String appKey = dingApp.getAppKey();
+        String appSecret = dingApp.getAppSecret();
+
         @Data
         class DingAccessTokenBody {
+
             private Integer errcode;
             private String accessToken;
             private String errmsg;
             private Integer expiresIn;
+
         }
 
-        DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/gettoken");
-        OapiGettokenRequest request = new OapiGettokenRequest();
-        request.setAppkey(dingApp.getAppKey());
-        request.setAppsecret(dingApp.getAppSecret());
-        request.setHttpMethod("GET");
-        OapiGettokenResponse response;
-        try {
-            response = client.execute(request);
-        } catch (ApiException apiException) {
-            throw new BusinessException("获取 AccessToken 失败");
+        DingAccessTokenBody dingAccessTokenBody;
+        try (HttpResponse response = HttpRequest.get("https://oapi.dingtalk.com/gettoken?appkey=" + appKey + "&appsecret=" + appSecret)
+                .execute()) {
+
+            dingAccessTokenBody = JSONUtil.toBean(response.body(), DingAccessTokenBody.class);
+
+            if (!Objects.equals(dingAccessTokenBody.getErrcode(), 0)) {
+                throw new BusinessException("获取钉钉 Token 失败：" + dingAccessTokenBody.getErrmsg());
+            }
+        } catch (Exception e) {
+            throw new BusinessException("钉钉获取 Token 接口调用失败！！！");
         }
 
-        DingAccessTokenBody dingAccessTokenBody = JSONUtil.toBean(response.getBody(), DingAccessTokenBody.class);
+        log.info("获取钉钉 Token 成功！");
         return dingAccessTokenBody.getAccessToken();
     }
 

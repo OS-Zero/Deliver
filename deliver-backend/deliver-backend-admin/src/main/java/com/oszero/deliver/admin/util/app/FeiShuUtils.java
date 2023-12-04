@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import java.util.Objects;
 
 /**
- * 获取模版详情
+ * App-飞书工具类
  *
  * @author oszero
  * @version 1.0.0

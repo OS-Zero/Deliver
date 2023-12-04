@@ -1,0 +1,11 @@
+server:
+  port: 7070
+spring:
+  application:
+    name: deliver-server
+  profiles:
+    active: dev
+
+# 对称加密
+aes:
+  key: oszero
