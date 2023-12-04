@@ -22,6 +22,55 @@ export interface TemplateItem {
 	templateId: number
 	templateStatus: number
 }
+
+/**
+ * 搜索框接口
+ */
+export interface SearchModel {
+	/**
+	 * 模板名
+	 */
+	templateName?: string
+	/**
+	 * 推送范围
+	 */
+	pushRange?: number
+	/**
+	 * 用户类型
+	 */
+	usersType?: number
+	/**
+	 * 日期
+	 */
+	period?: [Dayjs, Dayjs]
+	/**
+	 * 日期开始时间
+	 */
+	startTime?: string
+	/**
+	 * 日期结束时间
+	 */
+	endTime?: string
+}
+
+/**
+ * 发送搜索框信息接口
+ */
+export interface SearchMessage extends SearchModel {
+	/**
+	 * 模板状态
+	 */
+	templateStatus?: number | boolean
+	/**
+	 * 当前页面序号
+	 */
+	currentPage: number
+	/**
+	 * 页面大小
+	 */
+	pageSize: number
+}
+
 /**
  * 消息接口
  */
@@ -70,44 +119,6 @@ export interface MessageTemplate {
 	 * App名称
 	 */
 	appName: string
-}
-
-/**
- * 搜索框接口
- */
-export interface SearchMessage {
-	/**
-	 * 模板名
-	 */
-	templateName?: string
-	/**
-	 * 推送范围
-	 */
-	pushRange?: number
-	/**
-	 * 用户类型
-	 */
-	usersType?: number
-	/**
-	 * 当前页面序号
-	 */
-	currentPage: number
-	/**
-	 * 页面大小
-	 */
-	pageSize: number
-	/**
-	 * 起始日期
-	 */
-	startTime?: string
-	/**
-	 * 结束日期
-	 */
-	endTime?: string
-	/**
-	 * 时间段
-	 */
-	perid?: [Dayjs, Dayjs]
 }
 
 /**
