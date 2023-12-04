@@ -432,7 +432,7 @@ const a = computed(() => {
 	<!-- 搜索部分 -->
 	<searchForm ref="searchform" @mes="searchTemplate({ page: 1, pageSize, opt: 1 })" />
 	<!-- 表格部分 -->
-	<div id="message-container" :style="{ height: hasSelected ? 'calc(100%+940px)' : 'auto' }">
+	<div id="message-container" :style="{ height: hasSelected ? 'calc(100% + 940px)' : 'auto' }">
 		<div class="message-section">
 			<div class="splitter">
 				<a-tooltip title="刷新">

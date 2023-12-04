@@ -1,16 +1,17 @@
 <script lang="ts" setup>
-import { ReloadOutlined, ExclamationCircleOutlined } from '@ant-design/icons-vue'
 import { ref, reactive, h, onMounted, computed } from 'vue'
 import type { UnwrapRef } from 'vue'
+import { ReloadOutlined, ExclamationCircleOutlined } from '@ant-design/icons-vue'
 import type { TableColumnsType } from 'ant-design-vue'
 import { message, Modal } from 'ant-design-vue'
-import type { MessageTemplate, SearchMessage } from './type'
+import type { MessageTemplate, SearchMessage, SearchModel } from './type'
 import addTemplate from './components/addTemplate.vue'
 import modifyTemplate from './components/modifyTemplate.vue'
 import sendTest from './components/sendTest.vue'
 import { addTemplatePages, deleteTemplate, getTemplatePages, updateStatus, updatetemplate } from '@/api/message'
 import { changeTable, getPushRange, getUsersType, getMessageTypeArr, getAllMessage } from '@/utils/date'
 import { useStore } from '@/store'
+import { useMessageStore } from '@/store/modules/message'
 import { getPushWays } from '@/utils/date'
 import {
 	CopyTwoTone,
@@ -22,13 +23,27 @@ import {
 	ThunderboltOutlined
 } from '@ant-design/icons-vue'
 import { searchForm } from '@/config/form'
+
+const messageStore = useMessageStore()
+
 //表单搜索数据
-const searchModel = ref<Record<string, any>>({
+const searchModel = ref<SearchModel>({
 	templateName: '',
 	pushRange: undefined,
 	usersType: undefined,
-	creatTmie: undefined
+	period: undefined,
+	startTime: undefined,
+	endTime: undefined
 })
+
+// 条件查询
+const searchTemplate = async (data: SearchModel): Promise<void> => {
+	try {
+		const res = await messageStore.getTemplatePages(data)
+	} catch (error) {
+		console.error('An error occurred:', error)
+	}
+}
 
 /**
  * 表格初始化
@@ -317,42 +332,6 @@ const locale = {
 	next_page: '下一页' // 下一页按钮文字描述
 }
 
-// 条件查询
-const searchTemplate = ({ page, pageSize, opt }: SearchOptions = {}): void => {
-	// 对象解构
-	// eslint-disable-next-line
-	const { perid, ...rest } = searchform.value.searchPage
-	const searchNeedMes = { ...rest }
-	searchNeedMes.currentPage = page
-	searchNeedMes.pageSize = pageSize
-	tableLoadFlag.value = true
-	getTemplatePages(searchNeedMes)
-		.then((res) => {
-			templateTable.length = 0
-			total.value = res.data.total
-			current.value = page
-			if (res.data.records.length > 0) {
-				res.data.records.forEach((item: any) => {
-					item = changeTable(item)
-					templateTable.push(item)
-				})
-				if (opt === 1) {
-					void message.success('查询成功~ (*^▽^*)')
-				}
-			} else {
-				if (opt === 1) {
-					void message.success('未查询到任何数据   ≧ ﹏ ≦')
-				}
-			}
-			tableLoadFlag.value = false
-			searchform.value.iconLoading = false
-		})
-		.catch((err) => {
-			searchform.value.iconLoading = false
-			void message.error('查询失败，请检查网络~ (＞︿＜)')
-			console.error('An error occurred:', err)
-		})
-}
 // copy 文件 Key
 const copyTemplateId = (fileKey: string): void => {
 	navigator.clipboard.writeText(fileKey)

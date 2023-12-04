@@ -41,8 +41,8 @@ watch(
  * @param dateString
  */
 const onRangeChange = (_value: [Dayjs, Dayjs] | [string, string], dateString: [string, string]): void => {
-	searchModel.value.startTime = dateString[0] + ' 00:00:00'
-	searchModel.value.endTime = dateString[1] + ' 23:59:59'
+	searchModel.value.startTime = dateString[0]
+	searchModel.value.endTime = dateString[1]
 }
 
 /**
@@ -50,8 +50,14 @@ const onRangeChange = (_value: [Dayjs, Dayjs] | [string, string], dateString: [s
  */
 const onSubmit = (): void => {
 	if (!formRef.value) return
-	console.log(searchModel.value)
-	emit('submit', searchModel.value)
+	emit(
+		'submit',
+		Object.fromEntries(
+			Object.entries(searchModel.value).filter(([key]) => {
+				return key !== 'period'
+			})
+		)
+	)
 }
 
 /**

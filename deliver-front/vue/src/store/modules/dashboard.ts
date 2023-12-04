@@ -7,6 +7,7 @@ export const useDashboardStore = defineStore('dashboard', {
 	state: () => {
 		return {}
 	},
+	getters: {},
 	actions: {
 		/**
 		 * 同时获取echarts四个数据
@@ -76,6 +77,5 @@ export const useDashboardStore = defineStore('dashboard', {
 			}
 			return chartsPushUserOption
 		}
-	},
-	getters: {}
+	}
 })
