@@ -64,6 +64,7 @@ public class WeChatParamCheck implements BusinessLink<SendTaskDto> {
                 }
                 case "toall": {
                     paramMap.put("agentid", weChatApp.getAgentid());
+                    paramMap.put(wechatUserIdType, users.get(0));
                     break;
                 }
                 case "chatid": {
