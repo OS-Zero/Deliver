@@ -10,5 +10,5 @@ import com.taobao.api.ApiException;
  * @version 1.0.0
  */
 public interface SendService {
-    Integer send(SendRequestDto sendRequestDto) ;
+    String send(SendRequestDto sendRequestDto) ;
 }
