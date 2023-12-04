@@ -76,33 +76,13 @@
         </dependency>
 
         <!--        common-->
-<!--        <dependency>-->
-<!--            <groupId>com.oszero</groupId>-->
-<!--            <artifactId>deliver-backend-common</artifactId>-->
-<!--            <version>${project.version}</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.oszero</groupId>-->
+        <!--            <artifactId>deliver-backend-common</artifactId>-->
+        <!--            <version>${project.version}</version>-->
+        <!--        </dependency>-->
 
-        <!--        钉钉-->
-        <dependency>
-            <groupId>com.aliyun</groupId>
-            <artifactId>alibaba-dingtalk-service-sdk</artifactId>
-            <version>${ding.sdk.old.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.aliyun</groupId>
-            <artifactId>dingtalk</artifactId>
-            <version>${ding.sdk.new.version}</version>
-        </dependency>
-        <!--        企业微信-->
-
-        <!--        飞书-->
-        <dependency>
-            <groupId>com.larksuite.oapi</groupId>
-            <artifactId>oapi-sdk</artifactId>
-            <version>${feishi.sdk.version}</version>
-        </dependency>
-
-<!--        参数校验-->
+        <!--        参数校验-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
