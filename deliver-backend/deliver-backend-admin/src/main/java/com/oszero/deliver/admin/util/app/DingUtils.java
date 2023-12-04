@@ -3,17 +3,9 @@ package com.oszero.deliver.admin.util.app;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONUtil;
-import com.dingtalk.api.DefaultDingTalkClient;
-import com.dingtalk.api.DingTalkClient;
-import com.dingtalk.api.request.OapiGettokenRequest;
-import com.dingtalk.api.request.OapiMediaUploadRequest;
-import com.dingtalk.api.response.OapiGettokenResponse;
-import com.dingtalk.api.response.OapiMediaUploadResponse;
 import com.oszero.deliver.admin.exception.BusinessException;
 import com.oszero.deliver.admin.model.app.DingApp;
 import com.oszero.deliver.admin.model.dto.app.PlatformFileDto;
-import com.taobao.api.ApiException;
-import com.taobao.api.FileItem;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -21,7 +13,7 @@ import org.springframework.stereotype.Component;
 import java.util.Objects;
 
 /**
- * App-钉钉工具类
+ * 获取模版详情
  *
  * @author oszero
  * @version 1.0.0
@@ -29,6 +21,7 @@ import java.util.Objects;
 @Slf4j
 @Component
 public class DingUtils {
+
 
     /**
      * 获取 AccessToken
@@ -63,7 +56,6 @@ public class DingUtils {
         } catch (Exception e) {
             throw new BusinessException("钉钉获取 Token 接口调用失败！！！");
         }
-
         log.info("获取钉钉 Token 成功！");
         return dingAccessTokenBody.getAccessToken();
     }
@@ -76,6 +68,8 @@ public class DingUtils {
      * @return media_id
      */
     public String uploadDingFile(String accessToken, PlatformFileDto platformFileDto) {
+
+
         @Data
         class DingBody {
             private Integer errcode;
@@ -86,24 +80,23 @@ public class DingUtils {
 
         }
 
-        DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/media/upload");
-        OapiMediaUploadRequest req = new OapiMediaUploadRequest();
-        req.setType(platformFileDto.getFileType());
-        byte[] file = platformFileDto.getFile();
-        FileItem item = new FileItem(platformFileDto.getFileName(), file);
-        req.setMedia(item);
-        OapiMediaUploadResponse rsp = null;
-        try {
-            rsp = client.execute(req, accessToken);
-        } catch (ApiException a) {
-            throw new BusinessException("钉钉上传失败");
-        }
+        DingBody dingBody;
+        try (HttpResponse response = HttpRequest.post("https://oapi.dingtalk.com/media/upload?access_token=" + accessToken)
+                .header("Content-Type", "multipart/form-data")
+                .form("type", platformFileDto.getFileType())
+                .form("media", platformFileDto.getFile(), platformFileDto.getFileName())
+                .execute()) {
 
-        DingBody dingBody = JSONUtil.toBean(rsp.getBody(), DingBody.class);
-        if (dingBody.getErrcode() != 0) {
-            throw new BusinessException("钉钉上传失败");
-        }
+            dingBody = JSONUtil.toBean(response.body(), DingBody.class);
 
+            if (!Objects.equals(dingBody.getErrcode(), 0)) {
+                throw new BusinessException("上传钉钉文件失败：" + dingBody.getErrmsg());
+            }
+        } catch (Exception e) {
+            throw new BusinessException("上传钉钉文件接口调用失败！！！");
+        }
+        log.info("上传钉钉文件成功！");
         return dingBody.getMediaId();
+
     }
 }
