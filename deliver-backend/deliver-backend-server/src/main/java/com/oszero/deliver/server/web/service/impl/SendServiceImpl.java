@@ -45,17 +45,17 @@ public class SendServiceImpl implements SendService {
     private final LinkHandler linkHandler;
 
     @Override
-    public Integer send(SendRequestDto sendRequestDto) {
+    public String send(SendRequestDto sendRequestDto) {
 
         // 1.通过 templateId 获取 template
         Long templateId = sendRequestDto.getTemplateId();
         Template template = templateService.getById(templateId);
         if (Objects.isNull(template)) {
-            throw new BusinessException(ResultEnum.CLIENT_ERROR.getMessage()); // todo: 后续统一设计系统所有异常
+            throw new BusinessException("传入的模板 ID 非法，请输入正确的 templateId ！！！");
         }
         // 关闭状态直接返回
         if (StatusEnum.OFF.getStatus().equals(template.getTemplateStatus())) {
-            throw new BusinessException(ResultEnum.CLIENT_ERROR.getMessage()); // todo: 后续统一设计系统所有异常
+            throw new BusinessException("此模板已关闭，再次使用请启用此模板！！！");
         }
 
         // 2.通过 templateId 获取 appId
@@ -63,15 +63,18 @@ public class SendServiceImpl implements SendService {
         wrapper.eq(TemplateApp::getTemplateId, templateId);
         TemplateApp templateApp = templateAppService.getOne(wrapper);
         if (Objects.isNull(templateApp)) {
-            throw new BusinessException(ResultEnum.CLIENT_ERROR.getMessage()); // todo: 后续统一设计系统所有异常
+            throw new BusinessException("未获取到模板所关联的应用，请检查关联的应用是否存在！！！");
         }
         Long appId = templateApp.getAppId();
 
         // 3.得到 appConfig
         App app = appService.getById(appId);
+        if (Objects.isNull(app)) {
+            throw new BusinessException("未获取到模板所关联的应用，请检查关联的应用是否存在！！！");
+        }
         // 关闭状态直接返回
         if (StatusEnum.OFF.getStatus().equals(app.getAppStatus())) {
-            throw new BusinessException(ResultEnum.CLIENT_ERROR.getMessage()); // todo: 后续统一设计系统所有异常
+            throw new BusinessException("模板关联的应用为禁用状态，再次使用请启用！！！");
         }
         String appConfig = app.getAppConfig();
 
@@ -104,6 +107,8 @@ public class SendServiceImpl implements SendService {
                 .processModel(sendTaskDto)
                 .code(usersType + "-" + channelType).build();
         linkHandler.process(context);
-        return null;
+
+        // 7.返回 TRACE_ID
+        return MDCUtils.get(TraceIdConstant.TRACE_ID);
     }
 }

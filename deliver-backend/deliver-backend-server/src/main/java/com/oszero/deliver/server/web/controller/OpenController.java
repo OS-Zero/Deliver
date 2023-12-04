@@ -34,7 +34,7 @@ public class OpenController {
      */
     @PostMapping("/sendMessage")
     public CommonResult<?> sendMessage(@Valid @RequestBody SendRequestDto sendRequestDto) {
-        Integer send = sendService.send(sendRequestDto);
-        return CommonResult.success(send);
+        String traceId = sendService.send(sendRequestDto);
+        return CommonResult.success(traceId);
     }
 }
