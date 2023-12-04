@@ -5,19 +5,12 @@ import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.message.param.mail.MailParam;
 import com.oszero.deliver.server.model.app.MailApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
-import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.io.File;
-import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.Properties;
 
 /**
