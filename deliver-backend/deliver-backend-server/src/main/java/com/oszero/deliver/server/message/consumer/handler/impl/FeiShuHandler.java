@@ -6,7 +6,7 @@ import com.oszero.deliver.server.message.consumer.handler.BaseHandler;
 import com.oszero.deliver.server.model.app.FeiShuApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.util.AesUtils;
-import com.oszero.deliver.server.util.channel.FeiShuUtils;
+import com.oszero.deliver.server.client.FeiShuClient;
 import com.oszero.deliver.server.web.service.MessageRecordService;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +24,7 @@ import java.util.Set;
 @Component
 public class FeiShuHandler extends BaseHandler {
 
-    private final FeiShuUtils feiShuUtils;
+    private final FeiShuClient feiShuClient;
     private final AesUtils aesUtils;
 
     /**
@@ -33,8 +33,8 @@ public class FeiShuHandler extends BaseHandler {
     private static final Set<String> BATCH_MESSAGE_TYPE =
             new HashSet<>(Arrays.asList("text", "image", "post", "share_chat", "interactive"));
 
-    public FeiShuHandler(FeiShuUtils feiShuUtils, MessageRecordService messageRecordService, AesUtils aesUtils) {
-        this.feiShuUtils = feiShuUtils;
+    public FeiShuHandler(FeiShuClient feiShuClient, MessageRecordService messageRecordService, AesUtils aesUtils) {
+        this.feiShuClient = feiShuClient;
         this.messageRecordService = messageRecordService;
         this.aesUtils = aesUtils;
     }
@@ -44,7 +44,7 @@ public class FeiShuHandler extends BaseHandler {
         String appConfigJson = aesUtils.decrypt(sendTaskDto.getAppConfig());
         FeiShuApp feiShuApp = JSONUtil.toBean(appConfigJson, FeiShuApp.class);
 
-        String tenantAccessToken = feiShuUtils.getTenantAccessToken(feiShuApp);
+        String tenantAccessToken = feiShuClient.getTenantAccessToken(feiShuApp);
         Map<String, Object> paramMap = sendTaskDto.getParamMap();
         String feiShuUserIdType = paramMap.get("feiShuUserIdType").toString();
         String msgType = paramMap.get("msg_type").toString();
@@ -54,18 +54,18 @@ public class FeiShuHandler extends BaseHandler {
 
             // 如果满足批量发送的用户类型则批量发送
             if (BATCH_MESSAGE_TYPE.contains(msgType)) {
-                feiShuUtils.sendMessageBatch(tenantAccessToken, sendTaskDto);
+                feiShuClient.sendMessageBatch(tenantAccessToken, sendTaskDto);
             } else { // 否则单个发送
-                feiShuUtils.sendMessage(tenantAccessToken, sendTaskDto);
+                feiShuClient.sendMessage(tenantAccessToken, sendTaskDto);
             }
         } else if ("email".equals(feiShuUserIdType)) {
 
             // 邮箱类型只支持单个发送
-            feiShuUtils.sendMessage(tenantAccessToken, sendTaskDto);
+            feiShuClient.sendMessage(tenantAccessToken, sendTaskDto);
         } else if ("chat_id".equals((feiShuUserIdType))) {
 
             // 群聊类型只支持单个发送
-            feiShuUtils.sendMessage(tenantAccessToken, sendTaskDto);
+            feiShuClient.sendMessage(tenantAccessToken, sendTaskDto);
         } else if ("department_id".equals((feiShuUserIdType))) {
 
             // 不能批量的消息类型但传递了部门 ID 则直接抛出异常
@@ -77,7 +77,7 @@ public class FeiShuHandler extends BaseHandler {
             paramMap.remove("user_ids");
             paramMap.put("department_ids", user_ids);
             // 部门只能批量
-            feiShuUtils.sendMessageBatch(tenantAccessToken, sendTaskDto);
+            feiShuClient.sendMessageBatch(tenantAccessToken, sendTaskDto);
         } else {
             throw new MessageException("此类型(" + feiShuUserIdType + ")平台 ID 不支持！！！");
         }

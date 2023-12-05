@@ -1,15 +1,15 @@
-package com.oszero.deliver.server.util.channel;
+package com.oszero.deliver.server.client;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
- * 渠道-打电话工具类
+ * 渠道-发短信工具类
  *
  * @author oszero
  * @version 1.0.0
  */
 @Slf4j
 @Component
-public class CallUtils {
+public class SmsClient {
 }

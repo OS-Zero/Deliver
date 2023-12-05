@@ -5,7 +5,7 @@ import com.oszero.deliver.server.message.consumer.handler.BaseHandler;
 import com.oszero.deliver.server.model.app.WeChatApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.util.AesUtils;
-import com.oszero.deliver.server.util.channel.WeChatUtils;
+import com.oszero.deliver.server.client.WeChatClient;
 import com.oszero.deliver.server.web.service.MessageRecordService;
 import org.springframework.stereotype.Component;
 
@@ -22,11 +22,11 @@ import java.util.Map;
 @Component
 public class WeChatHandler extends BaseHandler {
 
-    private final WeChatUtils weChatUtils;
+    private final WeChatClient weChatClient;
     private final AesUtils aesUtils;
 
-    public WeChatHandler(WeChatUtils weChatUtils, MessageRecordService messageRecordService, AesUtils aesUtils) {
-        this.weChatUtils = weChatUtils;
+    public WeChatHandler(WeChatClient weChatClient, MessageRecordService messageRecordService, AesUtils aesUtils) {
+        this.weChatClient = weChatClient;
         this.messageRecordService = messageRecordService;
         this.aesUtils = aesUtils;
     }
@@ -36,7 +36,7 @@ public class WeChatHandler extends BaseHandler {
         String appConfig = aesUtils.decrypt(sendTaskDto.getAppConfig());
         WeChatApp weChatApp = JSONUtil.toBean(appConfig, WeChatApp.class);
 
-        String accessToken = weChatUtils.getAccessToken(weChatApp);
+        String accessToken = weChatClient.getAccessToken(weChatApp);
 
         Map<String, Object> paramMap = sendTaskDto.getParamMap();
         String pushSubject = paramMap.get("pushSubject").toString();
@@ -44,14 +44,14 @@ public class WeChatHandler extends BaseHandler {
 
         if ("app".equals(pushSubject)) {
             if (new HashSet<>(Arrays.asList("touser", "toparty", "totag")).contains(wechatUserIdType)) {
-                weChatUtils.sendAppMessage(accessToken, sendTaskDto);
+                weChatClient.sendAppMessage(accessToken, sendTaskDto);
             } else if (new HashSet<>(Arrays.asList("to_parent_userid", "to_student_userid", "to_party", "toall")).contains(wechatUserIdType)) {
-                weChatUtils.sendAppSchoolMessage(accessToken, sendTaskDto);
+                weChatClient.sendAppSchoolMessage(accessToken, sendTaskDto);
             } else {
-                weChatUtils.sendAppGroupMessage(accessToken, sendTaskDto);
+                weChatClient.sendAppGroupMessage(accessToken, sendTaskDto);
             }
         } else if ("robot".equals(pushSubject)) {
-            weChatUtils.sendRobotMessage(accessToken, sendTaskDto);
+            weChatClient.sendRobotMessage(accessToken, sendTaskDto);
         }
         // 删除掉标识参数
         paramMap.remove("pushSubject");

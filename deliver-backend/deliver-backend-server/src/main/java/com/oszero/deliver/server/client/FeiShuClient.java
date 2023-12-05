@@ -1,4 +1,4 @@
-package com.oszero.deliver.server.util.channel;
+package com.oszero.deliver.server.client;
 
 import cn.hutool.core.lang.UUID;
 import cn.hutool.http.HttpRequest;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Component
-public class FeiShuUtils {
+public class FeiShuClient {
 
     /**
      * 获取 tenantAccessToken
