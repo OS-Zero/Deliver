@@ -1,4 +1,4 @@
-package com.oszero.deliver.admin.util.app;
+package com.oszero.deliver.admin.client;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
@@ -22,7 +22,7 @@ import java.util.Objects;
  */
 @Slf4j
 @Component
-public class FeiShuUtils {
+public class FeiShuClient {
 
     /**
      * 获取 tenantAccessToken
