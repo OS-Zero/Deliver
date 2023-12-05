@@ -12,18 +12,19 @@ rocketmq:
     retry-times-when-send-async-failed: 3 # 异步发送消息失败重试次数，默认2
 
 spring:
-  redis:
-    port: 6379
-    host: localhost
-    password: 123456
-    database: 0
-    timeout: 60s
-    lettuce:
-      pool:
-        max-active: 10
-        max-idle: 8
-        min-idle: 0
-        max-wait: 5s
+  data:
+    redis:
+      port: 6379
+      host: localhost
+      password: 123456
+      database: 0
+      timeout: 60s
+      lettuce:
+        pool:
+          max-active: 10
+          max-idle: 8
+          min-idle: 0
+          max-wait: 5s
   datasource:
     url: jdbc:mysql://localhost:3306/deliver?serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull
     username: root
@@ -41,5 +42,3 @@ mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #开启 sql 日志
     map-underscore-to-camel-case: true
-
-
