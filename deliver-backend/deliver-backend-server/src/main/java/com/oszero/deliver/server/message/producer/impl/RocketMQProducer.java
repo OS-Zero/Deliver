@@ -64,7 +64,7 @@ public class RocketMQProducer implements Producer {
             }
         }
         if (!Objects.isNull(sendResult) && Objects.equals(SendStatus.SEND_OK, sendResult.getSendStatus())) {
-            log.info("模板 ID " + sendTaskDto.getTemplateId() + "RocketMQ 消息发送成功");
+            log.info("模板 ID " + sendTaskDto.getTemplateId() + " RocketMQ 消息发送成功");
         } else {
             // 消息再次重试发送
             retry(sendTaskDto);
@@ -76,7 +76,7 @@ public class RocketMQProducer implements Producer {
      *
      * @param sendTaskDto dto
      */
-    public void retry(SendTaskDto sendTaskDto) {
+    private void retry(SendTaskDto sendTaskDto) {
         if (sendTaskDto.getRetry() > 0) {
             log.error("模板 ID " + sendTaskDto.getTemplateId() + " 再次发送消息，消息重试发送");
             sendTaskDto.setRetry(sendTaskDto.getRetry() - 1);
