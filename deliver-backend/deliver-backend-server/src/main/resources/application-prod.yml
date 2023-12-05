@@ -37,7 +37,7 @@ spring:
     username: guest
     password: guest
     virtual-host: deliver
-
+    publisher-confirm-type: correlated
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #开启 sql 日志

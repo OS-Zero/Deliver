@@ -8,6 +8,8 @@ import com.oszero.deliver.server.message.producer.Producer;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.util.RabbitMQUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +21,7 @@ import java.util.Objects;
  * @author oszero
  * @version 1.0.0
  */
+@Slf4j
 @Component
 @RequiredArgsConstructor
 @ConditionalOnProperty(value = "mq-type", havingValue = "rabbitmq")
@@ -32,32 +35,36 @@ public class RabbitMQProducer implements Producer {
         if (Objects.isNull(channelTypeEnum)) {
             throw new BusinessException("[RabbitMQProducer#sendWorkNoticeMessage] 渠道类型配置错误！！！");
         }
+        String message = JSONUtil.toJsonStr(sendTaskDto);
+
+        // 指定关联数据（消息的唯一标识符）
+        CorrelationData correlationData = new CorrelationData(sendTaskDto.getTraceId() + "&&&" + sendTaskDto.getTemplateId());
+
         switch (channelTypeEnum) {
             case CALL: {
-                rabbitMQUtils.sendMessage(MQConstant.DELIVER_EXCHANGE, MQConstant.CALL_KEY_NAME, JSONUtil.toJsonStr(sendTaskDto));
+                rabbitMQUtils.sendMessage(MQConstant.DELIVER_EXCHANGE, MQConstant.CALL_KEY_NAME, message, correlationData);
                 break;
             }
             case SMS: {
-                rabbitMQUtils.sendMessage(MQConstant.DELIVER_EXCHANGE, MQConstant.SMS_KEY_NAME, JSONUtil.toJsonStr(sendTaskDto));
+                rabbitMQUtils.sendMessage(MQConstant.DELIVER_EXCHANGE, MQConstant.SMS_KEY_NAME, message, correlationData);
                 break;
             }
             case MAIL: {
-                rabbitMQUtils.sendMessage(MQConstant.DELIVER_EXCHANGE, MQConstant.MAIL_KEY_NAME, JSONUtil.toJsonStr(sendTaskDto));
+                rabbitMQUtils.sendMessage(MQConstant.DELIVER_EXCHANGE, MQConstant.MAIL_KEY_NAME, message, correlationData);
                 break;
             }
             case WECHAT: {
-                rabbitMQUtils.sendMessage(MQConstant.DELIVER_EXCHANGE, MQConstant.WECHAT_KEY_NAME, JSONUtil.toJsonStr(sendTaskDto));
+                rabbitMQUtils.sendMessage(MQConstant.DELIVER_EXCHANGE, MQConstant.WECHAT_KEY_NAME, message, correlationData);
                 break;
             }
             case DING: {
-                rabbitMQUtils.sendMessage(MQConstant.DELIVER_EXCHANGE, MQConstant.DING_KEY_NAME, JSONUtil.toJsonStr(sendTaskDto));
+                rabbitMQUtils.sendMessage(MQConstant.DELIVER_EXCHANGE, MQConstant.DING_KEY_NAME, message, correlationData);
                 break;
             }
             case FEI_SHU: {
-                rabbitMQUtils.sendMessage(MQConstant.DELIVER_EXCHANGE, MQConstant.FEI_SHU_KEY_NAME, JSONUtil.toJsonStr(sendTaskDto));
+                rabbitMQUtils.sendMessage(MQConstant.DELIVER_EXCHANGE, MQConstant.FEI_SHU_KEY_NAME, message, correlationData);
                 break;
             }
         }
     }
-
 }
