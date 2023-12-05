@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.6</version>
+        <version>3.1.4</version>
     </parent>
 
     <groupId>com.oszero</groupId>
@@ -19,25 +19,46 @@
         <module>deliver-backend-server</module>
         <module>deliver-backend-admin</module>
         <module>deliver-backend-common</module>
-        <module>deliver-backend-sdk/deliver-backend-sdk-java</module>
+        <module>deliver-backend-sdk</module>
     </modules>
 
-    <dependencyManagement>
-
-    </dependencyManagement>
-
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-        <hutool.version>5.8.9</hutool.version>
-        <mybatis.plus.version>3.5.1</mybatis.plus.version>
-        <rocketmq.client.java.version>2.0.4</rocketmq.client.java.version>
-        <ding.sdk.old.version>2.0.0</ding.sdk.old.version>
-        <ding.sdk.new.version>2.0.14</ding.sdk.new.version>
-        <!--        <wechat.sdk.version></wechat.sdk.version>-->
-        <feishi.sdk.version>2.0.16</feishi.sdk.version>
-        <tlog.version>1.5.1</tlog.version>
+        <project.version>1.0-SNAPSHOT</project.version>
+        <!--Maven-->
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <!--java 版本-->
+        <java.version>17</java.version>
+        <java.source.version>17</java.source.version>
+        <java.target.version>17</java.target.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <hutool.version>5.8.23</hutool.version>
+        <mybatis.plus.version>3.5.4</mybatis.plus.version>
+        <rocketmq.client.java.version>2.2.3</rocketmq.client.java.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis.plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.rocketmq</groupId>
+                <artifactId>rocketmq-spring-boot-starter</artifactId>
+                <version>${rocketmq.client.java.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -51,7 +72,6 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>${hutool.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
