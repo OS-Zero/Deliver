@@ -2,7 +2,7 @@ package com.oszero.deliver.admin.model.dto.request;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 
 /**
  * 模版添加中-通过渠道类型获取请求 dto

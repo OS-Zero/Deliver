@@ -2,7 +2,7 @@ package com.oszero.deliver.admin.model.dto.request;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 
 /**
  * 数据面板各图选择时间请求 DTO

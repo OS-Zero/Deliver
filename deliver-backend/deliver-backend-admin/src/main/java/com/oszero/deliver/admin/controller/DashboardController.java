@@ -7,13 +7,14 @@ import com.oszero.deliver.admin.model.dto.response.DashboardInfoResponseDto;
 import com.oszero.deliver.admin.model.dto.response.MessageInfoResponseReactDto;
 import com.oszero.deliver.admin.model.dto.response.MessageInfoResponseVueDto;
 import com.oszero.deliver.admin.service.DashboardService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -22,6 +23,7 @@ import java.util.List;
  * @author oszero
  * @version 1.0.0
  */
+@Validated
 @RestController
 @RequestMapping("/dashboard")
 @RequiredArgsConstructor

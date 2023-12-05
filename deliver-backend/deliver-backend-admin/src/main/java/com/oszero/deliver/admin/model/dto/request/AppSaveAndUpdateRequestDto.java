@@ -4,8 +4,7 @@ import com.oszero.deliver.admin.annotation.JsonString;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 
 /**
  * APP 保存和更新 DTO

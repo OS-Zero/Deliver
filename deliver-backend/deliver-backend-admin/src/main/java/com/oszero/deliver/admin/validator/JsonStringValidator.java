@@ -3,8 +3,8 @@ package com.oszero.deliver.admin.validator;
 import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.admin.annotation.JsonString;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 public class JsonStringValidator implements ConstraintValidator<JsonString, String> {
 

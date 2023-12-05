@@ -2,7 +2,7 @@ package com.oszero.deliver.admin.model.dto.request;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * 模版状态更新 dto

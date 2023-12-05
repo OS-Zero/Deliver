@@ -2,8 +2,7 @@ package com.oszero.deliver.admin.model.dto.request;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 
 /**
  * 测试消息模版-获取消息参数请求 DTO
