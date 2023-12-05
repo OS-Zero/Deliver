@@ -23,9 +23,9 @@ import com.oszero.deliver.admin.model.entity.PlatformFile;
 import com.oszero.deliver.admin.service.AppService;
 import com.oszero.deliver.admin.service.PlatformFileService;
 import com.oszero.deliver.admin.util.AesUtils;
-import com.oszero.deliver.admin.util.app.DingUtils;
-import com.oszero.deliver.admin.util.app.FeiShuUtils;
-import com.oszero.deliver.admin.util.app.WeChatUtils;
+import com.oszero.deliver.admin.client.DingClient;
+import com.oszero.deliver.admin.client.FeiShuClient;
+import com.oszero.deliver.admin.client.WeChatClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,9 +46,9 @@ import java.util.stream.Collectors;
 public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, PlatformFile>
         implements PlatformFileService {
 
-    private final DingUtils dingUtils;
-    private final FeiShuUtils feiShuUtils;
-    private final WeChatUtils weChatUtils;
+    private final DingClient dingClient;
+    private final FeiShuClient feiShuClient;
+    private final WeChatClient weChatClient;
     private final AppService appService;
     private final AesUtils aesUtils;
 
@@ -100,7 +100,7 @@ public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, Pla
             case DING: {
 
                 DingApp dingApp = JSONUtil.toBean(appConfig, DingApp.class);
-                String accessToken = dingUtils.getAccessToken(dingApp);
+                String accessToken = dingClient.getAccessToken(dingApp);
 
                 if (PlatformFileTypeEnum.DING_VOICE.getFileType().equals(dto.getFileType())) {
                     if (!PlatformFileConstant.DING_FILE_FORMAT_SET.contains(fileFormat.toLowerCase(Locale.ROOT))) {
@@ -117,13 +117,13 @@ public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, Pla
                         throw new BusinessException("文件最大为：20M！！！");
                     }
                 }
-                fileKey = dingUtils.uploadDingFile(accessToken, platformFileDto);
+                fileKey = dingClient.uploadDingFile(accessToken, platformFileDto);
                 break;
             }
             case WECHAT: {
                 // 得到 token
                 WeChatApp weChatApp = JSONUtil.toBean(appConfig, WeChatApp.class);
-                String accessToken = weChatUtils.getAccessToken(weChatApp);
+                String accessToken = weChatClient.getAccessToken(weChatApp);
 
                 // 发送
                 if (PlatformFileTypeEnum.WECHAT_IMAGE.getFileType().equals(dto.getFileType())) {
@@ -133,7 +133,7 @@ public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, Pla
                     if (fileSize > PlatformFileConstant.WECHAT_IMAGE_MAX_SIZE) {
                         throw new BusinessException("图片最大为：10M！！！");
                     }
-                    fileKey = weChatUtils.uploadWeChatFile(accessToken, platformFileDto);
+                    fileKey = weChatClient.uploadWeChatFile(accessToken, platformFileDto);
                 } else if (PlatformFileTypeEnum.WECHAT_VOICE.getFileType().equals(dto.getFileType())) {
                     if (!PlatformFileConstant.WECHAT_VOICE_FORMAT_SET.contains(fileFormat.toLowerCase(Locale.ROOT))) {
                         throw new BusinessException("不支持 " + fileFormat + " 格式的音频！！！");
@@ -141,7 +141,7 @@ public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, Pla
                     if (fileSize > PlatformFileConstant.WECHAT_VOICE_MAX_SIZE) {
                         throw new BusinessException("音频最大为：2M！！！");
                     }
-                    fileKey = weChatUtils.uploadWeChatFile(accessToken, platformFileDto);
+                    fileKey = weChatClient.uploadWeChatFile(accessToken, platformFileDto);
                 } else if (PlatformFileTypeEnum.WECHAT_VIDEO.getFileType().equals(dto.getFileType())) {
                     if (!PlatformFileConstant.WECHAT_VIDEO_FORMAT_SET.contains(fileFormat.toLowerCase(Locale.ROOT))) {
                         throw new BusinessException("不支持 " + fileFormat + " 格式的视频！！！");
@@ -149,19 +149,19 @@ public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, Pla
                     if (fileSize > PlatformFileConstant.WECHAT_VIDEO_MAX_SIZE) {
                         throw new BusinessException("视频最大为：10M！！！");
                     }
-                    fileKey = weChatUtils.uploadWeChatFile(accessToken, platformFileDto);
+                    fileKey = weChatClient.uploadWeChatFile(accessToken, platformFileDto);
                 } else {
                     if (fileSize > PlatformFileConstant.WECHAT_FILE_MAX_SIZE) {
                         throw new BusinessException("文件最大为：20M！！！");
                     }
-                    fileKey = weChatUtils.uploadWeChatFile(accessToken, platformFileDto);
+                    fileKey = weChatClient.uploadWeChatFile(accessToken, platformFileDto);
                 }
                 break;
             }
             case FEI_SHU: {
                 FeiShuApp feiShuApp = JSONUtil.toBean(appConfig, FeiShuApp.class);
                 // 得到 token
-                String tenantAccessToken = feiShuUtils.getTenantAccessToken(feiShuApp);
+                String tenantAccessToken = feiShuClient.getTenantAccessToken(feiShuApp);
                 // 发送
                 if (PlatformFileTypeEnum.FEI_SHU_IMAGE.getFileType().equals(dto.getFileType())) {
                     if (!PlatformFileConstant.FEI_SHU_IMAGE_FORMAT_SET.contains(fileFormat.toLowerCase(Locale.ROOT))) {
@@ -170,7 +170,7 @@ public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, Pla
                     if (fileSize > PlatformFileConstant.FEI_SHU_IMAGE_FILE_MAX_SIZE) {
                         throw new BusinessException("图片最大为：10M！！！");
                     }
-                    fileKey = feiShuUtils.uploadFeiShuImageFile(tenantAccessToken, platformFileDto);
+                    fileKey = feiShuClient.uploadFeiShuImageFile(tenantAccessToken, platformFileDto);
                 } else {
                     if (!PlatformFileConstant.FEI_SHU_FILE_FORMAT_SET.contains(fileFormat.toLowerCase(Locale.ROOT))) {
                         throw new BusinessException("不支持 " + fileFormat + " 格式的文件！！！");
@@ -178,7 +178,7 @@ public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, Pla
                     if (fileSize > PlatformFileConstant.FEI_SHU_FILE_MAX_SIZE) {
                         throw new BusinessException("文件最大为：30M！！！");
                     }
-                    fileKey = feiShuUtils.uploadFeiShuFile(tenantAccessToken, platformFileDto);
+                    fileKey = feiShuClient.uploadFeiShuFile(tenantAccessToken, platformFileDto);
                 }
                 break;
             }
