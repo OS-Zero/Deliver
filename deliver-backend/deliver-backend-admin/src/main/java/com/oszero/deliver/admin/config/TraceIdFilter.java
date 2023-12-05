@@ -4,7 +4,8 @@ import cn.hutool.core.lang.UUID;
 import com.oszero.deliver.admin.util.MdcUtils;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.*;
+import jakarta.servlet.*;
+
 import java.io.IOException;
 
 /**

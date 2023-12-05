@@ -3,13 +3,12 @@ package com.oszero.deliver.server.interceptor;
 import com.oszero.deliver.server.constant.TraceIdConstant;
 import com.oszero.deliver.server.trace.TraceIdStrategy;
 import com.oszero.deliver.server.util.MDCUtils;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Objects;
 
 /**

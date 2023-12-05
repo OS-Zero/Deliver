@@ -2,8 +2,9 @@ package com.oszero.deliver.admin.annotation;
 
 import com.oszero.deliver.admin.validator.JsonStringValidator;
 
-import javax.validation.Constraint;
-import javax.validation.Payload;
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
+
 import java.lang.annotation.*;
 
 @Documented

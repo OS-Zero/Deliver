@@ -1,8 +1,7 @@
 package com.oszero.deliver.admin.model.dto.request;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-
-import javax.validation.constraints.NotNull;
 
 /**
  * 通过渠道类型获取 APP 配置请求 DTO
