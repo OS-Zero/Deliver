@@ -1,4 +1,4 @@
-package com.oszero.deliver.server.util.channel;
+package com.oszero.deliver.server.client;
 
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
@@ -22,7 +22,7 @@ import java.util.Objects;
  */
 @Slf4j
 @Component
-public class DingUtils {
+public class DingClient {
 
     /**
      * 获取 AccessToken

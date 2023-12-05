@@ -1,4 +1,4 @@
-package com.oszero.deliver.server.util.channel;
+package com.oszero.deliver.server.client;
 
 import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.exception.MessageException;
@@ -21,7 +21,7 @@ import java.util.Properties;
  */
 @Slf4j
 @Component
-public class MailUtils {
+public class MailClient {
 
     /**
      * 发送邮件

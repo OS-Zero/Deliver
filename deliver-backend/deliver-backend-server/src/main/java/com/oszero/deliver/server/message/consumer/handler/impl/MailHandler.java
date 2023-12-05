@@ -5,7 +5,7 @@ import com.oszero.deliver.server.message.consumer.handler.BaseHandler;
 import com.oszero.deliver.server.model.app.MailApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.util.AesUtils;
-import com.oszero.deliver.server.util.channel.MailUtils;
+import com.oszero.deliver.server.client.MailClient;
 import com.oszero.deliver.server.web.service.MessageRecordService;
 import org.springframework.stereotype.Component;
 
@@ -18,11 +18,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class MailHandler extends BaseHandler {
 
-    private final MailUtils mailUtils;
+    private final MailClient mailClient;
     private final AesUtils aesUtils;
 
-    public MailHandler(MailUtils mailUtils, MessageRecordService messageRecordService, AesUtils aesUtils) {
-        this.mailUtils = mailUtils;
+    public MailHandler(MailClient mailClient, MessageRecordService messageRecordService, AesUtils aesUtils) {
+        this.mailClient = mailClient;
         this.messageRecordService = messageRecordService;
         this.aesUtils = aesUtils;
     }
@@ -32,6 +32,6 @@ public class MailHandler extends BaseHandler {
         String appConfigJson = aesUtils.decrypt(sendTaskDto.getAppConfig());
         MailApp mailApp = JSONUtil.toBean(appConfigJson, MailApp.class);
 
-        mailUtils.sendMail(mailApp, sendTaskDto);
+        mailClient.sendMail(mailApp, sendTaskDto);
     }
 }

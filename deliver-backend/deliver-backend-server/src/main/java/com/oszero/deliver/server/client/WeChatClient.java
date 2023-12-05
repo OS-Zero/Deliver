@@ -1,4 +1,4 @@
-package com.oszero.deliver.server.util.channel;
+package com.oszero.deliver.server.client;
 
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Component
-public class WeChatUtils {
+public class WeChatClient {
 
     /**
      * 获取企业微信 Token

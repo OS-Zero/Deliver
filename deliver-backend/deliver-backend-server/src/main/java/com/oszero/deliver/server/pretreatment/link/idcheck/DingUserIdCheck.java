@@ -6,7 +6,7 @@ import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.BusinessLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
 import com.oszero.deliver.server.util.AesUtils;
-import com.oszero.deliver.server.util.channel.DingUtils;
+import com.oszero.deliver.server.client.DingClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +23,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class DingUserIdCheck implements BusinessLink<SendTaskDto> {
 
-    private final DingUtils dingUtils;
+    private final DingClient dingClient;
     private final AesUtils aesUtils;
 
     @Override
@@ -37,8 +37,8 @@ public class DingUserIdCheck implements BusinessLink<SendTaskDto> {
 
             String appConfigJson = aesUtils.decrypt(sendTaskDto.getAppConfig());
             DingApp dingApp = JSONUtil.toBean(appConfigJson, DingApp.class);
-            String accessToken = dingUtils.getAccessToken(dingApp);
-            users.forEach(userId -> dingUtils.checkId(accessToken, userId));
+            String accessToken = dingClient.getAccessToken(dingApp);
+            users.forEach(userId -> dingClient.checkId(accessToken, userId));
         }
     }
 }
