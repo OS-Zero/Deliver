@@ -44,6 +44,7 @@ public abstract class BaseHandler {
                 , IpUtils.getClientIp()
                 , "消息消费成功");
 
+
         sendTaskDto.getUsers()
                 .forEach(user ->
                         messageRecordService.saveMessageRecord(

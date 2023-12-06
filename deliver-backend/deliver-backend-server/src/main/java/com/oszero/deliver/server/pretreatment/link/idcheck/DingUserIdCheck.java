@@ -55,5 +55,6 @@ public class DingUserIdCheck implements BusinessLink<SendTaskDto> {
                 ,sendTaskDto.getRetry()
                 , IpUtils.getClientIp()
                 ,"钉钉 userId 检查成功");
+
     }
 }

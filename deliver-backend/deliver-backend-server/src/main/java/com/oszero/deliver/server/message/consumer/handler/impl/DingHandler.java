@@ -31,6 +31,7 @@ public class DingHandler extends BaseHandler {
         this.messageLinkTraceLogger = messageLinkTraceLogger;
     }
 
+
     @Override
     protected void handle(SendTaskDto sendTaskDto) throws Exception {
         String appConfigJson = aesUtils.decrypt(sendTaskDto.getAppConfig());

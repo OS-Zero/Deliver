@@ -62,6 +62,7 @@ public class DingConsumer implements RocketMQListener<MessageExt> {
                 , IpUtils.getClientIp()
                 , "[DingConsumer 接收到消息] {}", messageExt);
         commonConsumer.omMessageAck(messageExt, dingHandler);
+
     }
 
 }

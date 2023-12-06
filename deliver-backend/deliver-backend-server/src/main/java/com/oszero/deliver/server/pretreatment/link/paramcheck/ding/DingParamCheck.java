@@ -81,6 +81,5 @@ public class DingParamCheck implements BusinessLink<SendTaskDto> {
                 ,sendTaskDto.getRetry()
                 , IpUtils.getClientIp()
                 ,"钉钉参数校验成功");
-
     }
 }
