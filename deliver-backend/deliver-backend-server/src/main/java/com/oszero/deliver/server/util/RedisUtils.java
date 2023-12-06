@@ -1,15 +1,14 @@
 package com.oszero.deliver.server.util;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.connection.stream.Record;
 import org.springframework.data.redis.connection.stream.RecordId;
 import org.springframework.data.redis.core.StreamOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -43,14 +42,12 @@ public class RedisUtils {
         return result != null && result;
     }
 
-    public RecordId sendMessage(String streamKey, String messageKey, String messageValue) {
-        Map<String, Object> message = new HashMap<>();
-        message.put(messageKey, messageValue);
+    public RecordId sendMessage(String streamKey, String messageValue) {
 
-        // 使用StringRedisTemplate获取StreamOperations对象
+        // 使用 StringRedisTemplate 获取 StreamOperations 对象
         StreamOperations<String, Object, Object> streamOperations = stringRedisTemplate.opsForStream();
 
-        // 创建Stream并发布消息
-        return streamOperations.add(streamKey, message);
+        // 创建 Stream 并发布消息
+        return streamOperations.add(Record.of(messageValue).withStreamKey(streamKey));
     }
 }

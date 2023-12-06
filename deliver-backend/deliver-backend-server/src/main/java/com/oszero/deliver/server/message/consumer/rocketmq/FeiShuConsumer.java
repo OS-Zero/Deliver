@@ -3,7 +3,6 @@ package com.oszero.deliver.server.message.consumer.rocketmq;
 import com.oszero.deliver.server.constant.MQConstant;
 import com.oszero.deliver.server.message.consumer.handler.impl.FeiShuHandler;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
@@ -20,15 +19,12 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-@RocketMQMessageListener(
-        topic = MQConstant.FEI_SHU_TOPIC,
-        consumerGroup = MQConstant.FEI_SHU_CONSUMER_GROUP
-)
+@RocketMQMessageListener(topic = MQConstant.FEI_SHU_TOPIC, consumerGroup = MQConstant.FEI_SHU_CONSUMER_GROUP)
 @ConditionalOnProperty(value = "mq-type", havingValue = "rocketmq")
 public class FeiShuConsumer implements RocketMQListener<MessageExt> {
 
     private final FeiShuHandler feiShuHandler;
-    private final CommonConsumer commonConsumer;
+    private final RocketMQCommonConsumer rocketMQCommonConsumer;
 
     /**
      * 没有报错，就签收
@@ -36,10 +32,9 @@ public class FeiShuConsumer implements RocketMQListener<MessageExt> {
      *
      * @param messageExt 消息对象
      */
-    @SneakyThrows
     @Override
     public void onMessage(MessageExt messageExt) {
         log.info("[FeiShuConsumer 接收到消息] {}", messageExt);
-        commonConsumer.omMessageAck(messageExt, feiShuHandler);
+        rocketMQCommonConsumer.omMessageAck(messageExt, feiShuHandler);
     }
 }
