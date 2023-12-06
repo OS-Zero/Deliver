@@ -2,11 +2,15 @@ package com.oszero.deliver.server.message.producer.impl;
 
 import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.constant.MQConstant;
+import com.oszero.deliver.server.constant.TraceIdConstant;
 import com.oszero.deliver.server.enums.ChannelTypeEnum;
 import com.oszero.deliver.server.exception.BusinessException;
 import com.oszero.deliver.server.exception.MessageException;
+import com.oszero.deliver.server.log.MessageLinkTraceLogger;
 import com.oszero.deliver.server.message.producer.Producer;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.util.IpUtils;
+import com.oszero.deliver.server.util.MDCUtils;
 import com.oszero.deliver.server.util.RocketMQUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +33,7 @@ import java.util.Objects;
 @ConditionalOnProperty(value = "mq-type", havingValue = "rocketmq")
 public class RocketMQProducer implements Producer {
     private final RocketMQUtils rocketMQUtils;
+    private final MessageLinkTraceLogger messageLinkTraceLogger;
 
     @Override
     public void sendMessage(SendTaskDto sendTaskDto) {
@@ -65,11 +70,22 @@ public class RocketMQProducer implements Producer {
         }
         if (!Objects.isNull(sendResult) && Objects.equals(SendStatus.SEND_OK, sendResult.getSendStatus())) {
             log.info("模板 ID " + sendTaskDto.getTemplateId() + " RocketMQ 消息发送成功");
+
+            messageLinkTraceLogger.info("消息链路 ID: {}, 模板 ID: {}, 应用 ID: {}, 接收人列表: {}, 是否重试消息: {}, 重试次数剩余: {}, 请求 IP: {}, 处理信息: {}"
+                    , MDCUtils.get(TraceIdConstant.TRACE_ID)
+                    ,sendTaskDto.getTemplateId()
+                    ,sendTaskDto.getAppId()
+                    ,sendTaskDto.getUsers()
+                    ,sendTaskDto.getRetried()
+                    ,sendTaskDto.getRetry()
+                    , IpUtils.getClientIp()
+                    ,"模板 ID  + sendTaskDto.getTemplateId() +  RocketMQ 消息发送成功");
         } else {
             // 消息再次重试发送
             retry(sendTaskDto);
         }
     }
+
 
     /**
      * 重新发送消息
