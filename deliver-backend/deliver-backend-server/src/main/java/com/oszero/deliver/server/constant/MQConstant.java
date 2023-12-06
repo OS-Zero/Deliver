@@ -60,6 +60,13 @@ public interface MQConstant {
     String WECHAT_STREAM_CONSUMER_GROUP = "stream_consumer_group_msg_wechat";
     String FEI_SHU_STREAM_CONSUMER_GROUP = "stream_consumer_group_msg_feiShu";
 
+    String CALL_STREAM_CONSUMER_NAME = "stream_consumer_name_msg_call";
+    String SMS_STREAM_CONSUMER_NAME = "stream_consumer_name_msg_sms";
+    String MAIL_STREAM_CONSUMER_NAME = "stream_consumer_name_msg_mail";
+    String DING_STREAM_CONSUMER_NAME = "stream_consumer_name_msg_ding";
+    String WECHAT_STREAM_CONSUMER_NAME = "stream_consumer_name_msg_wechat";
+    String FEI_SHU_STREAM_CONSUMER_NAME = "stream_consumer_name_msg_feiShu";
+
     /**
      * kafka
      */

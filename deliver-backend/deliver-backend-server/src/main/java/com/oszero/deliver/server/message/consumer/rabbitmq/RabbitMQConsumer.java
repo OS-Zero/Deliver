@@ -31,8 +31,8 @@ import java.util.Objects;
  */
 @Slf4j
 @Component
-@ConditionalOnProperty(value = "mq-type", havingValue = "rabbitmq")
 @RequiredArgsConstructor
+@ConditionalOnProperty(value = "mq-type", havingValue = "rabbitmq")
 public class RabbitMQConsumer {
 
     /**

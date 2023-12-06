@@ -3,7 +3,6 @@ package com.oszero.deliver.server.message.consumer.rocketmq;
 import com.oszero.deliver.server.constant.MQConstant;
 import com.oszero.deliver.server.message.consumer.handler.impl.DingHandler;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
@@ -25,7 +24,7 @@ import org.springframework.stereotype.Component;
 public class DingConsumer implements RocketMQListener<MessageExt> {
 
     private final DingHandler dingHandler;
-    private final CommonConsumer commonConsumer;
+    private final RocketMQCommonConsumer rocketMQCommonConsumer;
 
     /**
      * 没有报错，就签收
@@ -33,11 +32,10 @@ public class DingConsumer implements RocketMQListener<MessageExt> {
      *
      * @param messageExt 消息对象
      */
-    @SneakyThrows
     @Override
     public void onMessage(MessageExt messageExt) {
         log.info("[DingConsumer 接收到消息] {}", messageExt);
-        commonConsumer.omMessageAck(messageExt, dingHandler);
+        rocketMQCommonConsumer.omMessageAck(messageExt, dingHandler);
     }
 
 }
