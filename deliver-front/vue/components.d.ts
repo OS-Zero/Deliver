@@ -53,5 +53,6 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SearchForm: typeof import('./src/components/SearchForm/index.vue')['default']
+    Table: typeof import('./src/components/Table/index.vue')['default']
   }
 }

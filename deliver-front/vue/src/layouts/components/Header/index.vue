@@ -9,10 +9,10 @@ const setShowAbout = (open: boolean): void => {
 <template>
 	<a-layout-header class="header">
 		<div class="left">
-			<RouterLink to="/">
+			<a href="/">
 				<img src="logo.png" style="height: 28px; width: 33px; margin-top: 16px; margin-right: 8px" alt="空" />
-			</RouterLink>
-			<RouterLink to="/"><h1>Deliver 企业消息推送平台</h1></RouterLink>
+			</a>
+			<a href="/"><h1>Deliver 企业消息推送平台</h1></a>
 		</div>
 		<div class="right">
 			<a-tooltip title="关于">
