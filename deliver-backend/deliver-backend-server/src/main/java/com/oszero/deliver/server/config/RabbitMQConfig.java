@@ -2,6 +2,7 @@ package com.oszero.deliver.server.config;
 
 import com.oszero.deliver.server.constant.MQConstant;
 import org.springframework.amqp.core.*;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
  * @version 1.0.0
  */
 @Configuration
+@ConditionalOnProperty(value = "mq-type", havingValue = "rabbitmq")
 public class RabbitMQConfig {
 
     @Bean
