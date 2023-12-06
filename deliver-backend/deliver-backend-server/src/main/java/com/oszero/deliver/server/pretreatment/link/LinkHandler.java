@@ -60,7 +60,6 @@ public class LinkHandler {
         for (BusinessLink businessLink : processList) {
             businessLink.process(context);
         }
-
         return context;
     }
 

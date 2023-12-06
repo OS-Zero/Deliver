@@ -47,7 +47,6 @@ public class PushRangeCheck implements BusinessLink<SendTaskDto> {
                     ,sendTaskDto.getRetry()
                     , IpUtils.getClientIp()
                     ,"推送范围检测成功");
-
             return;
         }
         if (

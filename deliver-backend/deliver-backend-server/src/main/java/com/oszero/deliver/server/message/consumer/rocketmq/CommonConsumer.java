@@ -66,4 +66,5 @@ public class CommonConsumer {
                 , "消息消费失败");
 
     }
+
 }

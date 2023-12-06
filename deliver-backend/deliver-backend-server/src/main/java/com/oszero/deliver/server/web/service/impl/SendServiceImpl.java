@@ -137,6 +137,7 @@ public class SendServiceImpl implements SendService {
                 ,IpUtils.getClientIp()
                 ,"sendTaskDto封装完成");
 
+
         // 6.处理相关责任链
         LinkContext<LinkModel> context = LinkContext.builder()
                 .processModel(sendTaskDto)
