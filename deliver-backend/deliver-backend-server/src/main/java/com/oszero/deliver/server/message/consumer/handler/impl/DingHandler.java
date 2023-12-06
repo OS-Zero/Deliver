@@ -1,6 +1,7 @@
 package com.oszero.deliver.server.message.consumer.handler.impl;
 
 import cn.hutool.json.JSONUtil;
+import com.oszero.deliver.server.log.MessageLinkTraceLogger;
 import com.oszero.deliver.server.message.consumer.handler.BaseHandler;
 import com.oszero.deliver.server.model.app.DingApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
@@ -23,11 +24,13 @@ public class DingHandler extends BaseHandler {
     private final DingClient dingClient;
     private final AesUtils aesUtils;
 
-    public DingHandler(DingClient dingClient, MessageRecordService messageRecordService, AesUtils aesUtils) {
+    public DingHandler(DingClient dingClient, MessageRecordService messageRecordService, AesUtils aesUtils, MessageLinkTraceLogger messageLinkTraceLogger) {
         this.dingClient = dingClient;
         this.messageRecordService = messageRecordService;
         this.aesUtils = aesUtils;
+        this.messageLinkTraceLogger = messageLinkTraceLogger;
     }
+
 
     @Override
     protected void handle(SendTaskDto sendTaskDto) throws Exception {
