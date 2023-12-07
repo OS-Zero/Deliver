@@ -3,12 +3,11 @@ package com.oszero.deliver.server.message.consumer.rocketmq;
 import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.constant.TraceIdConstant;
 import com.oszero.deliver.server.enums.StatusEnum;
-import com.oszero.deliver.server.log.MessageLinkTraceLogger;
 import com.oszero.deliver.server.message.consumer.handler.BaseHandler;
 import com.oszero.deliver.server.message.producer.Producer;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
-import com.oszero.deliver.server.util.IpUtils;
 import com.oszero.deliver.server.util.MDCUtils;
+import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import com.oszero.deliver.server.web.service.MessageRecordService;
 import lombok.RequiredArgsConstructor;
 import org.apache.rocketmq.common.message.MessageExt;
@@ -30,25 +29,21 @@ public class RocketMQCommonConsumer {
 
     private final MessageRecordService messageRecordService;
     private final Producer producer;
-    private final MessageLinkTraceLogger messageLinkTraceLogger;
 
     public void omMessageAck(MessageExt messageExt, BaseHandler handler) {
         SendTaskDto sendTaskDto = null;
         try {
             sendTaskDto = JSONUtil.toBean(new String(messageExt.getBody(), StandardCharsets.UTF_8), SendTaskDto.class);
+            MDCUtils.put(TraceIdConstant.TRACE_ID, sendTaskDto.getTraceId());
+
+            MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "接收到 RocketMQ 消息，消息已送达消费者");
+
             handler.doHandle(sendTaskDto);
         } catch (Exception exception) {
-            // 记录消息消费失败
             if (sendTaskDto != null) {
-                messageLinkTraceLogger.error("消息链路 ID: {}, 模板 ID: {}, 应用 ID: {}, 接收人列表: {}, 是否重试消息: {}, 重试次数剩余: {}, 请求 IP: {}, 处理信息: {}"
-                        , MDCUtils.get(TraceIdConstant.TRACE_ID)
-                        , sendTaskDto.getTemplateId()
-                        , sendTaskDto.getAppId()
-                        , sendTaskDto.getUsers()
-                        , sendTaskDto.getRetried()
-                        , sendTaskDto.getRetry()
-                        , IpUtils.getClientIp()
-                        , "消息消费失败");
+                MessageLinkTraceUtils.recordMessageLifecycleErrorLog(sendTaskDto, "消息消费失败，" + exception.getMessage() + "！！！");
+
+                // 记录消息消费失败
                 SendTaskDto finalSendTaskDto = sendTaskDto;
                 sendTaskDto.getUsers().forEach(user -> messageRecordService.saveMessageRecord(finalSendTaskDto, StatusEnum.OFF, user));
 
@@ -57,7 +52,14 @@ public class RocketMQCommonConsumer {
                     sendTaskDto.setRetry(sendTaskDto.getRetry() - 1);
                     sendTaskDto.setRetried(StatusEnum.ON.getStatus());
                     producer.sendMessage(sendTaskDto);
+
+                    MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "RocketMQ 重试消息已发送");
+                } else {
+                    // TODO:后续可监控告警上报
+                    MessageLinkTraceUtils.recordMessageLifecycleErrorLog(sendTaskDto, "RocketMQ 消息发送失败，重试次数已用完，请检查 MQ 情况！！！");
                 }
+            } else {
+                MessageLinkTraceUtils.recordMessageLifecycleErrorLog("消息消费失败，" + exception.getMessage() + "！！！");
             }
         }
     }

@@ -7,6 +7,7 @@ import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.model.app.FeiShuApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -112,12 +113,12 @@ public class FeiShuClient {
                 if (!sendMessageResponse.getCode().equals(0)) {
                     throw new MessageException(sendTaskDto, "飞书发送消息失败，" + sendMessageResponse.getMsg());
                 }
-                log.info("飞书消息发送成功");
             } catch (Exception e) {
                 throw new MessageException(sendTaskDto, "飞书消息发送失败，服务异常");
             }
         });
 
+        MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "飞书消息发送成功");
     }
 
     /**
@@ -150,7 +151,7 @@ public class FeiShuClient {
             if (!sendMessageResponse.getCode().equals(0)) {
                 throw new MessageException(sendTaskDto, "飞书发送消息失败，" + sendMessageResponse.getMsg());
             }
-            log.info("飞书消息发送成功");
+            MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "飞书消息发送成功");
         } catch (Exception e) {
             throw new MessageException(sendTaskDto, "飞书消息发送失败，服务异常");
         }

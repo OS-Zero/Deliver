@@ -6,6 +6,7 @@ import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.model.app.DingApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -96,7 +97,8 @@ public class DingClient {
         } catch (Exception e) {
             throw new MessageException(sendTaskDto, "钉钉发送工作通知接口调用失败");
         }
-        log.info("发送钉钉工作通知消息成功");
+
+        MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "发送钉钉工作通知消息成功");
     }
 
     /**
@@ -134,7 +136,8 @@ public class DingClient {
         } catch (Exception e) {
             throw new MessageException(sendTaskDto, "钉钉发送钉钉机器人消息接口调用失败");
         }
-        log.info("发送钉钉机器人消息成功");
+
+        MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "发送钉钉机器人消息成功");
     }
 
     /**
