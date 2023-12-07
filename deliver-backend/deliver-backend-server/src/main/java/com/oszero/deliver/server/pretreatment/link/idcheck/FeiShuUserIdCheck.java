@@ -39,8 +39,8 @@ public class FeiShuUserIdCheck implements BusinessLink<SendTaskDto> {
         FeiShuApp feiShuApp = JSONUtil.toBean(appConfigJson, FeiShuApp.class);
         List<String> users = sendTaskDto.getUsers();
         users.forEach(userId -> {
-            String tenantAccessToken = feiShuClient.getTenantAccessToken(feiShuApp);
-            feiShuClient.checkUserId(tenantAccessToken, userId);
+            String tenantAccessToken = feiShuClient.getTenantAccessToken(feiShuApp, sendTaskDto);
+            feiShuClient.checkUserId(tenantAccessToken, userId, sendTaskDto);
         });
         MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成飞书 ID 检查");
     }

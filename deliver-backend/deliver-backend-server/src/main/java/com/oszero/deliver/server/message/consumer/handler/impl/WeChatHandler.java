@@ -36,7 +36,7 @@ public class WeChatHandler extends BaseHandler {
         String appConfig = aesUtils.decrypt(sendTaskDto.getAppConfig());
         WeChatApp weChatApp = JSONUtil.toBean(appConfig, WeChatApp.class);
 
-        String accessToken = weChatClient.getAccessToken(weChatApp);
+        String accessToken = weChatClient.getAccessToken(weChatApp, sendTaskDto);
 
         Map<String, Object> paramMap = sendTaskDto.getParamMap();
         String pushSubject = paramMap.get("pushSubject").toString();

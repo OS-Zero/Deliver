@@ -46,13 +46,13 @@ public class MailClient {
             helper.setBcc(mailParam.getToBCC().toArray(new String[0]));
             helper.setSubject(mailParam.getTitle());
             helper.setText(mailParam.getContent(), mailParam.isHtmlFlag());
-            // todo：增加邮件附件
-//        helper.addAttachment("", new File(""));
+            // TODO：增加邮件附件
+            // helper.addAttachment("", new File(""));
 
             // 3. 发送邮件
             javaMailSender.send(message);
         } catch (Exception e) {
-            throw new MessageException("发送邮件失败，" + e.getMessage());
+            throw new MessageException(sendTaskDto, "发送邮件失败，" + e.getMessage());
         }
         log.info("邮件消息发送成功，from {}，to {}", mailApp.getUsername(), sendTaskDto.getUsers());
     }
