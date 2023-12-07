@@ -46,7 +46,7 @@ public class SendServiceImpl implements SendService {
         // 1.设置 sendTaskDto
         SendTaskDto sendTaskDto = new SendTaskDto();
 
-        sendTaskDto.setTemplateId(sendTaskDto.getTemplateId());
+        sendTaskDto.setTemplateId(sendRequestDto.getTemplateId());
         sendTaskDto.setParamMap(sendRequestDto.getParamMap());
         sendTaskDto.setTraceId(MDCUtils.get(TraceIdConstant.TRACE_ID));
         sendTaskDto.setClientIp(IpUtils.getClientIp());

@@ -41,7 +41,7 @@ public class RocketMQCommonConsumer {
             handler.doHandle(sendTaskDto);
         } catch (Exception exception) {
             if (sendTaskDto != null) {
-                MessageLinkTraceUtils.recordMessageLifecycleErrorLog(sendTaskDto, "消息消费失败，" + exception.getMessage() + "！！！");
+                MessageLinkTraceUtils.recordMessageLifecycleErrorLog(exception.getMessage());
 
                 // 记录消息消费失败
                 SendTaskDto finalSendTaskDto = sendTaskDto;
@@ -56,7 +56,7 @@ public class RocketMQCommonConsumer {
                     MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "RocketMQ 重试消息已发送");
                 } else {
                     // TODO:后续可监控告警上报
-                    MessageLinkTraceUtils.recordMessageLifecycleErrorLog(sendTaskDto, "RocketMQ 消息发送失败，重试次数已用完，请检查 MQ 情况！！！");
+                    MessageLinkTraceUtils.recordMessageLifecycleErrorLog(sendTaskDto, "RocketMQ 消息发送失败，重试次数已用完！！！");
                 }
             } else {
                 MessageLinkTraceUtils.recordMessageLifecycleErrorLog("消息消费失败，" + exception.getMessage() + "！！！");
