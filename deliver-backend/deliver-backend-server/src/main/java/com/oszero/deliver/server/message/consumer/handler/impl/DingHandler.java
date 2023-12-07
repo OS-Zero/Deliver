@@ -31,12 +31,11 @@ public class DingHandler extends BaseHandler {
         this.messageLinkTraceLogger = messageLinkTraceLogger;
     }
 
-
     @Override
     protected void handle(SendTaskDto sendTaskDto) throws Exception {
         String appConfigJson = aesUtils.decrypt(sendTaskDto.getAppConfig());
         DingApp dingApp = JSONUtil.toBean(appConfigJson, DingApp.class);
-        String accessToken = dingClient.getAccessToken(dingApp);
+        String accessToken = dingClient.getAccessToken(dingApp, sendTaskDto);
 
         Map<String, Object> paramMap = sendTaskDto.getParamMap();
         String pushSubject = paramMap.get("pushSubject").toString();

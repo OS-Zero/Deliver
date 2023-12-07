@@ -38,8 +38,8 @@ public class DingUserIdCheck implements BusinessLink<SendTaskDto> {
 
             String appConfigJson = aesUtils.decrypt(sendTaskDto.getAppConfig());
             DingApp dingApp = JSONUtil.toBean(appConfigJson, DingApp.class);
-            String accessToken = dingClient.getAccessToken(dingApp);
-            users.forEach(userId -> dingClient.checkId(accessToken, userId));
+            String accessToken = dingClient.getAccessToken(dingApp, sendTaskDto);
+            users.forEach(userId -> dingClient.checkId(accessToken, userId, sendTaskDto));
 
             MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成钉钉 ID 检查");
         }

@@ -30,7 +30,7 @@ public class DingClient {
      * @param dingApp 钉钉App配置
      * @return access_token
      */
-    public String getAccessToken(DingApp dingApp) {
+    public String getAccessToken(DingApp dingApp, SendTaskDto sendTaskDto) {
 
         String appKey = dingApp.getAppKey();
         String appSecret = dingApp.getAppSecret();
@@ -52,12 +52,12 @@ public class DingClient {
             dingAccessTokenBody = JSONUtil.toBean(response.body(), DingAccessTokenBody.class);
 
             if (!Objects.equals(dingAccessTokenBody.getErrcode(), 0)) {
-                throw new MessageException("获取钉钉 Token 失败：" + dingAccessTokenBody.getErrmsg());
+                throw new MessageException(sendTaskDto, "获取钉钉 Token 失败，" + dingAccessTokenBody.getErrmsg());
             }
         } catch (Exception e) {
-            throw new MessageException("钉钉获取 Token 接口调用失败！！！");
+            throw new MessageException(sendTaskDto, "钉钉获取 Token 接口调用失败");
         }
-        log.info("获取钉钉 Token 成功！");
+        log.info("获取钉钉 Token 成功");
         return dingAccessTokenBody.getAccessToken();
     }
 
@@ -81,7 +81,6 @@ public class DingClient {
         Map<String, Object> paramMap = sendTaskDto.getParamMap();
         String body = JSONUtil.toJsonStr(paramMap);
 
-
         DingSendInfoResponseBody dingSendInfoResponseBody;
 
         try (HttpResponse response = HttpRequest.post("https://oapi.dingtalk.com/topapi/message/corpconversation/asyncsend_v2?access_token=" + accessToken)
@@ -92,14 +91,12 @@ public class DingClient {
             dingSendInfoResponseBody = JSONUtil.toBean(response.body(), DingSendInfoResponseBody.class);
 
             if (!Objects.equals(dingSendInfoResponseBody.getErrcode(), 0)) {
-                throw new MessageException("获取钉钉 Token 失败：" + dingSendInfoResponseBody.getErrmsg());
+                throw new MessageException(sendTaskDto, "获取钉钉 Token 失败，" + dingSendInfoResponseBody.getErrmsg());
             }
-
         } catch (Exception e) {
-            throw new MessageException("钉钉发送工作通知接口调用失败！！！");
+            throw new MessageException(sendTaskDto, "钉钉发送工作通知接口调用失败");
         }
-
-        log.info("发送钉钉工作通知消息成功 ！！！");
+        log.info("发送钉钉工作通知消息成功");
     }
 
     /**
@@ -130,16 +127,14 @@ public class DingClient {
 
             dingSendInfoResponseBody = JSONUtil.toBean(response.body(), DingSendInfoResponseBody.class);
 
-
             if (!(dingSendInfoResponseBody.invalidStaffIdList.isEmpty() && dingSendInfoResponseBody.flowControlledStaffIdList.isEmpty())) {
-                throw new MessageException("发送钉钉机器人消息失败!!!");
+                throw new MessageException(sendTaskDto, "发送钉钉机器人消息失败");
             }
 
         } catch (Exception e) {
-            throw new MessageException("钉钉发送钉钉机器人消息接口调用失败！！！");
+            throw new MessageException(sendTaskDto, "钉钉发送钉钉机器人消息接口调用失败");
         }
-
-        log.info("发送钉钉机器人消息成功 ！！！");
+        log.info("发送钉钉机器人消息成功");
     }
 
     /**
@@ -148,7 +143,7 @@ public class DingClient {
      * @param accessToken 钉钉accessToken
      * @param userId      userId
      */
-    public void checkId(String accessToken, String userId) {
+    public void checkId(String accessToken, String userId, SendTaskDto sendTaskDto) {
 
         @Data
         class RequestBody {
@@ -175,14 +170,12 @@ public class DingClient {
             dingUserInfoBody = JSONUtil.toBean(response.body(), DingUserInfoBody.class);
 
             if (!Objects.equals(dingUserInfoBody.getErrcode(), 0)) {
-                throw new MessageException("钉钉校验 userId 是否存在失败：" + dingUserInfoBody.getErrmsg());
+                throw new MessageException(sendTaskDto, "钉钉校验 userId 是否存在失败，" + dingUserInfoBody.getErrmsg());
             }
-
         } catch (Exception e) {
-            throw new MessageException("钉钉校验 userId 是否存在接口调用失败！！！");
+            throw new MessageException(sendTaskDto, "钉钉校验 userId 是否存在接口调用失败");
         }
-
-        log.info("钉钉校验 userId 是否存在成功 ！！！");
+        log.info("钉钉校验 userId 是否存在成功");
     }
 
     /**
@@ -193,7 +186,7 @@ public class DingClient {
      * @return userId
      */
 
-    public String getUserIdByPhone(String accessToken, String phone) {
+    public String getUserIdByPhone(String accessToken, String phone, SendTaskDto sendTaskDto) {
 
         @Data
         class RequestBody {
@@ -226,15 +219,13 @@ public class DingClient {
             dingResponseBody = JSONUtil.toBean(response.body(), DingResponseBody.class);
 
             if (!Objects.equals(dingResponseBody.getErrcode(), 0)) {
-                throw new MessageException("钉钉根据电话号码获取 userId 失败：" + dingResponseBody.getErrmsg());
+                throw new MessageException(sendTaskDto, "钉钉根据电话号码获取 userId 失败，" + dingResponseBody.getErrmsg());
             }
-
         } catch (Exception e) {
-            throw new MessageException("钉钉根据电话号码获取 userId 接口调用失败！！！");
+            throw new MessageException(sendTaskDto, "钉钉根据电话号码获取 userId 接口调用失败");
         }
 
-        log.info("钉钉根据电话号码获取 userId 成功 ！！！");
-
+        log.info("钉钉根据电话号码获取 userId 成功");
         return dingResponseBody.getResult().getUserid();
     }
 }
