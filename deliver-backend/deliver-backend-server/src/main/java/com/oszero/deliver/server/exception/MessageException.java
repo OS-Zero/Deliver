@@ -13,7 +13,6 @@ import lombok.Getter;
  */
 @Getter
 public class MessageException extends RuntimeException {
-    private final String name = "消息流程处理错误，消息传递失败，";
     private String message;
     private final ResultEnum code = ResultEnum.ERROR;
 
@@ -23,11 +22,11 @@ public class MessageException extends RuntimeException {
 
     public MessageException(String message) {
         super(message);
-        this.message = name + message;
+        this.message = message;
     }
 
     public MessageException(SendTaskDto sendTaskDto, String message) {
         super(message);
-        this.message = name + MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, message) + "！！！";
+        this.message = MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, message) + "！！！";
     }
 }
