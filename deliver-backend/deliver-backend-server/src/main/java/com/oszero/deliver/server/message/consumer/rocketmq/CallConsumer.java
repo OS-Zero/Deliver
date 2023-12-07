@@ -28,13 +28,13 @@ public class CallConsumer implements RocketMQListener<MessageExt> {
 
     /**
      * 没有报错，就签收
-     * 如果没有报错，就是拒收 就会重试
+     * 如果有报错，就是拒收 就会重试
      *
      * @param messageExt 消息对象
      */
     @Override
     public void onMessage(MessageExt messageExt) {
-        log.info("[CallConsumer 接收到消息] {}", messageExt);
+        log.info("[RocketMQListener]#[DingConsumer] 接收到消息");
         rocketMQCommonConsumer.omMessageAck(messageExt, callHandler);
     }
 }

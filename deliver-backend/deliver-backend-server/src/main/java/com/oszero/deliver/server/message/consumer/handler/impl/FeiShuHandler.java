@@ -7,6 +7,7 @@ import com.oszero.deliver.server.model.app.FeiShuApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.util.AesUtils;
 import com.oszero.deliver.server.client.FeiShuClient;
+import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import com.oszero.deliver.server.web.service.MessageRecordService;
 import org.springframework.stereotype.Component;
 
@@ -44,7 +45,7 @@ public class FeiShuHandler extends BaseHandler {
         String appConfigJson = aesUtils.decrypt(sendTaskDto.getAppConfig());
         FeiShuApp feiShuApp = JSONUtil.toBean(appConfigJson, FeiShuApp.class);
 
-        String tenantAccessToken = feiShuClient.getTenantAccessToken(feiShuApp);
+        String tenantAccessToken = feiShuClient.getTenantAccessToken(feiShuApp, sendTaskDto);
         Map<String, Object> paramMap = sendTaskDto.getParamMap();
         String feiShuUserIdType = paramMap.get("feiShuUserIdType").toString();
         String msgType = paramMap.get("msg_type").toString();
@@ -78,8 +79,8 @@ public class FeiShuHandler extends BaseHandler {
             paramMap.put("department_ids", user_ids);
             // 部门只能批量
             feiShuClient.sendMessageBatch(tenantAccessToken, sendTaskDto);
-        } else {
-            throw new MessageException("此类型(" + feiShuUserIdType + ")平台 ID 不支持！！！");
         }
+
+        MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "处理器处理消息成功");
     }
 }
