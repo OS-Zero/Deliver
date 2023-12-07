@@ -95,7 +95,7 @@ public class LinkConfig {
         userIdUsersType(map);
 
         return new LinkHandler().setTemplateConfig(map)
-                                .setMessageLinkTraceLogger(messageLinkTraceLogger);
+                .setMessageLinkTraceLogger(messageLinkTraceLogger);
     }
 
     /**
