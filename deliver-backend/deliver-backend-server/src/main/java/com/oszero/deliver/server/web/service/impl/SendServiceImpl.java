@@ -3,9 +3,9 @@ package com.oszero.deliver.server.web.service.impl;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.oszero.deliver.server.constant.TraceIdConstant;
-import com.oszero.deliver.server.enums.ResultEnum;
 import com.oszero.deliver.server.enums.StatusEnum;
 import com.oszero.deliver.server.exception.BusinessException;
+import com.oszero.deliver.server.log.MessageLinkTraceLogger;
 import com.oszero.deliver.server.model.dto.PushWayDto;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.model.dto.request.SendRequestDto;
@@ -15,6 +15,7 @@ import com.oszero.deliver.server.model.entity.TemplateApp;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
 import com.oszero.deliver.server.pretreatment.link.LinkHandler;
 import com.oszero.deliver.server.pretreatment.link.LinkModel;
+import com.oszero.deliver.server.util.IpUtils;
 import com.oszero.deliver.server.util.MDCUtils;
 import com.oszero.deliver.server.web.service.AppService;
 import com.oszero.deliver.server.web.service.SendService;
@@ -43,6 +44,8 @@ public class SendServiceImpl implements SendService {
     private final TemplateAppService templateAppService;
     private final AppService appService;
     private final LinkHandler linkHandler;
+    private final MessageLinkTraceLogger messageLinkTraceLogger;
+
 
     @Override
     public String send(SendRequestDto sendRequestDto) {
@@ -57,6 +60,15 @@ public class SendServiceImpl implements SendService {
         if (StatusEnum.OFF.getStatus().equals(template.getTemplateStatus())) {
             throw new BusinessException("此模板已关闭，再次使用请启用此模板！！！");
         }
+        messageLinkTraceLogger.info("消息链路 ID: {}, 模板 ID: {}, 应用 ID: {}, 接收人列表: {}, 是否重试消息: {}, 重试次数剩余: {}, 请求 IP: {}, 处理信息: {}"
+                ,MDCUtils.get(TraceIdConstant.TRACE_ID)
+                ,templateId
+                ,null
+                ,sendRequestDto.getUsers()
+                ,null
+                ,sendRequestDto.getRetry()
+                ,IpUtils.getClientIp()
+                ,"成功获取到消息模版id");
 
         // 2.通过 templateId 获取 appId
         LambdaQueryWrapper<TemplateApp> wrapper = new LambdaQueryWrapper<>();
@@ -65,7 +77,18 @@ public class SendServiceImpl implements SendService {
         if (Objects.isNull(templateApp)) {
             throw new BusinessException("未获取到模板所关联的应用，请检查关联的应用是否存在！！！");
         }
+
         Long appId = templateApp.getAppId();
+
+        messageLinkTraceLogger.info("消息链路 ID: {}, 模板 ID: {}, 应用 ID: {}, 接收人列表: {}, 是否重试消息: {}, 重试次数剩余: {}, 请求 IP: {}, 处理信息: {}"
+                ,MDCUtils.get(TraceIdConstant.TRACE_ID)
+                ,templateId
+                ,appId
+                ,sendRequestDto.getUsers()
+                ,null
+                ,sendRequestDto.getRetry()
+                ,IpUtils.getClientIp()
+                ,"成功获取到AppId");
 
         // 3.得到 appConfig
         App app = appService.getById(appId);
@@ -101,6 +124,19 @@ public class SendServiceImpl implements SendService {
                 .messageType(messageType)
                 .traceId(MDCUtils.get(TraceIdConstant.TRACE_ID)) // 全局链路 id
                 .retry(retry).build();
+
+
+
+        messageLinkTraceLogger.info("消息链路 ID: {}, 模板 ID: {}, 应用 ID: {}, 接收人列表: {}, 是否重试消息: {}, 重试次数剩余: {}, 请求 IP: {}, 处理信息: {}"
+                ,MDCUtils.get(TraceIdConstant.TRACE_ID)
+                ,templateId
+                ,appId
+                ,sendRequestDto.getUsers()
+                ,sendTaskDto.getRetried()
+                ,sendRequestDto.getRetry()
+                ,IpUtils.getClientIp()
+                ,"sendTaskDto封装完成");
+
 
         // 6.处理相关责任链
         LinkContext<LinkModel> context = LinkContext.builder()
