@@ -7,6 +7,7 @@ import com.oszero.deliver.server.client.WeChatClient;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.BusinessLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
+import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -41,5 +42,7 @@ public class WeChatUserIdCheck implements BusinessLink<SendTaskDto> {
         List<String> users = sendTaskDto.getUsers();
         String accessToken = weChatClient.getAccessToken(weChatApp);
         weChatClient.checkUserId(accessToken, users);
+
+        MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成企微 ID 检查");
     }
 }

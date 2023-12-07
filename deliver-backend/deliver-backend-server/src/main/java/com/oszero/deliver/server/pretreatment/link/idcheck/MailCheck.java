@@ -5,6 +5,7 @@ import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.BusinessLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
+import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import org.springframework.stereotype.Service;
 
 /**
@@ -21,8 +22,9 @@ public class MailCheck implements BusinessLink<SendTaskDto> {
         SendTaskDto sendTaskDto = context.getProcessModel();
         for (String email : sendTaskDto.getUsers()) {
             if (!Validator.isEmail(email)) {
-                throw new MessageException("[MailCheck#process]错误：消息接收者中有非[邮箱地址]用户！");
+                throw new MessageException(MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, "[MailCheck#process]错误：消息接收者中有非[邮箱地址]用户！！！"));
             }
         }
+        MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成邮箱检查");
     }
 }

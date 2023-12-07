@@ -35,9 +35,7 @@ public class RocketMQCommonConsumer {
     public void omMessageAck(MessageExt messageExt, BaseHandler handler) {
         SendTaskDto sendTaskDto = null;
         try {
-            sendTaskDto = JSONUtil.toBean(
-                    new String(messageExt.getBody(), StandardCharsets.UTF_8
-                    ), SendTaskDto.class);
+            sendTaskDto = JSONUtil.toBean(new String(messageExt.getBody(), StandardCharsets.UTF_8), SendTaskDto.class);
             handler.doHandle(sendTaskDto);
         } catch (Exception exception) {
             // 记录消息消费失败

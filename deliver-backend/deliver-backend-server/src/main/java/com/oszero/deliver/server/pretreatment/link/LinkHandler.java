@@ -1,12 +1,9 @@
 package com.oszero.deliver.server.pretreatment.link;
 
 import cn.hutool.core.collection.CollUtil;
-import com.oszero.deliver.server.constant.TraceIdConstant;
 import com.oszero.deliver.server.exception.MessageException;
-import com.oszero.deliver.server.log.MessageLinkTraceLogger;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
-import com.oszero.deliver.server.util.IpUtils;
-import com.oszero.deliver.server.util.MDCUtils;
+import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
@@ -24,42 +21,29 @@ import java.util.Objects;
 @Slf4j
 @Data
 @Accessors(chain = true)
-@SuppressWarnings("all")
 public class LinkHandler {
 
     /**
      * 模板映射
      */
     private Map<String, LinkTemplate> templateConfig = null;
-    private MessageLinkTraceLogger messageLinkTraceLogger = null;
-
 
     /**
      * 执行责任链
      *
-     * @param context
+     * @param context 上下文
      * @return 返回上下文内容
      */
-    public LinkContext process(LinkContext context) {
+    public LinkContext<SendTaskDto> process(LinkContext<SendTaskDto> context) {
 
         //1. 前置检查
         preCheck(context);
-        SendTaskDto sendTaskDto = (SendTaskDto) context.getProcessModel();
-        messageLinkTraceLogger.info("消息链路 ID: {}, 模板 ID: {}, 应用 ID: {}, 接收人列表: {}, 是否重试消息: {}, 重试次数剩余: {}, 请求 IP: {}, 处理信息: {}"
-                , MDCUtils.get(TraceIdConstant.TRACE_ID)
-                ,sendTaskDto.getTemplateId()
-                ,sendTaskDto.getAppId()
-                ,sendTaskDto.getUsers()
-                ,sendTaskDto.getRetried()
-                ,sendTaskDto.getRetry()
-                ,IpUtils.getClientIp()
-                ,"前置检查成功");
+        SendTaskDto sendTaskDto = context.getProcessModel();
+        MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成责任链配置检查");
 
         //2. 遍历流程节点
-        List<BusinessLink> processList = templateConfig.get(context.getCode()).getProcessList();
-        for (BusinessLink businessLink : processList) {
-            businessLink.process(context);
-        }
+        List<BusinessLink<SendTaskDto>> processList = templateConfig.get(context.getCode()).getProcessList();
+        processList.forEach(businessLink -> businessLink.process(context));
         return context;
     }
 
@@ -68,21 +52,26 @@ public class LinkHandler {
      *
      * @param context 执行上下文
      */
-    private void preCheck(LinkContext context) {
+    private void preCheck(LinkContext<SendTaskDto> context) {
+        SendTaskDto sendTaskDto = new SendTaskDto();
+        if (!Objects.isNull(context)) {
+            sendTaskDto = context.getProcessModel();
+        }
+
         if (Objects.isNull(context)) {
-            throw new MessageException("执行上下文为空！");
+            throw new MessageException(MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, "消息前置处理责任链执行上下文为空！！！"));
         }
 
         String businessCode = context.getCode();
 
         LinkTemplate linkTemplate = templateConfig.get(businessCode);
         if (Objects.isNull(linkTemplate)) {
-            throw new MessageException("无法找到执行模板！");
+            throw new MessageException(MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, "消息前置处理责任链无法找到执行模板！！！"));
         }
 
-        List<BusinessLink> processList = linkTemplate.getProcessList();
+        List<BusinessLink<SendTaskDto>> processList = linkTemplate.getProcessList();
         if (CollUtil.isEmpty(processList)) {
-            throw new MessageException("执行链路为空！");
+            throw new MessageException(MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, "消息前置处理责任链执行链路为空！！！"));
         }
 
     }

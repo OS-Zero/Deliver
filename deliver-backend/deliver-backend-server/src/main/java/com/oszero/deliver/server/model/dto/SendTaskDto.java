@@ -75,6 +75,11 @@ public class SendTaskDto extends LinkModel {
     private String traceId;
 
     /**
+     * 请求客户端 IP
+     */
+    private String clientIp;
+
+    /**
      * 是否重试消息（1-是 0-首次发送）
      */
     private Integer retried = 0;

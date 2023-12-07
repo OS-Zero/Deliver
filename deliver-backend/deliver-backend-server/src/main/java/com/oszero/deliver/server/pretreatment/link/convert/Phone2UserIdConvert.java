@@ -12,6 +12,7 @@ import com.oszero.deliver.server.util.AesUtils;
 import com.oszero.deliver.server.client.DingClient;
 import com.oszero.deliver.server.client.FeiShuClient;
 import com.oszero.deliver.server.client.WeChatClient;
+import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,8 @@ public class Phone2UserIdConvert implements BusinessLink<SendTaskDto> {
         // 策略模式实现 phone 转换平台 userId
         Phone2UserId phone2UserId = strategyMap.get(context.getCode());
         sendTaskDto.setUsers(phone2UserId.convert(appConfigJson, users));
+
+        MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成手机号转换平台 ID");
     }
 
     /**

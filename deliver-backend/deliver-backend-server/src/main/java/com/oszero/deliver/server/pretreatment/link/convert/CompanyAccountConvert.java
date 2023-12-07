@@ -5,6 +5,7 @@ import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.constant.PretreatmentCodeConstant;
 import com.oszero.deliver.server.pretreatment.link.BusinessLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
+import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -38,19 +39,25 @@ public class CompanyAccountConvert implements BusinessLink<SendTaskDto> {
 
     @Override
     public void process(LinkContext<SendTaskDto> context) {
-        if (Objects.isNull(companyAccount2Phone) || Objects.isNull(companyAccount2Mail)) {
-            throw new MessageException("[CompanyAccountConvert#process]错误：请注入相关实现！");
-        }
         String code = context.getCode();
         SendTaskDto sendTaskDto = context.getProcessModel();
+
+        if (Objects.isNull(companyAccount2Phone) || Objects.isNull(companyAccount2Mail)) {
+            throw new MessageException(MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, "[CompanyAccountConvert#process]错误：请注入[CompanyAccount2Phone]、[CompanyAccount2Mail]的实现！！！"));
+        }
+
         List<String> users = sendTaskDto.getUsers();
         // 企业账号转换
         if (PretreatmentCodeConstant.COMPANY_ACCOUNT_MAIL.equals(code)) {
             sendTaskDto.setUsers(companyAccount2Mail.convert(users));
+
+            MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成企业账号转换邮箱");
         } else {
             sendTaskDto.setUsers(companyAccount2Phone.convert(users));
             // 修改 code 码，以便于手机号转换平台 ID
             context.setCode(codeUpdateMap.get(code));
+
+            MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成企业账号转换手机号");
         }
     }
 

@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
- * 邮箱 send
+ * 邮箱推送
  *
  * @author oszero
  * @version 1.0.0
@@ -22,7 +22,7 @@ public class MailSend extends CommonSend implements BusinessLink<SendTaskDto> {
     /**
      * 真正处理逻辑
      *
-     * @param context
+     * @param context 上下文
      */
     @Override
     public void process(LinkContext<SendTaskDto> context) {

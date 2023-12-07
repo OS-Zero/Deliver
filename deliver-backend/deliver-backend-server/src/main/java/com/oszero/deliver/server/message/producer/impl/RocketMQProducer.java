@@ -2,18 +2,13 @@ package com.oszero.deliver.server.message.producer.impl;
 
 import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.constant.MQConstant;
-import com.oszero.deliver.server.constant.TraceIdConstant;
 import com.oszero.deliver.server.enums.ChannelTypeEnum;
-import com.oszero.deliver.server.exception.BusinessException;
 import com.oszero.deliver.server.exception.MessageException;
-import com.oszero.deliver.server.log.MessageLinkTraceLogger;
 import com.oszero.deliver.server.message.producer.Producer;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
-import com.oszero.deliver.server.util.IpUtils;
-import com.oszero.deliver.server.util.MDCUtils;
+import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import com.oszero.deliver.server.util.RocketMQUtils;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.client.producer.SendStatus;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -27,19 +22,17 @@ import java.util.Objects;
  * @author oszero
  * @version 1.0.0
  */
-@Slf4j
 @Component
 @RequiredArgsConstructor
 @ConditionalOnProperty(value = "mq-type", havingValue = "rocketmq")
 public class RocketMQProducer implements Producer {
     private final RocketMQUtils rocketMQUtils;
-    private final MessageLinkTraceLogger messageLinkTraceLogger;
 
     @Override
     public void sendMessage(SendTaskDto sendTaskDto) {
         ChannelTypeEnum channelTypeEnum = ChannelTypeEnum.getInstanceByCode(sendTaskDto.getChannelType());
         if (Objects.isNull(channelTypeEnum)) {
-            throw new BusinessException("");
+            throw new MessageException(MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, "[RocketMQProducer#sendMessage] 渠道类型配置错误！！！"));
         }
         SendResult sendResult = null;
         switch (channelTypeEnum) {
@@ -69,17 +62,7 @@ public class RocketMQProducer implements Producer {
             }
         }
         if (!Objects.isNull(sendResult) && Objects.equals(SendStatus.SEND_OK, sendResult.getSendStatus())) {
-            log.info("模板 ID " + sendTaskDto.getTemplateId() + " RocketMQ 消息发送成功");
-
-            messageLinkTraceLogger.info("消息链路 ID: {}, 模板 ID: {}, 应用 ID: {}, 接收人列表: {}, 是否重试消息: {}, 重试次数剩余: {}, 请求 IP: {}, 处理信息: {}"
-                    , MDCUtils.get(TraceIdConstant.TRACE_ID)
-                    , sendTaskDto.getTemplateId()
-                    , sendTaskDto.getAppId()
-                    , sendTaskDto.getUsers()
-                    , sendTaskDto.getRetried()
-                    , sendTaskDto.getRetry()
-                    , IpUtils.getClientIp()
-                    , "模板 ID  + " + sendTaskDto.getTemplateId() + " RocketMQ 消息发送成功");
+            MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成消息发送到 RocketMQ，消息已确认发送到消息队列");
         } else {
             // 消息再次重试发送
             retry(sendTaskDto);
@@ -93,12 +76,16 @@ public class RocketMQProducer implements Producer {
      */
     private void retry(SendTaskDto sendTaskDto) {
         if (sendTaskDto.getRetry() > 0) {
-            log.error("模板 ID " + sendTaskDto.getTemplateId() + " 再次发送消息，消息重试发送");
+            MessageLinkTraceUtils.recordMessageLifecycleErrorLog(sendTaskDto, "RocketMQ 消息发送失败！！！");
+
             sendTaskDto.setRetry(sendTaskDto.getRetry() - 1);
             sendTaskDto.setRetried(1);
             sendMessage(sendTaskDto);
+
+            MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "RocketMQ 重试消息已发送");
         } else {
-            throw new MessageException("RocketMQ 消息发送失败，重试次数已用完，请检查 MQ 情况！！！");
+            // TODO:后续可监控告警上报
+            throw new MessageException(MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, "RocketMQ 消息发送失败，重试次数已用完，请检查 MQ 情况！！！"));
         }
     }
 }
