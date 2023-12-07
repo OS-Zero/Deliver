@@ -42,7 +42,7 @@ public class Phone2UserIdConvert implements BusinessLink<SendTaskDto> {
         String appConfigJson = aesUtils.decrypt(sendTaskDto.getAppConfig());
         // 策略模式实现 phone 转换平台 userId
         Phone2UserId phone2UserId = strategyMap.get(context.getCode());
-        sendTaskDto.setUsers(phone2UserId.convert(appConfigJson, users));
+        sendTaskDto.setUsers(phone2UserId.convert(appConfigJson, users, sendTaskDto));
 
         MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成手机号转换平台 ID");
     }
@@ -51,7 +51,7 @@ public class Phone2UserIdConvert implements BusinessLink<SendTaskDto> {
      * 手机号转 userId 接口
      */
     public interface Phone2UserId {
-        List<String> convert(String appConfigJson, List<String> phones);
+        List<String> convert(String appConfigJson, List<String> phones, SendTaskDto sendTaskDto);
     }
 
     /**
@@ -63,9 +63,9 @@ public class Phone2UserIdConvert implements BusinessLink<SendTaskDto> {
         private final DingClient dingClient;
 
         @Override
-        public List<String> convert(String appConfigJson, List<String> phones) {
-            String accessToken = dingClient.getAccessToken(JSONUtil.toBean(appConfigJson, DingApp.class));
-            return phones.stream().map(phone -> dingClient.getUserIdByPhone(accessToken, phone)).collect(Collectors.toList());
+        public List<String> convert(String appConfigJson, List<String> phones, SendTaskDto sendTaskDto) {
+            String accessToken = dingClient.getAccessToken(JSONUtil.toBean(appConfigJson, DingApp.class), sendTaskDto);
+            return phones.stream().map(phone -> dingClient.getUserIdByPhone(accessToken, phone, sendTaskDto)).collect(Collectors.toList());
         }
     }
 
@@ -78,9 +78,9 @@ public class Phone2UserIdConvert implements BusinessLink<SendTaskDto> {
         private final WeChatClient weChatClient;
 
         @Override
-        public List<String> convert(String appConfigJson, List<String> phones) {
-            String accessToken = weChatClient.getAccessToken(JSONUtil.toBean(appConfigJson, WeChatApp.class));
-            return weChatClient.getUserIdByPhone(accessToken, phones);
+        public List<String> convert(String appConfigJson, List<String> phones, SendTaskDto sendTaskDto) {
+            String accessToken = weChatClient.getAccessToken(JSONUtil.toBean(appConfigJson, WeChatApp.class), sendTaskDto);
+            return weChatClient.getUserIdByPhone(accessToken, phones, sendTaskDto);
         }
     }
 
@@ -93,9 +93,9 @@ public class Phone2UserIdConvert implements BusinessLink<SendTaskDto> {
         private final FeiShuClient feiShuClient;
 
         @Override
-        public List<String> convert(String appConfigJson, List<String> phones) {
-            String tenantAccessToken = feiShuClient.getTenantAccessToken(JSONUtil.toBean(appConfigJson, FeiShuApp.class));
-            return feiShuClient.getUserIdsByPhones(tenantAccessToken, phones);
+        public List<String> convert(String appConfigJson, List<String> phones, SendTaskDto sendTaskDto) {
+            String tenantAccessToken = feiShuClient.getTenantAccessToken(JSONUtil.toBean(appConfigJson, FeiShuApp.class), sendTaskDto);
+            return feiShuClient.getUserIdsByPhones(tenantAccessToken, phones, sendTaskDto);
         }
     }
 }
