@@ -33,7 +33,7 @@ public class FeiShuClient {
      * @param feiShuApp 飞书 APP 配置
      * @return 返回 tenantAccessToken
      */
-    public String getTenantAccessToken(FeiShuApp feiShuApp) {
+    public String getTenantAccessToken(FeiShuApp feiShuApp, SendTaskDto sendTaskDto) {
         @Data
         @AllArgsConstructor
         class TenantAccessTokenReqBody {
@@ -60,13 +60,13 @@ public class FeiShuClient {
             TenantAccessTokenRespBody tenantAccessTokenRespBody = JSONUtil.toBean(body, TenantAccessTokenRespBody.class);
 
             if (!Objects.equals(tenantAccessTokenRespBody.getCode(), 0)) {
-                throw new MessageException("获取飞书 tenantAccessToken 失败，" + tenantAccessTokenRespBody.getMsg());
+                throw new MessageException(sendTaskDto, "获取飞书 tenantAccessToken 失败，" + tenantAccessTokenRespBody.getMsg());
             }
 
             log.info("获取飞书 tenantAccessToken 成功");
             return "Bearer " + tenantAccessTokenRespBody.getTenant_access_token();
         } catch (Exception e) {
-            throw new MessageException("获取飞书 tenantAccessToken 失败，服务异常");
+            throw new MessageException(sendTaskDto, "获取飞书 tenantAccessToken 失败，服务异常");
         }
     }
 
@@ -107,14 +107,14 @@ public class FeiShuClient {
                     .header("Authorization", tenantAccessToken)
                     .body(jsonStr)
                     .execute()) {
-                log.info("飞书消息发送响应为：{}", response.body());
+
                 sendMessageResponse = JSONUtil.toBean(response.body(), SendMessageResponse.class);
                 if (!sendMessageResponse.getCode().equals(0)) {
-                    throw new MessageException("飞书发送消息失败，" + sendMessageResponse.getMsg());
+                    throw new MessageException(sendTaskDto, "飞书发送消息失败，" + sendMessageResponse.getMsg());
                 }
                 log.info("飞书消息发送成功");
             } catch (Exception e) {
-                throw new MessageException("飞书消息发送失败，服务异常");
+                throw new MessageException(sendTaskDto, "飞书消息发送失败，服务异常");
             }
         });
 
@@ -145,14 +145,14 @@ public class FeiShuClient {
                 .header("Authorization", tenantAccessToken)
                 .body(body)
                 .execute()) {
-            log.info("飞书消息发送响应为：{}", response.body());
+
             sendMessageResponse = JSONUtil.toBean(response.body(), SendMessageResponse.class);
             if (!sendMessageResponse.getCode().equals(0)) {
-                throw new MessageException("飞书发送消息失败，" + sendMessageResponse.getMsg());
+                throw new MessageException(sendTaskDto, "飞书发送消息失败，" + sendMessageResponse.getMsg());
             }
             log.info("飞书消息发送成功");
         } catch (Exception e) {
-            throw new MessageException("飞书消息发送失败，服务异常");
+            throw new MessageException(sendTaskDto, "飞书消息发送失败，服务异常");
         }
     }
 
@@ -162,7 +162,7 @@ public class FeiShuClient {
      * @param tenantAccessToken token
      * @param userId            id
      */
-    public void checkUserId(String tenantAccessToken, String userId) {
+    public void checkUserId(String tenantAccessToken, String userId, SendTaskDto sendTaskDto) {
 
         try (HttpResponse execute = HttpRequest.get("https://open.feishu.cn/open-apis/contact/v3/users/" + userId + "?user_id_type=user_id")
                 .header("Authorization", tenantAccessToken)
@@ -175,11 +175,11 @@ public class FeiShuClient {
             }
             FeiShuUserInfoRespBody feiShuUserInfoRespBody = JSONUtil.toBean(execute.body(), FeiShuUserInfoRespBody.class);
             if (!Objects.equals(feiShuUserInfoRespBody.getCode(), 0)) {
-                throw new MessageException("用户: " + userId + " userId 检验失败，" + feiShuUserInfoRespBody.getMsg());
+                throw new MessageException(sendTaskDto, "用户: " + userId + " userId 检验失败，" + feiShuUserInfoRespBody.getMsg());
             }
             log.info("飞书用户：" + userId + " ID 校验成功");
         } catch (Exception e) {
-            throw new MessageException("飞书用户 ID 校验失败，服务异常");
+            throw new MessageException(sendTaskDto, "飞书用户 ID 校验失败，服务异常");
         }
     }
 
@@ -190,7 +190,7 @@ public class FeiShuClient {
      * @param phones            手机号列表
      * @return 用户id列表
      */
-    public List<String> getUserIdsByPhones(String tenantAccessToken, List<String> phones) {
+    public List<String> getUserIdsByPhones(String tenantAccessToken, List<String> phones, SendTaskDto sendTaskDto) {
         @Data
         class PhoneRequestBody {
             private List<String> mobiles;
@@ -221,14 +221,14 @@ public class FeiShuClient {
                 private DataResp data;
             }
             respBody = execute.body();
-            log.info("飞书电话转userId，响应为：{}", respBody);
+
             FeiShuUserIdRespBody feiShuUserIdRespBody = JSONUtil.toBean(respBody, FeiShuUserIdRespBody.class);
             if (!Objects.equals(feiShuUserIdRespBody.getCode(), 0)) {
-                throw new MessageException("转换 userId 失败，" + feiShuUserIdRespBody.getMsg() + "！！！");
+                throw new MessageException(sendTaskDto, "转换 userId 失败，" + feiShuUserIdRespBody.getMsg());
             }
             return feiShuUserIdRespBody.getData().getUser_list().stream().map(UserIdAndPhone::getUser_id).collect(Collectors.toList());
         } catch (Exception e) {
-            throw new MessageException("飞书手机号转换用户 ID 失败，服务异常");
+            throw new MessageException(sendTaskDto, "飞书手机号转换用户 ID 失败，服务异常");
         }
     }
 }
