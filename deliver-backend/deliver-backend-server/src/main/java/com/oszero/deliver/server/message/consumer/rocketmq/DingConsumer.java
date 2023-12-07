@@ -32,7 +32,7 @@ import java.nio.charset.StandardCharsets;
 public class DingConsumer implements RocketMQListener<MessageExt> {
 
     private final DingHandler dingHandler;
-    private final CommonConsumer commonConsumer;
+    private final RocketMQCommonConsumer commonConsumer;
     private final MessageLinkTraceLogger messageLinkTraceLogger;
 
     /**

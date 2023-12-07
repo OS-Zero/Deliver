@@ -73,19 +73,18 @@ public class RocketMQProducer implements Producer {
 
             messageLinkTraceLogger.info("消息链路 ID: {}, 模板 ID: {}, 应用 ID: {}, 接收人列表: {}, 是否重试消息: {}, 重试次数剩余: {}, 请求 IP: {}, 处理信息: {}"
                     , MDCUtils.get(TraceIdConstant.TRACE_ID)
-                    ,sendTaskDto.getTemplateId()
-                    ,sendTaskDto.getAppId()
-                    ,sendTaskDto.getUsers()
-                    ,sendTaskDto.getRetried()
-                    ,sendTaskDto.getRetry()
+                    , sendTaskDto.getTemplateId()
+                    , sendTaskDto.getAppId()
+                    , sendTaskDto.getUsers()
+                    , sendTaskDto.getRetried()
+                    , sendTaskDto.getRetry()
                     , IpUtils.getClientIp()
-                    ,"模板 ID  + sendTaskDto.getTemplateId() +  RocketMQ 消息发送成功");
+                    , "模板 ID  + " + sendTaskDto.getTemplateId() + " RocketMQ 消息发送成功");
         } else {
             // 消息再次重试发送
             retry(sendTaskDto);
         }
     }
-
 
     /**
      * 重新发送消息
