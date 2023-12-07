@@ -40,8 +40,8 @@ public class WeChatUserIdCheck implements BusinessLink<SendTaskDto> {
         String appConfigJson = aesUtils.decrypt(sendTaskDto.getAppConfig());
         WeChatApp weChatApp = JSONUtil.toBean(appConfigJson, WeChatApp.class);
         List<String> users = sendTaskDto.getUsers();
-        String accessToken = weChatClient.getAccessToken(weChatApp);
-        weChatClient.checkUserId(accessToken, users);
+        String accessToken = weChatClient.getAccessToken(weChatApp, sendTaskDto);
+        weChatClient.checkUserId(accessToken, users, sendTaskDto);
 
         MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成企微 ID 检查");
     }
