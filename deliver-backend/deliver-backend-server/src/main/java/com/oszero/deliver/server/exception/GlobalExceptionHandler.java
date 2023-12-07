@@ -2,6 +2,7 @@ package com.oszero.deliver.server.exception;
 
 import com.oszero.deliver.server.enums.ResultEnum;
 import com.oszero.deliver.server.model.CommonResult;
+import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
@@ -42,7 +43,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(MessageException.class)
     public CommonResult<?> handleMessageException(MessageException e, HttpServletRequest request) {
-        log.error("[MessageException] ", e);
+        MessageLinkTraceUtils.recordMessageLifecycleErrorLog(e.getMessage());
         return CommonResult.fail(e.getMessage());
     }
 

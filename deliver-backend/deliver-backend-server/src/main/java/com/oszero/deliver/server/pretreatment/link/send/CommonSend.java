@@ -1,7 +1,7 @@
 package com.oszero.deliver.server.pretreatment.link.send;
 
 import com.oszero.deliver.server.model.dto.SendTaskDto;
-import lombok.extern.slf4j.Slf4j;
+import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 
 /**
  * 抽象类 send
@@ -9,11 +9,10 @@ import lombok.extern.slf4j.Slf4j;
  * @author oszero
  * @version 1.0.0
  */
-@Slf4j
 public abstract class CommonSend {
 
     public void sendToMq(SendTaskDto sendTaskDto) {
-        log.info("[CommonSend#sendToMq], {}", "发送消息");
+        MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "开始准备发送消息到消息队列");
         send(sendTaskDto);
     }
 

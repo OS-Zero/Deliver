@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
- * 电话 send
+ * 电话推送
  *
  * @author oszero
  * @version 1.0.0

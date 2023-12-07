@@ -3,6 +3,7 @@ package com.oszero.deliver.server.pretreatment.link.paramcheck.phone;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.BusinessLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
+import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Service;
 public class PhoneParamCheck implements BusinessLink<SendTaskDto> {
     @Override
     public void process(LinkContext<SendTaskDto> context) {
+        SendTaskDto sendTaskDto = context.getProcessModel();
 
+        MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成手机号打电话参数校验");
     }
 }

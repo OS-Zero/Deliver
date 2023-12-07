@@ -5,6 +5,7 @@ import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.BusinessLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
+import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +27,9 @@ public class PhoneCheck implements BusinessLink<SendTaskDto> {
         List<String> users = sendTaskDto.getUsers();
         users.forEach(phone -> {
             if (!Validator.isMobile(phone)) {
-                throw new MessageException("[PhoneCheck#process]错误：消息接收者中有非[电话号码]用户！");
+                throw new MessageException(MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, "[PhoneCheck#process]错误：消息接收者中有非[电话号码]用户！"));
             }
         });
+        MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成手机号检查");
     }
 }

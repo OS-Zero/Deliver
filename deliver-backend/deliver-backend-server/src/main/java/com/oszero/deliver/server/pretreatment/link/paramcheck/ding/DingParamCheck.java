@@ -1,17 +1,14 @@
 package com.oszero.deliver.server.pretreatment.link.paramcheck.ding;
 
 import cn.hutool.json.JSONUtil;
-import com.oszero.deliver.server.constant.TraceIdConstant;
 import com.oszero.deliver.server.exception.MessageException;
-import com.oszero.deliver.server.log.MessageLinkTraceLogger;
 import com.oszero.deliver.server.model.app.DingApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.BusinessLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
 import com.oszero.deliver.server.pretreatment.link.paramcheck.ParamStrategy;
 import com.oszero.deliver.server.util.AesUtils;
-import com.oszero.deliver.server.util.IpUtils;
-import com.oszero.deliver.server.util.MDCUtils;
+import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,7 +29,6 @@ public class DingParamCheck implements BusinessLink<SendTaskDto> {
 
     private final Map<String, ParamStrategy> dingParamStrategyMap;
     private final AesUtils aesUtils;
-    private final MessageLinkTraceLogger messageLinkTraceLogger;
 
     @Override
     public void process(LinkContext<SendTaskDto> context) {
@@ -58,28 +54,16 @@ public class DingParamCheck implements BusinessLink<SendTaskDto> {
         } else if ("workNotice".equals(pushSubject)) {
             paramMap.put(dingUserIdType, String.join(",", users));
             paramMap.put("agent_id", dingApp.getAgentId());
-        } else {
-            throw new MessageException("钉钉消息校验异常，不支持此推送主体！！！");
         }
-
-        // 参数校验
-        ParamStrategy paramStrategy = dingParamStrategyMap.get(ParamStrategy.DING_STRATEGY_BEAN_PRE_NAME + sendTaskDto.getMessageType());
 
         try {
+            // 参数校验
+            ParamStrategy paramStrategy = dingParamStrategyMap.get(ParamStrategy.DING_STRATEGY_BEAN_PRE_NAME + sendTaskDto.getMessageType());
             paramStrategy.paramCheck(sendTaskDto);
         } catch (Exception e) {
-            log.error("[DingParamCheck#process]异常：{}", e.toString());
-            throw new MessageException("钉钉消息参数校验失败，" + e.getMessage() + "！！！");
+            throw new MessageException(MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, "钉钉消息参数校验失败，" + e.getMessage() + "！！！"));
         }
 
-        messageLinkTraceLogger.info("消息链路 ID: {}, 模板 ID: {}, 应用 ID: {}, 接收人列表: {}, 是否重试消息: {}, 重试次数剩余: {}, 请求 IP: {}, 处理信息: {}"
-                , MDCUtils.get(TraceIdConstant.TRACE_ID)
-                ,sendTaskDto.getTemplateId()
-                ,sendTaskDto.getAppId()
-                ,sendTaskDto.getUsers()
-                ,sendTaskDto.getRetried()
-                ,sendTaskDto.getRetry()
-                , IpUtils.getClientIp()
-                ,"钉钉参数校验成功");
+        MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成钉钉参数校验");
     }
 }

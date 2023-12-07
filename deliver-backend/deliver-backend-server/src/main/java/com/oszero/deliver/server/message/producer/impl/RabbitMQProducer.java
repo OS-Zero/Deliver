@@ -3,12 +3,12 @@ package com.oszero.deliver.server.message.producer.impl;
 import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.constant.MQConstant;
 import com.oszero.deliver.server.enums.ChannelTypeEnum;
-import com.oszero.deliver.server.exception.BusinessException;
+import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.message.producer.Producer;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import com.oszero.deliver.server.util.RabbitMQUtils;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -21,7 +21,6 @@ import java.util.Objects;
  * @author oszero
  * @version 1.0.0
  */
-@Slf4j
 @Component
 @RequiredArgsConstructor
 @ConditionalOnProperty(value = "mq-type", havingValue = "rabbitmq")
@@ -33,7 +32,7 @@ public class RabbitMQProducer implements Producer {
     public void sendMessage(SendTaskDto sendTaskDto) {
         ChannelTypeEnum channelTypeEnum = ChannelTypeEnum.getInstanceByCode(sendTaskDto.getChannelType());
         if (Objects.isNull(channelTypeEnum)) {
-            throw new BusinessException("[RabbitMQProducer#sendWorkNoticeMessage] 渠道类型配置错误！！！");
+            throw new MessageException(MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, "[RabbitMQProducer#sendMessage] 渠道类型配置错误！！！"));
         }
         String message = JSONUtil.toJsonStr(sendTaskDto);
 

@@ -1,5 +1,6 @@
 package com.oszero.deliver.server.pretreatment.link;
 
+import com.oszero.deliver.server.model.dto.SendTaskDto;
 import lombok.Data;
 
 import java.util.List;
@@ -11,8 +12,7 @@ import java.util.List;
  * @version 1.0.0
  */
 @Data
-@SuppressWarnings("all")
 public class LinkTemplate {
 
-    private List<BusinessLink> processList;
+    private List<BusinessLink<SendTaskDto>> processList;
 }

@@ -5,7 +5,7 @@ import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.BusinessLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
 import com.oszero.deliver.server.pretreatment.link.paramcheck.ParamStrategy;
-import lombok.Data;
+import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,14 +30,15 @@ public class FeiShuParamCheck implements BusinessLink<SendTaskDto> {
         SendTaskDto sendTaskDto = context.getProcessModel();
         // 飞书 userId 存在请求参数里
         sendTaskDto.getParamMap().put("user_ids", sendTaskDto.getUsers());
-        String strategyBeanName = ParamStrategy.FEI_SHU_STRATEGY_BEAN_PRE_NAME + sendTaskDto.getMessageType();
-        ParamStrategy paramStrategy = feiShuParamStrategyMap.get(strategyBeanName);
 
         try {
+            String strategyBeanName = ParamStrategy.FEI_SHU_STRATEGY_BEAN_PRE_NAME + sendTaskDto.getMessageType();
+            ParamStrategy paramStrategy = feiShuParamStrategyMap.get(strategyBeanName);
             paramStrategy.paramCheck(sendTaskDto);
         } catch (Exception exception) {
-            log.error("[FeiShuParamCheck#process]异常：{}", exception.toString());
-            throw new MessageException("飞书消息参数校验失败，" + exception.getMessage() + "！！！");
+            throw new MessageException(MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, "飞书消息参数校验失败，" + exception.getMessage() + "！！！"));
         }
+
+        MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成飞书参数校验");
     }
 }

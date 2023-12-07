@@ -7,6 +7,7 @@ import com.oszero.deliver.server.pretreatment.link.BusinessLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
 import com.oszero.deliver.server.util.AesUtils;
 import com.oszero.deliver.server.client.FeiShuClient;
+import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -41,5 +42,6 @@ public class FeiShuUserIdCheck implements BusinessLink<SendTaskDto> {
             String tenantAccessToken = feiShuClient.getTenantAccessToken(feiShuApp);
             feiShuClient.checkUserId(tenantAccessToken, userId);
         });
+        MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成飞书 ID 检查");
     }
 }

@@ -1,6 +1,5 @@
 package com.oszero.deliver.server.config;
 
-import com.oszero.deliver.server.log.MessageLinkTraceLogger;
 import com.oszero.deliver.server.pretreatment.constant.PretreatmentCodeConstant;
 import com.oszero.deliver.server.pretreatment.link.LinkHandler;
 import com.oszero.deliver.server.pretreatment.link.LinkTemplate;
@@ -74,11 +73,6 @@ public class LinkConfig {
     private final FeiShuSend feiShuSend;
 
     /**
-     * 消息链路追踪 logger
-     */
-    private final MessageLinkTraceLogger messageLinkTraceLogger;
-
-    /**
      * @return 前置处理责任链处理器
      */
     @Bean
@@ -94,8 +88,7 @@ public class LinkConfig {
         // 平台 ID
         userIdUsersType(map);
 
-        return new LinkHandler().setTemplateConfig(map)
-                .setMessageLinkTraceLogger(messageLinkTraceLogger);
+        return new LinkHandler().setTemplateConfig(map);
     }
 
     /**

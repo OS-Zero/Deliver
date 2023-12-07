@@ -4,6 +4,7 @@ import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.BusinessLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
+import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,12 +26,16 @@ public class CompanyAccountCheck implements BusinessLink<SendTaskDto> {
 
     @Override
     public void process(LinkContext<SendTaskDto> context) {
-        if (Objects.isNull(checkCompanyAccount)) {
-            throw new MessageException("[CompanyAccountCheck#process]错误：请注入相关实现！");
-        }
         SendTaskDto sendTaskDto = context.getProcessModel();
+
+        if (Objects.isNull(checkCompanyAccount)) {
+            throw new MessageException(MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, "[CompanyAccountCheck#process]错误：请注入[CheckCompanyAccount]实现！！！"));
+        }
+
         // 企业账号检查
         sendTaskDto.getUsers().forEach(checkCompanyAccount::check);
+
+        MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成企业账号检查");
     }
 
     public interface CheckCompanyAccount {
