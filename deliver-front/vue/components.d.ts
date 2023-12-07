@@ -48,11 +48,14 @@ declare module 'vue' {
     ATooltip: typeof import('ant-design-vue/es')['Tooltip']
     AUploadDragger: typeof import('ant-design-vue/es')['UploadDragger']
     Banner: typeof import('./src/components/Banner/index.vue')['default']
+    CenterModal: typeof import('./src/components/Table/components/CenterModal/index.vue')['default']
     Code: typeof import('./src/components/Code/index.vue')['default']
     Echarts: typeof import('./src/components/Echarts/index.vue')['default']
+    RightModal: typeof import('./src/components/Table/components/RightModal/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SearchForm: typeof import('./src/components/SearchForm/index.vue')['default']
     Table: typeof import('./src/components/Table/index.vue')['default']
+    TableHeader: typeof import('./src/components/Table/components/TableHeader/index.vue')['default']
   }
 }

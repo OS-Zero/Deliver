@@ -4,7 +4,7 @@ import type { UnwrapRef } from 'vue'
 import { ReloadOutlined, ExclamationCircleOutlined } from '@ant-design/icons-vue'
 import type { TableColumnsType } from 'ant-design-vue'
 import { message, Modal } from 'ant-design-vue'
-import type { MessageTemplate, SearchMessage, SearchModel } from './type'
+import type { MessageTemplate, SearchMessage, SearchModel, AddTemp } from './type'
 import addTemplate from './components/addTemplate.vue'
 import modifyTemplate from './components/modifyTemplate.vue'
 import sendTest from './components/sendTest.vue'
@@ -23,10 +23,12 @@ import {
 	ThunderboltOutlined
 } from '@ant-design/icons-vue'
 import { searchForm } from '@/config/form'
-
+import { tableColumn, tableHeader } from '@/config/table'
 const messageStore = useMessageStore()
 
-//表单搜索数据
+//搜索框配置
+const fieldList = searchForm.messageSearchForm
+//搜索框数据
 const searchModel = ref<SearchModel>({
 	templateName: '',
 	pushRange: undefined,
@@ -36,19 +38,48 @@ const searchModel = ref<SearchModel>({
 	endTime: undefined
 })
 
-// 条件查询
-const searchTemplate = async (data: SearchModel): Promise<void> => {
+/**
+ * 搜索请求表单数据
+ * @param data
+ */
+const searchTemplate = async (data: SearchModel | undefined): Promise<void> => {
 	try {
-		const res = await messageStore.getTemplatePages(data)
+		tableData.value = await messageStore.getTemplatePages(data !== undefined ? data : searchModel.value)
 	} catch (error) {
 		console.error('An error occurred:', error)
 	}
 }
 
-/**
- * 表格初始化
- */
+//表格头数据
+const tableHeaderData = ref<AddTemp>({
+	templateName: '',
+	pushRange: undefined,
+	usersType: undefined,
+	pushWays: '',
+	templateStatus: 0,
+	appId: undefined,
+	channelType: undefined,
+	messageType: ''
+})
+
+//表格数据
+const tableData = ref<MessageTemplate[]>([])
+
+//表格初始化
 const templateTable: UnwrapRef<MessageTemplate[]> = reactive([])
+
+//添加模板表单数据
+const modalData = ref({
+	templateName: '',
+	pushRange: undefined,
+	usersType: undefined,
+	pushWays: '',
+	templateStatus: 0,
+	appId: undefined,
+	channelType: undefined,
+	messageType: ''
+})
+
 // 表格数据
 const columns: TableColumnsType = [
 	{
@@ -357,8 +388,6 @@ onMounted(() => {
 const a = computed(() => {
 	return store.getCollapse() ? 80 : 200 // 计算输入框应该有的高度
 })
-
-const fieldList = searchForm.messageSearchForm
 </script>
 
 <template>
@@ -367,13 +396,7 @@ const fieldList = searchForm.messageSearchForm
 	<!-- 表格部分 -->
 	<div id="message-container" :style="{ height: hasSelected ? 'calc(100% + 40px)' : 'auto' }">
 		<div class="message-section">
-			<div class="splitter">
-				<a-tooltip title="刷新">
-					<a-button shape="circle" :icon="h(ReloadOutlined)" @click="searchTemplate({ page: 1, pageSize, opt: 2 })" />
-				</a-tooltip>
-				<addTemplate ref="addtemplate" @add="saveTemplate()" />
-			</div>
-
+			<TableHeader :config="tableHeader.templateField" :model="tableHeaderData" @reflash="searchTemplate" />
 			<div class="describe" v-if="hasSelected">
 				<template v-if="hasSelected">
 					<span class="count">
@@ -384,8 +407,8 @@ const fieldList = searchForm.messageSearchForm
 			</div>
 			<!-- 表格部分 -->
 			<a-table
-				:columns="columns"
-				:data-source="templateTable"
+				:columns="tableColumn"
+				:data-source="tableData"
 				:scroll="{ x: 1200, y: undefined, scrollToFirstRowOnChange: true }"
 				class="components-table-demo-nested"
 				@expand="getInnerData"

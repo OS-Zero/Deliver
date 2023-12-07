@@ -8,7 +8,13 @@ export const useMessageStore = defineStore('message', {
 	getters: {},
 	actions: {
 		async getTemplatePages(data: SearchModel) {
-			getTemplatePages(Object.assign(data, { currentPage: 1, pageSize: 10 }))
+			try {
+				const res = await getTemplatePages(Object.assign(data, { currentPage: 1, pageSize: 10 }))
+				return res.data.records
+			} catch (error) {
+				console.log(error)
+				throw error
+			}
 		}
 	}
 })

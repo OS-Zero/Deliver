@@ -2,13 +2,8 @@
 <template>
 	<div id="message-container" :style="{ height: hasSelected ? 'calc(100% + 40px)' : 'auto' }">
 		<div class="message-section">
-			<div class="splitter">
-				<a-tooltip title="刷新">
-					<a-button shape="circle" :icon="h(ReloadOutlined)" @click="searchTemplate({ page: 1, pageSize, opt: 2 })" />
-				</a-tooltip>
-				<addTemplate ref="addtemplate" @add="saveTemplate()" />
-			</div>
-
+			<TableHeader></TableHeader>
+			<!-- 表格部分 -->
 			<div class="describe" v-if="hasSelected">
 				<template v-if="hasSelected">
 					<span class="count">
@@ -17,7 +12,6 @@
 					<a-button type="link" class="cancel" @click="cancelSelect">取消选择</a-button>
 				</template>
 			</div>
-			<!-- 表格部分 -->
 			<a-table
 				:columns="columns"
 				:data-source="templateTable"
