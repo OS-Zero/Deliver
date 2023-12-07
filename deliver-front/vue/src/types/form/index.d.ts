@@ -2,7 +2,7 @@ import { type FormItemRule } from 'element-plus'
 export = Form
 export as namespace Form
 declare namespace Form {
-	type ItemType = 'input' | 'timePicker' | 'select'
+	type ItemType = 'input' | 'timePicker' | 'select' | 'radio' | 'switch'
 	interface Options {
 		labelWidth?: string | number
 		labelPosition?: 'left' | 'right' | 'top'

@@ -25,6 +25,7 @@ const emit = defineEmits<EmitEvent>()
 const expand = ref(false)
 const formRef = ref<FormInstance>()
 const searchModel = ref<Record<string, any>>({})
+
 watch(
 	() => props.model,
 	() => {
@@ -63,7 +64,7 @@ const onSubmit = (): void => {
 /**
  * 重置搜索框
  */
-const resetForm = () => {
+const resetForm = (): void => {
 	if (!formRef.value) return
 	formRef.value.resetFields()
 }

@@ -124,7 +124,7 @@ export interface MessageTemplate {
 /**
  * 新增接口
  */
-export interface addTemp {
+export interface AddTemp {
 	/**
 	 * 模板名
 	 */
