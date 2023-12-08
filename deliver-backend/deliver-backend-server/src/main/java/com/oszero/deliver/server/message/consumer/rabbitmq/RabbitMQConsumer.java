@@ -11,10 +11,10 @@ import com.oszero.deliver.server.message.consumer.handler.impl.*;
 import com.oszero.deliver.server.message.producer.Producer;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.util.MDCUtils;
+import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import com.oszero.deliver.server.web.service.MessageRecordService;
 import com.rabbitmq.client.Channel;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -29,7 +29,6 @@ import java.util.Objects;
  * @author oszero
  * @version 1.0.0
  */
-@Slf4j
 @Component
 @RequiredArgsConstructor
 @ConditionalOnProperty(value = "mq-type", havingValue = "rabbitmq")
@@ -146,13 +145,7 @@ public class RabbitMQConsumer {
             }
             MDCUtils.put(TraceIdConstant.TRACE_ID, traceId);
 
-            // 获取整个调用栈
-            StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-
-            // 获取类名和方法名
-            String className = this.getClass().getName();
-            String methodName = stackTrace[2].getMethodName();
-            log.info("[{}#{} 接收到消息] {}", className, methodName, message);
+            MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "接收到 RabbitMQ 消息，消息已送达消费者");
 
             handler.doHandle(sendTaskDto);
             // RabbitMQ 的 ack 机制中，第二个参数返回 true，表示需要将这条消息投递给其他的消费者重新消费
@@ -160,18 +153,26 @@ public class RabbitMQConsumer {
         } catch (Exception exception) {
             channel.basicAck(deliveryTag, false);
             // 报错重试
-            if (!Objects.isNull(sendTaskDto) && sendTaskDto.getRetry() > 0) {
+            if (!Objects.isNull(sendTaskDto)) {
+                MessageLinkTraceUtils.recordMessageLifecycleErrorLog(exception.getMessage());
                 // 记录消息消费失败
                 SendTaskDto finalSendTaskDto = sendTaskDto;
-                sendTaskDto.getUsers()
-                        .forEach(
-                                user -> messageRecordService.saveMessageRecord(finalSendTaskDto, StatusEnum.OFF, user)
-                        );
+                sendTaskDto.getUsers().forEach(
+                        user -> messageRecordService.saveMessageRecord(finalSendTaskDto, StatusEnum.OFF, user)
+                );
 
-                // 重新发送
-                sendTaskDto.setRetry(sendTaskDto.getRetry() - 1);
-                sendTaskDto.setRetried(StatusEnum.ON.getStatus());
-                producer.sendMessage(sendTaskDto);
+                if (sendTaskDto.getRetry() > 0) {
+
+                    // 重新发送
+                    sendTaskDto.setRetry(sendTaskDto.getRetry() - 1);
+                    sendTaskDto.setRetried(StatusEnum.ON.getStatus());
+                    producer.sendMessage(sendTaskDto);
+                    MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "RabbitMQ 重试消息已发送");
+                } else {
+                    MessageLinkTraceUtils.recordMessageLifecycleErrorLog(sendTaskDto, "RabbitMQ 消息发送失败，重试次数已用完！！！");
+                }
+            } else {
+                MessageLinkTraceUtils.recordMessageLifecycleErrorLog("消息消费失败，" + exception.getMessage() + "！！！");
             }
         }
     }

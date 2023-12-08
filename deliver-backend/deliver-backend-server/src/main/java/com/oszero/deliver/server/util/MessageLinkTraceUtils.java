@@ -22,6 +22,10 @@ public class MessageLinkTraceUtils {
                 , msg);
     }
 
+    public static void recordMessageLifecycleInfoLog(String msg) {
+        MessageLinkTraceLogger.info(msg);
+    }
+
     public static void recordMessageLifecycleErrorLog(SendTaskDto sendTaskDto, String msg) {
         MessageLinkTraceLogger.error("消息链路 ID: {}, 模板 ID: {}, 应用 ID: {}, 接收人列表: {}, 是否重试消息: {}, 重试次数剩余: {}, 请求 IP: {}, 处理信息: {}"
                 , sendTaskDto.getTraceId()
