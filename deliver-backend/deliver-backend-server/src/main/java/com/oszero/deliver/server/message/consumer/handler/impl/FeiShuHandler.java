@@ -1,13 +1,11 @@
 package com.oszero.deliver.server.message.consumer.handler.impl;
 
 import cn.hutool.json.JSONUtil;
-import com.oszero.deliver.server.exception.MessageException;
+import com.oszero.deliver.server.client.FeiShuClient;
 import com.oszero.deliver.server.message.consumer.handler.BaseHandler;
 import com.oszero.deliver.server.model.app.FeiShuApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.util.AesUtils;
-import com.oszero.deliver.server.client.FeiShuClient;
-import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import com.oszero.deliver.server.web.service.MessageRecordService;
 import org.springframework.stereotype.Component;
 
@@ -69,10 +67,6 @@ public class FeiShuHandler extends BaseHandler {
             feiShuClient.sendMessage(tenantAccessToken, sendTaskDto);
         } else if ("department_id".equals((feiShuUserIdType))) {
 
-            // 不能批量的消息类型但传递了部门 ID 则直接抛出异常
-            if (!BATCH_MESSAGE_TYPE.contains(msgType)) {
-                throw new MessageException("部门 ID 类型，不支持发送此类型(" + msgType + ")消息！！！");
-            }
             // 参数的处理
             Object user_ids = paramMap.get("user_ids");
             paramMap.remove("user_ids");
@@ -80,7 +74,5 @@ public class FeiShuHandler extends BaseHandler {
             // 部门只能批量
             feiShuClient.sendMessageBatch(tenantAccessToken, sendTaskDto);
         }
-
-        MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "处理器处理消息成功");
     }
 }

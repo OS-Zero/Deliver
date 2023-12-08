@@ -1,9 +1,9 @@
 package com.oszero.deliver.server.message.consumer.handler.impl;
 
+import com.oszero.deliver.server.client.CallClient;
 import com.oszero.deliver.server.message.consumer.handler.BaseHandler;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.util.AesUtils;
-import com.oszero.deliver.server.client.CallClient;
 import com.oszero.deliver.server.web.service.MessageRecordService;
 import org.springframework.stereotype.Component;
 
