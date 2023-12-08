@@ -1,8 +1,9 @@
+import { FunctionalComponent } from 'vue'
+import { AntdIconProps } from '../components/AntdIcon'
 export = Table
 export as namespace Table
-// table表格
 declare namespace Table {
-	type VNodeChild = import('vue').VNodeChild
+	type VNode = import('vue').VNode
 	type Type = 'selection' | 'index' | 'expand' | 'image' | 'date'
 	type Size = 'large' | 'default' | 'small'
 	type Align = 'center' | 'left' | 'right'
@@ -10,16 +11,15 @@ declare namespace Table {
 	type DateFormat = 'YYYY-MM-DD' | 'YYYY-MM-DD HH:mm:ss' | 'YYYY-MM-DD HH:mm' | 'YYYY-MM'
 	type Order = 'ascending' | 'descending'
 
-	interface TableHeader {
-		type: string
-		name: string
-		formData: Form.FieldItem[]
-	}
 	interface ButtonItem {
-		name: string
 		command: Command
 		size?: Size
-		type?: 'primary' | 'success' | 'warning' | 'danger' | 'info'
+		type?: 'primary' | 'dashed' | 'text' | 'link'
+		tip?: string
+		color?: string
+		modal?: 'center' | 'right' | undefined
+		config?: Form.Modal
+		icon?: FunctionalComponent<AntdIconProps>
 	}
 	interface Sort {
 		prop: string
@@ -27,22 +27,17 @@ declare namespace Table {
 		init?: any
 		silent?: any
 	}
-	interface Column {
-		// 对应列的类型。 如果设置了selection则显示多选框； 如果设置了 index 则显示该行的索引（从 1 开始计算）； 如果设置了 expand 则显示为一个可展开的按钮
-		type?: Type
-		label?: string
-		prop?: string
-		slot?: string
-		width?: string
-		align?: Align
-		dateFormat?: DateFormat // 显示在页面中的日期格式，简单列举了几种格式， 可自行配置
-		showOverflowTooltip?: boolean
+	interface Columns {
+		type?: 'tag' | 'blue' | 'img' | 'switch' | 'operation'
+		title?: string
+		dataIndex?: string
+		key?: string
+		width?: number
+		fixed?: string
+		head?: string
+		icon?: FunctionalComponent<AntdIconProps>
 		buttons?: ButtonItem[]
-		render?: (row?: any, index?: number) => VNodeChild // 渲染函数，渲染这一列的每一行的单元格
-		sortable?: boolean | 'custom' // 对应列是否可以排序， 如果设置为 'custom'，则代表用户希望远程排序，需要监听 Table 的 sort-change 事件
-		headerRender?: ({ column, index }) => VNodeChild // 渲染函数，渲染列表头
-		headerSlot?: string // 自定义表头插槽名字
-		children?: Column[] // 配置多级表头的数据集合, 具体用法可参考多级表头使用示例。
+		filter?: (val: any) => any
 	}
 	interface Options {
 		height?: string | number
