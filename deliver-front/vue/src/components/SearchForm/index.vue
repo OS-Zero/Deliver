@@ -103,7 +103,7 @@ defineExpose({
 			<a-col
 				:span="8"
 				:style="{
-					'text-align': expand === true ? 'right' : 'center',
+					'text-align': 'right',
 					'margin-bottom': expand === true ? '24px' : '0'
 				}">
 				<a-button type="primary" html-type="submit" @click="onSubmit" :loading="iconLoading">查询</a-button>

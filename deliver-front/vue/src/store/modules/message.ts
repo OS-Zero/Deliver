@@ -10,7 +10,14 @@ export const useMessageStore = defineStore('message', {
 		async getTemplatePages(data: SearchModel) {
 			try {
 				const res = await getTemplatePages(Object.assign(data, { currentPage: 1, pageSize: 10 }))
-				return res.data.records
+				res.data.records.forEach((item) => {
+					if (item.pushWays) {
+						const obj = JSON.parse(item.pushWays)
+						item.channelType = obj.channelType
+						item.messageType = obj.messageType
+					}
+				})
+				return res.data
 			} catch (error) {
 				console.log(error)
 				throw error

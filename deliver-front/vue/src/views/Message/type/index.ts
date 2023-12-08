@@ -23,6 +23,16 @@ export interface TemplateItem {
 	templateStatus: number
 }
 
+export interface Pagination {
+	/**
+	 * 当前页面序号
+	 */
+	currentPage: number
+	/**
+	 * 页面大小
+	 */
+	pageSize: number
+}
 /**
  * 搜索框接口
  */
@@ -56,19 +66,11 @@ export interface SearchModel {
 /**
  * 发送搜索框信息接口
  */
-export interface SearchMessage extends SearchModel {
+export interface SearchMessage extends SearchModel, Pagination {
 	/**
 	 * 模板状态
 	 */
 	templateStatus?: number | boolean
-	/**
-	 * 当前页面序号
-	 */
-	currentPage: number
-	/**
-	 * 页面大小
-	 */
-	pageSize: number
 }
 
 /**
@@ -95,6 +97,14 @@ export interface MessageTemplate {
 	 * 推送方式
 	 */
 	pushWays?: string
+	/**
+	 * 渠道选择
+	 */
+	channelType: number | string
+	/**
+	 * 消息类型
+	 */
+	messageType: string
 	/**
 	 * 模板累计使用数
 	 */
