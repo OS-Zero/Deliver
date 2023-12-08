@@ -30,7 +30,7 @@ drop table if exists deliver.app;
 create table if not exists deliver.app
 (
     app_id       bigint auto_increment primary key comment 'appId',
-    app_name         varchar(100)                                                   not null comment '应用名称',
+    app_name     varchar(100)                                                   not null comment '应用名称',
     channel_type tinyint                                                        not null comment '消息发送渠道类型 （1-打电话 2-发短信 3-邮件 4-企业微信 5-钉钉 6-飞书）',
     app_config   text                                                           not null comment '应用信息配置 json',
     use_count    int      default 0                                             not null comment 'APP 使用数',
@@ -69,6 +69,19 @@ create table deliver.message_record
     retried        tinyint  default 0                 not null comment '是否重试消息（1-是 0-首次发送）',
     create_time    datetime default CURRENT_TIMESTAMP not null
 ) comment '消息记录';
+
+-- 平台文件表
+create table platform_file
+(
+    id          bigint auto_increment primary key comment '主键',
+    file_name   varchar(50)                        not null comment '文件名',
+    app_type    tinyint                            not null comment 'APP 类型（1-钉钉2-企业微信3-飞书）',
+    file_type   varchar(20)                        not null comment '文件类型',
+    file_key    varchar(100)                       not null comment '文件平台 Key',
+    create_user varchar(100)                       null comment '创建者',
+    create_time datetime default CURRENT_TIMESTAMP null,
+    app_id      bigint                             not null comment '关联 APPID'
+) comment '平台文件表';
 
 
 
