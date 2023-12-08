@@ -25,12 +25,11 @@ public class GlobalExceptionHandler {
      *
      * @param e       异常信息
      * @param request 请求
-     * @return ResultVO
+     * @return CommonResult
      */
     @ExceptionHandler({BindException.class, MethodArgumentNotValidException.class})
     public CommonResult<?> handleBindingException(Exception e, HttpServletRequest request) {
-        log.error("[Binding] ", e);
-        log.warn("请求参数非预期异常: {} - {}, error = {}", request.getMethod(), request.getRequestURI(), e.getMessage());
+        log.error("请求参数非预期异常: {} - {}, error = {}", request.getMethod(), request.getRequestURI(), e.getMessage());
         return CommonResult.fail(e.getMessage());
     }
 
@@ -39,7 +38,7 @@ public class GlobalExceptionHandler {
      *
      * @param e       异常信息
      * @param request 请求
-     * @return ResultVO
+     * @return CommonResult
      */
     @ExceptionHandler(MessageException.class)
     public CommonResult<?> handleMessageException(MessageException e, HttpServletRequest request) {
@@ -48,28 +47,15 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 业务异常时的错误处理
-     *
-     * @param e       异常信息
-     * @param request 请求
-     * @return ResultVO
-     */
-    @ExceptionHandler(BusinessException.class)
-    public CommonResult<?> handleBusinessException(BusinessException e, HttpServletRequest request) {
-        log.error("[BusinessException] ", e);
-        return CommonResult.fail(e.getMessage());
-    }
-
-    /**
      * 系统异常时的错误处理
      *
      * @param e       异常信息
      * @param request 请求
-     * @return ResultVO
+     * @return CommonResult
      */
     @ExceptionHandler(SystemException.class)
     public CommonResult<?> handleSystemException(SystemException e, HttpServletRequest request) {
-        log.error("[SystemException] ", e);
+        log.error("[SystemException], {}", e.getMessage());
         return CommonResult.fail(e.getMessage());
     }
 
@@ -78,11 +64,11 @@ public class GlobalExceptionHandler {
      *
      * @param e       异常信息
      * @param request 请求
-     * @return
+     * @return CommonResult
      */
-    @ExceptionHandler(Exception.class)
-    public CommonResult<?> handleException(Exception e, HttpServletRequest request) {
-        log.error("[handleException] ", e);
+    @ExceptionHandler(Throwable.class)
+    public CommonResult<?> handleThrowable(Exception e, HttpServletRequest request) {
+        log.error("[handleThrowable], {} ", e.getMessage());
         return CommonResult.fail(ResultEnum.ERROR);
     }
 
