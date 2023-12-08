@@ -43,7 +43,7 @@ public class CompanyAccountConvert implements BusinessLink<SendTaskDto> {
         SendTaskDto sendTaskDto = context.getProcessModel();
 
         if (Objects.isNull(companyAccount2Phone) || Objects.isNull(companyAccount2Mail)) {
-            throw new MessageException(MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, "[CompanyAccountConvert#process]错误：请注入[CompanyAccount2Phone]、[CompanyAccount2Mail]的实现！！！"));
+            throw new MessageException(sendTaskDto, "[CompanyAccountConvert#process]错误：请注入[CompanyAccount2Phone]、[CompanyAccount2Mail]的实现");
         }
 
         List<String> users = sendTaskDto.getUsers();

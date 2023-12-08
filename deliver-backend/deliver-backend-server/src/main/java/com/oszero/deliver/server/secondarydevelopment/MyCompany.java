@@ -1,6 +1,7 @@
 package com.oszero.deliver.server.secondarydevelopment;
 
 import com.oszero.deliver.server.exception.MessageException;
+import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.convert.CompanyAccountConvert;
 import com.oszero.deliver.server.pretreatment.link.idcheck.CompanyAccountCheck;
 import org.springframework.context.annotation.Configuration;
@@ -27,9 +28,9 @@ public class MyCompany {
     @Component
     static class MyCheckCompanyAccount implements CompanyAccountCheck.CheckCompanyAccount {
         @Override
-        public void check(String companyAccount) {
+        public void check(String companyAccount, SendTaskDto sendTaskDto) {
             if (!"oszero".equals(companyAccount)) {
-                throw new MessageException("非法的企业账号！！！");
+                throw new MessageException(sendTaskDto, "非法的企业账号");
             }
         }
     }

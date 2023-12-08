@@ -10,7 +10,6 @@ import com.oszero.deliver.server.pretreatment.link.paramcheck.ParamStrategy;
 import com.oszero.deliver.server.util.AesUtils;
 import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -76,7 +75,7 @@ public class WeChatParamCheck implements BusinessLink<SendTaskDto> {
             ParamStrategy paramStrategy = wechatParamStrategyMap.get(strategyBeanName);
             paramStrategy.paramCheck(sendTaskDto);
         } catch (Exception exception) {
-            throw new MessageException(MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, "企微消息参数校验失败，" + exception.getMessage() + "！！！"));
+            throw new MessageException(sendTaskDto, "企微消息参数校验失败，" + exception.getMessage());
         }
 
         MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成企微消息参数校验");

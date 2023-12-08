@@ -36,7 +36,7 @@ public class FeiShuParamCheck implements BusinessLink<SendTaskDto> {
             ParamStrategy paramStrategy = feiShuParamStrategyMap.get(strategyBeanName);
             paramStrategy.paramCheck(sendTaskDto);
         } catch (Exception exception) {
-            throw new MessageException(MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, "飞书消息参数校验失败，" + exception.getMessage() + "！！！"));
+            throw new MessageException(sendTaskDto, "飞书消息参数校验失败，" + exception.getMessage());
         }
 
         MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成飞书参数校验");

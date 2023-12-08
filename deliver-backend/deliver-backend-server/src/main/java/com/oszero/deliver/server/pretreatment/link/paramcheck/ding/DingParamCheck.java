@@ -61,7 +61,7 @@ public class DingParamCheck implements BusinessLink<SendTaskDto> {
             ParamStrategy paramStrategy = dingParamStrategyMap.get(ParamStrategy.DING_STRATEGY_BEAN_PRE_NAME + sendTaskDto.getMessageType());
             paramStrategy.paramCheck(sendTaskDto);
         } catch (Exception e) {
-            throw new MessageException(MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, "钉钉消息参数校验失败，" + e.getMessage() + "！！！"));
+            throw new MessageException(sendTaskDto, "钉钉消息参数校验失败，" + e.getMessage());
         }
 
         MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成钉钉参数校验");

@@ -142,7 +142,7 @@ public class RabbitMQConsumer {
             // 记录链路追踪 id
             String traceId = sendTaskDto.getTraceId();
             if (StrUtil.isBlank(traceId)) {
-                throw new MessageException("traceId 为空！！！");
+                throw new MessageException(sendTaskDto, "traceId 为空");
             }
             MDCUtils.put(TraceIdConstant.TRACE_ID, traceId);
 
