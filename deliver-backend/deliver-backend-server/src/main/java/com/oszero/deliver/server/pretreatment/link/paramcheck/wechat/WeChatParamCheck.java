@@ -7,7 +7,6 @@ import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.BusinessLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
 import com.oszero.deliver.server.pretreatment.link.paramcheck.ParamStrategy;
-import com.oszero.deliver.server.util.AesUtils;
 import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,13 +25,12 @@ import java.util.Map;
 public class WeChatParamCheck implements BusinessLink<SendTaskDto> {
 
     private final Map<String, ParamStrategy> wechatParamStrategyMap;
-    private final AesUtils aesUtils;
 
     @Override
     public void process(LinkContext<SendTaskDto> context) {
         SendTaskDto sendTaskDto = context.getProcessModel();
 
-        String appConfig = aesUtils.decrypt(sendTaskDto.getAppConfig());
+        String appConfig = sendTaskDto.getAppConfig();
         WeChatApp weChatApp = JSONUtil.toBean(appConfig, WeChatApp.class);
 
         Map<String, Object> paramMap = sendTaskDto.getParamMap();

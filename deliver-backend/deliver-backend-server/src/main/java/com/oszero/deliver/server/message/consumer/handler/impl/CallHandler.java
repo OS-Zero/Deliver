@@ -3,7 +3,6 @@ package com.oszero.deliver.server.message.consumer.handler.impl;
 import com.oszero.deliver.server.client.CallClient;
 import com.oszero.deliver.server.message.consumer.handler.BaseHandler;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
-import com.oszero.deliver.server.util.AesUtils;
 import com.oszero.deliver.server.web.service.MessageRecordService;
 import org.springframework.stereotype.Component;
 
@@ -17,12 +16,10 @@ import org.springframework.stereotype.Component;
 public class CallHandler extends BaseHandler {
 
     private final CallClient callClient;
-    private final AesUtils aesUtils;
 
-    public CallHandler(CallClient callClient, MessageRecordService messageRecordService, AesUtils aesUtils) {
+    public CallHandler(CallClient callClient, MessageRecordService messageRecordService) {
         this.callClient = callClient;
         this.messageRecordService = messageRecordService;
-        this.aesUtils = aesUtils;
     }
 
     @Override

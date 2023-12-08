@@ -1,9 +1,8 @@
 package com.oszero.deliver.server.message.consumer.handler.impl;
 
+import com.oszero.deliver.server.client.SmsClient;
 import com.oszero.deliver.server.message.consumer.handler.BaseHandler;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
-import com.oszero.deliver.server.util.AesUtils;
-import com.oszero.deliver.server.client.SmsClient;
 import com.oszero.deliver.server.web.service.MessageRecordService;
 import org.springframework.stereotype.Component;
 
@@ -17,12 +16,10 @@ import org.springframework.stereotype.Component;
 public class SmsHandler extends BaseHandler {
 
     private final SmsClient smsClient;
-    private final AesUtils aesUtils;
 
-    public SmsHandler(SmsClient smsClient, MessageRecordService messageRecordService, AesUtils aesUtils) {
+    public SmsHandler(SmsClient smsClient, MessageRecordService messageRecordService) {
         this.smsClient = smsClient;
         this.messageRecordService = messageRecordService;
-        this.aesUtils = aesUtils;
     }
 
     @Override

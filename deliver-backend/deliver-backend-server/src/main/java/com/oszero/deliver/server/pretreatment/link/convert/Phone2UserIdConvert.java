@@ -1,6 +1,9 @@
 package com.oszero.deliver.server.pretreatment.link.convert;
 
 import cn.hutool.json.JSONUtil;
+import com.oszero.deliver.server.client.DingClient;
+import com.oszero.deliver.server.client.FeiShuClient;
+import com.oszero.deliver.server.client.WeChatClient;
 import com.oszero.deliver.server.model.app.DingApp;
 import com.oszero.deliver.server.model.app.FeiShuApp;
 import com.oszero.deliver.server.model.app.WeChatApp;
@@ -8,10 +11,6 @@ import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.constant.PretreatmentCodeConstant;
 import com.oszero.deliver.server.pretreatment.link.BusinessLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
-import com.oszero.deliver.server.util.AesUtils;
-import com.oszero.deliver.server.client.DingClient;
-import com.oszero.deliver.server.client.FeiShuClient;
-import com.oszero.deliver.server.client.WeChatClient;
 import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -32,14 +31,13 @@ import java.util.stream.Collectors;
 public class Phone2UserIdConvert implements BusinessLink<SendTaskDto> {
 
     private final Map<String, Phone2UserId> strategyMap;
-    private final AesUtils aesUtils;
 
     @Override
     public void process(LinkContext<SendTaskDto> context) {
         SendTaskDto sendTaskDto = context.getProcessModel();
         List<String> users = sendTaskDto.getUsers();
         // 获取 appConfig
-        String appConfigJson = aesUtils.decrypt(sendTaskDto.getAppConfig());
+        String appConfigJson = sendTaskDto.getAppConfig();
         // 策略模式实现 phone 转换平台 userId
         Phone2UserId phone2UserId = strategyMap.get(context.getCode());
         sendTaskDto.setUsers(phone2UserId.convert(appConfigJson, users, sendTaskDto));

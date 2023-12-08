@@ -5,7 +5,6 @@ import com.oszero.deliver.server.client.DingClient;
 import com.oszero.deliver.server.message.consumer.handler.BaseHandler;
 import com.oszero.deliver.server.model.app.DingApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
-import com.oszero.deliver.server.util.AesUtils;
 import com.oszero.deliver.server.web.service.MessageRecordService;
 import org.springframework.stereotype.Component;
 
@@ -21,17 +20,15 @@ import java.util.Map;
 public class DingHandler extends BaseHandler {
 
     private final DingClient dingClient;
-    private final AesUtils aesUtils;
 
-    public DingHandler(DingClient dingClient, MessageRecordService messageRecordService, AesUtils aesUtils) {
+    public DingHandler(DingClient dingClient, MessageRecordService messageRecordService) {
         this.dingClient = dingClient;
         this.messageRecordService = messageRecordService;
-        this.aesUtils = aesUtils;
     }
 
     @Override
     protected void handle(SendTaskDto sendTaskDto) throws Exception {
-        String appConfigJson = aesUtils.decrypt(sendTaskDto.getAppConfig());
+        String appConfigJson = sendTaskDto.getAppConfig();
         DingApp dingApp = JSONUtil.toBean(appConfigJson, DingApp.class);
         String accessToken = dingClient.getAccessToken(dingApp, sendTaskDto);
 
