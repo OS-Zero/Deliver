@@ -6,7 +6,6 @@ import com.oszero.deliver.server.enums.ChannelTypeEnum;
 import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.message.producer.Producer;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
-import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import com.oszero.deliver.server.util.RabbitMQUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
@@ -32,7 +31,7 @@ public class RabbitMQProducer implements Producer {
     public void sendMessage(SendTaskDto sendTaskDto) {
         ChannelTypeEnum channelTypeEnum = ChannelTypeEnum.getInstanceByCode(sendTaskDto.getChannelType());
         if (Objects.isNull(channelTypeEnum)) {
-            throw new MessageException(MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, "[RabbitMQProducer#sendMessage] 渠道类型配置错误！！！"));
+            throw new MessageException(sendTaskDto, "[RabbitMQProducer#sendMessage] 渠道类型配置错误");
         }
         String message = JSONUtil.toJsonStr(sendTaskDto);
 

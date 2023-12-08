@@ -32,7 +32,7 @@ public class OpenController {
      * @return 返回成功信息
      */
     @PostMapping("/sendMessage")
-    public CommonResult<?> sendMessage(@Valid @RequestBody SendRequestDto sendRequestDto) {
+    public CommonResult<String> sendMessage(@Valid @RequestBody SendRequestDto sendRequestDto) {
         String traceId = sendService.send(sendRequestDto);
         return CommonResult.success(traceId);
     }

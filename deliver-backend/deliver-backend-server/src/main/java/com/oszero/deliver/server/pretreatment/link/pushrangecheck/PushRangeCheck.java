@@ -52,7 +52,7 @@ public class PushRangeCheck implements BusinessLink<SendTaskDto> {
                     || ChannelTypeEnum.FEI_SHU.getCode().equals(channelType));
             // 任一一个失败则表示配置错误
             if (!(company || phone || mail || userId)) {
-                throw new MessageException(MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, "推送范围错误！！！"));
+                throw new MessageException(sendTaskDto, "推送范围错误");
             }
         } else { // 企业外部只有电话与邮箱
             // 电话支持打电话、发短信
@@ -63,7 +63,7 @@ public class PushRangeCheck implements BusinessLink<SendTaskDto> {
             boolean mail = UsersTypeEnum.MAIL.getCode().equals(usersType) && ChannelTypeEnum.MAIL.getCode().equals(channelType);
             // 任一一个失败则表示配置错误
             if (!(mail || phone)) {
-                throw new MessageException(MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, "推送范围错误！！！"));
+                throw new MessageException(sendTaskDto, "推送范围错误");
             }
         }
 

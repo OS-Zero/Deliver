@@ -29,16 +29,16 @@ public class CompanyAccountCheck implements BusinessLink<SendTaskDto> {
         SendTaskDto sendTaskDto = context.getProcessModel();
 
         if (Objects.isNull(checkCompanyAccount)) {
-            throw new MessageException(MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, "[CompanyAccountCheck#process]错误：请注入[CheckCompanyAccount]实现！！！"));
+            throw new MessageException(sendTaskDto, "[CompanyAccountCheck#process]错误：请注入[CheckCompanyAccount]实现");
         }
 
         // 企业账号检查
-        sendTaskDto.getUsers().forEach(checkCompanyAccount::check);
+        sendTaskDto.getUsers().forEach(companyAccount -> checkCompanyAccount.check(companyAccount, sendTaskDto));
 
         MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成企业账号检查");
     }
 
     public interface CheckCompanyAccount {
-        void check(String companyAccount);
+        void check(String companyAccount, SendTaskDto sendTaskDto);
     }
 }

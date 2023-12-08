@@ -22,7 +22,7 @@ public class MailCheck implements BusinessLink<SendTaskDto> {
         SendTaskDto sendTaskDto = context.getProcessModel();
         for (String email : sendTaskDto.getUsers()) {
             if (!Validator.isEmail(email)) {
-                throw new MessageException(MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, "[MailCheck#process]错误：消息接收者中有非[邮箱地址]用户！！！"));
+                throw new MessageException(sendTaskDto, "[MailCheck#process]错误：消息接收者中有非[邮箱地址]用户");
             }
         }
         MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成邮箱检查");

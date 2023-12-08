@@ -61,11 +61,11 @@ public class SendServiceImpl implements SendService {
 
         Template template = templateService.getById(templateId);
         if (Objects.isNull(template)) {
-            throw new MessageException(MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, "传入的模板 ID 非法，请输入正确的 templateId ！！！"));
+            throw new MessageException(sendTaskDto, "传入的模板 ID 非法，请输入正确的 templateId");
         }
         // 关闭状态直接返回
         if (StatusEnum.OFF.getStatus().equals(template.getTemplateStatus())) {
-            throw new MessageException(MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, "此模板已禁用，再次使用请启用此模板！！！"));
+            throw new MessageException(sendTaskDto, "此模板已禁用，再次使用请启用此模板");
         }
 
         Integer pushRange = template.getPushRange();
@@ -86,7 +86,7 @@ public class SendServiceImpl implements SendService {
         wrapper.eq(TemplateApp::getTemplateId, templateId);
         TemplateApp templateApp = templateAppService.getOne(wrapper);
         if (Objects.isNull(templateApp)) {
-            throw new MessageException(MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, "未获取到模板所关联的应用，请检查关联的应用是否存在！！！"));
+            throw new MessageException(sendTaskDto, "未获取到模板所关联的应用，请检查关联的应用是否存在");
         }
 
         Long appId = templateApp.getAppId();
@@ -95,11 +95,11 @@ public class SendServiceImpl implements SendService {
         // 4.得到 appConfig
         App app = appService.getById(appId);
         if (Objects.isNull(app)) {
-            throw new MessageException(MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, "未获取到模板所关联的应用，请检查关联的应用是否存在！！！"));
+            throw new MessageException(sendTaskDto, "未获取到模板所关联的应用，请检查关联的应用是否存在");
         }
         // 关闭状态直接返回
         if (StatusEnum.OFF.getStatus().equals(app.getAppStatus())) {
-            throw new MessageException(MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, "模板关联的应用为禁用状态，再次使用请启用！！！"));
+            throw new MessageException(sendTaskDto, "模板关联的应用为禁用状态，再次使用请启用");
         }
         String appConfig = app.getAppConfig();
         sendTaskDto.setAppConfig(appConfig);

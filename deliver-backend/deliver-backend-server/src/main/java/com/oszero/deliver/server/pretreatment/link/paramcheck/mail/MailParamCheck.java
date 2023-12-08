@@ -30,7 +30,7 @@ public class MailParamCheck implements BusinessLink<SendTaskDto> {
             JSONUtil.toBean(json, MailParam.class);
             sendTaskDto.setParamJson(json);
         } catch (Exception exception) {
-            throw new MessageException(MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, "邮件消息参数校验失败，" + exception.getMessage() + "！！！"));
+            throw new MessageException(sendTaskDto, "邮件消息参数校验失败，" + exception.getMessage());
         }
 
         MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成邮件消息参数校验");

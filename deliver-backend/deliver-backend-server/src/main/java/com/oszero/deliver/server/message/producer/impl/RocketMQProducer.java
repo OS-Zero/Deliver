@@ -32,7 +32,7 @@ public class RocketMQProducer implements Producer {
     public void sendMessage(SendTaskDto sendTaskDto) {
         ChannelTypeEnum channelTypeEnum = ChannelTypeEnum.getInstanceByCode(sendTaskDto.getChannelType());
         if (Objects.isNull(channelTypeEnum)) {
-            throw new MessageException(MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, "[RocketMQProducer#sendMessage] 渠道类型配置错误！！！"));
+            throw new MessageException(sendTaskDto, "[RocketMQProducer#sendMessage] 渠道类型配置错误");
         }
         SendResult sendResult = null;
         switch (channelTypeEnum) {
@@ -84,8 +84,7 @@ public class RocketMQProducer implements Producer {
 
             MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "RocketMQ 重试消息已发送");
         } else {
-            // TODO:后续可监控告警上报
-            throw new MessageException(MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, "RocketMQ 消息发送失败，重试次数已用完，请检查 MQ 情况！！！"));
+            throw new MessageException(sendTaskDto, "RocketMQ 消息发送失败，重试次数已用完");
         }
     }
 }

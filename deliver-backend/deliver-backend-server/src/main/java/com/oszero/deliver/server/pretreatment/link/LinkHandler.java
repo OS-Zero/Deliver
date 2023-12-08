@@ -59,19 +59,19 @@ public class LinkHandler {
         }
 
         if (Objects.isNull(context)) {
-            throw new MessageException(MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, "消息前置处理责任链执行上下文为空！！！"));
+            throw new MessageException(sendTaskDto, "消息前置处理责任链执行上下文为空");
         }
 
         String businessCode = context.getCode();
 
         LinkTemplate linkTemplate = templateConfig.get(businessCode);
         if (Objects.isNull(linkTemplate)) {
-            throw new MessageException(MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, "消息前置处理责任链无法找到执行模板！！！"));
+            throw new MessageException(sendTaskDto, "消息前置处理责任链无法找到执行模板");
         }
 
         List<BusinessLink<SendTaskDto>> processList = linkTemplate.getProcessList();
         if (CollUtil.isEmpty(processList)) {
-            throw new MessageException(MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, "消息前置处理责任链执行链路为空！！！"));
+            throw new MessageException(sendTaskDto, "消息前置处理责任链执行链路为空");
         }
 
     }

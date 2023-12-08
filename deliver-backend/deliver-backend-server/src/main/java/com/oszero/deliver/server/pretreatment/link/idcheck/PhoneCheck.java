@@ -27,7 +27,7 @@ public class PhoneCheck implements BusinessLink<SendTaskDto> {
         List<String> users = sendTaskDto.getUsers();
         users.forEach(phone -> {
             if (!Validator.isMobile(phone)) {
-                throw new MessageException(MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, "[PhoneCheck#process]错误：消息接收者中有非[电话号码]用户！"));
+                throw new MessageException(sendTaskDto, "[PhoneCheck#process]错误：消息接收者中有非[电话号码]用户");
             }
         });
         MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成手机号检查");

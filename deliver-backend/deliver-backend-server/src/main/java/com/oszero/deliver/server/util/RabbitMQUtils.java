@@ -76,8 +76,7 @@ public class RabbitMQUtils {
 
             MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "RabbitMQ 重试消息已发送");
         } else {
-            // TODO:后续可监控告警上报
-            MessageLinkTraceUtils.recordMessageLifecycleErrorLog(sendTaskDto, "RabbitMQ 消息发送失败，重试次数已用完，请检查消息队列情况！！！");
+            MessageLinkTraceUtils.recordMessageLifecycleErrorLog(sendTaskDto, "RabbitMQ 消息发送失败，重试次数已用完！！！");
         }
     }
 }
