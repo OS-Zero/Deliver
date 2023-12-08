@@ -6,7 +6,6 @@ import com.oszero.deliver.server.message.consumer.handler.BaseHandler;
 import com.oszero.deliver.server.model.app.DingApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.util.AesUtils;
-import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import com.oszero.deliver.server.web.service.MessageRecordService;
 import org.springframework.stereotype.Component;
 
@@ -48,7 +47,5 @@ public class DingHandler extends BaseHandler {
         } else {
             dingClient.sendWorkNoticeMessage(accessToken, sendTaskDto);
         }
-
-        MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "处理器处理消息成功");
     }
 }

@@ -38,7 +38,7 @@ public abstract class BaseHandler {
                 user
         ));
 
-        MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "成功完成消息记录，所有发送人已成功接收，本次消息流程已顺利完成");
+        MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "成功完成消息记录，所有发送人已成功接收，本次消息流程已全部顺利完成");
     }
 
     protected abstract void handle(SendTaskDto sendTaskDto) throws Exception;
