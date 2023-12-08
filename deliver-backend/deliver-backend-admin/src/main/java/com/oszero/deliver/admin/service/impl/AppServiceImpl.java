@@ -38,6 +38,7 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>
 
     private final TemplateAppService templateAppService;
     private final AesUtils aesUtils;
+    private final AppMapper appMapper;
 
     @Override
     public Page<AppSearchResponseDto> getAppPagesByCondition(AppSearchRequestDto dto) {
@@ -78,8 +79,8 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>
         if (!CollUtil.isEmpty(errRes)) {
             throw new BusinessException("以下 app 已关联模板，请解除关联关系后再删除：" + errRes);
         }
-        boolean b = this.removeBatchByIds(dto.getIds());
-        if (!b) {
+        int deleted = appMapper.deleteBatchIds(dto.getIds());
+        if (!Objects.equals(dto.getIds().size(), deleted)) {
             throw new BusinessException("删除 app 失败！！！");
         }
     }
@@ -166,27 +167,15 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>
     @Override
     public String getAppConfigByChannelType(AppConfigByChannelRequestDto dto) {
         Integer channelType = dto.getChannelType();
-        switch (channelType) {
-            case 1: {
-                return AppConfigConstant.CALL_CONFIG;
-            }
-            case 2: {
-                return AppConfigConstant.SMS_CONFIG;
-            }
-            case 3: {
-                return AppConfigConstant.MAIL_CONFIG;
-            }
-            case 4: {
-                return AppConfigConstant.DING_CONFIG;
-            }
-            case 5: {
-                return AppConfigConstant.WECHAT_CONFIG;
-            }
-            case 6: {
-                return AppConfigConstant.FEI_SHU_CONFIG;
-            }
-        }
-        return "{}";
+        return switch (channelType) {
+            case 1 -> AppConfigConstant.CALL_CONFIG;
+            case 2 -> AppConfigConstant.SMS_CONFIG;
+            case 3 -> AppConfigConstant.MAIL_CONFIG;
+            case 4 -> AppConfigConstant.DING_CONFIG;
+            case 5 -> AppConfigConstant.WECHAT_CONFIG;
+            case 6 -> AppConfigConstant.FEI_SHU_CONFIG;
+            default -> "{}";
+        };
     }
 }
 

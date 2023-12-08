@@ -16,7 +16,7 @@ public class MdcUtils {
      * @param key   键
      * @param value 值
      */
-    public static void set(String key, String value) {
+    public static void put(String key, String value) {
         MDC.put(key, value);
     }
 

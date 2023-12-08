@@ -7,6 +7,12 @@ import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 
+/**
+ * 对参数的JSON类型判断
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 @Documented
 @Constraint(validatedBy = JsonStringValidator.class)
 @Target({ElementType.FIELD})

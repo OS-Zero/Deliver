@@ -51,7 +51,7 @@ public class WeChatClient {
         } catch (Exception e) {
             throw new BusinessException("企业微信获取 Token 接口调用失败！！！");
         }
-        log.info("获取企微 Token 成功！");
+        log.info("获取企微 Token 成功");
         return weChatResponse.getAccess_token();
     }
 
@@ -81,6 +81,7 @@ public class WeChatClient {
             if (!Objects.equals(wechatResponse.getErrcode(), 0)) {
                 throw new BusinessException("上传企业微信平台文件失败，" + wechatResponse.getErrmsg() + "！！！");
             }
+            log.info("上传企微平台文件成功");
             return wechatResponse.getMedia_id();
         } catch (Exception e) {
             throw new BusinessException("上传企业微信平台文件出错！！！");

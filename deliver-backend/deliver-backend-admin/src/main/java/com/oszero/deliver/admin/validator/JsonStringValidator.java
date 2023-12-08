@@ -6,6 +6,12 @@ import com.oszero.deliver.admin.annotation.JsonString;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
+/**
+ * JSON 校验
+ *
+ * @author oszero
+ * @version 1.0.0
+ */
 public class JsonStringValidator implements ConstraintValidator<JsonString, String> {
 
     @Override

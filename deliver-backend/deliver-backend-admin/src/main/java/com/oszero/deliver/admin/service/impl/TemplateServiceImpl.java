@@ -81,7 +81,7 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template>
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Throwable.class)
     public void deleteByIds(DeleteIdsRequestDto dto) {
         boolean b = this.removeBatchByIds(dto.getIds());
         if (!b) {
@@ -98,7 +98,7 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template>
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Throwable.class)
     public void updateById(TemplateSaveAndUpdateRequestDto dto) {
         // 去掉两边空格
         dto.setTemplateName(dto.getTemplateName().trim());

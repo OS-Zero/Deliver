@@ -5,18 +5,12 @@
 <mapper namespace="com.oszero.deliver.admin.mapper.PlatformFileMapper">
 
     <resultMap id="BaseResultMap" type="com.oszero.deliver.admin.model.entity.PlatformFile">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="fileName" column="file_name" jdbcType="VARCHAR"/>
-            <result property="appType" column="app_type" jdbcType="TINYINT"/>
-            <result property="fileType" column="file_type" jdbcType="VARCHAR"/>
-            <result property="fileKey" column="file_key" jdbcType="VARCHAR"/>
-            <result property="createUser" column="create_user" jdbcType="VARCHAR"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="fileName" column="file_name" jdbcType="VARCHAR"/>
+        <result property="appType" column="app_type" jdbcType="TINYINT"/>
+        <result property="fileType" column="file_type" jdbcType="VARCHAR"/>
+        <result property="fileKey" column="file_key" jdbcType="VARCHAR"/>
+        <result property="createUser" column="create_user" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
     </resultMap>
-
-    <sql id="Base_Column_List">
-        id,file_name,app_type,
-        file_type,file_key,create_user,
-        create_time
-    </sql>
 </mapper>
