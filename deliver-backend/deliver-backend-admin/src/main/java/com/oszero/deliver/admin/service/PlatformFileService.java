@@ -10,9 +10,10 @@ import com.oszero.deliver.admin.model.entity.PlatformFile;
 import java.io.IOException;
 
 /**
- * @author 23088
- * @description 针对表【platform_file(平台文件表)】的数据库操作Service
- * @createDate 2023-11-14 19:38:02
+ * 针对表【platform_file(平台文件表)】的数据库操作Service
+ *
+ * @author oszero
+ * @version 1.0.0
  */
 public interface PlatformFileService extends IService<PlatformFile> {
 

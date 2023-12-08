@@ -22,7 +22,6 @@ import java.util.Objects;
 @Component
 public class DingClient {
 
-
     /**
      * 获取 AccessToken
      *
@@ -51,7 +50,7 @@ public class DingClient {
             dingAccessTokenBody = JSONUtil.toBean(response.body(), DingAccessTokenBody.class);
 
             if (!Objects.equals(dingAccessTokenBody.getErrcode(), 0)) {
-                throw new BusinessException("获取钉钉 Token 失败：" + dingAccessTokenBody.getErrmsg());
+                throw new BusinessException("获取钉钉 Token 失败，" + dingAccessTokenBody.getErrmsg());
             }
         } catch (Exception e) {
             throw new BusinessException("钉钉获取 Token 接口调用失败！！！");

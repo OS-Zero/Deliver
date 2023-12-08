@@ -27,7 +27,7 @@ public class TraceIdFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         try {
-            MdcUtils.set("traceId", UUID.randomUUID().toString());
+            MdcUtils.put("traceId", UUID.randomUUID().toString());
             filterChain.doFilter(servletRequest, servletResponse);
         } finally {
             MdcUtils.clear();

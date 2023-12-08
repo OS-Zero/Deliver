@@ -132,23 +132,10 @@
               如果未设置此属性，那么当前logger将会继承上级的级别。
         additivity:是否向上级logger传递打印信息,默认是true
     -->
-    <!-- 使用mybatis的时候，sql语句是debug下才会打印，而这里我们只配置了info，所以想要查看sql语句的话，有以下两种操作：
-         第一种把<root level="INFO">改成<root level="DEBUG">这样就会打印sql，不过这样日志那边会出现很多其他消息
-         第二种就是单独给mapper下目录配置DEBUG模式，代码如下，这样配置sql语句会打印，其他还是正常DEBUG级别：
-    -->
-    <logger name="com.hyh.logback.web.LogTestController" level="WARN" additivity="false">
-        <appender-ref ref="console"/>
-        <appender-ref ref="warn_file"/>
-        <appender-ref ref="error_file"/>
-    </logger>
 
     <!--    如果多环境开发可以用springProfile -->
     <!--开发环境:打印控制台-->
     <springProfile name="dev">
-        <!--可以输出项目中的debug日志，包括mybatis的sql日志-->
-        <logger name="com.hyh.logback.web" level="DEBUG">
-            <appender-ref ref="console"/>
-        </logger>
         <!--
             root节点是必选节点，用来指定最基础的日志输出级别，只有一个level属性
             level:用来设置打印级别，大小写无关：TRACE, DEBUG, INFO, WARN, ERROR, ALL 和 OFF，默认是DEBUG
@@ -160,10 +147,6 @@
     </springProfile>
 
     <springProfile name="local">
-        <!--可以输出项目中的debug日志，包括mybatis的sql日志-->
-        <logger name="com.hyh.logback.web" level="DEBUG">
-            <appender-ref ref="console"/>
-        </logger>
         <!--
             root节点是必选节点，用来指定最基础的日志输出级别，只有一个level属性
             level:用来设置打印级别，大小写无关：TRACE, DEBUG, INFO, WARN, ERROR, ALL 和 OFF，默认是DEBUG
