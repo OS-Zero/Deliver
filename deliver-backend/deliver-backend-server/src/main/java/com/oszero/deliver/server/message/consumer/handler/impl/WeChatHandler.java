@@ -1,11 +1,10 @@
 package com.oszero.deliver.server.message.consumer.handler.impl;
 
 import cn.hutool.json.JSONUtil;
+import com.oszero.deliver.server.client.WeChatClient;
 import com.oszero.deliver.server.message.consumer.handler.BaseHandler;
 import com.oszero.deliver.server.model.app.WeChatApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
-import com.oszero.deliver.server.util.AesUtils;
-import com.oszero.deliver.server.client.WeChatClient;
 import com.oszero.deliver.server.web.service.MessageRecordService;
 import org.springframework.stereotype.Component;
 
@@ -23,17 +22,15 @@ import java.util.Map;
 public class WeChatHandler extends BaseHandler {
 
     private final WeChatClient weChatClient;
-    private final AesUtils aesUtils;
 
-    public WeChatHandler(WeChatClient weChatClient, MessageRecordService messageRecordService, AesUtils aesUtils) {
+    public WeChatHandler(WeChatClient weChatClient, MessageRecordService messageRecordService) {
         this.weChatClient = weChatClient;
         this.messageRecordService = messageRecordService;
-        this.aesUtils = aesUtils;
     }
 
     @Override
     protected void handle(SendTaskDto sendTaskDto) throws Exception {
-        String appConfig = aesUtils.decrypt(sendTaskDto.getAppConfig());
+        String appConfig = sendTaskDto.getAppConfig();
         WeChatApp weChatApp = JSONUtil.toBean(appConfig, WeChatApp.class);
 
         String accessToken = weChatClient.getAccessToken(weChatApp, sendTaskDto);

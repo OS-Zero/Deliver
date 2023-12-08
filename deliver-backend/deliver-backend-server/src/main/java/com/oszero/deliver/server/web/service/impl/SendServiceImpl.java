@@ -13,6 +13,7 @@ import com.oszero.deliver.server.model.entity.Template;
 import com.oszero.deliver.server.model.entity.TemplateApp;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
 import com.oszero.deliver.server.pretreatment.link.LinkHandler;
+import com.oszero.deliver.server.util.AesUtils;
 import com.oszero.deliver.server.util.IpUtils;
 import com.oszero.deliver.server.util.MDCUtils;
 import com.oszero.deliver.server.util.MessageLinkTraceUtils;
@@ -39,6 +40,7 @@ public class SendServiceImpl implements SendService {
     private final TemplateAppService templateAppService;
     private final AppService appService;
     private final LinkHandler linkHandler;
+    private final AesUtils aesUtils;
 
     @Override
     public String send(SendRequestDto sendRequestDto) {
@@ -101,8 +103,8 @@ public class SendServiceImpl implements SendService {
         if (StatusEnum.OFF.getStatus().equals(app.getAppStatus())) {
             throw new MessageException(sendTaskDto, "模板关联的应用为禁用状态，再次使用请启用");
         }
-        String appConfig = app.getAppConfig();
-        sendTaskDto.setAppConfig(appConfig);
+
+        sendTaskDto.setAppConfig(aesUtils.decrypt(app.getAppConfig()));
 
         MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成消息模板关联应用检测");
 

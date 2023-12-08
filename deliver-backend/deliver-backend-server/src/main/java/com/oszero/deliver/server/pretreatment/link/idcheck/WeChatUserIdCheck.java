@@ -1,9 +1,8 @@
 package com.oszero.deliver.server.pretreatment.link.idcheck;
 
 import cn.hutool.json.JSONUtil;
-import com.oszero.deliver.server.model.app.WeChatApp;
-import com.oszero.deliver.server.util.AesUtils;
 import com.oszero.deliver.server.client.WeChatClient;
+import com.oszero.deliver.server.model.app.WeChatApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.BusinessLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
@@ -27,7 +26,6 @@ import java.util.Map;
 public class WeChatUserIdCheck implements BusinessLink<SendTaskDto> {
 
     private final WeChatClient weChatClient;
-    private final AesUtils aesUtils;
 
     @Override
     public void process(LinkContext<SendTaskDto> context) {
@@ -37,7 +35,7 @@ public class WeChatUserIdCheck implements BusinessLink<SendTaskDto> {
         if (!new HashSet<>(Arrays.asList("touser", "to_parent_userid", "to_student_userid")).contains(wechatUserIdType)) {
             return;
         }
-        String appConfigJson = aesUtils.decrypt(sendTaskDto.getAppConfig());
+        String appConfigJson = sendTaskDto.getAppConfig();
         WeChatApp weChatApp = JSONUtil.toBean(appConfigJson, WeChatApp.class);
         List<String> users = sendTaskDto.getUsers();
         String accessToken = weChatClient.getAccessToken(weChatApp, sendTaskDto);
