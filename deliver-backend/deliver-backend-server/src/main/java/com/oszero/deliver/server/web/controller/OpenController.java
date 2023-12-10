@@ -1,6 +1,6 @@
 package com.oszero.deliver.server.web.controller;
 
-import com.oszero.deliver.server.model.CommonResult;
+import com.oszero.deliver.server.common.CommonResult;
 import com.oszero.deliver.server.model.dto.request.SendRequestDto;
 import com.oszero.deliver.server.web.service.SendService;
 import jakarta.validation.Valid;

@@ -1,4 +1,4 @@
-package com.oszero.deliver.server.model;
+package com.oszero.deliver.server.common;
 
 import com.oszero.deliver.server.enums.ResultEnum;
 import lombok.AllArgsConstructor;
