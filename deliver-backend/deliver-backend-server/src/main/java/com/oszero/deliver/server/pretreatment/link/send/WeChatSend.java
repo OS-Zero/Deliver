@@ -1,7 +1,7 @@
 package com.oszero.deliver.server.pretreatment.link.send;
 
 import com.oszero.deliver.server.mq.producer.Producer;
-import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.common.MessageLink;
 import com.oszero.deliver.server.pretreatment.common.LinkContext;
 import lombok.RequiredArgsConstructor;

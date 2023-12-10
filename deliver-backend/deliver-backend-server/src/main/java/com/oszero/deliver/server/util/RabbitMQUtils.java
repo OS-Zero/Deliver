@@ -3,7 +3,7 @@ package com.oszero.deliver.server.util;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.constant.TraceIdConstant;
-import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.model.dto.common.SendTaskDto;
 import org.springframework.amqp.core.ReturnedMessage;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

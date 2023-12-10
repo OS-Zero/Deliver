@@ -1,7 +1,7 @@
 package com.oszero.deliver.server.exception;
 
 import com.oszero.deliver.server.enums.ResultEnum;
-import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import lombok.Getter;
 

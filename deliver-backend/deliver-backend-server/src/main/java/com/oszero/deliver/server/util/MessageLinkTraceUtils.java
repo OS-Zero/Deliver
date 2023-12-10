@@ -1,7 +1,7 @@
 package com.oszero.deliver.server.util;
 
 import com.oszero.deliver.server.log.MessageLinkTraceLogger;
-import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.model.dto.common.SendTaskDto;
 
 /**
  * MessageLinkTrace 工具类

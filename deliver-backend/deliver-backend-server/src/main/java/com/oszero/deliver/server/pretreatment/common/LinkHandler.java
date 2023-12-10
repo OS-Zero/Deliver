@@ -2,7 +2,7 @@ package com.oszero.deliver.server.pretreatment.common;
 
 import cn.hutool.core.collection.CollUtil;
 import com.oszero.deliver.server.exception.MessageException;
-import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import lombok.Data;
 import lombok.experimental.Accessors;

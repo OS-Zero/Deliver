@@ -7,7 +7,7 @@ import com.oszero.deliver.server.client.wechat.WeChatClient;
 import com.oszero.deliver.server.model.app.DingApp;
 import com.oszero.deliver.server.model.app.FeiShuApp;
 import com.oszero.deliver.server.model.app.WeChatApp;
-import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.constant.PretreatmentCodeConstant;
 import com.oszero.deliver.server.pretreatment.common.MessageLink;
 import com.oszero.deliver.server.pretreatment.common.LinkContext;

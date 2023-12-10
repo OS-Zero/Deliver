@@ -1,6 +1,6 @@
 package com.oszero.deliver.server.pretreatment.link.paramcheck;
 
-import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.model.dto.common.SendTaskDto;
 
 /**
  * 消息参数校验

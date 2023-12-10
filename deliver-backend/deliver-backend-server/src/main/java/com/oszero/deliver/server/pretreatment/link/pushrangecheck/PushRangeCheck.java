@@ -4,7 +4,7 @@ import com.oszero.deliver.server.enums.ChannelTypeEnum;
 import com.oszero.deliver.server.enums.PushRangeEnum;
 import com.oszero.deliver.server.enums.UsersTypeEnum;
 import com.oszero.deliver.server.exception.MessageException;
-import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.common.LinkContext;
 import com.oszero.deliver.server.pretreatment.common.MessageLink;
 import com.oszero.deliver.server.util.MessageLinkTraceUtils;
