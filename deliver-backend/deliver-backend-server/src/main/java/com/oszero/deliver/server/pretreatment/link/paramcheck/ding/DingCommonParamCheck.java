@@ -6,6 +6,7 @@ import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.common.LinkContext;
 import com.oszero.deliver.server.pretreatment.common.MessageLink;
+import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -50,5 +51,6 @@ public class DingCommonParamCheck implements MessageLink<SendTaskDto> {
             }
         }
 
+        MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成钉钉通用参数校验");
     }
 }
