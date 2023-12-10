@@ -3,7 +3,6 @@ package com.oszero.deliver.server.pretreatment.link.paramcheck.ding.strategy;
 import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.enums.MessageTypeEnum;
 import com.oszero.deliver.server.message.param.ding.DingOAParam;
-import com.oszero.deliver.server.message.param.ding.DingTextParam;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.paramcheck.ParamStrategy;
 import org.springframework.stereotype.Component;
@@ -27,8 +26,6 @@ public class OAParamStartegy implements ParamStrategy {
         oAMessageDTO.setMsgtype(MessageTypeEnum.DING_OA.getMsgType());
         paramMap.put("msg", oAMessageDTO);
 
-        String json = JSONUtil.toJsonStr(paramMap);
-        JSONUtil.toBean(json, DingOAParam.class);
-        sendTaskDto.setParamJson(json);
+        // TODO:参数校验
     }
 }

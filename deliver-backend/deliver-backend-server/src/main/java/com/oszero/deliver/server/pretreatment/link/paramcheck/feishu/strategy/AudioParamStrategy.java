@@ -1,8 +1,6 @@
 package com.oszero.deliver.server.pretreatment.link.paramcheck.feishu.strategy;
 
-import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.enums.MessageTypeEnum;
-import com.oszero.deliver.server.message.param.feishu.FeiShuAudioParam;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.paramcheck.ParamStrategy;
 import org.springframework.stereotype.Component;
@@ -22,8 +20,7 @@ public class AudioParamStrategy implements ParamStrategy {
     public void paramCheck(SendTaskDto sendTaskDto) throws Exception {
         Map<String, Object> paramMap = sendTaskDto.getParamMap();
         paramMap.put("msg_type", MessageTypeEnum.FEI_SHU_AUDIO.getMsgType());
-        String json = JSONUtil.toJsonStr(paramMap);
-        JSONUtil.toBean(json, FeiShuAudioParam.class);
-        sendTaskDto.setParamJson(json);
+
+        // TODO:参数校验
     }
 }

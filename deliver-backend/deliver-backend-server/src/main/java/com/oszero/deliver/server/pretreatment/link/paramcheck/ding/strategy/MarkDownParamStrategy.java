@@ -1,10 +1,6 @@
 package com.oszero.deliver.server.pretreatment.link.paramcheck.ding.strategy;
 
-import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.enums.MessageTypeEnum;
-import com.oszero.deliver.server.message.param.ding.DingLinkParam;
-import com.oszero.deliver.server.message.param.ding.DingMarkDownParam;
-import com.oszero.deliver.server.message.param.ding.DingTextParam;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.paramcheck.ParamStrategy;
 import org.springframework.stereotype.Component;
@@ -31,8 +27,6 @@ public class MarkDownParamStrategy implements ParamStrategy {
             msg.put("msgtype", MessageTypeEnum.DING_MARKDOWN.getMsgType());
         }
 
-        String json = JSONUtil.toJsonStr(paramMap);
-        JSONUtil.toBean(json, DingMarkDownParam.class);
-        sendTaskDto.setParamJson(json);
+        // TODO:参数校验
     }
 }

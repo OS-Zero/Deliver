@@ -1,8 +1,6 @@
 package com.oszero.deliver.server.pretreatment.link.paramcheck.ding.strategy;
 
-import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.enums.MessageTypeEnum;
-import com.oszero.deliver.server.message.param.ding.DingTextParam;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.paramcheck.ParamStrategy;
 import org.springframework.stereotype.Component;
@@ -29,10 +27,7 @@ public class TextParamStrategy implements ParamStrategy {
             msg.put("msgtype", MessageTypeEnum.TEXT.getMsgType());
         }
 
-        String json = JSONUtil.toJsonStr(paramMap);
-        JSONUtil.toBean(json, DingTextParam.class);
-        sendTaskDto.setParamJson(json);
-
+        // TODO:参数校验
 
     }
 }

@@ -1,8 +1,6 @@
 package com.oszero.deliver.server.client;
 
-import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.exception.MessageException;
-import com.oszero.deliver.server.message.param.mail.MailParam;
 import com.oszero.deliver.server.model.app.MailApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.util.MessageLinkTraceUtils;
@@ -11,6 +9,8 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -30,8 +30,12 @@ public class MailClient {
      */
     public void sendMail(MailApp mailApp, SendTaskDto sendTaskDto) {
         try {
-            String paramJson = sendTaskDto.getParamJson();
-            MailParam mailParam = JSONUtil.toBean(paramJson, MailParam.class);
+            Map<String, Object> paramMap = sendTaskDto.getParamMap();
+            String title = paramMap.get("title").toString();
+            String content = paramMap.get("content").toString();
+            List<String> toCC = (List<String>) paramMap.get("toCC");
+            List<String> toBCC = (List<String>) paramMap.get("toBCC");
+            Boolean htmlFlag = (Boolean) paramMap.get("htmlFlag");
 
             //1. 创建 JavaMailSender
             JavaMailSenderImpl javaMailSender = getJavaMailSender(mailApp);
@@ -41,10 +45,10 @@ public class MailClient {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(mailApp.getUsername());
             helper.setTo(sendTaskDto.getUsers().toArray(new String[0]));
-            helper.setCc(mailParam.getToCC().toArray(new String[0]));
-            helper.setBcc(mailParam.getToBCC().toArray(new String[0]));
-            helper.setSubject(mailParam.getTitle());
-            helper.setText(mailParam.getContent(), mailParam.isHtmlFlag());
+            helper.setCc(toCC.toArray(new String[0]));
+            helper.setBcc(toBCC.toArray(new String[0]));
+            helper.setSubject(title);
+            helper.setText(content, htmlFlag);
             // TODO：增加邮件附件
             // helper.addAttachment("", new File(""));
 
