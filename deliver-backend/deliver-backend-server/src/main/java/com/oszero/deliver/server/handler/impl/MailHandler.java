@@ -1,7 +1,7 @@
 package com.oszero.deliver.server.handler.impl;
 
 import cn.hutool.json.JSONUtil;
-import com.oszero.deliver.server.client.MailClient;
+import com.oszero.deliver.server.client.mail.MailClient;
 import com.oszero.deliver.server.handler.BaseHandler;
 import com.oszero.deliver.server.model.app.MailApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;

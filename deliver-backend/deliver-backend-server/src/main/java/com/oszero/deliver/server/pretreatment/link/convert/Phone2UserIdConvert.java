@@ -1,9 +1,9 @@
 package com.oszero.deliver.server.pretreatment.link.convert;
 
 import cn.hutool.json.JSONUtil;
-import com.oszero.deliver.server.client.DingClient;
-import com.oszero.deliver.server.client.FeiShuClient;
-import com.oszero.deliver.server.client.WeChatClient;
+import com.oszero.deliver.server.client.ding.DingClient;
+import com.oszero.deliver.server.client.feishu.FeiShuClient;
+import com.oszero.deliver.server.client.wechat.WeChatClient;
 import com.oszero.deliver.server.model.app.DingApp;
 import com.oszero.deliver.server.model.app.FeiShuApp;
 import com.oszero.deliver.server.model.app.WeChatApp;

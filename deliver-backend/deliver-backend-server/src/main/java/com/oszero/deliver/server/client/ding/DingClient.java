@@ -1,4 +1,4 @@
-package com.oszero.deliver.server.client;
+package com.oszero.deliver.server.client.ding;
 
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;

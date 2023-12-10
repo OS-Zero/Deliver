@@ -1,7 +1,7 @@
 package com.oszero.deliver.server.handler.impl;
 
 import cn.hutool.json.JSONUtil;
-import com.oszero.deliver.server.client.WeChatClient;
+import com.oszero.deliver.server.client.wechat.WeChatClient;
 import com.oszero.deliver.server.handler.BaseHandler;
 import com.oszero.deliver.server.model.app.WeChatApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;

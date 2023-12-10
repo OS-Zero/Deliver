@@ -1,4 +1,4 @@
-package com.oszero.deliver.server.client;
+package com.oszero.deliver.server.client.feishu;
 
 import cn.hutool.core.lang.UUID;
 import cn.hutool.http.HttpRequest;

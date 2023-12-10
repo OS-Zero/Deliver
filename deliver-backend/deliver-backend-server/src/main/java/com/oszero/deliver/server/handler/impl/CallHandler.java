@@ -1,6 +1,6 @@
 package com.oszero.deliver.server.handler.impl;
 
-import com.oszero.deliver.server.client.factory.CallFactory;
+import com.oszero.deliver.server.client.call.factory.CallFactory;
 import com.oszero.deliver.server.handler.BaseHandler;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.web.service.MessageRecordService;
