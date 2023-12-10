@@ -1,7 +1,7 @@
-package com.oszero.deliver.server.trace.strategy;
+package com.oszero.deliver.server.log.trace.strategy;
 
 import cn.hutool.core.lang.UUID;
-import com.oszero.deliver.server.trace.TraceIdStrategy;
+import com.oszero.deliver.server.log.trace.TraceIdStrategy;
 import org.springframework.stereotype.Component;
 
 /**

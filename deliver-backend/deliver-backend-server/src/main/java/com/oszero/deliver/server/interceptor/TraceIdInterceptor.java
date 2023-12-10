@@ -1,7 +1,7 @@
 package com.oszero.deliver.server.interceptor;
 
 import com.oszero.deliver.server.constant.TraceIdConstant;
-import com.oszero.deliver.server.trace.TraceIdStrategy;
+import com.oszero.deliver.server.log.trace.TraceIdStrategy;
 import com.oszero.deliver.server.util.MDCUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
