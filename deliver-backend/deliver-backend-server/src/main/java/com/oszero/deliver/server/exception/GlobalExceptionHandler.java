@@ -1,7 +1,7 @@
 package com.oszero.deliver.server.exception;
 
 import com.oszero.deliver.server.enums.ResultEnum;
-import com.oszero.deliver.server.model.CommonResult;
+import com.oszero.deliver.server.common.CommonResult;
 import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
