@@ -5,10 +5,9 @@ import com.oszero.deliver.server.enums.PushRangeEnum;
 import com.oszero.deliver.server.enums.UsersTypeEnum;
 import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
-import com.oszero.deliver.server.pretreatment.link.BusinessLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
+import com.oszero.deliver.server.pretreatment.link.MessageLink;
 import com.oszero.deliver.server.util.MessageLinkTraceUtils;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,8 +17,7 @@ import org.springframework.stereotype.Service;
  * @version 1.0.0
  */
 @Service
-@RequiredArgsConstructor
-public class PushRangeCheck implements BusinessLink<SendTaskDto> {
+public class PushRangeCheck implements MessageLink<SendTaskDto> {
 
     /**
      * 真正处理逻辑

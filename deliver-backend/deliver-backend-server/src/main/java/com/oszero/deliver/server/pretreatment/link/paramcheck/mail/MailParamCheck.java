@@ -4,7 +4,7 @@ import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.message.param.mail.MailParam;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
-import com.oszero.deliver.server.pretreatment.link.BusinessLink;
+import com.oszero.deliver.server.pretreatment.link.MessageLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
 import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import java.util.Map;
  * @version 1.0.0
  */
 @Service
-public class MailParamCheck implements BusinessLink<SendTaskDto> {
+public class MailParamCheck implements MessageLink<SendTaskDto> {
 
     @Override
     public void process(LinkContext<SendTaskDto> context) {

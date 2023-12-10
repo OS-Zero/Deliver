@@ -14,5 +14,5 @@ import java.util.List;
 @Data
 public class LinkTemplate {
 
-    private List<BusinessLink<SendTaskDto>> processList;
+    private List<MessageLink<SendTaskDto>> processList;
 }

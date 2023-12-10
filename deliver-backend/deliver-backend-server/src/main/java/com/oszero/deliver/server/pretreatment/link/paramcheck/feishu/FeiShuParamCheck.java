@@ -2,7 +2,7 @@ package com.oszero.deliver.server.pretreatment.link.paramcheck.feishu;
 
 import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
-import com.oszero.deliver.server.pretreatment.link.BusinessLink;
+import com.oszero.deliver.server.pretreatment.link.MessageLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
 import com.oszero.deliver.server.pretreatment.link.paramcheck.ParamStrategy;
 import com.oszero.deliver.server.util.MessageLinkTraceUtils;
@@ -21,7 +21,7 @@ import java.util.Map;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class FeiShuParamCheck implements BusinessLink<SendTaskDto> {
+public class FeiShuParamCheck implements MessageLink<SendTaskDto> {
 
     private final Map<String, ParamStrategy> feiShuParamStrategyMap;
 

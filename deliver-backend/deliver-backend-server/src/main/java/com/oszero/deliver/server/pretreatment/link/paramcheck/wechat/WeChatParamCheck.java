@@ -4,7 +4,7 @@ import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.model.app.WeChatApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
-import com.oszero.deliver.server.pretreatment.link.BusinessLink;
+import com.oszero.deliver.server.pretreatment.link.MessageLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
 import com.oszero.deliver.server.pretreatment.link.paramcheck.ParamStrategy;
 import com.oszero.deliver.server.util.MessageLinkTraceUtils;
@@ -22,7 +22,7 @@ import java.util.Map;
  */
 @Service
 @RequiredArgsConstructor
-public class WeChatParamCheck implements BusinessLink<SendTaskDto> {
+public class WeChatParamCheck implements MessageLink<SendTaskDto> {
 
     private final Map<String, ParamStrategy> wechatParamStrategyMap;
 

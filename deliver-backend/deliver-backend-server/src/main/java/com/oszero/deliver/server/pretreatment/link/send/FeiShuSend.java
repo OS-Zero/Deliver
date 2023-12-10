@@ -2,7 +2,7 @@ package com.oszero.deliver.server.pretreatment.link.send;
 
 import com.oszero.deliver.server.message.producer.Producer;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
-import com.oszero.deliver.server.pretreatment.link.BusinessLink;
+import com.oszero.deliver.server.pretreatment.link.MessageLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
-public class FeiShuSend extends CommonSend implements BusinessLink<SendTaskDto> {
+public class FeiShuSend extends CommonSend implements MessageLink<SendTaskDto> {
 
     private final Producer producer;
 

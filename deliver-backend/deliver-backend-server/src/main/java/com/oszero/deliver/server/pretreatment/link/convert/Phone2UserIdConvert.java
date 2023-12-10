@@ -9,7 +9,7 @@ import com.oszero.deliver.server.model.app.FeiShuApp;
 import com.oszero.deliver.server.model.app.WeChatApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.constant.PretreatmentCodeConstant;
-import com.oszero.deliver.server.pretreatment.link.BusinessLink;
+import com.oszero.deliver.server.pretreatment.link.MessageLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
 import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
-public class Phone2UserIdConvert implements BusinessLink<SendTaskDto> {
+public class Phone2UserIdConvert implements MessageLink<SendTaskDto> {
 
     private final Map<String, Phone2UserId> strategyMap;
 
