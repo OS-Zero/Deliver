@@ -1,7 +1,7 @@
 package com.oszero.deliver.server.handler.impl;
 
 import cn.hutool.json.JSONUtil;
-import com.oszero.deliver.server.client.FeiShuClient;
+import com.oszero.deliver.server.client.feishu.FeiShuClient;
 import com.oszero.deliver.server.handler.BaseHandler;
 import com.oszero.deliver.server.model.app.FeiShuApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;

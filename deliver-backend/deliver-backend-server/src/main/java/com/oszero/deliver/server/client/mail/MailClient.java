@@ -1,4 +1,4 @@
-package com.oszero.deliver.server.client;
+package com.oszero.deliver.server.client.mail;
 
 import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.model.app.MailApp;

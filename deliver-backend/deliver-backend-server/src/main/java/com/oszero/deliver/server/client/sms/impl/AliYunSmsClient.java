@@ -1,4 +1,4 @@
-package com.oszero.deliver.server.client.impl;
+package com.oszero.deliver.server.client.sms.impl;
 
 import org.springframework.stereotype.Service;
 
@@ -9,5 +9,5 @@ import org.springframework.stereotype.Service;
  * @version 1.0.0
  */
 @Service
-public class AliYunSmsClientImpl {
+public class AliYunSmsClient {
 }

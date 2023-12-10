@@ -1,4 +1,4 @@
-package com.oszero.deliver.server.client;
+package com.oszero.deliver.server.client.call;
 
 /**
  * 电话客户端接口

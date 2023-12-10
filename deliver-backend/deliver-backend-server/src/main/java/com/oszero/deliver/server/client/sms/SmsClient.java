@@ -1,4 +1,4 @@
-package com.oszero.deliver.server.client;
+package com.oszero.deliver.server.client.sms;
 
 /**
  * 短信客户端接口

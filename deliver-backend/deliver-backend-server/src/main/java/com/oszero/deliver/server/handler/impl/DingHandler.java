@@ -1,7 +1,7 @@
 package com.oszero.deliver.server.handler.impl;
 
 import cn.hutool.json.JSONUtil;
-import com.oszero.deliver.server.client.DingClient;
+import com.oszero.deliver.server.client.ding.DingClient;
 import com.oszero.deliver.server.handler.BaseHandler;
 import com.oszero.deliver.server.model.app.DingApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
