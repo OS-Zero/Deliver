@@ -3,11 +3,11 @@ package com.oszero.deliver.server.pretreatment.link;
 /**
  * 前置处理责任链抽象接口
  *
+ * @param <T> LinkModel
  * @author oszero
  * @version 1.0.0
- * @param <T> LinkModel
  */
-public interface BusinessLink<T extends LinkModel> {
+public interface MessageLink<T extends LinkModel> {
 
     /**
      * 真正处理逻辑

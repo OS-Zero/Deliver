@@ -2,7 +2,7 @@ package com.oszero.deliver.server.pretreatment.link.idcheck;
 
 import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
-import com.oszero.deliver.server.pretreatment.link.BusinessLink;
+import com.oszero.deliver.server.pretreatment.link.MessageLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
 import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ import java.util.Objects;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class CompanyAccountCheck implements BusinessLink<SendTaskDto> {
+public class CompanyAccountCheck implements MessageLink<SendTaskDto> {
 
     private final CheckCompanyAccount checkCompanyAccount;
 

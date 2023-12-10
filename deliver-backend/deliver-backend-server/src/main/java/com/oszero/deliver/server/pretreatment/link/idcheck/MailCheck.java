@@ -3,7 +3,7 @@ package com.oszero.deliver.server.pretreatment.link.idcheck;
 import cn.hutool.core.lang.Validator;
 import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
-import com.oszero.deliver.server.pretreatment.link.BusinessLink;
+import com.oszero.deliver.server.pretreatment.link.MessageLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
 import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
  * @version 1.0.0
  */
 @Service
-public class MailCheck implements BusinessLink<SendTaskDto> {
+public class MailCheck implements MessageLink<SendTaskDto> {
 
     @Override
     public void process(LinkContext<SendTaskDto> context) {

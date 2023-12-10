@@ -1,7 +1,7 @@
 package com.oszero.deliver.server.pretreatment.link.paramcheck.sms;
 
 import com.oszero.deliver.server.model.dto.SendTaskDto;
-import com.oszero.deliver.server.pretreatment.link.BusinessLink;
+import com.oszero.deliver.server.pretreatment.link.MessageLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
 import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
  * @version 1.0.0
  */
 @Service
-public class SmsParamCheck implements BusinessLink<SendTaskDto> {
+public class SmsParamCheck implements MessageLink<SendTaskDto> {
     @Override
     public void process(LinkContext<SendTaskDto> context) {
         SendTaskDto sendTaskDto = context.getProcessModel();

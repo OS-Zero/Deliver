@@ -42,7 +42,7 @@ public class LinkHandler {
         MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成责任链配置检查");
 
         //2. 遍历流程节点
-        List<BusinessLink<SendTaskDto>> processList = templateConfig.get(context.getCode()).getProcessList();
+        List<MessageLink<SendTaskDto>> processList = templateConfig.get(context.getCode()).getProcessList();
         processList.forEach(businessLink -> businessLink.process(context));
         return context;
     }
@@ -69,7 +69,7 @@ public class LinkHandler {
             throw new MessageException(sendTaskDto, "消息前置处理责任链无法找到执行模板");
         }
 
-        List<BusinessLink<SendTaskDto>> processList = linkTemplate.getProcessList();
+        List<MessageLink<SendTaskDto>> processList = linkTemplate.getProcessList();
         if (CollUtil.isEmpty(processList)) {
             throw new MessageException(sendTaskDto, "消息前置处理责任链执行链路为空");
         }

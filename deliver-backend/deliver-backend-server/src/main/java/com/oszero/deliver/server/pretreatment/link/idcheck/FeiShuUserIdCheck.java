@@ -4,7 +4,7 @@ import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.client.FeiShuClient;
 import com.oszero.deliver.server.model.app.FeiShuApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
-import com.oszero.deliver.server.pretreatment.link.BusinessLink;
+import com.oszero.deliver.server.pretreatment.link.MessageLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
 import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import java.util.Map;
  */
 @Service
 @RequiredArgsConstructor
-public class FeiShuUserIdCheck implements BusinessLink<SendTaskDto> {
+public class FeiShuUserIdCheck implements MessageLink<SendTaskDto> {
 
     private final FeiShuClient feiShuClient;
 

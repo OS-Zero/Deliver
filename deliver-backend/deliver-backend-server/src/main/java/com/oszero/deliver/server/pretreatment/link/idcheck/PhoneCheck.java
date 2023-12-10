@@ -3,7 +3,7 @@ package com.oszero.deliver.server.pretreatment.link.idcheck;
 import cn.hutool.core.lang.Validator;
 import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
-import com.oszero.deliver.server.pretreatment.link.BusinessLink;
+import com.oszero.deliver.server.pretreatment.link.MessageLink;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
 import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
-public class PhoneCheck implements BusinessLink<SendTaskDto> {
+public class PhoneCheck implements MessageLink<SendTaskDto> {
 
     @Override
     public void process(LinkContext<SendTaskDto> context) {
