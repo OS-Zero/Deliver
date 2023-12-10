@@ -4,8 +4,8 @@ import cn.hutool.core.util.StrUtil;
 import com.oszero.deliver.server.enums.MessageTypeEnum;
 import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
-import com.oszero.deliver.server.pretreatment.link.LinkContext;
-import com.oszero.deliver.server.pretreatment.link.MessageLink;
+import com.oszero.deliver.server.pretreatment.common.LinkContext;
+import com.oszero.deliver.server.pretreatment.common.MessageLink;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;

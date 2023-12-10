@@ -1,6 +1,6 @@
 package com.oszero.deliver.server.model.dto;
 
-import com.oszero.deliver.server.pretreatment.link.LinkModel;
+import com.oszero.deliver.server.pretreatment.common.LinkModel;
 import lombok.*;
 
 import java.util.List;

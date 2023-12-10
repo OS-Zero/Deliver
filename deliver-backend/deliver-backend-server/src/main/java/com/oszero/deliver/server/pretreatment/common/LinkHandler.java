@@ -1,4 +1,4 @@
-package com.oszero.deliver.server.pretreatment.link;
+package com.oszero.deliver.server.pretreatment.common;
 
 import cn.hutool.core.collection.CollUtil;
 import com.oszero.deliver.server.exception.MessageException;
