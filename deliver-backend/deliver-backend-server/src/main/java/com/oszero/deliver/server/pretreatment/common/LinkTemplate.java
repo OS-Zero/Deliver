@@ -1,6 +1,6 @@
 package com.oszero.deliver.server.pretreatment.common;
 
-import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.model.dto.common.SendTaskDto;
 import lombok.Data;
 
 import java.util.List;

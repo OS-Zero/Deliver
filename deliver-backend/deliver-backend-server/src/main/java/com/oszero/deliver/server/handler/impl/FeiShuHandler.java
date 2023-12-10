@@ -4,7 +4,7 @@ import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.client.feishu.FeiShuClient;
 import com.oszero.deliver.server.handler.BaseHandler;
 import com.oszero.deliver.server.model.app.FeiShuApp;
-import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.server.web.service.MessageRecordService;
 import org.springframework.stereotype.Component;
 

@@ -6,7 +6,7 @@ import com.oszero.deliver.server.enums.StatusEnum;
 import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.handler.BaseHandler;
 import com.oszero.deliver.server.mq.producer.Producer;
-import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.server.util.MDCUtils;
 import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import com.oszero.deliver.server.web.service.MessageRecordService;

@@ -3,7 +3,7 @@ package com.oszero.deliver.server.pretreatment.link.paramcheck.ding;
 import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.model.app.DingApp;
-import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.common.MessageLink;
 import com.oszero.deliver.server.pretreatment.common.LinkContext;
 import com.oszero.deliver.server.pretreatment.link.paramcheck.ParamStrategy;

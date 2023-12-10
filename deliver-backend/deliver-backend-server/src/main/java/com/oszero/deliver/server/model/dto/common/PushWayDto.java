@@ -1,4 +1,4 @@
-package com.oszero.deliver.server.model.dto;
+package com.oszero.deliver.server.model.dto.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package com.oszero.deliver.server.model.dto;
+package com.oszero.deliver.server.model.dto.common;
 
 import com.oszero.deliver.server.pretreatment.common.LinkModel;
 import lombok.*;

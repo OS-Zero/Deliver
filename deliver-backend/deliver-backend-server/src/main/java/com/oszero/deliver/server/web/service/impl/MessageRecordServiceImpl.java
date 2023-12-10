@@ -2,7 +2,7 @@ package com.oszero.deliver.server.web.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oszero.deliver.server.enums.StatusEnum;
-import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.server.model.entity.MessageRecord;
 import com.oszero.deliver.server.web.service.MessageRecordService;
 import com.oszero.deliver.server.web.mapper.MessageRecordMapper;

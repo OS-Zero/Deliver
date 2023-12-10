@@ -6,7 +6,7 @@ import com.oszero.deliver.server.handler.impl.*;
 import com.oszero.deliver.server.mq.consumer.common.MQCommonConsumer;
 import com.oszero.deliver.server.handler.BaseHandler;
 import com.oszero.deliver.server.mq.producer.Producer;
-import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.server.web.service.MessageRecordService;
 import com.rabbitmq.client.Channel;
 import lombok.RequiredArgsConstructor;

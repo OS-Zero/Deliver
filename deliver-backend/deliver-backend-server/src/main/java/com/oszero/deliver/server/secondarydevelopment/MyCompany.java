@@ -1,7 +1,7 @@
 package com.oszero.deliver.server.secondarydevelopment;
 
 import com.oszero.deliver.server.exception.MessageException;
-import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.convert.CompanyAccountConvert;
 import com.oszero.deliver.server.pretreatment.link.idcheck.CompanyAccountCheck;
 import org.springframework.context.annotation.Configuration;

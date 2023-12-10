@@ -1,6 +1,6 @@
 package com.oszero.deliver.server.mq.producer;
 
-import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.model.dto.common.SendTaskDto;
 
 /**
  * 生产者接口

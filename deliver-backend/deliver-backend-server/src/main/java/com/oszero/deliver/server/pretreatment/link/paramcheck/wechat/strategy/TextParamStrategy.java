@@ -1,7 +1,7 @@
 package com.oszero.deliver.server.pretreatment.link.paramcheck.wechat.strategy;
 
 import com.oszero.deliver.server.enums.MessageTypeEnum;
-import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.paramcheck.ParamStrategy;
 import org.springframework.stereotype.Component;
 

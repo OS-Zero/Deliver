@@ -2,7 +2,7 @@ package com.oszero.deliver.server.handler.impl;
 
 import com.oszero.deliver.server.client.sms.factory.SmsFactory;
 import com.oszero.deliver.server.handler.BaseHandler;
-import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.server.web.service.MessageRecordService;
 import org.springframework.stereotype.Component;
 

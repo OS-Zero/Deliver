@@ -1,7 +1,7 @@
 package com.oszero.deliver.server.handler;
 
 import com.oszero.deliver.server.enums.StatusEnum;
-import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import com.oszero.deliver.server.web.service.MessageRecordService;
 import lombok.extern.slf4j.Slf4j;
