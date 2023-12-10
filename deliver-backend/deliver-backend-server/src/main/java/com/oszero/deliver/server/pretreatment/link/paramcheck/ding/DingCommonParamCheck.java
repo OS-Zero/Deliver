@@ -18,11 +18,13 @@ import java.util.Map;
  */
 @Component
 public class DingCommonParamCheck implements MessageLink<SendTaskDto> {
+
     @Override
     public void process(LinkContext<SendTaskDto> context) {
         SendTaskDto sendTaskDto = context.getProcessModel();
         String messageType = sendTaskDto.getMessageType();
         Map<String, Object> paramMap = sendTaskDto.getParamMap();
+
         String pushSubject = paramMap.getOrDefault("pushSubject", "").toString();
         String dingUserIdType = paramMap.getOrDefault("dingUserIdType", "").toString();
 

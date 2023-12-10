@@ -39,7 +39,9 @@ public class FeiShuCommonParamCheck implements MessageLink<SendTaskDto> {
         SendTaskDto sendTaskDto = context.getProcessModel();
         String messageType = sendTaskDto.getMessageType();
         Map<String, Object> paramMap = sendTaskDto.getParamMap();
+
         String feiShuUserIdType = paramMap.getOrDefault("feiShuUserIdType", "").toString();
+
         if (StrUtil.isBlank(feiShuUserIdType)) {
             throw new MessageException(sendTaskDto, "飞书 feiShuUserIdType 参数为空");
         }
