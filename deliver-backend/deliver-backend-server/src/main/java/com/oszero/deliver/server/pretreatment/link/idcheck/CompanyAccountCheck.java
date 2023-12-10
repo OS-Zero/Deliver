@@ -2,8 +2,8 @@ package com.oszero.deliver.server.pretreatment.link.idcheck;
 
 import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
-import com.oszero.deliver.server.pretreatment.link.MessageLink;
-import com.oszero.deliver.server.pretreatment.link.LinkContext;
+import com.oszero.deliver.server.pretreatment.common.MessageLink;
+import com.oszero.deliver.server.pretreatment.common.LinkContext;
 import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

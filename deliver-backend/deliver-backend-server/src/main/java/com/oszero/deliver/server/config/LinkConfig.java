@@ -1,8 +1,8 @@
 package com.oszero.deliver.server.config;
 
 import com.oszero.deliver.server.pretreatment.constant.PretreatmentCodeConstant;
-import com.oszero.deliver.server.pretreatment.link.LinkHandler;
-import com.oszero.deliver.server.pretreatment.link.LinkTemplate;
+import com.oszero.deliver.server.pretreatment.common.LinkHandler;
+import com.oszero.deliver.server.pretreatment.common.LinkTemplate;
 import com.oszero.deliver.server.pretreatment.link.convert.CompanyAccountConvert;
 import com.oszero.deliver.server.pretreatment.link.convert.Phone2UserIdConvert;
 import com.oszero.deliver.server.pretreatment.link.idcheck.*;

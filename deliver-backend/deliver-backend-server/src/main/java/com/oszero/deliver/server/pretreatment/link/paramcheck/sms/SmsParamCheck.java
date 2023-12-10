@@ -1,8 +1,8 @@
 package com.oszero.deliver.server.pretreatment.link.paramcheck.sms;
 
 import com.oszero.deliver.server.model.dto.SendTaskDto;
-import com.oszero.deliver.server.pretreatment.link.MessageLink;
-import com.oszero.deliver.server.pretreatment.link.LinkContext;
+import com.oszero.deliver.server.pretreatment.common.MessageLink;
+import com.oszero.deliver.server.pretreatment.common.LinkContext;
 import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import org.springframework.stereotype.Service;
 
