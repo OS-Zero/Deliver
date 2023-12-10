@@ -6,6 +6,7 @@ import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.common.LinkContext;
 import com.oszero.deliver.server.pretreatment.common.MessageLink;
+import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -51,5 +52,7 @@ public class FeiShuCommonParamCheck implements MessageLink<SendTaskDto> {
         if ("department_id".equals(feiShuUserIdType) && !DEPARTMENT_MESSAGE_TYPE.contains(messageType)) {
             throw new MessageException(sendTaskDto, "飞书 feiShuUserIdType 为 department_id 时，不支持此消息类型");
         }
+
+        MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成飞书通用参数校验");
     }
 }
