@@ -42,7 +42,10 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(MessageException.class)
     public CommonResult<?> handleMessageException(MessageException e, HttpServletRequest request) {
+        // 记录错误日志
         MessageLinkTraceUtils.recordMessageLifecycleErrorLog(e.getMessage());
+        // 记录异常信息到生命周期日志中
+        MessageLinkTraceUtils.recordMessageLifecycleError2InfoLog(e.getMessage());
         return CommonResult.fail(e.getMessage());
     }
 

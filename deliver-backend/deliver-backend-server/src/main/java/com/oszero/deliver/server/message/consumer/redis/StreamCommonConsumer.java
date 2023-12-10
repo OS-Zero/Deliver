@@ -1,17 +1,12 @@
 package com.oszero.deliver.server.message.consumer.redis;
 
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.constant.MQConstant;
-import com.oszero.deliver.server.constant.TraceIdConstant;
-import com.oszero.deliver.server.enums.StatusEnum;
-import com.oszero.deliver.server.exception.MessageException;
+import com.oszero.deliver.server.message.consumer.common.MQCommonConsumer;
 import com.oszero.deliver.server.message.consumer.handler.BaseHandler;
 import com.oszero.deliver.server.message.consumer.handler.impl.*;
 import com.oszero.deliver.server.message.producer.Producer;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
-import com.oszero.deliver.server.util.MDCUtils;
-import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import com.oszero.deliver.server.web.service.MessageRecordService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,45 +35,15 @@ public class StreamCommonConsumer {
     public void omMessageAck(ObjectRecord<String, String> message, BaseHandler handler) {
         SendTaskDto sendTaskDto = null;
         try {
-            String next = message.getValue();
+            sendTaskDto = JSONUtil.toBean(message.getValue(), SendTaskDto.class);
+            MQCommonConsumer.tryHandle(sendTaskDto, handler);
 
-            sendTaskDto = JSONUtil.toBean(next, SendTaskDto.class);
-
-            // 记录链路追踪 id
-            String traceId = sendTaskDto.getTraceId();
-            if (StrUtil.isBlank(traceId)) {
-                throw new MessageException(sendTaskDto, "traceId 为空");
-            }
-            MDCUtils.put(TraceIdConstant.TRACE_ID, traceId);
-
-            MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "接收到 Redis Stream 消息，消息已送达消费者");
-
-            handler.doHandle(sendTaskDto);
             // 确认消息消费成功
             ack(message, handler);
         } catch (Exception exception) {
             // 确认消息消费成功
             ack(message, handler);
-            if (!Objects.isNull(sendTaskDto)) {
-                MessageLinkTraceUtils.recordMessageLifecycleErrorLog(exception.getMessage());
-
-                // 记录消息消费失败
-                SendTaskDto finalSendTaskDto = sendTaskDto;
-                sendTaskDto.getUsers().forEach(user -> messageRecordService.saveMessageRecord(finalSendTaskDto, StatusEnum.OFF, user));
-
-                if (sendTaskDto.getRetry() > 0) {
-
-                    // 重新发送
-                    sendTaskDto.setRetry(sendTaskDto.getRetry() - 1);
-                    sendTaskDto.setRetried(StatusEnum.ON.getStatus());
-                    producer.sendMessage(sendTaskDto);
-                    MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "Redis Stream 重试消息已发送");
-                } else {
-                    MessageLinkTraceUtils.recordMessageLifecycleErrorLog(sendTaskDto, "Redis Stream 消息发送失败，重试次数已用完！！！");
-                }
-            } else {
-                MessageLinkTraceUtils.recordMessageLifecycleErrorLog("消息消费失败，" + exception.getMessage() + "！！！");
-            }
+            MQCommonConsumer.catchHandle(sendTaskDto, exception, messageRecordService, producer);
         }
     }
 
