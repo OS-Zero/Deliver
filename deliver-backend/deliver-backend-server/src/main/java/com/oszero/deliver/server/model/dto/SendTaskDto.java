@@ -40,11 +40,6 @@ public class SendTaskDto extends LinkModel {
     private Map<String, Object> paramMap;
 
     /**
-     * 转换后的参数 JSON 便于后续直接转换为对应参数
-     */
-    private String paramJson;
-
-    /**
      * appConfig 数据库的 JSON 数据加密
      */
     private String appConfig;
