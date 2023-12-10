@@ -1,15 +1,10 @@
 package com.oszero.deliver.server.client;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
-
 /**
- * 渠道-发短信工具类
+ * 短信客户端接口
  *
  * @author oszero
  * @version 1.0.0
  */
-@Slf4j
-@Component
-public class SmsClient {
+public interface SmsClient {
 }

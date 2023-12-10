@@ -1,15 +1,11 @@
 package com.oszero.deliver.server.client;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
-
 /**
- * 渠道-打电话工具类
+ * 电话客户端接口
  *
  * @author oszero
  * @version 1.0.0
  */
-@Slf4j
-@Component
-public class CallClient {
+public interface CallClient {
+
 }

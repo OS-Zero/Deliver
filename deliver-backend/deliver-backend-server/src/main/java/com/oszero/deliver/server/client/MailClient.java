@@ -5,8 +5,8 @@ import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.message.param.mail.MailParam;
 import com.oszero.deliver.server.model.app.MailApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import jakarta.mail.internet.MimeMessage;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
@@ -19,7 +19,6 @@ import java.util.Properties;
  * @author oszero
  * @version 1.0.0
  */
-@Slf4j
 @Component
 public class MailClient {
 
@@ -54,7 +53,7 @@ public class MailClient {
         } catch (Exception e) {
             throw new MessageException(sendTaskDto, "发送邮件失败，" + e.getMessage());
         }
-        log.info("邮件消息发送成功，from {}，to {}", mailApp.getUsername(), sendTaskDto.getUsers());
+        MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "邮件消息发送成功");
     }
 
     /**

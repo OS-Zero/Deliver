@@ -6,6 +6,7 @@ import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.model.app.WeChatApp;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
+import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -49,10 +50,10 @@ public class WeChatClient {
 
             weChatResponse = JSONUtil.toBean(response.body(), WechatResponse.class);
             if (!Objects.equals(weChatResponse.getErrcode(), 0)) {
-                throw new MessageException(sendTaskDto, "获取企业微信 Token 失败，" + weChatResponse.getErrmsg());
+                throw new MessageException(weChatResponse.getErrmsg());
             }
         } catch (Exception e) {
-            throw new MessageException(sendTaskDto, "企业微信获取 Token 接口调用失败");
+            throw new MessageException(sendTaskDto, "企业微信获取 Token 接口调用失败，" + e.getMessage());
         }
         log.info("获取企微 Token 成功");
         return weChatResponse.getAccess_token();
@@ -86,12 +87,12 @@ public class WeChatClient {
 
             WechatResponse wechatResponse = JSONUtil.toBean(response.body(), WechatResponse.class);
             if (!Objects.equals(wechatResponse.getErrcode(), 0)) {
-                throw new MessageException(sendTaskDto, "企微发送应用消息失败，" + wechatResponse.getErrmsg());
+                throw new MessageException(wechatResponse.getErrmsg());
             }
         } catch (Exception e) {
-            throw new MessageException(sendTaskDto, "企微发送应用消息失败，服务调用异常");
+            throw new MessageException(sendTaskDto, "企微发送应用消息失败，" + e.getMessage());
         }
-        log.info("企微发送应用消息成功");
+        MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "企微发送应用消息成功");
     }
 
     /**
@@ -116,12 +117,12 @@ public class WeChatClient {
 
             WechatResponse wechatResponse = JSONUtil.toBean(response.body(), WechatResponse.class);
             if (!Objects.equals(wechatResponse.getErrcode(), 0)) {
-                throw new MessageException(sendTaskDto, "企微发送应用消息到群聊会话失败，" + wechatResponse.getErrmsg());
+                throw new MessageException(wechatResponse.getErrmsg());
             }
         } catch (Exception e) {
-            throw new MessageException(sendTaskDto, "企微发送应用消息到群聊会话失败，服务调用异常");
+            throw new MessageException(sendTaskDto, "企微发送应用消息到群聊会话失败，" + e.getMessage());
         }
-        log.info("企微发送应用消息到群聊会话成功");
+        MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "企微发送应用消息到群聊会话成功");
     }
 
     /**
@@ -149,12 +150,12 @@ public class WeChatClient {
 
             WechatResponse wechatResponse = JSONUtil.toBean(response.body(), WechatResponse.class);
             if (!Objects.equals(wechatResponse.getErrcode(), 0)) {
-                throw new MessageException(sendTaskDto, "企微发送应用家校消息推送失败，" + wechatResponse.getErrmsg());
+                throw new MessageException(wechatResponse.getErrmsg());
             }
         } catch (Exception e) {
-            throw new MessageException(sendTaskDto, "企微发送应用家校消息推送失败，服务调用异常");
+            throw new MessageException(sendTaskDto, "企微发送应用家校消息推送失败，" + e.getMessage());
         }
-        log.info("企微发送应用家校消息推送成功");
+        MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "企微发送应用家校消息推送成功");
     }
 
     /**
@@ -180,12 +181,12 @@ public class WeChatClient {
 
             WechatResponse wechatResponse = JSONUtil.toBean(response.body(), WechatResponse.class);
             if (!Objects.equals(wechatResponse.getErrcode(), 0)) {
-                throw new MessageException(sendTaskDto, "企微发送群机器人消息失败，" + wechatResponse.getErrmsg());
+                throw new MessageException(wechatResponse.getErrmsg());
             }
         } catch (Exception e) {
-            throw new MessageException(sendTaskDto, "企微发送群机器人消息失败，服务调用异常");
+            throw new MessageException(sendTaskDto, "企微发送群机器人消息失败，" + e.getMessage());
         }
-        log.info("企微发送群机器人消息成功");
+        MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "企微发送群机器人消息成功");
     }
 
     /**
@@ -213,11 +214,11 @@ public class WeChatClient {
                 }
                 WechatResponse wechatResponse = JSONUtil.toBean(response.body(), WechatResponse.class);
                 if (!Objects.equals(wechatResponse.getErrcode(), 0)) {
-                    throw new MessageException(sendTaskDto, "企微通过手机号获取 UserId 失败，" + wechatResponse.getErrmsg());
+                    throw new MessageException(wechatResponse.getErrmsg());
                 }
                 return wechatResponse.getUserid();
             } catch (Exception e) {
-                throw new MessageException(sendTaskDto, "企微通过手机号获取 UserId 失败，服务异常");
+                throw new MessageException(sendTaskDto, "企微通过手机号获取 UserId 失败，" + e.getMessage());
             }
         }).collect(Collectors.toList());
     }
@@ -240,10 +241,10 @@ public class WeChatClient {
                 }
                 WechatResponse wechatResponse = JSONUtil.toBean(response.body(), WechatResponse.class);
                 if (!Objects.equals(wechatResponse.getErrcode(), 0)) {
-                    throw new MessageException(sendTaskDto, "企微校验用户 ID 失败，" + wechatResponse.getErrmsg());
+                    throw new MessageException(wechatResponse.getErrmsg());
                 }
             } catch (Exception e) {
-                throw new MessageException(sendTaskDto, "企微校验用户 ID 失败，服务异常");
+                throw new MessageException(sendTaskDto, "企微校验用户 ID 失败，" + e.getMessage());
             }
         });
         log.info("企微校验用户 ID 成功");
