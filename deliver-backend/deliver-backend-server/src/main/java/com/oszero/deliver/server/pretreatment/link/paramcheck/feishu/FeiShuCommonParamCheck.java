@@ -1,6 +1,7 @@
 package com.oszero.deliver.server.pretreatment.link.paramcheck.feishu;
 
 import cn.hutool.core.util.StrUtil;
+import com.oszero.deliver.server.enums.MessageTypeEnum;
 import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.pretreatment.link.LinkContext;
@@ -26,7 +27,12 @@ public class FeiShuCommonParamCheck implements MessageLink<SendTaskDto> {
      * 可以通过 department_id 发送的消息类型
      */
     private static final Set<String> DEPARTMENT_MESSAGE_TYPE =
-            new HashSet<>(Arrays.asList("1", "6-2", "6-1", "6-4", "6-3"));
+            new HashSet<>(Arrays.asList(
+                    MessageTypeEnum.TEXT.getCode(),
+                    MessageTypeEnum.FEI_SHU_POST.getCode(),
+                    MessageTypeEnum.FEI_SHU_IMAGE.getCode(),
+                    MessageTypeEnum.FEI_SHU_INTERACTIVE.getCode(),
+                    MessageTypeEnum.FEI_SHU_SHARE_CHAT.getCode()));
 
     @Override
     public void process(LinkContext<SendTaskDto> context) {
