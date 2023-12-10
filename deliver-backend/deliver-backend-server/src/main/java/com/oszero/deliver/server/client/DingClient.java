@@ -53,10 +53,10 @@ public class DingClient {
             dingAccessTokenBody = JSONUtil.toBean(response.body(), DingAccessTokenBody.class);
 
             if (!Objects.equals(dingAccessTokenBody.getErrcode(), 0)) {
-                throw new MessageException(sendTaskDto, "获取钉钉 Token 失败，" + dingAccessTokenBody.getErrmsg());
+                throw new MessageException(dingAccessTokenBody.getErrmsg());
             }
         } catch (Exception e) {
-            throw new MessageException(sendTaskDto, "钉钉获取 Token 接口调用失败");
+            throw new MessageException(sendTaskDto, "钉钉获取 Token 接口调用失败，" + e.getMessage());
         }
         log.info("获取钉钉 Token 成功");
         return dingAccessTokenBody.getAccessToken();
@@ -92,10 +92,10 @@ public class DingClient {
             dingSendInfoResponseBody = JSONUtil.toBean(response.body(), DingSendInfoResponseBody.class);
 
             if (!Objects.equals(dingSendInfoResponseBody.getErrcode(), 0)) {
-                throw new MessageException(sendTaskDto, "获取钉钉 Token 失败，" + dingSendInfoResponseBody.getErrmsg());
+                throw new MessageException(dingSendInfoResponseBody.getErrmsg());
             }
         } catch (Exception e) {
-            throw new MessageException(sendTaskDto, "钉钉发送工作通知接口调用失败");
+            throw new MessageException(sendTaskDto, "钉钉发送工作通知接口调用失败，" + e.getMessage());
         }
 
         MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "发送钉钉工作通知消息成功");
@@ -130,11 +130,11 @@ public class DingClient {
             dingSendInfoResponseBody = JSONUtil.toBean(response.body(), DingSendInfoResponseBody.class);
 
             if (!(dingSendInfoResponseBody.invalidStaffIdList.isEmpty() && dingSendInfoResponseBody.flowControlledStaffIdList.isEmpty())) {
-                throw new MessageException(sendTaskDto, "发送钉钉机器人消息失败");
+                throw new MessageException("");
             }
 
         } catch (Exception e) {
-            throw new MessageException(sendTaskDto, "钉钉发送钉钉机器人消息接口调用失败");
+            throw new MessageException(sendTaskDto, "钉钉发送钉钉机器人消息接口调用失败，" + e.getMessage());
         }
 
         MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "发送钉钉机器人消息成功");
@@ -173,10 +173,10 @@ public class DingClient {
             dingUserInfoBody = JSONUtil.toBean(response.body(), DingUserInfoBody.class);
 
             if (!Objects.equals(dingUserInfoBody.getErrcode(), 0)) {
-                throw new MessageException(sendTaskDto, "钉钉校验 userId 是否存在失败，" + dingUserInfoBody.getErrmsg());
+                throw new MessageException(dingUserInfoBody.getErrmsg());
             }
         } catch (Exception e) {
-            throw new MessageException(sendTaskDto, "钉钉校验 userId 是否存在接口调用失败");
+            throw new MessageException(sendTaskDto, "钉钉校验 userId 是否存在接口调用失败，" + e.getMessage());
         }
         log.info("钉钉校验 userId 是否存在成功");
     }
@@ -222,10 +222,10 @@ public class DingClient {
             dingResponseBody = JSONUtil.toBean(response.body(), DingResponseBody.class);
 
             if (!Objects.equals(dingResponseBody.getErrcode(), 0)) {
-                throw new MessageException(sendTaskDto, "钉钉根据电话号码获取 userId 失败，" + dingResponseBody.getErrmsg());
+                throw new MessageException(dingResponseBody.getErrmsg());
             }
         } catch (Exception e) {
-            throw new MessageException(sendTaskDto, "钉钉根据电话号码获取 userId 接口调用失败");
+            throw new MessageException(sendTaskDto, "钉钉根据电话号码获取 userId 接口调用失败，" + e.getMessage());
         }
 
         log.info("钉钉根据电话号码获取 userId 成功");

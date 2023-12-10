@@ -1,4 +1,4 @@
-package com.oszero.deliver.server.message.consumer.factory;
+package com.oszero.deliver.server.client.factory;
 
 import org.springframework.stereotype.Service;
 

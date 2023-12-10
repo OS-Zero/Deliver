@@ -61,4 +61,10 @@ public class MessageLinkTraceUtils {
                 , sendTaskDto.getClientIp()
                 , msg);
     }
+
+    public static void recordErrorLogAndError2InfoLog(SendTaskDto sendTaskDto, String msg) {
+        String errorLogMsg = formatMessageLifecycleErrorLogMsg(sendTaskDto, msg);
+        recordMessageLifecycleError2InfoLog(errorLogMsg);
+        recordMessageLifecycleErrorLog(errorLogMsg);
+    }
 }
