@@ -1,4 +1,4 @@
-package com.oszero.deliver.server.trace;
+package com.oszero.deliver.server.log.trace;
 
 /**
  * @author oszero

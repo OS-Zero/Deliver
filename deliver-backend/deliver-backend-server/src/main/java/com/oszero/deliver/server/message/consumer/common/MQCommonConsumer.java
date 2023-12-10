@@ -64,5 +64,6 @@ public class MQCommonConsumer {
             // 记录异常信息到生命周期日志中
             MessageLinkTraceUtils.recordMessageLifecycleError2InfoLog("消息消费失败，" + exception.getMessage() + "！！！");
         }
+        MDCUtils.clear();
     }
 }
