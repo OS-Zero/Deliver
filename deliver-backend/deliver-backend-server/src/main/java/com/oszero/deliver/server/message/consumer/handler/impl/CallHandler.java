@@ -1,6 +1,6 @@
 package com.oszero.deliver.server.message.consumer.handler.impl;
 
-import com.oszero.deliver.server.client.CallClient;
+import com.oszero.deliver.server.client.factory.CallFactory;
 import com.oszero.deliver.server.message.consumer.handler.BaseHandler;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.web.service.MessageRecordService;
@@ -15,10 +15,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class CallHandler extends BaseHandler {
 
-    private final CallClient callClient;
+    private final CallFactory callFactory;
 
-    public CallHandler(CallClient callClient, MessageRecordService messageRecordService) {
-        this.callClient = callClient;
+    public CallHandler(CallFactory callFactory, MessageRecordService messageRecordService) {
+        this.callFactory = callFactory;
         this.messageRecordService = messageRecordService;
     }
 

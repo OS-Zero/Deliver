@@ -1,6 +1,6 @@
 package com.oszero.deliver.server.message.consumer.handler.impl;
 
-import com.oszero.deliver.server.client.SmsClient;
+import com.oszero.deliver.server.client.factory.SmsFactory;
 import com.oszero.deliver.server.message.consumer.handler.BaseHandler;
 import com.oszero.deliver.server.model.dto.SendTaskDto;
 import com.oszero.deliver.server.web.service.MessageRecordService;
@@ -15,10 +15,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class SmsHandler extends BaseHandler {
 
-    private final SmsClient smsClient;
+    private final SmsFactory smsFactory;
 
-    public SmsHandler(SmsClient smsClient, MessageRecordService messageRecordService) {
-        this.smsClient = smsClient;
+    public SmsHandler(SmsFactory smsFactory, MessageRecordService messageRecordService) {
+        this.smsFactory = smsFactory;
         this.messageRecordService = messageRecordService;
     }
 
