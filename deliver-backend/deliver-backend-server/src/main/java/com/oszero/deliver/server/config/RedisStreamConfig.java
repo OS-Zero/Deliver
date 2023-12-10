@@ -1,7 +1,7 @@
 package com.oszero.deliver.server.config;
 
 import com.oszero.deliver.server.constant.MQConstant;
-import com.oszero.deliver.server.message.consumer.redis.*;
+import com.oszero.deliver.server.mq.consumer.redis.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
