@@ -12,6 +12,8 @@ rocketmq:
     retry-times-when-send-async-failed: 3 # 异步发送消息失败重试次数，默认2
 
 spring:
+  #  cache:
+  #    type: none 即可关闭缓存功能
   data:
     redis:
       port: 6379
