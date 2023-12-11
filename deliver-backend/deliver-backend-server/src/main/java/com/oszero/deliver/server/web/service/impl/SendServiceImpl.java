@@ -1,7 +1,7 @@
 package com.oszero.deliver.server.web.service.impl;
 
 import cn.hutool.json.JSONUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.oszero.deliver.server.cache.manager.ServerCacheManager;
 import com.oszero.deliver.server.constant.TraceIdConstant;
 import com.oszero.deliver.server.enums.StatusEnum;
 import com.oszero.deliver.server.exception.MessageException;
@@ -17,10 +17,7 @@ import com.oszero.deliver.server.util.AesUtils;
 import com.oszero.deliver.server.util.IpUtils;
 import com.oszero.deliver.server.util.MDCUtils;
 import com.oszero.deliver.server.util.MessageLinkTraceUtils;
-import com.oszero.deliver.server.web.service.AppService;
 import com.oszero.deliver.server.web.service.SendService;
-import com.oszero.deliver.server.web.service.TemplateAppService;
-import com.oszero.deliver.server.web.service.TemplateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -36,9 +33,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class SendServiceImpl implements SendService {
 
-    private final TemplateService templateService;
-    private final TemplateAppService templateAppService;
-    private final AppService appService;
+    private final ServerCacheManager serverCacheManager;
     private final LinkHandler linkHandler;
     private final AesUtils aesUtils;
 
@@ -61,7 +56,7 @@ public class SendServiceImpl implements SendService {
         // 2.通过 templateId 获取 template
         Long templateId = sendRequestDto.getTemplateId();
 
-        Template template = templateService.getById(templateId);
+        Template template = serverCacheManager.getTemplate(templateId);
         if (Objects.isNull(template)) {
             throw new MessageException(sendTaskDto, "传入的模板 ID 非法，请输入正确的 templateId");
         }
@@ -84,9 +79,7 @@ public class SendServiceImpl implements SendService {
         MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成消息模板检测");
 
         // 3.通过 templateId 获取 appId
-        LambdaQueryWrapper<TemplateApp> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(TemplateApp::getTemplateId, templateId);
-        TemplateApp templateApp = templateAppService.getOne(wrapper);
+        TemplateApp templateApp = serverCacheManager.getTemplateApp(templateId);
         if (Objects.isNull(templateApp)) {
             throw new MessageException(sendTaskDto, "未获取到模板所关联的应用，请检查关联的应用是否存在");
         }
@@ -95,7 +88,7 @@ public class SendServiceImpl implements SendService {
         sendTaskDto.setAppId(appId);
 
         // 4.得到 appConfig
-        App app = appService.getById(appId);
+        App app = serverCacheManager.getApp(appId);
         if (Objects.isNull(app)) {
             throw new MessageException(sendTaskDto, "未获取到模板所关联的应用，请检查关联的应用是否存在");
         }
