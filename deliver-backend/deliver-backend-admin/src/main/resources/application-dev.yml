@@ -13,10 +13,11 @@ spring:
           min-idle: 0
           max-wait: 5s
   datasource:
-    url: jdbc:mysql://localhost:3306/deliver?serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull
-    username: root
-    password: 123456
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    druid:
+      url: jdbc:mysql://localhost:3306/deliver?serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull
+      username: root
+      password: 123456
+      driver-class-name: com.mysql.cj.jdbc.Driver
 
 mybatis-plus:
   configuration:
