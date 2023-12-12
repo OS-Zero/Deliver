@@ -5,6 +5,10 @@ import com.oszero.deliver.server.cache.constant.CacheConstant;
 import com.oszero.deliver.server.client.ding.DingClient;
 import com.oszero.deliver.server.client.feishu.FeiShuClient;
 import com.oszero.deliver.server.client.wechat.WeChatClient;
+import com.oszero.deliver.server.model.app.DingApp;
+import com.oszero.deliver.server.model.app.FeiShuApp;
+import com.oszero.deliver.server.model.app.WeChatApp;
+import com.oszero.deliver.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.server.model.entity.App;
 import com.oszero.deliver.server.model.entity.Template;
 import com.oszero.deliver.server.model.entity.TemplateApp;
@@ -53,6 +57,24 @@ public class ServerCacheManager {
             cacheManager = CacheConstant.REDIS_CACHE_MANAGER)
     public App getApp(Long appId) {
         return appService.getById(appId);
+    }
+
+    @Cacheable(value = CacheConstant.CLIENT_TOKEN_CACHE_NAME, keyGenerator = "tokenKeyGenerator",
+            cacheManager = CacheConstant.REDIS_CACHE_MANAGER)
+    public String getDingToken(DingApp dingApp, SendTaskDto sendTaskDto) {
+        return dingClient.getAccessToken(dingApp, sendTaskDto);
+    }
+
+    @Cacheable(value = CacheConstant.CLIENT_TOKEN_CACHE_NAME, keyGenerator = "tokenKeyGenerator",
+            cacheManager = CacheConstant.REDIS_CACHE_MANAGER)
+    public String getWeChatToken(WeChatApp weChatApp, SendTaskDto sendTaskDto) {
+        return weChatClient.getAccessToken(weChatApp, sendTaskDto);
+    }
+
+    @Cacheable(value = CacheConstant.CLIENT_TOKEN_CACHE_NAME, keyGenerator = "tokenKeyGenerator",
+            cacheManager = CacheConstant.REDIS_CACHE_MANAGER)
+    public String getFeiShuToken(FeiShuApp feiShuApp, SendTaskDto sendTaskDto) {
+        return feiShuClient.getTenantAccessToken(feiShuApp, sendTaskDto);
     }
 
 

@@ -1,6 +1,7 @@
 package com.oszero.deliver.server.pretreatment.link.idcheck;
 
 import cn.hutool.json.JSONUtil;
+import com.oszero.deliver.server.cache.manager.ServerCacheManager;
 import com.oszero.deliver.server.client.ding.DingClient;
 import com.oszero.deliver.server.model.app.DingApp;
 import com.oszero.deliver.server.model.dto.common.SendTaskDto;
@@ -24,6 +25,7 @@ import java.util.Map;
 public class DingUserIdCheck implements MessageLink<SendTaskDto> {
 
     private final DingClient dingClient;
+    private final ServerCacheManager serverCacheManager;
 
     @Override
     public void process(LinkContext<SendTaskDto> context) {
@@ -36,7 +38,7 @@ public class DingUserIdCheck implements MessageLink<SendTaskDto> {
 
             String appConfigJson = sendTaskDto.getAppConfig();
             DingApp dingApp = JSONUtil.toBean(appConfigJson, DingApp.class);
-            String accessToken = dingClient.getAccessToken(dingApp, sendTaskDto);
+            String accessToken = serverCacheManager.getDingToken(dingApp, sendTaskDto);
             users.forEach(userId -> dingClient.checkId(accessToken, userId, sendTaskDto));
 
             MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成钉钉 ID 检查");

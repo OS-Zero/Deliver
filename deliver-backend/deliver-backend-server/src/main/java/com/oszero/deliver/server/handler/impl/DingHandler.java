@@ -1,6 +1,7 @@
 package com.oszero.deliver.server.handler.impl;
 
 import cn.hutool.json.JSONUtil;
+import com.oszero.deliver.server.cache.manager.ServerCacheManager;
 import com.oszero.deliver.server.client.ding.DingClient;
 import com.oszero.deliver.server.handler.BaseHandler;
 import com.oszero.deliver.server.model.app.DingApp;
@@ -20,9 +21,11 @@ import java.util.Map;
 public class DingHandler extends BaseHandler {
 
     private final DingClient dingClient;
+    private final ServerCacheManager serverCacheManager;
 
-    public DingHandler(DingClient dingClient, MessageRecordService messageRecordService) {
+    public DingHandler(DingClient dingClient, ServerCacheManager serverCacheManager, MessageRecordService messageRecordService) {
         this.dingClient = dingClient;
+        this.serverCacheManager = serverCacheManager;
         this.messageRecordService = messageRecordService;
     }
 
@@ -30,7 +33,7 @@ public class DingHandler extends BaseHandler {
     protected void handle(SendTaskDto sendTaskDto) throws Exception {
         String appConfigJson = sendTaskDto.getAppConfig();
         DingApp dingApp = JSONUtil.toBean(appConfigJson, DingApp.class);
-        String accessToken = dingClient.getAccessToken(dingApp, sendTaskDto);
+        String accessToken = serverCacheManager.getDingToken(dingApp, sendTaskDto);
 
         Map<String, Object> paramMap = sendTaskDto.getParamMap();
         String pushSubject = paramMap.get("pushSubject").toString();

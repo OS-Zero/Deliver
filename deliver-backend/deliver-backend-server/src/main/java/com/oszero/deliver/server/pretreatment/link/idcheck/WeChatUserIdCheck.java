@@ -1,6 +1,7 @@
 package com.oszero.deliver.server.pretreatment.link.idcheck;
 
 import cn.hutool.json.JSONUtil;
+import com.oszero.deliver.server.cache.manager.ServerCacheManager;
 import com.oszero.deliver.server.client.wechat.WeChatClient;
 import com.oszero.deliver.server.model.app.WeChatApp;
 import com.oszero.deliver.server.model.dto.common.SendTaskDto;
@@ -26,6 +27,7 @@ import java.util.Map;
 public class WeChatUserIdCheck implements MessageLink<SendTaskDto> {
 
     private final WeChatClient weChatClient;
+    private final ServerCacheManager serverCacheManager;
 
     @Override
     public void process(LinkContext<SendTaskDto> context) {
@@ -38,7 +40,7 @@ public class WeChatUserIdCheck implements MessageLink<SendTaskDto> {
         String appConfigJson = sendTaskDto.getAppConfig();
         WeChatApp weChatApp = JSONUtil.toBean(appConfigJson, WeChatApp.class);
         List<String> users = sendTaskDto.getUsers();
-        String accessToken = weChatClient.getAccessToken(weChatApp, sendTaskDto);
+        String accessToken = serverCacheManager.getWeChatToken(weChatApp, sendTaskDto);
         weChatClient.checkUserId(accessToken, users, sendTaskDto);
 
         MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成企微 ID 检查");

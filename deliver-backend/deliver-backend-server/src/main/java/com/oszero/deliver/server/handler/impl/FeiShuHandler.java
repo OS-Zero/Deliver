@@ -1,6 +1,7 @@
 package com.oszero.deliver.server.handler.impl;
 
 import cn.hutool.json.JSONUtil;
+import com.oszero.deliver.server.cache.manager.ServerCacheManager;
 import com.oszero.deliver.server.client.feishu.FeiShuClient;
 import com.oszero.deliver.server.handler.BaseHandler;
 import com.oszero.deliver.server.model.app.FeiShuApp;
@@ -23,6 +24,7 @@ import java.util.Set;
 public class FeiShuHandler extends BaseHandler {
 
     private final FeiShuClient feiShuClient;
+    private final ServerCacheManager serverCacheManager;
 
     /**
      * 可以批量发送的消息类型
@@ -30,8 +32,9 @@ public class FeiShuHandler extends BaseHandler {
     private static final Set<String> BATCH_MESSAGE_TYPE =
             new HashSet<>(Arrays.asList("text", "image", "post", "share_chat", "interactive"));
 
-    public FeiShuHandler(FeiShuClient feiShuClient, MessageRecordService messageRecordService) {
+    public FeiShuHandler(FeiShuClient feiShuClient, ServerCacheManager serverCacheManager, MessageRecordService messageRecordService) {
         this.feiShuClient = feiShuClient;
+        this.serverCacheManager = serverCacheManager;
         this.messageRecordService = messageRecordService;
     }
 
@@ -40,7 +43,7 @@ public class FeiShuHandler extends BaseHandler {
         String appConfigJson = sendTaskDto.getAppConfig();
         FeiShuApp feiShuApp = JSONUtil.toBean(appConfigJson, FeiShuApp.class);
 
-        String tenantAccessToken = feiShuClient.getTenantAccessToken(feiShuApp, sendTaskDto);
+        String tenantAccessToken = serverCacheManager.getFeiShuToken(feiShuApp, sendTaskDto);
         Map<String, Object> paramMap = sendTaskDto.getParamMap();
         String feiShuUserIdType = paramMap.get("feiShuUserIdType").toString();
         String msgType = paramMap.get("msg_type").toString();

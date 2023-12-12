@@ -2,6 +2,7 @@ package com.oszero.deliver.server.cache.config;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.oszero.deliver.server.cache.constant.CacheConstant;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.caffeine.CaffeineCache;
 import org.springframework.cache.support.SimpleCacheManager;
@@ -28,6 +29,7 @@ import java.util.Map;
  * @version 1.0.0
  */
 @Configuration
+@ConditionalOnMissingBean({CacheManager.class})
 public class CacheConfig {
 
     /**
@@ -76,7 +78,7 @@ public class CacheConfig {
                     .prefixCacheNameWith(CacheConstant.REDIS_CACHE_PREFIX);
 
             if (cache.getTtl() > 0) { // 缓存时间设置，分钟级别
-                redisCacheConfiguration.entryTtl(Duration.ofMinutes(cache.getTtl()));
+                redisCacheConfiguration = redisCacheConfiguration.entryTtl(Duration.ofMinutes(cache.getTtl()));
             }
             cacheMap.put(cache.getName(), redisCacheConfiguration);
         }

@@ -1,6 +1,7 @@
 package com.oszero.deliver.server.handler.impl;
 
 import cn.hutool.json.JSONUtil;
+import com.oszero.deliver.server.cache.manager.ServerCacheManager;
 import com.oszero.deliver.server.client.wechat.WeChatClient;
 import com.oszero.deliver.server.handler.BaseHandler;
 import com.oszero.deliver.server.model.app.WeChatApp;
@@ -22,9 +23,11 @@ import java.util.Map;
 public class WeChatHandler extends BaseHandler {
 
     private final WeChatClient weChatClient;
+    private final ServerCacheManager serverCacheManager;
 
-    public WeChatHandler(WeChatClient weChatClient, MessageRecordService messageRecordService) {
+    public WeChatHandler(WeChatClient weChatClient, ServerCacheManager serverCacheManager, MessageRecordService messageRecordService) {
         this.weChatClient = weChatClient;
+        this.serverCacheManager = serverCacheManager;
         this.messageRecordService = messageRecordService;
     }
 
@@ -33,7 +36,7 @@ public class WeChatHandler extends BaseHandler {
         String appConfig = sendTaskDto.getAppConfig();
         WeChatApp weChatApp = JSONUtil.toBean(appConfig, WeChatApp.class);
 
-        String accessToken = weChatClient.getAccessToken(weChatApp, sendTaskDto);
+        String accessToken = serverCacheManager.getWeChatToken(weChatApp, sendTaskDto);
 
         Map<String, Object> paramMap = sendTaskDto.getParamMap();
         String pushSubject = paramMap.get("pushSubject").toString();

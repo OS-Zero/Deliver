@@ -48,7 +48,11 @@ public class CacheConstant {
 
         APP(APP_CACHE_NAME, 60 * 24, 50),
 
-        CLIENT_TOKEN(CLIENT_TOKEN_CACHE_NAME, 20, 50);
+        /**
+         * Token 缓存时间为 90 分钟，钉钉、企微、飞书的 Token 有效期都为 120 分钟，
+         * 这里做 30 分钟的提前失效
+         */
+        CLIENT_TOKEN(CLIENT_TOKEN_CACHE_NAME, 90, 50);
 
         /**
          * 缓存的名字
@@ -57,7 +61,7 @@ public class CacheConstant {
         /**
          * 失效时间（秒） 0-永不失效
          */
-        private final int ttl;
+        private final long ttl;
         /**
          * 最大容量
          */
