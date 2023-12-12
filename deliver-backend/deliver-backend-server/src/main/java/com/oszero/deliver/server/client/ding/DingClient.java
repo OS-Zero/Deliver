@@ -168,7 +168,8 @@ public class DingClient {
 
         DingUserInfoBody dingUserInfoBody;
 
-        try (HttpResponse response = HttpRequest.post("https://oapi.dingtalk.com/topapi/v2/user/get?access_token=" + accessToken).body(JSONUtil.toJsonStr(requestBody))
+        try (HttpResponse response = HttpRequest.post("https://oapi.dingtalk.com/topapi/v2/user/get?access_token=" + accessToken)
+                .body(JSONUtil.toJsonStr(requestBody))
                 .execute()) {
             dingUserInfoBody = JSONUtil.toBean(response.body(), DingUserInfoBody.class);
 
@@ -217,7 +218,8 @@ public class DingClient {
 
         DingResponseBody dingResponseBody;
 
-        try (HttpResponse response = HttpRequest.post("https://oapi.dingtalk.com/topapi/v2/user/getbymobile?access_token=" + accessToken).body(JSONUtil.toJsonStr(requestBody))
+        try (HttpResponse response = HttpRequest.post("https://oapi.dingtalk.com/topapi/v2/user/getbymobile?access_token=" + accessToken)
+                .body(JSONUtil.toJsonStr(requestBody))
                 .execute()) {
             dingResponseBody = JSONUtil.toBean(response.body(), DingResponseBody.class);
 

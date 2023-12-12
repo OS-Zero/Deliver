@@ -38,7 +38,9 @@ public class ServerCacheManager {
     private final WeChatClient weChatClient;
     private final FeiShuClient feiShuClient;
 
-    // 缓存建立
+    /**
+     * 缓存建立
+     */
     @Cacheable(value = CacheConstant.TEMPLATE_CACHE_NAME, key = "#templateId",
             cacheManager = CacheConstant.REDIS_CACHE_MANAGER)
     public Template getTemplate(Long templateId) {
@@ -78,7 +80,9 @@ public class ServerCacheManager {
     }
 
 
-    // 清空缓存
+    /**
+     * 清空缓存
+     */
     @CacheEvict(value = CacheConstant.TEMPLATE_CACHE_NAME, key = "#templateId",
             cacheManager = CacheConstant.REDIS_CACHE_MANAGER)
     public void evictTemplate(Long templateId) {
@@ -94,4 +98,18 @@ public class ServerCacheManager {
     public void evictApp(Long appId) {
     }
 
+    @CacheEvict(value = CacheConstant.CLIENT_TOKEN_CACHE_NAME, keyGenerator = "tokenKeyGenerator",
+            cacheManager = CacheConstant.REDIS_CACHE_MANAGER)
+    public void evictDingToken(DingApp dingApp) {
+    }
+
+    @CacheEvict(value = CacheConstant.CLIENT_TOKEN_CACHE_NAME, keyGenerator = "tokenKeyGenerator",
+            cacheManager = CacheConstant.REDIS_CACHE_MANAGER)
+    public void evictWeChatToken(WeChatApp weChatApp) {
+    }
+
+    @CacheEvict(value = CacheConstant.CLIENT_TOKEN_CACHE_NAME, keyGenerator = "tokenKeyGenerator",
+            cacheManager = CacheConstant.REDIS_CACHE_MANAGER)
+    public void evictFeiShuToken(FeiShuApp feiShuApp) {
+    }
 }
