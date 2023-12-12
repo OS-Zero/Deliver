@@ -77,10 +77,10 @@ public class WeChatClient {
             class WechatResponse {
                 private Integer errcode;
                 private String errmsg;
-                private String invaliduser;
-                private String invalidparty;
-                private String invalidtag;
-                private String unlicenseduser;
+                private String invaliduser; // 不合法的userid，不区分大小写，统一转为小写
+                private String invalidparty; // 不合法的partyid
+                private String invalidtag; // 不合法的标签id
+                private String unlicenseduser; // 没有基础接口许可(包含已过期)的userid
                 private String msgid;
                 private String response_code;
             }
@@ -88,6 +88,17 @@ public class WeChatClient {
             WechatResponse wechatResponse = JSONUtil.toBean(response.body(), WechatResponse.class);
             if (!Objects.equals(wechatResponse.getErrcode(), 0)) {
                 throw new MessageException(wechatResponse.getErrmsg());
+            }
+            if (!(wechatResponse.getInvaliduser().isBlank()
+                    && wechatResponse.getInvalidparty().isBlank()
+                    && wechatResponse.getInvalidtag().isBlank()
+                    && wechatResponse.getUnlicenseduser().isBlank())) {
+                throw new MessageException("存在异常的企微 userId："
+                        + wechatResponse.getInvaliduser()
+                        + wechatResponse.getInvalidparty()
+                        + wechatResponse.getInvalidtag()
+                        + wechatResponse.getUnlicenseduser()
+                        + "，请检查 touser 或者 toparty 或者 totag 参数");
             }
         } catch (Exception e) {
             throw new MessageException(sendTaskDto, "企微发送应用消息失败，" + e.getMessage());
@@ -151,6 +162,15 @@ public class WeChatClient {
             WechatResponse wechatResponse = JSONUtil.toBean(response.body(), WechatResponse.class);
             if (!Objects.equals(wechatResponse.getErrcode(), 0)) {
                 throw new MessageException(wechatResponse.getErrmsg());
+            }
+            if (!(wechatResponse.getInvalid_parent_userid().isEmpty()
+                    && wechatResponse.getInvalid_student_userid().isEmpty()
+                    && wechatResponse.getInvalid_party().isEmpty())) {
+                throw new MessageException("存在异常的企微 userId："
+                        + wechatResponse.getInvalid_parent_userid()
+                        + wechatResponse.getInvalid_student_userid()
+                        + wechatResponse.getInvalid_party()
+                        + "，请检查 to_parent_userid 或者 to_student_userid 或者 to_party 参数");
             }
         } catch (Exception e) {
             throw new MessageException(sendTaskDto, "企微发送应用家校消息推送失败，" + e.getMessage());

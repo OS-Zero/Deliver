@@ -1,6 +1,7 @@
 package com.oszero.deliver.server.pretreatment.link.idcheck;
 
 import cn.hutool.json.JSONUtil;
+import com.oszero.deliver.server.cache.manager.ServerCacheManager;
 import com.oszero.deliver.server.client.feishu.FeiShuClient;
 import com.oszero.deliver.server.model.app.FeiShuApp;
 import com.oszero.deliver.server.model.dto.common.SendTaskDto;
@@ -24,6 +25,7 @@ import java.util.Map;
 public class FeiShuUserIdCheck implements MessageLink<SendTaskDto> {
 
     private final FeiShuClient feiShuClient;
+    private final ServerCacheManager serverCacheManager;
 
     @Override
     public void process(LinkContext<SendTaskDto> context) {
@@ -37,7 +39,7 @@ public class FeiShuUserIdCheck implements MessageLink<SendTaskDto> {
         FeiShuApp feiShuApp = JSONUtil.toBean(appConfigJson, FeiShuApp.class);
         List<String> users = sendTaskDto.getUsers();
         users.forEach(userId -> {
-            String tenantAccessToken = feiShuClient.getTenantAccessToken(feiShuApp, sendTaskDto);
+            String tenantAccessToken = serverCacheManager.getFeiShuToken(feiShuApp, sendTaskDto);
             feiShuClient.checkUserId(tenantAccessToken, userId, sendTaskDto);
         });
         MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成飞书 ID 检查");
