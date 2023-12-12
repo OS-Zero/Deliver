@@ -48,6 +48,9 @@ public class FeiShuHandler extends BaseHandler {
         String feiShuUserIdType = paramMap.get("feiShuUserIdType").toString();
         String msgType = paramMap.get("msg_type").toString();
 
+        // 移除掉用户判断的 feiShuUserIdType
+        paramMap.remove("feiShuUserIdType");
+
         // 支持发送多种飞书的 usersId，包括 [用户(user_id),用户(email),群组(chat_id),部门(department_id)]
         if ("user_id".equals(feiShuUserIdType)) {
 
@@ -55,16 +58,16 @@ public class FeiShuHandler extends BaseHandler {
             if (BATCH_MESSAGE_TYPE.contains(msgType)) {
                 feiShuClient.sendMessageBatch(tenantAccessToken, sendTaskDto);
             } else { // 否则单个发送
-                feiShuClient.sendMessage(tenantAccessToken, sendTaskDto);
+                feiShuClient.sendMessage(tenantAccessToken, sendTaskDto, feiShuUserIdType);
             }
         } else if ("email".equals(feiShuUserIdType)) {
 
             // 邮箱类型只支持单个发送
-            feiShuClient.sendMessage(tenantAccessToken, sendTaskDto);
+            feiShuClient.sendMessage(tenantAccessToken, sendTaskDto, feiShuUserIdType);
         } else if ("chat_id".equals((feiShuUserIdType))) {
 
             // 群聊类型只支持单个发送
-            feiShuClient.sendMessage(tenantAccessToken, sendTaskDto);
+            feiShuClient.sendMessage(tenantAccessToken, sendTaskDto, feiShuUserIdType);
         } else if ("department_id".equals((feiShuUserIdType))) {
 
             // 参数的处理

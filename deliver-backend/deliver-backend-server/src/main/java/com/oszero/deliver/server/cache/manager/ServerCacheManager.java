@@ -97,19 +97,4 @@ public class ServerCacheManager {
             cacheManager = CacheConstant.REDIS_CACHE_MANAGER)
     public void evictApp(Long appId) {
     }
-
-    @CacheEvict(value = CacheConstant.CLIENT_TOKEN_CACHE_NAME, keyGenerator = "tokenKeyGenerator",
-            cacheManager = CacheConstant.REDIS_CACHE_MANAGER)
-    public void evictDingToken(DingApp dingApp) {
-    }
-
-    @CacheEvict(value = CacheConstant.CLIENT_TOKEN_CACHE_NAME, keyGenerator = "tokenKeyGenerator",
-            cacheManager = CacheConstant.REDIS_CACHE_MANAGER)
-    public void evictWeChatToken(WeChatApp weChatApp) {
-    }
-
-    @CacheEvict(value = CacheConstant.CLIENT_TOKEN_CACHE_NAME, keyGenerator = "tokenKeyGenerator",
-            cacheManager = CacheConstant.REDIS_CACHE_MANAGER)
-    public void evictFeiShuToken(FeiShuApp feiShuApp) {
-    }
 }

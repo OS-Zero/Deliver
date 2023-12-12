@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -72,12 +73,26 @@ public class FeiShuClient {
     }
 
     /**
-     * 发送消息
-     *
-     * @param tenantAccessToken 飞书 token
-     * @param sendTaskDto       消息 dto
+     * 发送单个消息
      */
-    public void sendMessage(String tenantAccessToken, SendTaskDto sendTaskDto) {
+    public void sendMessage(String tenantAccessToken, SendTaskDto sendTaskDto, String feiShuUserIdType) {
+        try {
+            List<String> users = sendTaskDto.getUsers();
+            Map<String, Object> paramMap = sendTaskDto.getParamMap();
+            Object content = paramMap.get("content");
+            String msgType = paramMap.get("msg_type").toString();
+            String contentJson = JSONUtil.toJsonStr(content);
+            users.forEach(userId -> this.sendMessage(tenantAccessToken, userId, contentJson, msgType, feiShuUserIdType));
+        } catch (Exception e) {
+            throw new MessageException(sendTaskDto, "飞书消息发送失败，" + e.getMessage());
+        }
+        MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "飞书消息发送成功");
+    }
+
+    /**
+     * 发送消息
+     */
+    private void sendMessage(String tenantAccessToken, String userId, String contentJson, String msgType, String feiShuUserIdType) {
 
         @Data
         class SendMessageResponse {
@@ -85,40 +100,28 @@ public class FeiShuClient {
             private String msg;
             private Object data;
         }
-        Map<String, Object> paramMap = sendTaskDto.getParamMap();
-        String feiShuUserIdType = paramMap.get("feiShuUserIdType").toString();
-        paramMap.remove("feiShuUserIdType");
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("receive_id", userId);
+        paramMap.put("msg_type", msgType);
+        paramMap.put("content", contentJson);
+        paramMap.put("uuid", UUID.randomUUID().toString());
+        String jsonStr = JSONUtil.toJsonStr(paramMap);
 
-        List<String> user_ids = (List<String>) paramMap.get("user_ids");
-        paramMap.remove("user_ids");
+        SendMessageResponse sendMessageResponse;
 
-        user_ids.forEach(userId -> {
-            paramMap.put("uuid", UUID.randomUUID().toString());
-            paramMap.remove("receive_id");
-            paramMap.put("receive_id", userId);
-            Object content = paramMap.get("content");
-            String contentJson = JSONUtil.toJsonStr(content);
-            paramMap.put("content", contentJson);
-            String jsonStr = JSONUtil.toJsonStr(paramMap);
+        try (HttpResponse response = HttpRequest.post("https://open.feishu.cn/open-apis/im/v1/messages?receive_id_type=" + feiShuUserIdType)
+                .header("Content-Type", "application/json; charset=utf-8")
+                .header("Authorization", tenantAccessToken)
+                .body(jsonStr)
+                .execute()) {
 
-            SendMessageResponse sendMessageResponse;
-
-            try (HttpResponse response = HttpRequest.post("https://open.feishu.cn/open-apis/im/v1/messages?receive_id_type=" + feiShuUserIdType)
-                    .header("Content-Type", "application/json; charset=utf-8")
-                    .header("Authorization", tenantAccessToken)
-                    .body(jsonStr)
-                    .execute()) {
-
-                sendMessageResponse = JSONUtil.toBean(response.body(), SendMessageResponse.class);
-                if (!sendMessageResponse.getCode().equals(0)) {
-                    throw new MessageException(sendMessageResponse.getMsg());
-                }
-            } catch (Exception e) {
-                throw new MessageException(sendTaskDto, "飞书消息发送失败，" + e.getMessage());
+            sendMessageResponse = JSONUtil.toBean(response.body(), SendMessageResponse.class);
+            if (!sendMessageResponse.getCode().equals(0)) {
+                throw new MessageException(sendMessageResponse.getMsg());
             }
-        });
-
-        MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "飞书消息发送成功");
+        } catch (Exception e) {
+            throw new MessageException(e.getMessage());
+        }
     }
 
     /**
@@ -136,8 +139,6 @@ public class FeiShuClient {
             private Object data;
         }
         Map<String, Object> paramMap = sendTaskDto.getParamMap();
-        // 移除掉用户判断的 feiShuUserIdType
-        paramMap.remove("feiShuUserIdType");
         String body = JSONUtil.toJsonStr(paramMap);
         SendMessageResponse sendMessageResponse;
 
