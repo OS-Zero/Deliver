@@ -18,6 +18,8 @@ public class SmsParamCheck implements MessageLink<SendTaskDto> {
     public void process(LinkContext<SendTaskDto> context) {
         SendTaskDto sendTaskDto = context.getProcessModel();
 
+        // TODO: 2023/12/13  参数校验
+
         MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成短信消息参数校验");
     }
 }
