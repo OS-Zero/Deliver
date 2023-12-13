@@ -14,7 +14,7 @@ import lombok.Getter;
 @Getter
 public class MessageException extends RuntimeException {
     private String message;
-    private final ResultEnum code = ResultEnum.ERROR;
+    private ResultEnum code;
 
     public MessageException() {
         super();
@@ -23,10 +23,17 @@ public class MessageException extends RuntimeException {
     public MessageException(String message) {
         super(message);
         this.message = message;
+        this.code = ResultEnum.ERROR;
     }
 
     public MessageException(SendTaskDto sendTaskDto, String message) {
         super(message);
         this.message = MessageLinkTraceUtils.formatMessageLifecycleErrorLogMsg(sendTaskDto, message) + "！！！";
+        this.code = ResultEnum.ERROR;
+    }
+
+    public MessageException(ResultEnum resultEnum) {
+        super(resultEnum.getMessage());
+        this.code = resultEnum;
     }
 }
