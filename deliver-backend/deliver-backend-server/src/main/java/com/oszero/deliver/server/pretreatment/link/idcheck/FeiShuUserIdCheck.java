@@ -38,8 +38,8 @@ public class FeiShuUserIdCheck implements MessageLink<SendTaskDto> {
         String appConfigJson = sendTaskDto.getAppConfig();
         FeiShuApp feiShuApp = JSONUtil.toBean(appConfigJson, FeiShuApp.class);
         List<String> users = sendTaskDto.getUsers();
+        String tenantAccessToken = serverCacheManager.getFeiShuToken(feiShuApp, sendTaskDto);
         users.forEach(userId -> {
-            String tenantAccessToken = serverCacheManager.getFeiShuToken(feiShuApp, sendTaskDto);
             feiShuClient.checkUserId(tenantAccessToken, userId, sendTaskDto);
         });
         MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成飞书 ID 检查");
