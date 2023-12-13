@@ -1,0 +1,11 @@
+server:
+  port: 6060
+spring:
+  application:
+    name: deliver-all
+  profiles:
+    active: dev
+
+# 对称加密
+aes:
+  key: oszero

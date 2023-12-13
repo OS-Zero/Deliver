@@ -18,6 +18,7 @@
     <modules>
         <module>deliver-backend-server</module>
         <module>deliver-backend-admin</module>
+        <module>deliver-backend-all</module>
     </modules>
 
     <properties>
