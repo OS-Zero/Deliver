@@ -8,6 +8,7 @@ import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.oszero.deliver.admin.cache.ServerCacheManager;
 import com.oszero.deliver.admin.constant.MessageParamConstant;
 import com.oszero.deliver.admin.enums.MessageTypeEnum;
 import com.oszero.deliver.admin.exception.BusinessException;
@@ -44,6 +45,7 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template>
 
     private final AppService appService;
     private final TemplateAppService templateAppService;
+    private final ServerCacheManager serverCacheManager;
 
     @Override
     public Page<TemplateSearchResponseDto> search(TemplateSearchRequestDto dto) {
@@ -95,6 +97,9 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template>
                 throw new BusinessException("批量删除模板失败！！！");
             }
         });
+        // 删除缓存
+        dto.getIds().forEach(serverCacheManager::evictTemplate);
+        dto.getIds().forEach(serverCacheManager::evictTemplateApp);
     }
 
     @Override
@@ -121,6 +126,9 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template>
         if (!update) {
             throw new BusinessException("更新模板失败！！！");
         }
+        // 删除缓存
+        serverCacheManager.evictTemplate(dto.getTemplateId());
+        serverCacheManager.evictTemplateApp(dto.getTemplateId());
     }
 
     @Override
@@ -131,6 +139,8 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template>
         if (!b) {
             throw new BusinessException("更新模板失败！！！");
         }
+        // 删除缓存
+        serverCacheManager.evictTemplate(dto.getTemplateId());
     }
 
     @Override

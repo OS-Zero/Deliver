@@ -16,7 +16,6 @@ import com.oszero.deliver.server.web.service.AppService;
 import com.oszero.deliver.server.web.service.TemplateAppService;
 import com.oszero.deliver.server.web.service.TemplateService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -61,40 +60,21 @@ public class ServerCacheManager {
         return appService.getById(appId);
     }
 
-    @Cacheable(value = CacheConstant.CLIENT_TOKEN_CACHE_NAME, keyGenerator = "tokenKeyGenerator",
-            cacheManager = CacheConstant.REDIS_CACHE_MANAGER)
+//    @Cacheable(value = CacheConstant.CLIENT_TOKEN_CACHE_NAME, keyGenerator = "tokenKeyGenerator",
+//            cacheManager = CacheConstant.REDIS_CACHE_MANAGER)
     public String getDingToken(DingApp dingApp, SendTaskDto sendTaskDto) {
         return dingClient.getAccessToken(dingApp, sendTaskDto);
     }
 
-    @Cacheable(value = CacheConstant.CLIENT_TOKEN_CACHE_NAME, keyGenerator = "tokenKeyGenerator",
-            cacheManager = CacheConstant.REDIS_CACHE_MANAGER)
+//    @Cacheable(value = CacheConstant.CLIENT_TOKEN_CACHE_NAME, keyGenerator = "tokenKeyGenerator",
+//            cacheManager = CacheConstant.REDIS_CACHE_MANAGER)
     public String getWeChatToken(WeChatApp weChatApp, SendTaskDto sendTaskDto) {
         return weChatClient.getAccessToken(weChatApp, sendTaskDto);
     }
 
-    @Cacheable(value = CacheConstant.CLIENT_TOKEN_CACHE_NAME, keyGenerator = "tokenKeyGenerator",
-            cacheManager = CacheConstant.REDIS_CACHE_MANAGER)
+//    @Cacheable(value = CacheConstant.CLIENT_TOKEN_CACHE_NAME, keyGenerator = "tokenKeyGenerator",
+//            cacheManager = CacheConstant.REDIS_CACHE_MANAGER)
     public String getFeiShuToken(FeiShuApp feiShuApp, SendTaskDto sendTaskDto) {
         return feiShuClient.getTenantAccessToken(feiShuApp, sendTaskDto);
-    }
-
-
-    /**
-     * 清空缓存
-     */
-    @CacheEvict(value = CacheConstant.TEMPLATE_CACHE_NAME, key = "#templateId",
-            cacheManager = CacheConstant.REDIS_CACHE_MANAGER)
-    public void evictTemplate(Long templateId) {
-    }
-
-    @CacheEvict(value = CacheConstant.TEMPLATE_APP_CACHE_NAME, key = "#templateId",
-            cacheManager = CacheConstant.REDIS_CACHE_MANAGER)
-    public void evictTemplateApp(Long templateId) {
-    }
-
-    @CacheEvict(value = CacheConstant.APP_CACHE_NAME, key = "#appId",
-            cacheManager = CacheConstant.REDIS_CACHE_MANAGER)
-    public void evictApp(Long appId) {
     }
 }

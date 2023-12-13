@@ -6,6 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.oszero.deliver.admin.cache.ServerCacheManager;
 import com.oszero.deliver.admin.constant.AppConfigConstant;
 import com.oszero.deliver.admin.exception.BusinessException;
 import com.oszero.deliver.admin.mapper.AppMapper;
@@ -39,6 +40,7 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>
     private final TemplateAppService templateAppService;
     private final AesUtils aesUtils;
     private final AppMapper appMapper;
+    private final ServerCacheManager serverCacheManager;
 
     @Override
     public Page<AppSearchResponseDto> getAppPagesByCondition(AppSearchRequestDto dto) {
@@ -83,6 +85,8 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>
         if (!Objects.equals(dto.getIds().size(), deleted)) {
             throw new BusinessException("删除 app 失败！！！");
         }
+        // 删除缓存
+        dto.getIds().forEach(serverCacheManager::evictApp);
     }
 
     @Override
@@ -99,6 +103,8 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>
         if (!update) {
             throw new BusinessException("app 更新失败！！！");
         }
+        // 删除缓存
+        serverCacheManager.evictApp(dto.getAppId());
     }
 
     @Override
@@ -125,6 +131,8 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>
         if (!update) {
             throw new BusinessException("app 状态更新失败！！！");
         }
+        // 删除缓存
+        serverCacheManager.evictApp(dto.getAppId());
     }
 
     @Override
