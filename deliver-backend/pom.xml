@@ -39,10 +39,17 @@
         <mybatis.plus.version>3.5.4</mybatis.plus.version>
         <druid.version>1.2.16</druid.version>
         <rocketmq.client.java.version>2.2.3</rocketmq.client.java.version>
+
+        <aliyun-sms-sdk-version>2.0.24</aliyun-sms-sdk-version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.aliyun</groupId>
+                <artifactId>alibabacloud-dysmsapi20170525</artifactId>
+                <version>${aliyun-sms-sdk-version}</version>
+            </dependency>
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
