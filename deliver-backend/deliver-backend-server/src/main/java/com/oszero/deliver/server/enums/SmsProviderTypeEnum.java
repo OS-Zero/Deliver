@@ -13,18 +13,16 @@ import lombok.ToString;
 @Getter
 @ToString
 @AllArgsConstructor
-public enum SmsProvideTypeEnum {
+public enum SmsProviderTypeEnum {
 
-    aliyun(0,"aliyun"),
-    tencent(1,"tencent");
+    ALI_YUN(1, "aliyun"),
+    TENCENT(2, "tencent");
 
     private final Integer code;
-    private final String message;
+    private final String name;
 
-
-    public static SmsProvideTypeEnum getInstanceByCode(Integer code) {
-        for (SmsProvideTypeEnum item : values()
-        ) {
+    public static SmsProviderTypeEnum getInstanceByCode(Integer code) {
+        for (SmsProviderTypeEnum item : values()) {
             if (item.getCode().equals(code)) {
                 return item;
             }

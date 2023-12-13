@@ -1,6 +1,5 @@
-package com.oszero.deliver.server.model.app.smsapp;
+package com.oszero.deliver.server.model.app.sms;
 
-import com.oszero.deliver.server.model.app.SmsApp;
 import lombok.*;
 
 /**
