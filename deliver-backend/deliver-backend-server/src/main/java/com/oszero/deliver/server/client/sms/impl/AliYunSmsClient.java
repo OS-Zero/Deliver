@@ -7,12 +7,13 @@ import com.aliyun.sdk.service.dysmsapi20170525.models.SendSmsRequest;
 import com.aliyun.sdk.service.dysmsapi20170525.models.SendSmsResponse;
 import com.oszero.deliver.server.client.sms.SmsClient;
 import com.oszero.deliver.server.exception.MessageException;
-import com.oszero.deliver.server.model.app.SmsApp;
-import com.oszero.deliver.server.model.app.smsapp.AliYunSmsApp;
+import com.oszero.deliver.server.model.app.sms.SmsApp;
+import com.oszero.deliver.server.model.app.sms.AliYunSmsApp;
 import com.oszero.deliver.server.model.dto.common.SendTaskDto;
 import darabonba.core.client.ClientOverrideConfiguration;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -25,15 +26,14 @@ import java.util.concurrent.ExecutionException;
 @Service
 public class AliYunSmsClient implements SmsClient {
 
-    private static  final String Template_Param = "templateParam";
-    private static final String Endpoint_Override = "dysmsapi.aliyuncs.com";
+    private static final String TEMPLATE_PARAM = "templateParam";
+    private static final String ENDPOINT_OVERRIDE = "dysmsapi.aliyuncs.com";
 
     @Override
     public void sendSms(SmsApp smsApp, SendTaskDto sendTaskDto) {
-        String s = sendTaskDto.getUsers().toString();
-        String phoneNumbers = s.substring(1, s.length()-1);
+        List<String> users = sendTaskDto.getUsers();
+        String phoneNumbers = String.join(",", users);
         AliYunSmsApp aliYunSmsApp = (AliYunSmsApp) smsApp;
-
 
         StaticCredentialProvider provider = StaticCredentialProvider.create(Credential.builder()
                 // 此处以把AccessKey 和 AccessKeySecret 保存在环境变量为例说明。您也可以根据业务需要，保存到配置文件里
@@ -42,37 +42,27 @@ public class AliYunSmsClient implements SmsClient {
                 .accessKeySecret(System.getenv("ALIBABA_CLOUD_ACCESS_KEY_SECRET"))
                 .build());
 
-        AsyncClient client = null;
-        try {
-            client = AsyncClient.builder()
-                    .credentialsProvider(provider)
-                    .overrideConfiguration(
-                            ClientOverrideConfiguration.create()
-                                    .setEndpointOverride(Endpoint_Override)
-                    )
-                    .build();
-
+        try (AsyncClient client = AsyncClient.builder()
+                .credentialsProvider(provider)
+                .overrideConfiguration(
+                        ClientOverrideConfiguration
+                                .create()
+                                .setEndpointOverride(ENDPOINT_OVERRIDE)
+                )
+                .build()) {
 
             SendSmsRequest sendSmsRequest = SendSmsRequest.builder()
                     .phoneNumbers(phoneNumbers)
                     .signName(aliYunSmsApp.getSignName())
                     .templateCode(aliYunSmsApp.getTemplateCode())
-                    .templateParam((String) sendTaskDto.getParamMap().get(Template_Param))
+                    .templateParam((String) sendTaskDto.getParamMap().get(TEMPLATE_PARAM))
                     .build();
-
 
             CompletableFuture<SendSmsResponse> response = client.sendSms(sendSmsRequest);
 
             SendSmsResponse resp = response.get();
-        } catch (InterruptedException e) {
-            throw new MessageException("短信发送失败" + e.getMessage());
-        } catch (ExecutionException e) {
-            throw new MessageException("短信发送失败" + e.getMessage());
-        } finally {
-            client.close();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new MessageException("短信发送失败，" + e.getMessage());
         }
-
     }
-
-
 }

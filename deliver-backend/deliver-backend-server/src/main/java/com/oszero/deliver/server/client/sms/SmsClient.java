@@ -1,6 +1,6 @@
 package com.oszero.deliver.server.client.sms;
 
-import com.oszero.deliver.server.model.app.SmsApp;
+import com.oszero.deliver.server.model.app.sms.SmsApp;
 import com.oszero.deliver.server.model.dto.common.SendTaskDto;
 
 /**
