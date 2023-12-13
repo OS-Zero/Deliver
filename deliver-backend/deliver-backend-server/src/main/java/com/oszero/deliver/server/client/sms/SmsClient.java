@@ -1,5 +1,8 @@
 package com.oszero.deliver.server.client.sms;
 
+import com.oszero.deliver.server.model.app.SmsApp;
+import com.oszero.deliver.server.model.dto.common.SendTaskDto;
+
 /**
  * 短信客户端接口
  *
@@ -7,4 +10,7 @@ package com.oszero.deliver.server.client.sms;
  * @version 1.0.0
  */
 public interface SmsClient {
+
+    void sendSms(SmsApp smsApp, SendTaskDto sendTaskDto);
+
 }
