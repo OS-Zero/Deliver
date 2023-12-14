@@ -50,12 +50,12 @@ public class DingClient {
             dingAccessTokenBody = JSONUtil.toBean(response.body(), DingAccessTokenBody.class);
 
             if (!Objects.equals(dingAccessTokenBody.getErrcode(), 0)) {
-                throw new BusinessException("获取钉钉 Token 失败，" + dingAccessTokenBody.getErrmsg());
+                throw new BusinessException(dingAccessTokenBody.getErrmsg());
             }
         } catch (Exception e) {
-            throw new BusinessException("钉钉获取 Token 接口调用失败！！！");
+            throw new BusinessException("获取钉钉 accessToken 失败，" + e.getMessage() + "！！！");
         }
-        log.info("获取钉钉 Token 成功！");
+        log.info("获取钉钉 accessToken 成功");
         return dingAccessTokenBody.getAccessToken();
     }
 
@@ -67,7 +67,6 @@ public class DingClient {
      * @return media_id
      */
     public String uploadDingFile(String accessToken, PlatformFileDto platformFileDto) {
-
 
         @Data
         class DingBody {
@@ -89,12 +88,12 @@ public class DingClient {
             dingBody = JSONUtil.toBean(response.body(), DingBody.class);
 
             if (!Objects.equals(dingBody.getErrcode(), 0)) {
-                throw new BusinessException("上传钉钉文件失败：" + dingBody.getErrmsg());
+                throw new BusinessException(dingBody.getErrmsg());
             }
         } catch (Exception e) {
-            throw new BusinessException("上传钉钉文件接口调用失败！！！");
+            throw new BusinessException("上传钉钉文件失败，" + e.getMessage() + "！！！");
         }
-        log.info("上传钉钉文件成功！");
+        log.info("上传钉钉文件成功");
         return dingBody.getMediaId();
 
     }

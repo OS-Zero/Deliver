@@ -267,6 +267,5 @@ public class WeChatClient {
                 throw new MessageException(sendTaskDto, "企微校验用户 ID 失败，" + e.getMessage());
             }
         });
-        log.info("企微校验用户 ID 成功");
     }
 }

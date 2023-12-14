@@ -58,7 +58,7 @@ public class DingClient {
         } catch (Exception e) {
             throw new MessageException(sendTaskDto, "钉钉获取 Token 接口调用失败，" + e.getMessage());
         }
-        log.info("获取钉钉 Token 成功");
+        log.info("获取钉钉 accessToken 成功");
         return dingAccessTokenBody.getAccessToken();
     }
 
@@ -179,7 +179,6 @@ public class DingClient {
         } catch (Exception e) {
             throw new MessageException(sendTaskDto, "钉钉校验 userId 是否存在接口调用失败，" + e.getMessage());
         }
-        log.info("钉钉校验 userId 是否存在成功");
     }
 
     /**
@@ -230,7 +229,6 @@ public class DingClient {
             throw new MessageException(sendTaskDto, "钉钉根据电话号码获取 userId 接口调用失败，" + e.getMessage());
         }
 
-        log.info("钉钉根据电话号码获取 userId 成功");
         return dingResponseBody.getResult().getUserid();
     }
 }

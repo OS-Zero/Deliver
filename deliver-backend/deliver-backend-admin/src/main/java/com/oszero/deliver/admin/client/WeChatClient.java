@@ -23,10 +23,10 @@ import java.util.Objects;
 public class WeChatClient {
 
     /**
-     * 获取企业微信 Token
+     * 获取企业微信 AccessToken
      *
      * @param weChatApp 企微 APP
-     * @return Token
+     * @return AccessToken
      */
     public String getAccessToken(WeChatApp weChatApp) {
 
@@ -46,12 +46,12 @@ public class WeChatClient {
 
             weChatResponse = JSONUtil.toBean(response.body(), WechatResponse.class);
             if (!Objects.equals(weChatResponse.getErrcode(), 0)) {
-                throw new BusinessException("获取企业微信 Token 失败：" + weChatResponse.getErrmsg());
+                throw new BusinessException(weChatResponse.getErrmsg());
             }
         } catch (Exception e) {
-            throw new BusinessException("企业微信获取 Token 接口调用失败！！！");
+            throw new BusinessException("获取企业微信 AccessToken 失败，" + e.getMessage() + "！！！");
         }
-        log.info("获取企微 Token 成功");
+        log.info("获取企微 AccessToken 成功");
         return weChatResponse.getAccess_token();
     }
 
@@ -79,12 +79,12 @@ public class WeChatClient {
                 .execute()) {
             WechatResponse wechatResponse = JSONUtil.toBean(response.body(), WechatResponse.class);
             if (!Objects.equals(wechatResponse.getErrcode(), 0)) {
-                throw new BusinessException("上传企业微信平台文件失败，" + wechatResponse.getErrmsg() + "！！！");
+                throw new BusinessException(wechatResponse.getErrmsg());
             }
             log.info("上传企微平台文件成功");
             return wechatResponse.getMedia_id();
         } catch (Exception e) {
-            throw new BusinessException("上传企业微信平台文件出错！！！");
+            throw new BusinessException("上传企业微信平台文件失败，" + e.getMessage() + "！！！");
         }
     }
 }

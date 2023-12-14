@@ -180,7 +180,6 @@ public class FeiShuClient {
             if (!Objects.equals(feiShuUserInfoRespBody.getCode(), 0)) {
                 throw new MessageException(feiShuUserInfoRespBody.getMsg());
             }
-            log.info("飞书用户：" + userId + " ID 校验成功");
         } catch (Exception e) {
             throw new MessageException(sendTaskDto, "飞书用户 ID 校验失败，" + e.getMessage());
         }

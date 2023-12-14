@@ -55,12 +55,12 @@ public class FeiShuClient {
             TenantAccessTokenRespBody tenantAccessTokenRespBody = JSONUtil.toBean(body, TenantAccessTokenRespBody.class);
 
             if (!Objects.equals(tenantAccessTokenRespBody.getCode(), 0)) {
-                throw new BusinessException("获取飞书 tenantAccessToken 失败，" + tenantAccessTokenRespBody.getMsg());
+                throw new BusinessException(tenantAccessTokenRespBody.getMsg());
             }
             log.info("获取飞书 tenantAccessToken 成功");
             return "Bearer " + tenantAccessTokenRespBody.getTenant_access_token();
         } catch (Exception e) {
-            throw new BusinessException("获取飞书 tenantAccessToken 失败，服务异常！！！");
+            throw new BusinessException("获取飞书 tenantAccessToken 失败，" + e.getMessage() + "！！！");
         }
     }
 
@@ -94,13 +94,13 @@ public class FeiShuClient {
 
             FeiShuUploadFileResponse feiShuUploadFileResponse = JSONUtil.toBean(response.body(), FeiShuUploadFileResponse.class);
             if (!feiShuUploadFileResponse.getCode().equals(0) || StrUtil.isBlank(feiShuUploadFileResponse.getData().getFile_key())) {
-                throw new BusinessException("上传飞书文件失败，" + feiShuUploadFileResponse.getMsg() + "！！！");
+                throw new BusinessException(feiShuUploadFileResponse.getMsg());
             }
 
             log.info("上传飞书文件成功");
             return feiShuUploadFileResponse.getData().getFile_key();
         } catch (Exception e) {
-            throw new BusinessException("上传飞书文件失败，服务异常！！！");
+            throw new BusinessException("上传飞书文件失败，" + e.getMessage() + "！！！");
         }
     }
 
@@ -133,12 +133,12 @@ public class FeiShuClient {
 
             FeiShuUploadImageResponse feiShuUploadImageResponse = JSONUtil.toBean(response.body(), FeiShuUploadImageResponse.class);
             if (!feiShuUploadImageResponse.getCode().equals(0) || StrUtil.isBlank(feiShuUploadImageResponse.getData().getImage_key())) {
-                throw new BusinessException("上传飞书图片失败，" + feiShuUploadImageResponse.getMsg() + "！！！");
+                throw new BusinessException(feiShuUploadImageResponse.getMsg());
             }
             log.info("上传飞书图片成功");
             return feiShuUploadImageResponse.getData().getImage_key();
         } catch (Exception e) {
-            throw new BusinessException("上传飞书图片失败，服务异常");
+            throw new BusinessException("上传飞书图片失败，" + e.getMessage() + "！！！");
         }
     }
 }
