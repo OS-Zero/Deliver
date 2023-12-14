@@ -17,9 +17,12 @@ declare namespace Table {
 		type?: 'primary' | 'dashed' | 'text' | 'link'
 		tip?: string
 		color?: string
-		modal?: 'center' | 'right' | undefined
+		feedback?: 'modal' | 'drawer'
 		config?: Form.Modal
 		icon?: FunctionalComponent<AntdIconProps>
+		name?: string
+		confirm?: boolean
+		options?: any
 	}
 	interface Sort {
 		prop: string
@@ -52,7 +55,8 @@ declare namespace Table {
 		rowStyle?: ({ row, rowIndex }) => stirng | object // 行的 style 的回调方法，也可以使用一个固定的 Object 为所有行设置一样的 Style。
 		headerCellStyle?: import('vue').CSSProperties // 表头单元格的style样式，是一个object为所有表头单元格设置一样的 Style。注：CSSProperties类型就是一个对象，像正常在style中写css一样 {color: #f00}
 		defaultSort?: Sort // 默认的排序列的 prop 和顺序。 它的 prop 属性指定默认的排序的列，order 指定默认排序的顺序。
-		rowKey?: string // 行数据的 Key，用来优化 Table 的渲染。
+		rowKey: string // 行数据的 Key，用来优化 Table 的渲染。
+		expands?: Array<Record<string, any>>
 	}
 	interface Pagination {
 		total?: number // 总条目数

@@ -10,14 +10,6 @@ export interface MessageItem {
 	name: string
 }
 
-export interface AddTemplate {
-	templateName: string
-	pushRange: number
-	usersType: number
-	pushWays: string
-	templateStatus: number
-	appId: number
-}
 export interface TemplateItem {
 	templateId: number
 	templateStatus: number
@@ -74,7 +66,7 @@ export interface SearchMessage extends SearchModel, Pagination {
 }
 
 /**
- * 消息接口
+ * 表单数据
  */
 export interface MessageTemplate {
 	/**
@@ -88,11 +80,11 @@ export interface MessageTemplate {
 	/**
 	 * 推送范围
 	 */
-	pushRange: string
+	pushRange: number
 	/**
 	 * 用户类型
 	 */
-	usersType: string
+	usersType: number
 	/**
 	 * 推送方式
 	 */
@@ -104,7 +96,7 @@ export interface MessageTemplate {
 	/**
 	 * 消息类型
 	 */
-	messageType: string
+	messageType: number
 	/**
 	 * 模板累计使用数
 	 */
@@ -170,51 +162,9 @@ export interface AddTemp {
 }
 
 /**
- * 编辑模板接口
- */
-export interface modiTemp {
-	/**
-	 * 模板id
-	 */
-	templateId: number
-	/**
-	 * 模板名
-	 */
-	templateName: string
-	/**
-	 * 推送范围
-	 */
-	pushRange: number | undefined
-	/**
-	 * 用户类型
-	 */
-	usersType: number | undefined
-	/**
-	 * 用户类型
-	 */
-	pushWays: string
-	/**
-	 * 渠道选择
-	 */
-	channelType?: string | undefined | number
-	/**
-	 * 消息类型
-	 */
-	messageType?: string
-	/**
-	 * 模板状态
-	 */
-	templateStatus: number
-	/**
-	 * Appid
-	 */
-	appId: number | undefined | string
-}
-
-/**
  * 发送消息接口
  */
-export interface sendMessageTest {
+export interface SendTestMessage {
 	/**
 	 * 模板id
 	 */

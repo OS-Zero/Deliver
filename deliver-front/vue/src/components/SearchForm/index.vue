@@ -1,22 +1,21 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted, onUnmounted } from 'vue'
 import { DownOutlined, UpOutlined } from '@ant-design/icons-vue'
 import locale from 'ant-design-vue/es/date-picker/locale/zh_CN'
 import 'dayjs/locale/zh-cn'
 import type { FormInstance } from 'ant-design-vue'
 import type { Dayjs } from 'dayjs'
 import Form from '@/types/form'
-
+import emitter from '@/utils/mitt'
 interface DelayLoading {
 	delay: number
 }
 interface Props {
 	fieldList: Form.FieldItem[]
 	model?: Record<Form.FieldItem['field'], Form.FieldItem['value']>
-	options?: Form.Options
 }
 interface EmitEvent {
-	(e: 'submit', params: any): void
+	(e: 'submit', params: any, msg: string): void
 }
 
 const iconLoading = ref<boolean | DelayLoading>(false)
@@ -51,27 +50,34 @@ const onRangeChange = (_value: [Dayjs, Dayjs] | [string, string], dateString: [s
  */
 const onSubmit = (): void => {
 	if (!formRef.value) return
+	iconLoading.value = true
+	emitter.emit('loading', true)
 	emit(
 		'submit',
 		Object.fromEntries(
 			Object.entries(searchModel.value).filter(([key]) => {
 				return key !== 'period'
 			})
-		)
+		),
+		'查询成功~ (*^▽^*)'
 	)
 }
 
 /**
  * 重置搜索框
  */
-const resetForm = (): void => {
+const resetForm = () => {
 	if (!formRef.value) return
 	formRef.value.resetFields()
 }
 
-defineExpose({
-	// searchInfo,
-	// iconLoading
+onMounted(() => {
+	emitter.on('iconLoading', (loading) => {
+		iconLoading.value = loading
+	})
+})
+onUnmounted(() => {
+	emitter.off('iconLoading')
 })
 </script>
 
