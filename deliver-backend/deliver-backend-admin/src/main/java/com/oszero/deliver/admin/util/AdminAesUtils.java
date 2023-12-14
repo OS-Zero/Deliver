@@ -14,7 +14,7 @@ import java.util.Arrays;
  * @version 1.0.0
  */
 @Component
-public class AesUtils {
+public class AdminAesUtils {
 
     /**
      * 秘钥

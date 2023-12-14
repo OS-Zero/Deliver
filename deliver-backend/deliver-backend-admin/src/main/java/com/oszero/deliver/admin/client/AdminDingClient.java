@@ -20,7 +20,7 @@ import java.util.Objects;
  */
 @Slf4j
 @Component
-public class DingClient {
+public class AdminDingClient {
 
     /**
      * 获取 AccessToken

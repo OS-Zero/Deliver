@@ -8,11 +8,11 @@ import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.oszero.deliver.admin.cache.ServerCacheManager;
+import com.oszero.deliver.admin.cache.AdminServerCacheManager;
 import com.oszero.deliver.admin.constant.MessageParamConstant;
 import com.oszero.deliver.admin.enums.MessageTypeEnum;
 import com.oszero.deliver.admin.exception.BusinessException;
-import com.oszero.deliver.admin.mapper.TemplateMapper;
+import com.oszero.deliver.admin.mapper.AdminTemplateMapper;
 import com.oszero.deliver.admin.model.CommonResult;
 import com.oszero.deliver.admin.model.dto.request.*;
 import com.oszero.deliver.admin.model.dto.response.MessageTypeResponseDto;
@@ -24,6 +24,7 @@ import com.oszero.deliver.admin.service.AppService;
 import com.oszero.deliver.admin.service.TemplateAppService;
 import com.oszero.deliver.admin.service.TemplateService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,12 +41,14 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
-public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template>
+public class AdminTemplateServiceImpl extends ServiceImpl<AdminTemplateMapper, Template>
         implements TemplateService {
 
     private final AppService appService;
     private final TemplateAppService templateAppService;
-    private final ServerCacheManager serverCacheManager;
+    private final AdminServerCacheManager adminServerCacheManager;
+    @Value("${deliver-server.url}")
+    private String serverUrl;
 
     @Override
     public Page<TemplateSearchResponseDto> search(TemplateSearchRequestDto dto) {
@@ -98,8 +101,8 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template>
             }
         });
         // 删除缓存
-        dto.getIds().forEach(serverCacheManager::evictTemplate);
-        dto.getIds().forEach(serverCacheManager::evictTemplateApp);
+        dto.getIds().forEach(adminServerCacheManager::evictTemplate);
+        dto.getIds().forEach(adminServerCacheManager::evictTemplateApp);
     }
 
     @Override
@@ -127,8 +130,8 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template>
             throw new BusinessException("更新模板失败！！！");
         }
         // 删除缓存
-        serverCacheManager.evictTemplate(dto.getTemplateId());
-        serverCacheManager.evictTemplateApp(dto.getTemplateId());
+        adminServerCacheManager.evictTemplate(dto.getTemplateId());
+        adminServerCacheManager.evictTemplateApp(dto.getTemplateId());
     }
 
     @Override
@@ -140,7 +143,7 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template>
             throw new BusinessException("更新模板失败！！！");
         }
         // 删除缓存
-        serverCacheManager.evictTemplate(dto.getTemplateId());
+        adminServerCacheManager.evictTemplate(dto.getTemplateId());
     }
 
     @Override
@@ -215,9 +218,6 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template>
 
     @Override
     public void testSendMessage(SendTestRequestDto sendTestRequestDto) {
-
-        // 修改为自己的地址
-        String serverUrl = "http://localhost:7070/open/sendMessage";
         CommonResult<?> commonResult;
         try (HttpResponse response = HttpRequest.post(serverUrl)
                 .header("ContentType", "application/json")

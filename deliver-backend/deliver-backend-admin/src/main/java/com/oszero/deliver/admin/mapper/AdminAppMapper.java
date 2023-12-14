@@ -1,15 +1,15 @@
 package com.oszero.deliver.admin.mapper;
 
-import com.oszero.deliver.admin.model.entity.TemplateApp;
+import com.oszero.deliver.admin.model.entity.App;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
- * 模板 app mapper
+ * app mapper
  *
  * @author oszero
  * @version 1.0.0
  */
-public interface TemplateAppMapper extends BaseMapper<TemplateApp> {
+public interface AdminAppMapper extends BaseMapper<App> {
 
 }
 

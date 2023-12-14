@@ -1,7 +1,7 @@
 package com.oszero.deliver.admin.cache;
 
+import com.oszero.deliver.admin.util.AdminRedisUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,27 +12,27 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class ServerCacheManager {
+public class AdminServerCacheManager {
 
-    private final StringRedisTemplate stringRedisTemplate;
+    private final AdminRedisUtils adminRedisUtils;
 
     /**
      * 清空缓存
      */
     public void evictTemplate(Long templateId) {
-        stringRedisTemplate.delete(CacheConstant.REDIS_CACHE_PREFIX
+        adminRedisUtils.deleteByKey(CacheConstant.REDIS_CACHE_PREFIX
                 + CacheConstant.TEMPLATE_CACHE_NAME
                 + "::" + templateId);
     }
 
     public void evictTemplateApp(Long templateId) {
-        stringRedisTemplate.delete(CacheConstant.REDIS_CACHE_PREFIX
+        adminRedisUtils.deleteByKey(CacheConstant.REDIS_CACHE_PREFIX
                 + CacheConstant.TEMPLATE_APP_CACHE_NAME
                 + "::" + templateId);
     }
 
     public void evictApp(Long appId) {
-        stringRedisTemplate.delete(CacheConstant.REDIS_CACHE_PREFIX
+        adminRedisUtils.deleteByKey(CacheConstant.REDIS_CACHE_PREFIX
                 + CacheConstant.APP_CACHE_NAME
                 + "::" + appId);
     }

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Aspect
 @Component
-public class ControllerAop {
+public class OpenControllerAop {
 
     @Pointcut(value = "execution(* com.oszero.deliver.server.web.controller..*.*(..))")
     public void controllerPointcut() {

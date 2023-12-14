@@ -2,9 +2,9 @@ package com.oszero.deliver.admin.config;
 
 import cn.hutool.core.lang.UUID;
 import com.oszero.deliver.admin.util.MdcUtils;
-import org.springframework.stereotype.Component;
-
 import jakarta.servlet.*;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
@@ -15,6 +15,7 @@ import java.io.IOException;
  * @version 1.0.0
  */
 @Component
+@ConditionalOnMissingBean(name = "traceIdInterceptor")
 public class TraceIdFilter implements Filter {
 
     /**
