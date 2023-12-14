@@ -40,6 +40,7 @@
         <rocketmq.client.java.version>2.2.3</rocketmq.client.java.version>
 
         <aliyun-sms-sdk-version>2.0.24</aliyun-sms-sdk-version>
+        <tencentcloud.sdk.version>3.1.915</tencentcloud.sdk.version>
     </properties>
 
     <dependencyManagement>
@@ -48,6 +49,11 @@
                 <groupId>com.aliyun</groupId>
                 <artifactId>alibabacloud-dysmsapi20170525</artifactId>
                 <version>${aliyun-sms-sdk-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tencentcloudapi</groupId>
+                <artifactId>tencentcloud-sdk-java</artifactId>
+                <version>${tencentcloud.sdk.version}</version>
             </dependency>
             <dependency>
                 <groupId>cn.hutool</groupId>
