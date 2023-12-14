@@ -15,7 +15,7 @@ import java.util.List;
  * @version 1.0.0
  */
 @Mapper
-public interface MessageRecordMapper extends BaseMapper<MessageRecord> {
+public interface AdminMessageRecordMapper extends BaseMapper<MessageRecord> {
 
     /**
      * 获取指定时间内的 TOP size

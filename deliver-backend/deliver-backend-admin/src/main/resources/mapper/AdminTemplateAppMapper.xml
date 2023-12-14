@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.oszero.deliver.admin.mapper.TemplateAppMapper">
+<mapper namespace="com.oszero.deliver.admin.mapper.AdminTemplateAppMapper">
 
     <resultMap id="BaseResultMap" type="com.oszero.deliver.admin.model.entity.TemplateApp">
         <id property="id" column="id" jdbcType="BIGINT"/>

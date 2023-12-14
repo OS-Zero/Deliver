@@ -19,7 +19,7 @@ import jakarta.servlet.http.HttpServletRequest;
  */
 @Slf4j
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class AdminGlobalExceptionHandler {
 
     /**
      * 业务异常时的错误处理

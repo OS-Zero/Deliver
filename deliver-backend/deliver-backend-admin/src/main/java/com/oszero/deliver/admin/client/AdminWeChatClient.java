@@ -20,7 +20,7 @@ import java.util.Objects;
  */
 @Slf4j
 @Component
-public class WeChatClient {
+public class AdminWeChatClient {
 
     /**
      * 获取企业微信 AccessToken

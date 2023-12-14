@@ -22,7 +22,7 @@ import java.util.Objects;
  */
 @Slf4j
 @Component
-public class FeiShuClient {
+public class AdminFeiShuClient {
 
     /**
      * 获取 tenantAccessToken

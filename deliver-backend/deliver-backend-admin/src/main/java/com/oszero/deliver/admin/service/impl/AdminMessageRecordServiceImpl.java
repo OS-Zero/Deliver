@@ -1,7 +1,7 @@
 package com.oszero.deliver.admin.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.oszero.deliver.admin.mapper.MessageRecordMapper;
+import com.oszero.deliver.admin.mapper.AdminMessageRecordMapper;
 import com.oszero.deliver.admin.model.entity.MessageRecord;
 import com.oszero.deliver.admin.service.MessageRecordService;
 import lombok.RequiredArgsConstructor;
@@ -18,24 +18,24 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
-public class MessageRecordServiceImpl extends ServiceImpl<MessageRecordMapper, MessageRecord>
+public class AdminMessageRecordServiceImpl extends ServiceImpl<AdminMessageRecordMapper, MessageRecord>
         implements MessageRecordService {
 
-    private final MessageRecordMapper messageRecordMapper;
+    private final AdminMessageRecordMapper adminMessageRecordMapper;
 
     @Override
     public List<MessageRecord> getTemplateInfo(LocalDateTime startTime, LocalDateTime endTime, Integer size) {
-        return messageRecordMapper.getTemplateInfo(startTime, endTime, size);
+        return adminMessageRecordMapper.getTemplateInfo(startTime, endTime, size);
     }
 
     @Override
     public List<MessageRecord> getAppInfo(LocalDateTime startTime, LocalDateTime endTime, Integer size) {
-        return messageRecordMapper.getAppInfo(startTime, endTime, size);
+        return adminMessageRecordMapper.getAppInfo(startTime, endTime, size);
     }
 
     @Override
     public List<MessageRecord> getPushUserInfo(LocalDateTime startTime, LocalDateTime endTime, Integer size) {
-        return messageRecordMapper.getPushUserInfo(startTime, endTime, size);
+        return adminMessageRecordMapper.getPushUserInfo(startTime, endTime, size);
     }
 
 }

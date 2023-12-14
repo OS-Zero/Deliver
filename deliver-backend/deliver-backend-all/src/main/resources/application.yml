@@ -9,3 +9,6 @@ spring:
 # 对称加密
 aes:
   key: oszero
+# 服务端发送接口地址
+deliver-server:
+  url: /open/sendMessage

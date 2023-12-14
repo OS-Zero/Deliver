@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @MapperScan("com.oszero.deliver.admin.mapper")
-public class MyBatisPlusConfig {
+public class AdminMyBatisPlusConfig {
     /**
      * 添加分页插件
      *

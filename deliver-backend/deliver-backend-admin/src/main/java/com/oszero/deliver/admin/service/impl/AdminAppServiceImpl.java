@@ -6,10 +6,10 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.oszero.deliver.admin.cache.ServerCacheManager;
+import com.oszero.deliver.admin.cache.AdminServerCacheManager;
 import com.oszero.deliver.admin.constant.AppConfigConstant;
 import com.oszero.deliver.admin.exception.BusinessException;
-import com.oszero.deliver.admin.mapper.AppMapper;
+import com.oszero.deliver.admin.mapper.AdminAppMapper;
 import com.oszero.deliver.admin.model.dto.request.*;
 import com.oszero.deliver.admin.model.dto.response.AppByChannelResponseDto;
 import com.oszero.deliver.admin.model.dto.response.AppSearchResponseDto;
@@ -17,7 +17,7 @@ import com.oszero.deliver.admin.model.entity.App;
 import com.oszero.deliver.admin.model.entity.TemplateApp;
 import com.oszero.deliver.admin.service.AppService;
 import com.oszero.deliver.admin.service.TemplateAppService;
-import com.oszero.deliver.admin.util.AesUtils;
+import com.oszero.deliver.admin.util.AdminAesUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -34,13 +34,13 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
-public class AppServiceImpl extends ServiceImpl<AppMapper, App>
+public class AdminAppServiceImpl extends ServiceImpl<AdminAppMapper, App>
         implements AppService {
 
     private final TemplateAppService templateAppService;
-    private final AesUtils aesUtils;
-    private final AppMapper appMapper;
-    private final ServerCacheManager serverCacheManager;
+    private final AdminAesUtils adminAesUtils;
+    private final AdminAppMapper adminAppMapper;
+    private final AdminServerCacheManager adminServerCacheManager;
 
     @Override
     public Page<AppSearchResponseDto> getAppPagesByCondition(AppSearchRequestDto dto) {
@@ -57,7 +57,7 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>
                 .map(app -> {
                     AppSearchResponseDto appSearchResponseDto = new AppSearchResponseDto();
                     BeanUtil.copyProperties(app, appSearchResponseDto);
-                    appSearchResponseDto.setAppConfig(aesUtils.decrypt(app.getAppConfig()));
+                    appSearchResponseDto.setAppConfig(adminAesUtils.decrypt(app.getAppConfig()));
                     return appSearchResponseDto;
                 }).collect(Collectors.toList());
 
@@ -81,12 +81,12 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>
         if (!CollUtil.isEmpty(errRes)) {
             throw new BusinessException("以下 app 已关联模板，请解除关联关系后再删除：" + errRes);
         }
-        int deleted = appMapper.deleteBatchIds(dto.getIds());
+        int deleted = adminAppMapper.deleteBatchIds(dto.getIds());
         if (!Objects.equals(dto.getIds().size(), deleted)) {
             throw new BusinessException("删除 app 失败！！！");
         }
         // 删除缓存
-        dto.getIds().forEach(serverCacheManager::evictApp);
+        dto.getIds().forEach(adminServerCacheManager::evictApp);
     }
 
     @Override
@@ -98,13 +98,13 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>
 
         App app = new App();
         BeanUtil.copyProperties(dto, app);
-        app.setAppConfig(aesUtils.encrypt(dto.getAppConfig()));
+        app.setAppConfig(adminAesUtils.encrypt(dto.getAppConfig()));
         boolean update = this.updateById(app);
         if (!update) {
             throw new BusinessException("app 更新失败！！！");
         }
         // 删除缓存
-        serverCacheManager.evictApp(dto.getAppId());
+        adminServerCacheManager.evictApp(dto.getAppId());
     }
 
     @Override
@@ -116,7 +116,7 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>
 
         App app = new App();
         BeanUtil.copyProperties(dto, app);
-        app.setAppConfig(aesUtils.encrypt(dto.getAppConfig()));
+        app.setAppConfig(adminAesUtils.encrypt(dto.getAppConfig()));
         boolean save = this.save(app);
         if (!save) {
             throw new BusinessException("app 保存失败！！！");
@@ -132,7 +132,7 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>
             throw new BusinessException("app 状态更新失败！！！");
         }
         // 删除缓存
-        serverCacheManager.evictApp(dto.getAppId());
+        adminServerCacheManager.evictApp(dto.getAppId());
     }
 
     @Override
