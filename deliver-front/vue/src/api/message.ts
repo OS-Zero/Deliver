@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 import { R, SearchData } from '@/types'
-import type { MessageTemplate, SearchMessage, sendMessageTest, AppItem, MessageItem, AddTemplate, TemplateItem } from '@/views/Message/type'
+import type { MessageTemplate, SearchMessage, SendTestMessage, AppItem, MessageItem, TemplateItem, AddTemp } from '@/views/Message/type'
 
 /**
  * 模版分页查询
@@ -46,7 +46,7 @@ export async function getApp(data: { channelType: number }): Promise<R<Array<App
  * @param data 新增模板数据
  * @returns
  */
-export async function addTemplatePages(data: AddTemplate): Promise<R<null>> {
+export async function addTemplatePages(data: AddTemp): Promise<R<null>> {
 	return await request({
 		url: '/template/saveTemplate',
 		method: 'post',
@@ -72,7 +72,7 @@ export async function updateStatus(data: TemplateItem): Promise<R<null>> {
  * @param data
  * @returns
  */
-export async function updatetemplate(data: any): Promise<R<null>> {
+export async function updatetemplate(data: AddTemp): Promise<R<null>> {
 	return await request({
 		url: '/template/updateById',
 		method: 'post',
@@ -85,7 +85,7 @@ export async function updatetemplate(data: any): Promise<R<null>> {
  * @param data
  * @returns
  */
-export async function deleteTemplate(data: { ids: number[] }): Promise<R<null>> {
+export async function deleteTemplate(data: { ids: Array<number> }): Promise<R<null>> {
 	return await request({
 		url: '/template/deleteByIds',
 		method: 'post',
@@ -98,7 +98,7 @@ export async function deleteTemplate(data: { ids: number[] }): Promise<R<null>> 
  * @param data
  * @returns
  */
-export async function sendTestMes(data: sendMessageTest): Promise<R<null>> {
+export async function sendTestMes(data: SendTestMessage): Promise<R<null>> {
 	return await request({
 		url: '/template/testSendMessage',
 		method: 'post',
@@ -107,11 +107,11 @@ export async function sendTestMes(data: sendMessageTest): Promise<R<null>> {
 }
 
 /**
- *
+ * 请求默认模板
  * @param data
  * @returns
  */
-export async function getMessageParamByMessageType(data: { messageType: string; channelType: string }): Promise<any> {
+export async function getMessageParamByMessageType(data: { messageType: number; channelType: number }): Promise<any> {
 	return await request({
 		url: '/template/getMessageParamByMessageType',
 		method: 'post',
