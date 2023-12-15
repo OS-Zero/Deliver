@@ -100,8 +100,8 @@ public class AliYunCallClient implements CallClient {
             } catch (Exception e) {
                 throw new MessageException(e.getMessage());
             }
-        } catch (MessageException e) {
-            throw new MessageException("阿里云语音电话失败，" + e.getMessage());
+        } catch (Exception e) {
+            throw new MessageException("阿里云语音电话消息发送失败，" + e.getMessage());
         }
     }
 }

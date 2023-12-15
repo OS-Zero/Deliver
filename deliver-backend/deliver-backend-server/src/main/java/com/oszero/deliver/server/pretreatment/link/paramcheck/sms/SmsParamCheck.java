@@ -34,6 +34,7 @@ public class SmsParamCheck implements MessageLink<SendTaskDto> {
     @Override
     public void process(LinkContext<SendTaskDto> context) {
         SendTaskDto sendTaskDto = context.getProcessModel();
+
         Map<String, Object> paramMap = sendTaskDto.getParamMap();
         String smsProvider = paramMap.getOrDefault("smsProvider", "").toString();
         if (StrUtil.isBlank(smsProvider)) {
