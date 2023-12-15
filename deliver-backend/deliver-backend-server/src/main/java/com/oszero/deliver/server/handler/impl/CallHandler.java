@@ -1,10 +1,19 @@
 package com.oszero.deliver.server.handler.impl;
 
+import cn.hutool.json.JSONUtil;
+import com.oszero.deliver.server.client.call.CallClient;
 import com.oszero.deliver.server.client.call.factory.CallFactory;
+import com.oszero.deliver.server.enums.CallProviderTypeEnum;
+import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.handler.BaseHandler;
+import com.oszero.deliver.server.model.app.call.AliYunCallApp;
+import com.oszero.deliver.server.model.app.call.CallApp;
+import com.oszero.deliver.server.model.app.call.TencentCallApp;
 import com.oszero.deliver.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.server.web.service.MessageRecordService;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 /**
  * 电话消费者处理器
@@ -16,6 +25,7 @@ import org.springframework.stereotype.Component;
 public class CallHandler extends BaseHandler {
 
     private final CallFactory callFactory;
+    private final static String CALL_PROVIDER = "callProvider";
 
     public CallHandler(CallFactory callFactory, MessageRecordService messageRecordService) {
         this.callFactory = callFactory;
@@ -24,6 +34,29 @@ public class CallHandler extends BaseHandler {
 
     @Override
     protected void handle(SendTaskDto sendTaskDto) throws Exception {
+        try {
+            Map<String, Object> map = sendTaskDto.getParamMap();
 
+            String appConfig = sendTaskDto.getAppConfig();
+            String callProvider = map.get(CALL_PROVIDER).toString();
+            // 获取到具体电话应用
+            CallApp callApp = getCallApp(callProvider, appConfig);
+            // 获取到具体电话应用客户端
+            CallClient callClient = callFactory.getClient(callProvider);
+            // 发送电话消息
+            callClient.sendCall(callApp, sendTaskDto);
+        } catch (Exception e) {
+            throw new MessageException(sendTaskDto, e.getMessage());
+        }
+    }
+
+    private CallApp getCallApp(String callProvider, String appConfig) {
+
+        if (CallProviderTypeEnum.ALI_YUN.getName().equals(callProvider)) {
+            return JSONUtil.toBean(appConfig, AliYunCallApp.class);
+        } else if (CallProviderTypeEnum.TENCENT.getName().equals(callProvider)) {
+            return JSONUtil.toBean(appConfig, TencentCallApp.class);
+        }
+        throw new MessageException("没有指定的电话服务 App:" + callProvider);
     }
 }
