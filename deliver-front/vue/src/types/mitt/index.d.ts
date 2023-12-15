@@ -3,4 +3,5 @@ declare type MittType = {
 	loading: boolean
 	data?: object
 	collapsed: boolean
+	total: number
 }

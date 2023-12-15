@@ -1,4 +1,5 @@
-import { EditTwoTone, DeleteTwoTone, DownCircleTwoTone, ApiTwoTone, ThunderboltOutlined, SettingOutlined } from '@ant-design/icons-vue'
+import { EditTwoTone, DeleteTwoTone, DownCircleTwoTone, ApiTwoTone, ThunderboltOutlined, SettingOutlined, CopyTwoTone } from '@ant-design/icons-vue'
+import { message } from 'ant-design-vue'
 import { getMessageType, getPushRange, getUsersType, getImg } from '@/utils/table'
 import { useMessageStore } from '@/store/modules/message'
 import Table from '@/types/table'
@@ -240,7 +241,16 @@ export const tableColumns: Table.Columns[] = [
 		key: 'templateId',
 		width: 106,
 		head: 'icon',
-		icon: ThunderboltOutlined
+		type: 'icon',
+		headIcon: ThunderboltOutlined,
+		bodyIcon: CopyTwoTone,
+		options: {
+			tip: '复制 TemplateId 发送消息吧~',
+			func: (text: string): void => {
+				navigator.clipboard.writeText(text)
+				message.success('复制成功')
+			}
+		}
 	},
 	{
 		title: '模板名',
@@ -287,7 +297,7 @@ export const tableColumns: Table.Columns[] = [
 		fixed: 'right',
 		width: 270,
 		head: 'icon',
-		icon: SettingOutlined,
+		headIcon: SettingOutlined,
 		buttons: [
 			{
 				command: 'expand',
@@ -350,7 +360,12 @@ export const tableOptions: Record<string, Table.Options> = {
 			{ field: 'appName', alias: '关联 AppName' },
 			{ field: 'createUser', alias: '创建者' },
 			{ field: 'createTime', alias: '创建时间' }
-		]
+		],
+		paginationConfig: {
+			current: 1,
+			pageSize: 10,
+			total: 0
+		}
 	}
 }
 //表格表单配置
