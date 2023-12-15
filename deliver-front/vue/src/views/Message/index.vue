@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, onBeforeMount } from 'vue'
 import { message } from 'ant-design-vue'
 import { useMessageStore } from '@/store/modules/message'
-import type { AddTemp, MessageTemplate, SearchModel, SendTestMessage } from './type'
+import type { AddTemp, MessageTemplate, SearchModel, SendTestMessage, TemplateItem } from './type'
 import { searchForm } from '@/config/form'
 import { tableHeader, tableColumns, tableHeaderOptions, tableOptions } from '@/config/table'
 import emitter from '@/utils/mitt'
-import { deleteTemplate } from '@/api/message'
+import { deleteTemplate, updateStatus } from '@/api/message'
 const messageStore = useMessageStore()
 
 //搜索框配置
@@ -25,9 +25,10 @@ const searchModel = ref<SearchModel>({
  * 搜索请求表单数据
  * @param data
  */
-const searchTemplate = async (data: SearchModel | undefined, msg: string): Promise<void> => {
+const searchTemplate = async (data: SearchModel | undefined, msg: string, page?: { currentPage: number; pageSize: number }): Promise<void> => {
 	try {
-		const { records } = await messageStore.getTemplatePages(data !== undefined ? data : searchModel.value)
+		const { records, total } = await messageStore.getTemplatePages(data !== undefined ? data : searchModel.value, page)
+		tableOptions.templateOption.paginationConfig.total = total
 		emitter.emit('loading', false)
 		emitter.emit('iconLoading', false)
 		tableModel.value = records
@@ -113,6 +114,19 @@ const sendTestMessage = async (data: SendTestMessage) => {
 }
 
 /**
+ * 更新状态
+ */
+const updateStatu = async (obj: TemplateItem) => {
+	try {
+		await updateStatus(obj)
+		message.success('修改成功')
+	} catch (error) {
+		console.error('An error occurred:', error)
+		message.error(error)
+	}
+}
+
+/**
  * 按钮点击事件
  * @param command
  * @param callback
@@ -121,6 +135,12 @@ const handleAction = (command: string, val: any, callback: any) => {
 	console.log(val)
 
 	switch (command) {
+		case 'search':
+			searchTemplate(undefined, '', val)
+			break
+		case 'status':
+			updateStatu(val)
+			break
 		case 'edit':
 			callback(updatetemplate)
 			break
@@ -135,7 +155,7 @@ const handleAction = (command: string, val: any, callback: any) => {
 			break
 	}
 }
-onMounted(() => {
+onBeforeMount(() => {
 	searchTemplate(undefined, '')
 })
 </script>

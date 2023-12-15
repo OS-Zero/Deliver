@@ -26,11 +26,27 @@ const state = reactive<State>({
 	loading: true,
 	collapsed: false
 })
+const pagination = ref<Table.Pagination>({
+	current: 1,
+	pageSize: 10,
+	total: 0,
+	pageSizeOptions: ['10', '20', '50', '100'],
+	showQuickJumper: true,
+	showSizeChanger: true,
+	locale: {
+		items_per_page: '条/页', // 每页显示条数的文字描述
+		jump_to: '跳至', // 跳转到某页的文字描述
+		page: '页', // 页的文字描述
+		prev_page: '上一页', // 上一页按钮文字描述
+		next_page: '下一页' // 下一页按钮文字描述
+	},
+	showTotal: (total: number) => `共 ${total} 条数据`
+})
 watch(
 	props,
 	() => {
-		console.log('hello')
 		state.selectedRowKeys = []
+		pagination.value.total = props.options.paginationConfig.total
 	},
 	{
 		immediate: true
@@ -69,6 +85,19 @@ const toggleExpand = (expand: boolean, record: any) => {
 		expandedRowKeys.value.push(record[props.options.rowKey])
 	}
 }
+const change = (page: any) => {
+	pagination.value.current = page.current
+	pagination.value.pageSize = page.pageSize
+	pagination.value.total = page.pageSize
+	emitter.emit('loading', true)
+	emit('actions', 'search', { currentPage: page.current, pageSize: page.pageSize })
+}
+const changeStatus = (name1: string, val1: any, name2: string, val2: string) => {
+	const obj = {}
+	obj[name1] = val1
+	obj[name2] = val2
+	emit('actions', 'status', obj)
+}
 onMounted(() => {
 	emitter.on('loading', (loading) => {
 		state.loading = loading
@@ -79,7 +108,7 @@ onMounted(() => {
 })
 onUnmounted(() => {
 	emitter.off('loading')
-	emitter.off('loading')
+	emitter.off('collapsed')
 })
 </script>
 <template>
@@ -93,29 +122,40 @@ onUnmounted(() => {
 		<a-table
 			:columns="columns"
 			:data-source="model"
+			:pagination="pagination"
 			:scroll="{ x: 1200, y: undefined, scrollToFirstRowOnChange: true }"
 			:expandedRowKeys="expandedRowKeys"
 			:expandIconAsCell="false"
 			:expandIconColumnIndex="-1"
 			:loading="state.loading"
 			:row-key="(record: any) => record[props.options.rowKey]"
-			:row-selection="{ selectedRowKeys: state.selectedRowKeys, onChange: onSelectChange }">
+			:row-selection="{ selectedRowKeys: state.selectedRowKeys, onChange: onSelectChange }"
+			@change="change">
 			<template #headerCell="{ column }">
 				<template v-if="column.head === 'icon'">
 					<span>
-						<component :is="h(column.icon)"></component>
+						<component :is="h(column.headIcon)"></component>
 						{{ column.title }}
 					</span>
 				</template>
 			</template>
 			<template #bodyCell="{ column, record, index }">
-				<template v-if="column.type === 'tag'">
+				<template v-if="column.type === 'icon'">
+					<span style="font-weight: 700; margin-right: 5px">
+						{{ column.filter ? column.filter(record[column.dataIndex]) : record[column.dataIndex] }}
+					</span>
+					<a-tooltip>
+						<template #title>{{ column.options.tip }}</template>
+						<component :is="h(column.bodyIcon)" @click="column.options.func(record[column.dataIndex])"></component>
+					</a-tooltip>
+				</template>
+				<template v-else-if="column.type === 'tag'">
 					<a-tag :color="getColor(record[column.dataIndex])" style="width: 80px; text-align: center">
-						<span>{{ column.filter(record[column.dataIndex]) }}</span>
+						<span>{{ column.filter ? column.filter(record[column.dataIndex]) : record[column.dataIndex] }}</span>
 					</a-tag>
 				</template>
 				<template v-else-if="column.type === 'blue'">
-					<span style="color: #1677ff">{{ column.filter(record[column.dataIndex]) }}</span>
+					<span style="color: #1677ff">{{ column.filter ? column.filter(record[column.dataIndex]) : record[column.dataIndex] }}</span>
 				</template>
 				<template v-else-if="column.type === 'img'">
 					<img style="height: 30px; width: 30px" :src="column.filter(record[column.dataIndex])" :alt="record[column.dataIndex]" />
@@ -126,7 +166,8 @@ onUnmounted(() => {
 						checked-children="启用"
 						un-checked-children="禁用"
 						:checkedValue="1"
-						:unCheckedValue="0" />
+						:unCheckedValue="0"
+						@click="changeStatus(options.rowKey, record[options.rowKey], column.dataIndex, record[column.dataIndex])" />
 				</template>
 				<template v-else-if="column.type === 'operation'">
 					<template v-for="btn in column.buttons" :key="btn.command">

@@ -7,9 +7,9 @@ export const useMessageStore = defineStore('message', {
 	},
 	getters: {},
 	actions: {
-		async getTemplatePages(data: SearchModel) {
+		async getTemplatePages(data: SearchModel, page?: { currentPage: number; pageSize: number }) {
 			try {
-				const res = await getTemplatePages(Object.assign(data, { currentPage: 1, pageSize: 10 }))
+				const res = await getTemplatePages(Object.assign(data, page ? page : { currentPage: 1, pageSize: 10 }))
 				res.data.records.forEach((item) => {
 					if (item.pushWays) {
 						const obj = JSON.parse(item.pushWays)
