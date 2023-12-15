@@ -13,20 +13,20 @@ interface EmitEvent {
 }
 const props = defineProps<Props>()
 const emit = defineEmits<EmitEvent>()
-const centerModel = ref<Record<string, any>>({})
+const drawerModel = ref<Record<string, any>>({})
 const modeList = ref(['code'])
 const cache = new Map()
 watch(
 	() => props.model,
 	() => {
-		centerModel.value[props.model.key] = props.model[props.model.key]
+		drawerModel.value[props.model.key] = props.model[props.model.key]
 		props.config.formData.forEach((item) => {
 			if (item.type === 'cascader') {
 				item.options.forEach((opt: any) => {
-					centerModel.value[opt.field] = props.model[opt.field]
+					drawerModel.value[opt.field] = props.model[opt.field]
 				})
 			} else {
-				centerModel.value[item.field] = props.model[item.field]
+				drawerModel.value[item.field] = props.model[item.field]
 			}
 		})
 	},
@@ -46,7 +46,7 @@ const openModel = () => {
 				})
 			}
 			item.request(...args).then((res: any) => {
-				centerModel.value[item.field] = res
+				drawerModel.value[item.field] = res
 				cache.set(item.field, res)
 			})
 		})
@@ -60,10 +60,10 @@ const selectChange = (opts: Array<Record<string, any>> | undefined, index: numbe
 	const len = opts.length
 	opts.forEach((opt: Record<string, any>, idx: number) => {
 		if (idx <= index) {
-			res.push(centerModel.value[opt.field])
-			if (len - 1 === idx) lastNumber.value = centerModel.value[opt.field]
+			res.push(drawerModel.value[opt.field])
+			if (len - 1 === idx) lastNumber.value = drawerModel.value[opt.field]
 		} else {
-			centerModel.value[opt.field] = undefined
+			drawerModel.value[opt.field] = undefined
 			lastNumber.value = undefined
 			res.push(-1)
 		}
@@ -80,7 +80,7 @@ watch(lastNumber, () => {
 	props.config.requests?.forEach((item: Record<string, any>) => {
 		if (lastNumber.value === undefined) {
 			requestOptions.value[item.field] = []
-			centerModel.value[item.field] = undefined
+			drawerModel.value[item.field] = undefined
 		} else {
 			item.request(lastNumber.value as number).then((res: Array<Record<string, any>>) => {
 				requestOptions.value[item.field] = res
@@ -98,7 +98,7 @@ const resetForm = () => {
 	formRef.value.resetFields()
 	if (cache.size) {
 		props.config.requests?.forEach((item) => {
-			centerModel.value[item.field] = cache.get(item.field)
+			drawerModel.value[item.field] = cache.get(item.field)
 		})
 	}
 }
@@ -109,7 +109,7 @@ const submit = () => {
 	formRef.value
 		.validate()
 		.then(() => {
-			emit('submit', centerModel.value)
+			emit('submit', drawerModel.value)
 			resetForm()
 			open.value = false
 		})
@@ -124,36 +124,36 @@ const submit = () => {
 			<a-button @click="openModel" type="primary">{{ config.title }}</a-button>
 		</slot>
 		<a-drawer v-model:open="open" :title="config.title" width="650px" :footer="null" @close="resetForm">
-			<a-form ref="formRef" :model="centerModel" :rules="config.rules" :label-col="{ span: 5 }" :wrapper-col="{ span: 20 }" class="centerForm">
+			<a-form ref="formRef" :model="drawerModel" :rules="config.rules" :label-col="{ span: 5 }" :wrapper-col="{ span: 20 }" class="centerForm">
 				<template v-for="item in config.formData" :key="item.field">
 					<a-form-item :label="item.label" :name="item.field" class="center-item" v-if="item.type === 'input'">
-						<a-input :maxlength="20" v-model:value="centerModel[item.field]" :placeholder="item.placeholder" style="width: 70%" />
+						<a-input :maxlength="20" v-model:value="drawerModel[item.field]" :placeholder="item.placeholder" style="width: 70%" />
 					</a-form-item>
 					<a-form-item :label="item.label" :name="item.field" class="center-item" v-if="item.type === 'inputNumber'">
-						<a-input-number v-model:value="centerModel[item.field]" :min="0" :max="3" />
+						<a-input-number v-model:value="drawerModel[item.field]" :min="0" :max="3" />
 					</a-form-item>
 					<a-form-item :label="item.label" :name="item.field" class="center-item" v-else-if="item.type === 'radio'">
-						<a-radio-group v-model:value="centerModel[item.field]" button-style="solid">
+						<a-radio-group v-model:value="drawerModel[item.field]" button-style="solid">
 							<a-radio-button :value="radio.value" v-for="radio in item.options" :key="radio.value">{{ item.label }}</a-radio-button>
 						</a-radio-group>
 					</a-form-item>
 					<a-form-item :label="item.label" :name="item.field" class="center-item" v-else-if="item.type === 'select'">
 						<a-select
-							v-model:value="centerModel[item.field]"
+							v-model:value="drawerModel[item.field]"
 							:options="item.options === 'function' ? requestOptions[item.field] : item.options"
 							:disabled="item.options === 'function' ? !requestOptions[item.field] || !requestOptions[item.field].length : !item.options.lengh"
 							style="width: 70%" />
 					</a-form-item>
 					<a-form-item :label="item.label" :name="item.field" class="center-item" v-else-if="item.type === 'list'">
-						<List v-model:value="centerModel[item.field]" :options="item.options"></List>
+						<List v-model:value="drawerModel[item.field]" :options="item.options"></List>
 					</a-form-item>
 					<a-form-item :label="item.label" :name="item.field" class="center-item" v-else-if="item.type === 'jsonEditor'">
-						<json-editor-vue v-model="centerModel[item.field]" langua="zh" :mode="'text'" :modeList="modeList"></json-editor-vue>
+						<json-editor-vue v-model="drawerModel[item.field]" langua="zh" :mode="'text'" :modeList="modeList"></json-editor-vue>
 					</a-form-item>
 					<template v-else-if="item.type === 'cascader'">
 						<a-form-item :label="option.label" :name="option.field" class="center-item" v-for="(option, index) in item.options" :key="option.field">
 							<a-select
-								v-model:value="centerModel[option.field]"
+								v-model:value="drawerModel[option.field]"
 								:options="index === 0 ? option.options : Array.isArray(options[index]) ? options[index] : []"
 								style="width: 70%"
 								:disabled="index !== 0 && (!Array.isArray(options[index]) || !options[index].length)"
@@ -162,7 +162,7 @@ const submit = () => {
 					</template>
 					<a-form-item :label="item.label" :name="item.field" class="center-item" v-else-if="item.type === 'switch'">
 						<a-switch
-							v-model:checked="centerModel[item.field]"
+							v-model:checked="drawerModel[item.field]"
 							checked-children="启用"
 							un-checked-children="禁用"
 							:checkedValue="1"
