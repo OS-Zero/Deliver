@@ -4,10 +4,8 @@ import App from './App.vue'
 
 import router from './router'
 import { createPinia } from 'pinia'
-
-import 'jsoneditor'
 import './permisson'
-
+import 'jsoneditor'
 const pinia = createPinia()
 
 createApp(App).use(router).use(pinia).mount('#app')

@@ -8,12 +8,7 @@ import { platformFile, searchPlatformFile } from './type'
 import { getPagePlatformFile } from '@/api/platformFile'
 import searchForm from './components/searchForm.vue'
 import uploadFile from './components/uploadFile.vue'
-import {
-	UpCircleTwoTone,
-	DownCircleTwoTone,
-	CopyTwoTone,
-	SettingOutlined
-} from '@ant-design/icons-vue'
+import { UpCircleTwoTone, DownCircleTwoTone, CopyTwoTone, SettingOutlined } from '@ant-design/icons-vue'
 /**
  * 表格初始化
  */
@@ -199,10 +194,7 @@ onMounted(() => {
 		<div class="message-section">
 			<div class="splitter">
 				<a-tooltip title="刷新">
-					<a-button
-						shape="circle"
-						:icon="h(ReloadOutlined)"
-						@click="getPagesPlatformFile({ page: current, pageSize, opt: 1 })" />
+					<a-button shape="circle" :icon="h(ReloadOutlined)" @click="getPagesPlatformFile({ page: current, pageSize, opt: 1 })" />
 				</a-tooltip>
 				<uploadFile @mes="getPagesPlatformFile({ page: 1, pageSize, opt: 1 })" />
 			</div>
@@ -231,21 +223,9 @@ onMounted(() => {
 					<template v-if="column.key === 'appType'">
 						<span>
 							<!-- 根据 appType 的值显示不同的图片 -->
-							<img
-								style="height: 30px; width: 30px"
-								v-if="record.appType === 1"
-								src="钉钉.png"
-								alt="钉钉" />
-							<img
-								style="height: 30px; width: 30px"
-								v-else-if="record.appType === 2"
-								src="企业微信.png"
-								alt="企业微信" />
-							<img
-								style="height: 30px; width: 30px"
-								v-else-if="record.appType === 3"
-								src="飞书.png"
-								alt="飞书" />
+							<img style="height: 30px; width: 30px" v-if="record.appType === 1" src="钉钉.png" alt="钉钉" />
+							<img style="height: 30px; width: 30px" v-else-if="record.appType === 2" src="企业微信.png" alt="企业微信" />
+							<img style="height: 30px; width: 30px" v-else-if="record.appType === 3" src="飞书.png" alt="飞书" />
 							<!-- 添加更多条件根据需要显示不同的图片 -->
 						</span>
 					</template>
@@ -255,22 +235,12 @@ onMounted(() => {
 						</span>
 					</template>
 					<template v-if="column.key === 'operation'">
-						<a-button
-							type="link"
-							size="small"
-							style="font-size: 14px"
-							@click="getInnerData(false, record)"
-							v-if="judgeInclude(record)">
+						<a-button type="link" size="small" style="font-size: 14px" @click="getInnerData(false, record)" v-if="judgeInclude(record)">
 							<UpCircleTwoTone style="font-size: 18px" />
 						</a-button>
 						<a-tooltip v-if="!judgeInclude(record)">
 							<template #title>查看平台文件更多信息</template>
-							<a-button
-								type="link"
-								size="small"
-								style="font-size: 14px"
-								@click="getInnerData(true, record)"
-								v-if="!judgeInclude(record)">
+							<a-button type="link" size="small" style="font-size: 14px" @click="getInnerData(true, record)" v-if="!judgeInclude(record)">
 								<DownCircleTwoTone style="font-size: 18px" />
 							</a-button>
 						</a-tooltip>

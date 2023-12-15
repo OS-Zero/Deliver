@@ -1,7 +1,13 @@
 import request from '@/utils/request'
-import type { searchMessage, addTemp, sendMessageTest } from '@/views/Message/type'
+import { R, SearchData } from '@/types'
+import type { MessageTemplate, SearchMessage, SendTestMessage, AppItem, MessageItem, TemplateItem, AddTemp } from '@/views/Message/type'
 
-export async function getTemplatePages(data: searchMessage): Promise<any> {
+/**
+ * 模版分页查询
+ * @param data 搜索框数据
+ * @returns 返回模板数据
+ */
+export async function getTemplatePages(data: SearchMessage): Promise<R<SearchData<MessageTemplate>>> {
 	return await request({
 		url: '/template/search',
 		method: 'post',
@@ -9,7 +15,12 @@ export async function getTemplatePages(data: searchMessage): Promise<any> {
 	})
 }
 
-export async function getMessageType(data: { channelType: number }): Promise<any> {
+/**
+ * 根据渠道类型查询具体的消息类型
+ * @param data 1-电话、2-短信、3-邮件、4-钉钉、5-企业微信、6-飞书
+ * @returns 返回消息类型
+ */
+export async function getMessageType(data: { channelType: number }): Promise<R<Array<MessageItem>>> {
 	return await request({
 		url: '/template/getMessageTypeByChannelType',
 		method: 'post',
@@ -17,7 +28,12 @@ export async function getMessageType(data: { channelType: number }): Promise<any
 	})
 }
 
-export async function getApp(data: { channelType: number }): Promise<any> {
+/**
+ * 根据渠道类型查询 APP
+ * @param data 1-电话、2-短信、3-邮件、4-钉钉、5-企业微信、6-飞书
+ * @returns 返回消息类型
+ */
+export async function getApp(data: { channelType: number }): Promise<R<Array<AppItem>>> {
 	return await request({
 		url: '/app/getAppByChannelType',
 		method: 'post',
@@ -25,7 +41,12 @@ export async function getApp(data: { channelType: number }): Promise<any> {
 	})
 }
 
-export async function addTemplatePages(data: addTemp): Promise<any> {
+/**
+ * 新增模版
+ * @param data 新增模板数据
+ * @returns
+ */
+export async function addTemplatePages(data: AddTemp): Promise<R<null>> {
 	return await request({
 		url: '/template/saveTemplate',
 		method: 'post',
@@ -33,10 +54,12 @@ export async function addTemplatePages(data: addTemp): Promise<any> {
 	})
 }
 
-export async function updateStatus(data: {
-	templateId: number
-	templateStatus: number
-}): Promise<any> {
+/**
+ * 更新模板状态
+ * @param data
+ * @returns
+ */
+export async function updateStatus(data: TemplateItem): Promise<R<null>> {
 	return await request({
 		url: '/template/updateStatusById',
 		method: 'post',
@@ -44,7 +67,12 @@ export async function updateStatus(data: {
 	})
 }
 
-export async function updatetemplate(data: any): Promise<any> {
+/**
+ * 更新模板
+ * @param data
+ * @returns
+ */
+export async function updatetemplate(data: AddTemp): Promise<R<null>> {
 	return await request({
 		url: '/template/updateById',
 		method: 'post',
@@ -52,7 +80,12 @@ export async function updatetemplate(data: any): Promise<any> {
 	})
 }
 
-export async function deleteTemplate(data: { ids: number[] }): Promise<any> {
+/**
+ * 删除模板
+ * @param data
+ * @returns
+ */
+export async function deleteTemplate(data: { ids: Array<number> }): Promise<R<null>> {
 	return await request({
 		url: '/template/deleteByIds',
 		method: 'post',
@@ -60,7 +93,12 @@ export async function deleteTemplate(data: { ids: number[] }): Promise<any> {
 	})
 }
 
-export async function sendTestMes(data: sendMessageTest): Promise<any> {
+/**
+ * 模板测试发送消息
+ * @param data
+ * @returns
+ */
+export async function sendTestMes(data: SendTestMessage): Promise<R<null>> {
 	return await request({
 		url: '/template/testSendMessage',
 		method: 'post',
@@ -68,10 +106,12 @@ export async function sendTestMes(data: sendMessageTest): Promise<any> {
 	})
 }
 
-export async function getMessageParamByMessageType(data: {
-	messageType: string
-	channelType: string
-}): Promise<any> {
+/**
+ * 请求默认模板
+ * @param data
+ * @returns
+ */
+export async function getMessageParamByMessageType(data: { messageType: number; channelType: number }): Promise<any> {
 	return await request({
 		url: '/template/getMessageParamByMessageType',
 		method: 'post',

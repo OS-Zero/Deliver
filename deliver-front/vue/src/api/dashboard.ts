@@ -1,25 +1,6 @@
 import request from '@/utils/request'
-import { R } from '@/types/type'
-
-export interface DashboardHeadData {
-	numberOfMessagesToday?: string
-	numberOfPlatformFiles?: string
-	accumulatedTemplateOwnership?: string
-	numberOfApps?: string
-}
-
-type MessageInfo = [string, string, string]
-export interface MessageInfoList {
-	messageInfoList: MessageInfo[]
-}
-
-interface DashboardInfo {
-	value: number
-	name: string
-}
-export interface DashboardInfoList {
-	dashboardInfoList: Array<DashboardInfo>
-}
+import { R } from '@/types'
+import { DashboardHeadData, MessageInfoList, DashboardInfoList } from '@/views/Dashboard/type'
 
 /**
  * 请求控制面板头部数据

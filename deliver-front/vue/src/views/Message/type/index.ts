@@ -1,5 +1,74 @@
 import type { Dayjs } from 'dayjs'
-export interface messageTemplate {
+
+export interface AppItem {
+	appId: number
+	appName: string
+}
+
+export interface MessageItem {
+	code: string
+	name: string
+}
+
+export interface TemplateItem {
+	templateId: number
+	templateStatus: number
+}
+
+export interface Pagination {
+	/**
+	 * 当前页面序号
+	 */
+	currentPage: number
+	/**
+	 * 页面大小
+	 */
+	pageSize: number
+}
+/**
+ * 搜索框接口
+ */
+export interface SearchModel {
+	/**
+	 * 模板名
+	 */
+	templateName?: string
+	/**
+	 * 推送范围
+	 */
+	pushRange?: number
+	/**
+	 * 用户类型
+	 */
+	usersType?: number
+	/**
+	 * 日期
+	 */
+	period?: [Dayjs, Dayjs]
+	/**
+	 * 日期开始时间
+	 */
+	startTime?: string
+	/**
+	 * 日期结束时间
+	 */
+	endTime?: string
+}
+
+/**
+ * 发送搜索框信息接口
+ */
+export interface SearchMessage extends SearchModel, Pagination {
+	/**
+	 * 模板状态
+	 */
+	templateStatus?: number | boolean
+}
+
+/**
+ * 表单数据
+ */
+export interface MessageTemplate {
 	/**
 	 * 模板id
 	 */
@@ -11,11 +80,11 @@ export interface messageTemplate {
 	/**
 	 * 推送范围
 	 */
-	pushRange: string
+	pushRange: number
 	/**
 	 * 用户类型
 	 */
-	usersType: string
+	usersType: number
 	/**
 	 * 推送方式
 	 */
@@ -27,7 +96,7 @@ export interface messageTemplate {
 	/**
 	 * 消息类型
 	 */
-	messageType: string
+	messageType: number
 	/**
 	 * 模板累计使用数
 	 */
@@ -54,44 +123,10 @@ export interface messageTemplate {
 	appName: string
 }
 
-// 搜索框接口
-export interface searchMessage {
-	/**
-	 * 模板名
-	 */
-	templateName?: string
-	/**
-	 * 推送范围
-	 */
-	pushRange?: number
-	/**
-	 * 用户类型
-	 */
-	usersType?: number
-	/**
-	 * 当前页面序号
-	 */
-	currentPage: number
-	/**
-	 * 页面大小
-	 */
-	pageSize: number
-	/**
-	 * 起始日期
-	 */
-	startTime?: string
-	/**
-	 * 结束日期
-	 */
-	endTime?: string
-	/**
-	 * 时间段
-	 */
-	perid?: [Dayjs, Dayjs]
-}
-
-// 新增接口
-export interface addTemp {
+/**
+ * 新增接口
+ */
+export interface AddTemp {
 	/**
 	 * 模板名
 	 */
@@ -126,47 +161,10 @@ export interface addTemp {
 	templateStatus: number | boolean
 }
 
-// 修改接口
-export interface modiTemp {
-	/**
-	 * 模板id
-	 */
-	templateId: number
-	/**
-	 * 模板名
-	 */
-	templateName: string
-	/**
-	 * 推送范围
-	 */
-	pushRange: number | undefined
-	/**
-	 * 用户类型
-	 */
-	usersType: number | undefined
-	/**
-	 * 用户类型
-	 */
-	pushWays: string
-	/**
-	 * 渠道选择
-	 */
-	channelType?: string | undefined | number
-	/**
-	 * 消息类型
-	 */
-	messageType?: string
-	/**
-	 * 模板状态
-	 */
-	templateStatus: number
-	/**
-	 * Appid
-	 */
-	appId: number | undefined | string
-}
-
-export interface sendMessageTest {
+/**
+ * 发送消息接口
+ */
+export interface SendTestMessage {
 	/**
 	 * 模板id
 	 */

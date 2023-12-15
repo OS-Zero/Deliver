@@ -108,25 +108,10 @@ const wrapperCol = { span: 20 }
 
 <template>
 	<a-button type="primary" @click="showDrawer" style="margin-left: 20px">上传平台文件</a-button>
-	<a-drawer
-		title="上传平台文件"
-		:placement="placement"
-		:closable="true"
-		:open="open"
-		@close="onClose"
-		:width="660">
-		<a-form
-			ref="uploadFileForm"
-			:model="uploadFileTable"
-			:rules="rules"
-			:label-col="labelCol"
-			:wrapper-col="wrapperCol">
+	<a-drawer title="上传平台文件" :placement="placement" :closable="true" :open="open" @close="onClose" :width="660">
+		<a-form ref="uploadFileForm" :model="uploadFileTable" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
 			<a-form-item label="文件名" name="fileName" style="margin-left: 10px">
-				<a-input
-					show-count
-					:maxlength="50"
-					v-model:value="uploadFileTable.fileName"
-					placeholder="请输入文件名"></a-input>
+				<a-input show-count :maxlength="50" v-model:value="uploadFileTable.fileName" placeholder="请输入文件名"></a-input>
 			</a-form-item>
 			<a-form-item label="APP 类型" name="appType" style="margin-left: 10px">
 				<a-select v-model:value="uploadFileTable.appType" placeholder="请选择 APP 类型">
@@ -137,81 +122,29 @@ const wrapperCol = { span: 20 }
 			</a-form-item>
 			<a-form-item label="文件类型" name="fileType" style="margin-left: 10px">
 				<a-select v-model:value="uploadFileTable.fileType" placeholder="请选择文件类型">
-					<a-select-option
-						v-if="uploadFileTable.appType == 1 || uploadFileTable.appType == undefined"
-						value="image">
-						钉钉-图片
-					</a-select-option>
-					<a-select-option
-						v-if="uploadFileTable.appType == 1 || uploadFileTable.appType == undefined"
-						value="voice">
-						钉钉-语音
-					</a-select-option>
-					<a-select-option
-						v-if="uploadFileTable.appType == 1 || uploadFileTable.appType == undefined"
-						value="video">
-						钉钉-视频
-					</a-select-option>
-					<a-select-option
-						v-if="uploadFileTable.appType == 1 || uploadFileTable.appType == undefined"
-						value="file">
-						钉钉-文件
-					</a-select-option>
-					<a-select-option
-						v-if="uploadFileTable.appType == 3 || uploadFileTable.appType == undefined"
-						value="image">
-						飞书-图片
-					</a-select-option>
-					<a-select-option
-						v-if="uploadFileTable.appType == 3 || uploadFileTable.appType == undefined"
-						value="opus">
+					<a-select-option v-if="uploadFileTable.appType == 1 || uploadFileTable.appType == undefined" value="image">钉钉-图片</a-select-option>
+					<a-select-option v-if="uploadFileTable.appType == 1 || uploadFileTable.appType == undefined" value="voice">钉钉-语音</a-select-option>
+					<a-select-option v-if="uploadFileTable.appType == 1 || uploadFileTable.appType == undefined" value="video">钉钉-视频</a-select-option>
+					<a-select-option v-if="uploadFileTable.appType == 1 || uploadFileTable.appType == undefined" value="file">钉钉-文件</a-select-option>
+					<a-select-option v-if="uploadFileTable.appType == 3 || uploadFileTable.appType == undefined" value="image">飞书-图片</a-select-option>
+					<a-select-option v-if="uploadFileTable.appType == 3 || uploadFileTable.appType == undefined" value="opus">
 						飞书-opus音频文件
 					</a-select-option>
-					<a-select-option
-						v-if="uploadFileTable.appType == 3 || uploadFileTable.appType == undefined"
-						value="mp4">
-						飞书-mp4视频文件
-					</a-select-option>
-					<a-select-option
-						v-if="uploadFileTable.appType == 3 || uploadFileTable.appType == undefined"
-						value="pdf">
-						飞书-pdf格式文件
-					</a-select-option>
-					<a-select-option
-						v-if="uploadFileTable.appType == 3 || uploadFileTable.appType == undefined"
-						value="doc">
-						飞书-doc格式文件
-					</a-select-option>
-					<a-select-option
-						v-if="uploadFileTable.appType == 3 || uploadFileTable.appType == undefined"
-						value="xls">
-						飞书-xls格式文件
-					</a-select-option>
-					<a-select-option
-						v-if="uploadFileTable.appType == 3 || uploadFileTable.appType == undefined"
-						value="ppt">
-						飞书-ppt格式文件
-					</a-select-option>
-					<a-select-option
-						v-if="uploadFileTable.appType == 3 || uploadFileTable.appType == undefined"
-						value="stream">
+					<a-select-option v-if="uploadFileTable.appType == 3 || uploadFileTable.appType == undefined" value="mp4">飞书-mp4视频文件</a-select-option>
+					<a-select-option v-if="uploadFileTable.appType == 3 || uploadFileTable.appType == undefined" value="pdf">飞书-pdf格式文件</a-select-option>
+					<a-select-option v-if="uploadFileTable.appType == 3 || uploadFileTable.appType == undefined" value="doc">飞书-doc格式文件</a-select-option>
+					<a-select-option v-if="uploadFileTable.appType == 3 || uploadFileTable.appType == undefined" value="xls">飞书-xls格式文件</a-select-option>
+					<a-select-option v-if="uploadFileTable.appType == 3 || uploadFileTable.appType == undefined" value="ppt">飞书-ppt格式文件</a-select-option>
+					<a-select-option v-if="uploadFileTable.appType == 3 || uploadFileTable.appType == undefined" value="stream">
 						飞书-stream格式文件
 					</a-select-option>
 				</a-select>
 			</a-form-item>
 			<a-form-item label="关联 AppId" name="appId" style="margin-left: 10px">
-				<a-input
-					:maxlength="50"
-					v-model:value="uploadFileTable.appId"
-					placeholder="请输入关联 AppId"></a-input>
+				<a-input :maxlength="50" v-model:value="uploadFileTable.appId" placeholder="请输入关联 AppId"></a-input>
 			</a-form-item>
 			<a-form-item label="文件" name="file" style="margin-left: 10px">
-				<a-upload-dragger
-					:max-count="1"
-					v-model:fileList="fileList"
-					name="file"
-					:before-upload="beforeUpload"
-					@remove="handleRemove">
+				<a-upload-dragger :max-count="1" v-model:fileList="fileList" name="file" :before-upload="beforeUpload" @remove="handleRemove">
 					<p class="ant-upload-drag-icon">
 						<inbox-outlined></inbox-outlined>
 					</p>

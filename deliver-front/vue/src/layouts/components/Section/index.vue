@@ -14,7 +14,7 @@ import ItemLink from '../ItemLink/index.vue'
 import Breadcrumb from '../Breadcrumb/index.vue'
 import { useRoute } from 'vue-router'
 import { useStore } from '@/store/index'
-
+import emitter from '@/utils/mitt'
 const route = useRoute()
 const store = useStore()
 const selectedKeys2 = ref<string[]>([`${route.name as string}-1`])
@@ -22,6 +22,7 @@ const openKeys = ref<string[]>([route.name as string])
 const collapsed = ref(false)
 const toggleCollapsed = (): void => {
 	collapsed.value = !collapsed.value
+	emitter.emit('collapsed', collapsed.value)
 	store.changeCollapse()
 }
 </script>
@@ -52,11 +53,7 @@ const toggleCollapsed = (): void => {
 			<RightOutlined v-if="collapsed" />
 			<LeftOutlined v-else />
 		</a-button>
-		<a-menu
-			v-model:selectedKeys="selectedKeys2"
-			v-model:openKeys="openKeys"
-			mode="inline"
-			style="border-right: 0px solid #ececec">
+		<a-menu v-model:selectedKeys="selectedKeys2" v-model:openKeys="openKeys" mode="inline" style="border-right: 0px solid #ececec">
 			<a-sub-menu key="欢迎">
 				<template #title>
 					<span>
@@ -102,15 +99,6 @@ const toggleCollapsed = (): void => {
 				</template>
 				<ItemLink itemKey="文件管理-1" info="文件管理" to="file" />
 			</a-sub-menu>
-			<!-- <a-sub-menu key="规则配置">
-				<template #title>
-					<span>
-						<FunnelPlotOutlined />
-						<span>流控规则配置</span>
-					</span>
-				</template>
-				<ItemLink itemKey="规则配置-1" info="规则配置" to="flowControlRule" />
-			</a-sub-menu> -->
 		</a-menu>
 	</a-layout-sider>
 	<a-layout
@@ -131,10 +119,7 @@ const toggleCollapsed = (): void => {
 			}">
 			<div style="margin-bottom: 6px">
 				Deliver 企业消息推送平台
-				<a
-					href="https://gitee.com/OS-Zero"
-					target="_blank"
-					style="color: #1e1e1e; font-size: 16px; margin: 0 5px 0">
+				<a href="https://gitee.com/OS-Zero" target="_blank" style="color: #1e1e1e; font-size: 16px; margin: 0 5px 0">
 					<GithubOutlined />
 				</a>
 				OSZero 开源社区出品
