@@ -56,7 +56,8 @@ public class DingParamCheck implements MessageLink<SendTaskDto> {
 
         try {
             // 参数校验
-            ParamStrategy paramStrategy = dingParamStrategyMap.get(ParamStrategy.DING_STRATEGY_BEAN_PRE_NAME + sendTaskDto.getMessageType());
+            String strategyName = ParamStrategy.DING_STRATEGY_BEAN_PRE_NAME + sendTaskDto.getMessageType();
+            ParamStrategy paramStrategy = dingParamStrategyMap.get(strategyName);
             paramStrategy.paramCheck(sendTaskDto);
         } catch (Exception e) {
             throw new MessageException(sendTaskDto, "钉钉消息参数校验失败，" + e.getMessage());
