@@ -1,5 +1,7 @@
 package com.oszero.deliver.server.client.sms.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import com.oszero.deliver.server.client.sms.SmsClient;
 import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.model.app.sms.SmsApp;
@@ -10,11 +12,14 @@ import com.tencentcloudapi.common.profile.ClientProfile;
 import com.tencentcloudapi.common.profile.HttpProfile;
 import com.tencentcloudapi.sms.v20210111.models.SendSmsRequest;
 import com.tencentcloudapi.sms.v20210111.models.SendSmsResponse;
+import com.tencentcloudapi.sms.v20210111.models.SendStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 短信客户端腾讯云实现
@@ -28,17 +33,21 @@ public class TencentSmsClient implements SmsClient {
     @Override
     public void sendSms(SmsApp smsApp, SendTaskDto sendTaskDto) {
         try {
+            // 获取腾讯云API接口安全配置参数
             TencentSmsApp tencentSmsApp = (TencentSmsApp) smsApp;
             String secretId = tencentSmsApp.getSecretId();
             String secretKey = tencentSmsApp.getSecretKey();
-
+            // 获取短信相关参数
             Map<String, Object> paramMap = sendTaskDto.getParamMap();
             String region = paramMap.get("region").toString();
             String smsSdkAppId = paramMap.get("smsSdkAppId").toString();
             String signName = paramMap.get("signName").toString();
             String templateId = paramMap.get("templateId").toString();
-            List<String> templateParam = (List<String>) paramMap.get("templateParam");
-
+            List<String> templateParam = (List<String>) paramMap.getOrDefault("templateParam", new ArrayList<String>());
+            String extendCode = paramMap.getOrDefault("extendCode", "").toString();
+            String sessionContext = paramMap.getOrDefault("sessionContext", "").toString();
+            String senderId = paramMap.getOrDefault("senderId", "").toString();
+            // 得到发送人
             List<String> users = sendTaskDto.getUsers();
 
             Credential cred = new Credential(secretId, secretKey);
@@ -60,14 +69,31 @@ public class TencentSmsClient implements SmsClient {
             req.setSignName(signName);
             req.setTemplateId(templateId);
 
-            String[] templateParamSet = templateParam.toArray(new String[0]);
-            req.setTemplateParamSet(templateParamSet);
+            if (CollectionUtil.isNotEmpty(templateParam)) {
+                String[] templateParamSet = templateParam.toArray(new String[0]);
+                req.setTemplateParamSet(templateParamSet);
+            }
+            if (StrUtil.isNotBlank(extendCode)) {
+                req.setExtendCode(extendCode);
+            }
+            if (StrUtil.isNotBlank(sessionContext)) {
+                req.setSessionContext(sessionContext);
+            }
+            if (StrUtil.isNotBlank(senderId)) {
+                req.setSenderId(senderId);
+            }
 
             SendSmsResponse resp = client.SendSms(req);
-
+            SendStatus[] sendStatusSet = resp.getSendStatusSet();
+            // 响应判断
+            for (SendStatus sendStatus : sendStatusSet) {
+                if (!Objects.equals("Ok", sendStatus.getCode())) {
+                    throw new MessageException(sendStatus.getMessage());
+                }
+            }
             log.info("发送腾讯云短信成功");
         } catch (Exception e) {
-            throw new MessageException(sendTaskDto, "发送腾讯云短信失败，" + e.getMessage());
+            throw new MessageException("发送腾讯云短信失败，" + e.getMessage());
         }
     }
 }
