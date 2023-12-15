@@ -1,5 +1,6 @@
-package com.oszero.deliver.server.model.app;
+package com.oszero.deliver.server.model.app.call;
 
+import com.oszero.deliver.server.model.app.AppConfig;
 import lombok.*;
 
 /**
