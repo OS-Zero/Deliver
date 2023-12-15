@@ -54,6 +54,6 @@ public class SmsHandler extends BaseHandler {
         } else if (SmsProviderTypeEnum.TENCENT.getName().equals(smsProvider)) {
             return JSONUtil.toBean(appConfig, TencentSmsApp.class);
         }
-        throw new MessageException("没有指定的短信服务 App：" + smsProvider);
+        throw new MessageException("没有指定的短信服务 App:" + smsProvider);
     }
 }
