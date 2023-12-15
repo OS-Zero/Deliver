@@ -16,5 +16,4 @@ import lombok.*;
 public class AliYunCallApp extends CallApp {
     private String accessKeyId;
     private String accessKeySecret;
-
 }

@@ -1,5 +1,6 @@
 package com.oszero.deliver.server.client.sms.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.aliyun.auth.credentials.Credential;
 import com.aliyun.auth.credentials.provider.StaticCredentialProvider;
 import com.aliyun.sdk.service.dysmsapi20170525.AsyncClient;
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 /**
  * 短信客户端阿里云实现
@@ -27,50 +27,68 @@ import java.util.concurrent.ExecutionException;
 @Service
 public class AliYunSmsClient implements SmsClient {
 
-    private static final String TEMPLATE_PARAM = "templateParam";
     private static final String ENDPOINT_OVERRIDE = "dysmsapi.aliyuncs.com";
-    private static final String SMS_UP_EXTEND_CODE = "smsUpExtendCode";
-    private static final String OUT_ID = "outId";
+    private static final String REGION = "region";
     private static final String SIG_NAME = "signName";
     private static final String TEMPLATE_CODE = "templateCode";
-    private static final String REGION = "region";
+    private static final String TEMPLATE_PARAM = "templateParam";
+    private static final String SMS_UP_EXTEND_CODE = "smsUpExtendCode";
+    private static final String OUT_ID = "outId";
 
     @Override
     public void sendSms(SmsApp smsApp, SendTaskDto sendTaskDto) {
-        List<String> users = sendTaskDto.getUsers();
-        String phoneNumbers = String.join(",", users);
-        Map<String,Object> map = sendTaskDto.getParamMap();
-        AliYunSmsApp aliYunSmsApp = (AliYunSmsApp) smsApp;
+        try {
+            AliYunSmsApp aliYunSmsApp = (AliYunSmsApp) smsApp;
 
-        StaticCredentialProvider provider = StaticCredentialProvider.create(Credential.builder()
-                .accessKeyId(aliYunSmsApp.getAccessKeyId())
-                .accessKeySecret(aliYunSmsApp.getAccessKeySecret())
-                .build());
+            List<String> users = sendTaskDto.getUsers();
+            String phoneNumbers = String.join(",", users);
 
-        try (AsyncClient client = AsyncClient.builder()
-                .region((String) map.get(REGION))
-                .credentialsProvider(provider)
-                .overrideConfiguration(
-                        ClientOverrideConfiguration
-                                .create()
-                                .setEndpointOverride(ENDPOINT_OVERRIDE)
-                )
-                .build()) {
+            Map<String, Object> paramMap = sendTaskDto.getParamMap();
 
-            SendSmsRequest sendSmsRequest = SendSmsRequest.builder()
-                    .phoneNumbers(phoneNumbers)
-                    .signName((String) map.get(SIG_NAME))
-                    .templateCode((String) map.get(TEMPLATE_CODE))
-                    .templateParam((String)map.get(TEMPLATE_PARAM))
-                    .smsUpExtendCode((String) map.get(SMS_UP_EXTEND_CODE))
-                    .outId((String) map.get(OUT_ID))
-                    .build();
+            // 获取阿里云短信各级参数
+            String region = paramMap.get(REGION).toString();
+            String signName = paramMap.get(SIG_NAME).toString();
+            String templateCode = paramMap.get(TEMPLATE_CODE).toString();
+            String templateParam = paramMap.getOrDefault(TEMPLATE_PARAM, "").toString();
+            String smsUpExtendCode = paramMap.getOrDefault(SMS_UP_EXTEND_CODE, "").toString();
+            String outId = paramMap.getOrDefault(OUT_ID, "").toString();
 
-            CompletableFuture<SendSmsResponse> response = client.sendSms(sendSmsRequest);
+            StaticCredentialProvider provider = StaticCredentialProvider.create(Credential.builder()
+                    .accessKeyId(aliYunSmsApp.getAccessKeyId())
+                    .accessKeySecret(aliYunSmsApp.getAccessKeySecret()).build());
 
-            SendSmsResponse resp = response.get();
-        } catch (InterruptedException | ExecutionException e) {
-            throw new MessageException("短信发送失败，" + e.getMessage());
+            try (AsyncClient client = AsyncClient.builder()
+                    .region(region)
+                    .credentialsProvider(provider)
+                    .overrideConfiguration(ClientOverrideConfiguration
+                            .create()
+                            .setEndpointOverride(ENDPOINT_OVERRIDE)
+                    ).build()) {
+
+                SendSmsRequest.Builder builder = SendSmsRequest.builder()
+                        .phoneNumbers(phoneNumbers)
+                        .signName(signName)
+                        .templateCode(templateCode);
+
+                if (StrUtil.isNotBlank(templateParam)) {
+                    builder.templateParam(templateParam);
+                }
+                if (StrUtil.isNotBlank(smsUpExtendCode)) {
+                    builder.smsUpExtendCode(smsUpExtendCode);
+                }
+                if (StrUtil.isNotBlank(outId)) {
+                    builder.outId(outId);
+                }
+
+                SendSmsRequest sendSmsRequest = builder.build();
+
+                CompletableFuture<SendSmsResponse> response = client.sendSms(sendSmsRequest);
+                SendSmsResponse resp = response.get();
+            } catch (Exception e) {
+                throw new MessageException(e.getMessage());
+            }
+        } catch (Exception e) {
+            throw new MessageException("阿里云短信发送失败，" + e.getMessage());
         }
     }
 }

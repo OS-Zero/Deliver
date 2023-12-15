@@ -17,5 +17,4 @@ public class AliYunSmsApp extends SmsApp {
 
     private String accessKeyId;
     private String accessKeySecret;
-
 }
