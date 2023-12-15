@@ -1,4 +1,4 @@
-package com.oszero.deliver.server.mq.param.feishu;
+package com.oszero.deliver.server.model.messageparam.feishu;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
