@@ -1,9 +1,9 @@
-package com.oszero.deliver.server.mq.param.feishu;
+package com.oszero.deliver.server.model.messageparam.feishu;
 
 import lombok.*;
 
 /**
- * 飞书分享群消息内容
+ * 飞书视频消息内容
  *
  * @author oszero
  * @version 1.0.0
@@ -13,12 +13,13 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class FeiShuShareChatParam extends FeiShuMessageParam {
+public class FeiShuMediaParam extends FeiShuMessageParam {
 
     private Content content;
 
     @Data
     public static class Content {
-        private String chat_id;
+        private String file_key;
+        private String image_key;
     }
 }

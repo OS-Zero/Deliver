@@ -1,4 +1,4 @@
-package com.oszero.deliver.server.mq.param.mail;
+package com.oszero.deliver.server.model.messageparam.mail;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

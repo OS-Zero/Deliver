@@ -1,4 +1,4 @@
-package com.oszero.deliver.server.mq.param.ding;
+package com.oszero.deliver.server.model.messageparam.ding;
 
 import cn.hutool.core.annotation.Alias;
 import lombok.*;

@@ -1,9 +1,9 @@
-package com.oszero.deliver.server.mq.param.feishu;
+package com.oszero.deliver.server.model.messageparam.feishu;
 
 import lombok.*;
 
 /**
- * 飞书表情包消息内容
+ * 飞书文本消息内容
  *
  * @author oszero
  * @version 1.0.0
@@ -13,12 +13,12 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class FeiShuStickerParam extends FeiShuMessageParam {
+public class FeiShuTextParam extends FeiShuMessageParam {
 
     private Content content;
 
     @Data
     public static class Content {
-        private String file_key;
+        private String text;
     }
 }

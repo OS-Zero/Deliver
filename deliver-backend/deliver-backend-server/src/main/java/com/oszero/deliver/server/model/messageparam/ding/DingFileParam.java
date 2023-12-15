@@ -1,10 +1,10 @@
-package com.oszero.deliver.server.mq.param.ding;
+package com.oszero.deliver.server.model.messageparam.ding;
 
 import cn.hutool.core.annotation.Alias;
 import lombok.*;
 
 /**
- * 钉钉图片消息内容
+ * 钉钉文件消息
  *
  * @author oszero
  * @version 1.0.0
@@ -14,19 +14,21 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class DingImageParam extends DingMessageParam {
-    private ImageMessage msg;
+public class DingFileParam extends DingMessageParam {
+
+    private FileMessage msg;
+
 
     @Data
-    public static class ImageMessage {
+    public static class FileMessage {
         private String msgtype;
-        private Image image;
+        private FileContent file;
+
     }
 
     @Data
-    public static class Image {
+    public static class FileContent {
         @Alias("media_id")
         private String mediaId;
     }
-
 }
