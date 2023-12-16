@@ -4,10 +4,7 @@ import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.util.IpUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -48,5 +45,18 @@ public class OpenControllerAop {
         String resultJson = JSONUtil.toJsonStr(result);
         // 打印日志
         log.info("IP地址为: {}，请求返回 [{}#{}] 响应参数为: {}", ip, className, methodName, resultJson);
+    }
+
+    @AfterThrowing(value = "controllerPointcut()", throwing = "ex")
+    public void afterThrowing(JoinPoint joinPoint, Throwable ex) {
+        // 获取 IP 地址
+        String ip = IpUtils.getClientIp();
+
+        // 获取类名和方法名
+        String className = joinPoint.getTarget().getClass().getName();
+        String methodName = joinPoint.getSignature().getName();
+
+        // 打印异常日志
+        log.error("IP地址为: {}，请求 [{}#{}] 发生异常: {}", ip, className, methodName, ex.getMessage());
     }
 }
