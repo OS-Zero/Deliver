@@ -18,4 +18,8 @@ public class ThreadLocalUtils {
     public static SendTaskDto getSendTaskDto() {
         return SEND_TASK_DTO_THREAD_LOCAL.get();
     }
+
+    public static void clear() {
+        SEND_TASK_DTO_THREAD_LOCAL.remove();
+    }
 }
