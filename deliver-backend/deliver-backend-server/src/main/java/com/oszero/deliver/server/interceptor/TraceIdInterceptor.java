@@ -3,6 +3,7 @@ package com.oszero.deliver.server.interceptor;
 import com.oszero.deliver.server.constant.TraceIdConstant;
 import com.oszero.deliver.server.log.trace.TraceIdStrategy;
 import com.oszero.deliver.server.util.MDCUtils;
+import com.oszero.deliver.server.util.ThreadLocalUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -40,5 +41,6 @@ public class TraceIdInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         MDCUtils.clear();
+        ThreadLocalUtils.clear();
     }
 }
