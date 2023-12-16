@@ -66,14 +66,13 @@ public class CacheConfig {
 
         RedisCacheConfiguration defaultCacheConfig = RedisCacheConfiguration.defaultCacheConfig()
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()))
-                .disableCachingNullValues().prefixCacheNameWith(CacheConstant.REDIS_CACHE_PREFIX);
+                .prefixCacheNameWith(CacheConstant.REDIS_CACHE_PREFIX);
 
         Map<String, RedisCacheConfiguration> cacheMap = new LinkedHashMap<>(CacheConstant.CacheEnum.values().length);
 
         for (var cache : CacheConstant.CacheEnum.values()) {
 
             RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
-                    .disableCachingNullValues()
                     .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()))
                     .prefixCacheNameWith(CacheConstant.REDIS_CACHE_PREFIX);
 

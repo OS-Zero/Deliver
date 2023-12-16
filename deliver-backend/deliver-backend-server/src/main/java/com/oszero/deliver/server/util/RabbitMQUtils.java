@@ -3,7 +3,9 @@ package com.oszero.deliver.server.util;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.constant.TraceIdConstant;
+import com.oszero.deliver.server.enums.StatusEnum;
 import com.oszero.deliver.server.model.dto.common.SendTaskDto;
+import com.oszero.deliver.server.web.service.MessageRecordService;
 import org.springframework.amqp.core.ReturnedMessage;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -22,9 +24,12 @@ import java.util.Objects;
 @ConditionalOnProperty(value = "mq-type", havingValue = "rabbitmq")
 public class RabbitMQUtils {
     private final RabbitTemplate rabbitTemplate;
+    private final MessageRecordService messageRecordService;
 
-    public RabbitMQUtils(RabbitTemplate rabbitTemplate) {
+    public RabbitMQUtils(RabbitTemplate rabbitTemplate, MessageRecordService messageRecordService) {
         this.rabbitTemplate = rabbitTemplate;
+        this.messageRecordService = messageRecordService;
+
         // 设置 ConfirmCallback 以处理确认和退回
         this.rabbitTemplate.setConfirmCallback((CorrelationData correlationData, boolean ack, String cause) -> {
             SendTaskDto sendTaskDto = null;
@@ -62,9 +67,13 @@ public class RabbitMQUtils {
     }
 
     public void retry(String exchange, String routingKey, SendTaskDto sendTaskDto) {
-        if (sendTaskDto.getRetry() > 0) {
+        MessageLinkTraceUtils.recordMessageLifecycleErrorLog(sendTaskDto, "RabbitMQ 消息发送失败！！！");
+        // 记录异常信息到生命周期日志中
+        MessageLinkTraceUtils.recordMessageLifecycleError2InfoLog(sendTaskDto, "RabbitMQ 消息发送失败！！！");
+        // 记录消息发送失败
+        sendTaskDto.getUsers().forEach(user -> messageRecordService.saveMessageRecord(sendTaskDto, StatusEnum.OFF, user));
 
-            MessageLinkTraceUtils.recordMessageLifecycleErrorLog(sendTaskDto, "RabbitMQ 消息发送失败！！！");
+        if (sendTaskDto.getRetry() > 0) {
 
             sendTaskDto.setRetry(sendTaskDto.getRetry() - 1);
             sendTaskDto.setRetried(1);
@@ -77,6 +86,8 @@ public class RabbitMQUtils {
             MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "RabbitMQ 重试消息已发送");
         } else {
             MessageLinkTraceUtils.recordMessageLifecycleErrorLog(sendTaskDto, "RabbitMQ 消息发送失败，重试次数已用完！！！");
+            // 记录异常信息到生命周期日志中
+            MessageLinkTraceUtils.recordMessageLifecycleError2InfoLog(sendTaskDto, "RabbitMQ 消息发送失败，重试次数已用完！！！");
         }
     }
 }

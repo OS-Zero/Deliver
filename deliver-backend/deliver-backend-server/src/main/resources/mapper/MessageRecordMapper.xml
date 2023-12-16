@@ -13,14 +13,8 @@
             <result property="pushUser" column="push_user" jdbcType="VARCHAR"/>
             <result property="channelType" column="channel_type" jdbcType="TINYINT"/>
             <result property="messageType" column="message_type" jdbcType="TINYINT"/>
+            <result property="pushRange" column="push_range" jdbcType="TINYINT"/>
             <result property="retried" column="retried" jdbcType="TINYINT"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
     </resultMap>
-
-    <sql id="Base_Column_List">
-        trace_id,template_id,app_id,
-        message_status,user_type,push_user,
-        channel_type,message_type,retried,
-        create_time
-    </sql>
 </mapper>

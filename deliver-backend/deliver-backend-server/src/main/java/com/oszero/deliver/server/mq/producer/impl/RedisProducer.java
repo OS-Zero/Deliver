@@ -3,11 +3,13 @@ package com.oszero.deliver.server.mq.producer.impl;
 import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.server.constant.MQConstant;
 import com.oszero.deliver.server.enums.ChannelTypeEnum;
+import com.oszero.deliver.server.enums.StatusEnum;
 import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.mq.producer.Producer;
 import com.oszero.deliver.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import com.oszero.deliver.server.util.RedisUtils;
+import com.oszero.deliver.server.web.service.MessageRecordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.redis.connection.stream.RecordId;
@@ -27,6 +29,7 @@ import java.util.Objects;
 public class RedisProducer implements Producer {
 
     private final RedisUtils redisUtils;
+    private final MessageRecordService messageRecordService;
 
     @Override
     public void sendMessage(SendTaskDto sendTaskDto) {
@@ -75,8 +78,13 @@ public class RedisProducer implements Producer {
      * @param sendTaskDto dto
      */
     private void retry(SendTaskDto sendTaskDto) {
+        MessageLinkTraceUtils.recordMessageLifecycleErrorLog(sendTaskDto, "Redis Stream 消息发送失败！！！");
+        // 记录错误日志至info-log
+        MessageLinkTraceUtils.recordMessageLifecycleError2InfoLog(sendTaskDto, "Redis Stream 消息发送失败！！！");
+        // 记录消息发送失败
+        sendTaskDto.getUsers().forEach(user -> messageRecordService.saveMessageRecord(sendTaskDto, StatusEnum.OFF, user));
+
         if (sendTaskDto.getRetry() > 0) {
-            MessageLinkTraceUtils.recordMessageLifecycleErrorLog(sendTaskDto, "Redis Stream 消息发送失败！！！");
 
             sendTaskDto.setRetry(sendTaskDto.getRetry() - 1);
             sendTaskDto.setRetried(1);
@@ -84,7 +92,9 @@ public class RedisProducer implements Producer {
 
             MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "Redis Stream 重试消息已发送");
         } else {
-            throw new MessageException(sendTaskDto, "Redis Stream 消息发送失败，重试次数已用完");
+            MessageLinkTraceUtils.recordMessageLifecycleErrorLog(sendTaskDto, "Redis Stream 消息发送失败，重试次数已用完！！！");
+            // 记录错误日志至info-log
+            MessageLinkTraceUtils.recordMessageLifecycleError2InfoLog(sendTaskDto, "Redis Stream 消息发送失败，重试次数已用完！！！");
         }
     }
 }

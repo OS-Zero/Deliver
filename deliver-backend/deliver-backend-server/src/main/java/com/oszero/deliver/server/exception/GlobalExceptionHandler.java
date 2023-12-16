@@ -1,9 +1,14 @@
 package com.oszero.deliver.server.exception;
 
-import com.oszero.deliver.server.enums.ResultEnum;
 import com.oszero.deliver.server.common.CommonResult;
+import com.oszero.deliver.server.enums.ResultEnum;
+import com.oszero.deliver.server.enums.StatusEnum;
+import com.oszero.deliver.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.server.util.MessageLinkTraceUtils;
+import com.oszero.deliver.server.util.ThreadLocalUtils;
+import com.oszero.deliver.server.web.service.MessageRecordService;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -18,7 +23,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  */
 @Slf4j
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
+
+    private final MessageRecordService messageRecordService;
 
     /**
      * DTO 参数校验失败的异常处理
@@ -46,6 +54,13 @@ public class GlobalExceptionHandler {
         MessageLinkTraceUtils.recordMessageLifecycleErrorLog(e.getMessage());
         // 记录异常信息到生命周期日志中
         MessageLinkTraceUtils.recordMessageLifecycleError2InfoLog(e.getMessage());
+        try {
+            // 记录消息发送失败
+            SendTaskDto sendTaskDto = ThreadLocalUtils.getSendTaskDto();
+            sendTaskDto.getUsers().forEach(user -> messageRecordService.saveMessageRecord(sendTaskDto, StatusEnum.OFF, user));
+        } catch (Exception ex) {
+            log.error(ex.getMessage());
+        }
         return CommonResult.fail(e.getMessage());
     }
 

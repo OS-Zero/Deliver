@@ -13,10 +13,7 @@ import com.oszero.deliver.server.model.entity.Template;
 import com.oszero.deliver.server.model.entity.TemplateApp;
 import com.oszero.deliver.server.pretreatment.common.LinkContext;
 import com.oszero.deliver.server.pretreatment.common.LinkHandler;
-import com.oszero.deliver.server.util.AesUtils;
-import com.oszero.deliver.server.util.IpUtils;
-import com.oszero.deliver.server.util.MDCUtils;
-import com.oszero.deliver.server.util.MessageLinkTraceUtils;
+import com.oszero.deliver.server.util.*;
 import com.oszero.deliver.server.web.service.SendService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -42,6 +39,7 @@ public class SendServiceImpl implements SendService {
 
         // 1.设置 sendTaskDto
         SendTaskDto sendTaskDto = new SendTaskDto();
+        ThreadLocalUtils.setSendTaskDto(sendTaskDto);
 
         sendTaskDto.setTemplateId(sendRequestDto.getTemplateId());
         sendTaskDto.setParamMap(sendRequestDto.getParamMap());
@@ -60,10 +58,6 @@ public class SendServiceImpl implements SendService {
         if (Objects.isNull(template)) {
             throw new MessageException(sendTaskDto, "传入的模板 ID 非法，请输入正确的 templateId");
         }
-        // 关闭状态直接返回
-        if (StatusEnum.OFF.getStatus().equals(template.getTemplateStatus())) {
-            throw new MessageException(sendTaskDto, "此模板已禁用，再次使用请启用此模板");
-        }
 
         Integer pushRange = template.getPushRange();
         Integer usersType = template.getUsersType();
@@ -75,6 +69,11 @@ public class SendServiceImpl implements SendService {
         sendTaskDto.setUsersType(usersType);
         sendTaskDto.setChannelType(channelType);
         sendTaskDto.setMessageType(messageType);
+
+        // 关闭状态直接返回
+        if (StatusEnum.OFF.getStatus().equals(template.getTemplateStatus())) {
+            throw new MessageException(sendTaskDto, "此模板已禁用，再次使用请启用此模板");
+        }
 
         MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成消息模板检测");
 
