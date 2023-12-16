@@ -22,7 +22,7 @@ public class CallEventListener implements ApplicationListener<CallEvent> {
     private final NoMQCommonListener noMQCommonListener;
     private final CallHandler callHandler;
 
-    @Async
+    @Async("callAsyncExecutor")
     @Override
     public void onApplicationEvent(CallEvent event) {
         noMQCommonListener.omMessageAck(event, callHandler);

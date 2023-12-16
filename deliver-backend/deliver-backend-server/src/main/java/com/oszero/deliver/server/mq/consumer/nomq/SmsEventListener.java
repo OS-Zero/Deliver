@@ -22,7 +22,7 @@ public class SmsEventListener implements ApplicationListener<SmsEvent> {
     private final NoMQCommonListener noMQCommonListener;
     private final SmsHandler smsHandler;
 
-    @Async
+    @Async("smsAsyncExecutor")
     @Override
     public void onApplicationEvent(SmsEvent event) {
         noMQCommonListener.omMessageAck(event, smsHandler);
