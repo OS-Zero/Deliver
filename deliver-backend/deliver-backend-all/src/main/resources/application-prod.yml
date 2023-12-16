@@ -1,6 +1,8 @@
 # MQ 类型选择
-mq-type: rabbitmq
+#mq-type: rabbitmq
 #mq-type: rocketmq
+#mq-type: redis
+mq-type: none
 
 #rocketmq:
 rocketmq:
