@@ -15,10 +15,4 @@
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="deleted" column="deleted" jdbcType="TINYINT"/>
     </resultMap>
-
-    <sql id="Base_Column_List">
-        app_id,app_name,channel_type,
-        app_config,create_user,update_user,
-        create_time,update_time,deleted
-    </sql>
 </mapper>

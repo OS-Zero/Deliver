@@ -16,11 +16,4 @@
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="deleted" column="deleted" jdbcType="TINYINT"/>
     </resultMap>
-
-    <sql id="Base_Column_List">
-        template_id,template_name,push_range,
-        users_type,push_ways,create_user,
-        update_user,create_time,update_time,
-        deleted
-    </sql>
 </mapper>
