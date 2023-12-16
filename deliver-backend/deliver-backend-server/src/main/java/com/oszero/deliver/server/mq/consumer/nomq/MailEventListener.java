@@ -22,7 +22,7 @@ public class MailEventListener implements ApplicationListener<MailEvent> {
     private final NoMQCommonListener noMQCommonListener;
     private final MailHandler mailHandler;
 
-    @Async
+    @Async("mailAsyncExecutor")
     @Override
     public void onApplicationEvent(MailEvent event) {
         noMQCommonListener.omMessageAck(event, mailHandler);

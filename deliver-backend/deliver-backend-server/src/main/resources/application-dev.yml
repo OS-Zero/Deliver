@@ -22,12 +22,12 @@ spring:
       host: localhost
       password: 123456
       database: 0
-      timeout: 2000ms
+      timeout: 5s
       lettuce:
         pool:
           max-active: 20
           max-idle: 30
-          min-idle: 0
+          min-idle: 5
           max-wait: 10s
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource

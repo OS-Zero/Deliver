@@ -22,7 +22,7 @@ public class WeChatEventListener implements ApplicationListener<WeChatEvent> {
     private final NoMQCommonListener noMQCommonListener;
     private final WeChatHandler weChatHandler;
 
-    @Async
+    @Async("weChatAsyncExecutor")
     @Override
     public void onApplicationEvent(WeChatEvent event) {
         noMQCommonListener.omMessageAck(event, weChatHandler);

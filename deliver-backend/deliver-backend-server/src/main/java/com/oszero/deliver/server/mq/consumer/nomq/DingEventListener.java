@@ -22,7 +22,7 @@ public class DingEventListener implements ApplicationListener<DingEvent> {
     private final NoMQCommonListener noMQCommonListener;
     private final DingHandler dingHandler;
 
-    @Async
+    @Async("dingAsyncExecutor")
     @Override
     public void onApplicationEvent(DingEvent event) {
         noMQCommonListener.omMessageAck(event, dingHandler);

@@ -22,7 +22,7 @@ public class FeiShuEventListener implements ApplicationListener<FeiShuEvent> {
     private final NoMQCommonListener noMQCommonListener;
     private final FeiShuHandler feiShuHandler;
 
-    @Async
+    @Async("feiShuAsyncExecutor")
     @Override
     public void onApplicationEvent(FeiShuEvent event) {
         noMQCommonListener.omMessageAck(event, feiShuHandler);
