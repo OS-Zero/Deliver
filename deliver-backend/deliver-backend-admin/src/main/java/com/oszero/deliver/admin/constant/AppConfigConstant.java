@@ -12,30 +12,38 @@ public interface AppConfigConstant {
 
     String SMS_CONFIG = "{}";
 
-    String MAIL_CONFIG = "{\n" +
-            "  \"host\": \"xxx\",\n" +
-            "  \"username\": \"xxx\",\n" +
-            "  \"password\": \"xxx\",\n" +
-            "  \"auth\": \"true\",\n" +
-            "  \"sslEnable\": \"true\"\n" +
-            "}";
+    String MAIL_CONFIG = """
+            {
+              "host": "xxx",
+              "username": "xxx",
+              "password": "xxx",
+              "auth": "true",
+              "sslEnable": "true"
+            }
+            """;
 
-    String DING_CONFIG = "{\n" +
-            "  \"agentId\": 0,\n" +
-            "  \"appKey\": \"\",\n" +
-            "  \"appSecret\": \"\",\n" +
-            " \"robotCode\": \"\"\n" +
-            "}";
+    String DING_CONFIG = """
+            {
+              "agentId": 995,
+              "appKey": "xxx",
+              "appSecret": "xxx",
+              "robotCode": "xxx"
+            }
+            """;
 
-    String WECHAT_CONFIG = "{\n" +
-            "  \"corpid\": \"\",\n" +
-            "  \"corpsecret\": \"\",\n" +
-            " \"agentid\": \"\"\n" +
-            "}";
+    String WECHAT_CONFIG = """
+            {
+              "corpid": "xxx",
+              "corpsecret": "xxx",
+              "agentid": "xxx"
+            }
+            """;
 
-    String FEI_SHU_CONFIG = "{\n" +
-            "  \"appId\": \"\",\n" +
-            "  \"appSecret\": \"\"\n" +
-            "}";
+    String FEI_SHU_CONFIG = """
+            {
+              "appId": "xxx",
+              "appSecret": "xxx"
+            }
+            """;
 
 }
