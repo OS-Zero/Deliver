@@ -40,30 +40,12 @@ public class RedisProducer implements Producer {
         String message = JSONUtil.toJsonStr(sendTaskDto);
         RecordId recordId = null;
         switch (channelTypeEnum) {
-            case CALL: {
-                recordId = redisUtils.sendMessage(MQConstant.CALL_STREAM, message);
-                break;
-            }
-            case SMS: {
-                recordId = redisUtils.sendMessage(MQConstant.SMS_STREAM, message);
-                break;
-            }
-            case MAIL: {
-                recordId = redisUtils.sendMessage(MQConstant.MAIL_STREAM, message);
-                break;
-            }
-            case DING: {
-                recordId = redisUtils.sendMessage(MQConstant.DING_STREAM, message);
-                break;
-            }
-            case WECHAT: {
-                recordId = redisUtils.sendMessage(MQConstant.WECHAT_STREAM, message);
-                break;
-            }
-            case FEI_SHU: {
-                recordId = redisUtils.sendMessage(MQConstant.FEI_SHU_STREAM, message);
-                break;
-            }
+            case CALL -> recordId = redisUtils.sendMessage(MQConstant.CALL_STREAM, message);
+            case SMS -> recordId = redisUtils.sendMessage(MQConstant.SMS_STREAM, message);
+            case MAIL -> recordId = redisUtils.sendMessage(MQConstant.MAIL_STREAM, message);
+            case DING -> recordId = redisUtils.sendMessage(MQConstant.DING_STREAM, message);
+            case WECHAT -> recordId = redisUtils.sendMessage(MQConstant.WECHAT_STREAM, message);
+            case FEI_SHU -> recordId = redisUtils.sendMessage(MQConstant.FEI_SHU_STREAM, message);
         }
         if (Objects.isNull(recordId)) {
             retry(sendTaskDto);

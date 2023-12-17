@@ -39,30 +39,18 @@ public class RabbitMQProducer implements Producer {
         CorrelationData correlationData = new CorrelationData(sendTaskDto.getTraceId() + "&&&" + sendTaskDto.getTemplateId());
 
         switch (channelTypeEnum) {
-            case CALL: {
-                rabbitMQUtils.sendMessage(MQConstant.DELIVER_EXCHANGE, MQConstant.CALL_KEY_NAME, message, correlationData);
-                break;
-            }
-            case SMS: {
-                rabbitMQUtils.sendMessage(MQConstant.DELIVER_EXCHANGE, MQConstant.SMS_KEY_NAME, message, correlationData);
-                break;
-            }
-            case MAIL: {
-                rabbitMQUtils.sendMessage(MQConstant.DELIVER_EXCHANGE, MQConstant.MAIL_KEY_NAME, message, correlationData);
-                break;
-            }
-            case WECHAT: {
-                rabbitMQUtils.sendMessage(MQConstant.DELIVER_EXCHANGE, MQConstant.WECHAT_KEY_NAME, message, correlationData);
-                break;
-            }
-            case DING: {
-                rabbitMQUtils.sendMessage(MQConstant.DELIVER_EXCHANGE, MQConstant.DING_KEY_NAME, message, correlationData);
-                break;
-            }
-            case FEI_SHU: {
-                rabbitMQUtils.sendMessage(MQConstant.DELIVER_EXCHANGE, MQConstant.FEI_SHU_KEY_NAME, message, correlationData);
-                break;
-            }
+            case CALL ->
+                    rabbitMQUtils.sendMessage(MQConstant.DELIVER_EXCHANGE, MQConstant.CALL_KEY_NAME, message, correlationData);
+            case SMS ->
+                    rabbitMQUtils.sendMessage(MQConstant.DELIVER_EXCHANGE, MQConstant.SMS_KEY_NAME, message, correlationData);
+            case MAIL ->
+                    rabbitMQUtils.sendMessage(MQConstant.DELIVER_EXCHANGE, MQConstant.MAIL_KEY_NAME, message, correlationData);
+            case WECHAT ->
+                    rabbitMQUtils.sendMessage(MQConstant.DELIVER_EXCHANGE, MQConstant.WECHAT_KEY_NAME, message, correlationData);
+            case DING ->
+                    rabbitMQUtils.sendMessage(MQConstant.DELIVER_EXCHANGE, MQConstant.DING_KEY_NAME, message, correlationData);
+            case FEI_SHU ->
+                    rabbitMQUtils.sendMessage(MQConstant.DELIVER_EXCHANGE, MQConstant.FEI_SHU_KEY_NAME, message, correlationData);
         }
     }
 }
