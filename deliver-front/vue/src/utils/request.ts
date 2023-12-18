@@ -2,7 +2,7 @@ import { message } from 'ant-design-vue'
 import axios from 'axios'
 
 const service = axios.create({
-	baseURL: '/admin',
+	baseURL: '/backend',
 	timeout: 5000
 })
 
