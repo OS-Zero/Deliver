@@ -314,7 +314,7 @@ export const tableColumns: Table.Columns[] = [
 				config: { ...editTemplateField, title: '修改模板' },
 				tip: '修改消息模版',
 				icon: EditTwoTone,
-				options: { resetButtonText: '重置', submitButtonText: '确认修改' }
+				options: { rowKey: 'templateId', resetButtonText: '重置', submitButtonText: '确认修改' }
 			},
 			{
 				command: 'send',
@@ -324,7 +324,7 @@ export const tableColumns: Table.Columns[] = [
 				config: sendTest,
 				tip: '测试消息模板发送',
 				icon: ApiTwoTone,
-				options: { resetButtonText: '清空', submitButtonText: '发送' }
+				options: { rowKey: 'templateId', resetButtonText: '清空', submitButtonText: '发送' }
 			},
 			{
 				command: 'delete',
