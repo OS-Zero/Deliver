@@ -7,4 +7,5 @@ package com.oszero.deliver.admin.constant;
  * @version 1.0.0
  */
 public interface CommonConstant {
+    String AUTH_HEARD_NAME = "Authorization";
 }

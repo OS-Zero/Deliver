@@ -1,4 +1,4 @@
-package com.oszero.deliver.admin.config;
+package com.oszero.deliver.admin.filter;
 
 import cn.hutool.core.lang.UUID;
 import com.oszero.deliver.admin.util.MdcUtils;
@@ -7,6 +7,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+
+import static com.oszero.deliver.admin.constant.MdcConstant.TRANCE_ID_NAME;
 
 /**
  * traceId 过滤器
@@ -28,7 +30,7 @@ public class TraceIdFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         try {
-            MdcUtils.put("traceId", UUID.randomUUID().toString());
+            MdcUtils.put(TRANCE_ID_NAME, UUID.randomUUID().toString());
             filterChain.doFilter(servletRequest, servletResponse);
         } finally {
             MdcUtils.clear();

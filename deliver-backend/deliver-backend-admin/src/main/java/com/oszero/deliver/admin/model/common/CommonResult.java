@@ -1,4 +1,4 @@
-package com.oszero.deliver.admin.model;
+package com.oszero.deliver.admin.model.common;
 
 import com.oszero.deliver.admin.enums.ResultEnum;
 import lombok.AllArgsConstructor;

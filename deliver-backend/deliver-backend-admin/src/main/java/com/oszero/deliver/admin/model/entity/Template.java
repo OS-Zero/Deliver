@@ -1,10 +1,12 @@
 package com.oszero.deliver.admin.model.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.oszero.deliver.admin.model.common.BaseEntity;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.util.Date;
-import lombok.Data;
 
 /**
  * 消息模板
@@ -12,9 +14,10 @@ import lombok.Data;
  * @author oszero
  * @version 1.0.0
  */
-@TableName(value ="template")
 @Data
-public class Template implements Serializable {
+@TableName(value = "template")
+@EqualsAndHashCode(callSuper = true)
+public class Template extends BaseEntity implements Serializable {
     /**
      * 模板id
      */
@@ -54,16 +57,6 @@ public class Template implements Serializable {
      * 模板状态
      */
     private Integer templateStatus;
-
-    /**
-     * 创建者
-     */
-    private String createUser;
-
-    /**
-     * 更新者
-     */
-    private String updateUser;
 
     /**
      * 创建时间

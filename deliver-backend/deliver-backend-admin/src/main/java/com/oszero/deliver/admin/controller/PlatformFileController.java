@@ -1,7 +1,7 @@
 package com.oszero.deliver.admin.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.oszero.deliver.admin.model.CommonResult;
+import com.oszero.deliver.admin.model.common.CommonResult;
 import com.oszero.deliver.admin.model.dto.request.PlatformFileSearchRequestDto;
 import com.oszero.deliver.admin.model.dto.request.PlatformFileUploadRequestDto;
 import com.oszero.deliver.admin.model.dto.response.PlatformFileSearchResponseDto;

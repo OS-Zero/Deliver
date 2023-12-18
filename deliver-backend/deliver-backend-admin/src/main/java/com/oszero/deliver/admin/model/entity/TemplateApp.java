@@ -1,10 +1,10 @@
 package com.oszero.deliver.admin.model.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
-import lombok.Data;
 
 /**
  * 模板 app
@@ -12,7 +12,7 @@ import lombok.Data;
  * @author oszero
  * @version 1.0.0
  */
-@TableName(value ="template_app")
+@TableName(value = "template_app")
 @Data
 public class TemplateApp implements Serializable {
     /**
