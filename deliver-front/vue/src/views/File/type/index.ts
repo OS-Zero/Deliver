@@ -7,6 +7,7 @@ export interface platformFile {
 	appType?: number
 	fileType?: string
 	fileKey?: string
+	fileStatus?: number
 	createUser?: string
 	createTime?: string
 	appId?: number

@@ -17,7 +17,7 @@ public class AdminServerCacheManager {
     private final AdminRedisUtils adminRedisUtils;
 
     /**
-     * 清空缓存
+     * 清空模板缓存
      */
     public void evictTemplate(Long templateId) {
         adminRedisUtils.deleteByKey(CacheConstant.REDIS_CACHE_PREFIX
@@ -25,12 +25,18 @@ public class AdminServerCacheManager {
                 + "::" + templateId);
     }
 
+    /**
+     * 清空模板应用缓存
+     */
     public void evictTemplateApp(Long templateId) {
         adminRedisUtils.deleteByKey(CacheConstant.REDIS_CACHE_PREFIX
                 + CacheConstant.TEMPLATE_APP_CACHE_NAME
                 + "::" + templateId);
     }
 
+    /**
+     * 清空应用缓存
+     */
     public void evictApp(Long appId) {
         adminRedisUtils.deleteByKey(CacheConstant.REDIS_CACHE_PREFIX
                 + CacheConstant.APP_CACHE_NAME

@@ -42,6 +42,11 @@ public class PlatformFileSearchResponseDto {
     private String fileKey;
 
     /**
+     * 文件平台状态（1-生效0-失效）
+     */
+    private Integer fileStatus;
+
+    /**
      * 创建者
      */
     private String createUser;

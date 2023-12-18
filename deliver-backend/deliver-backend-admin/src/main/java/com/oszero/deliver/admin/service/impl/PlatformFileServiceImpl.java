@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -97,7 +98,7 @@ public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, Pla
         String appConfig = adminAesUtils.decrypt(app.getAppConfig());
         // 具体执行选择
         switch (appTypeEnum) {
-            case DING: {
+            case DING -> {
 
                 DingApp dingApp = JSONUtil.toBean(appConfig, DingApp.class);
                 String accessToken = adminDingClient.getAccessToken(dingApp);
@@ -118,9 +119,8 @@ public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, Pla
                     }
                 }
                 fileKey = adminDingClient.uploadDingFile(accessToken, platformFileDto);
-                break;
             }
-            case WECHAT: {
+            case WECHAT -> {
                 // 得到 token
                 WeChatApp weChatApp = JSONUtil.toBean(appConfig, WeChatApp.class);
                 String accessToken = adminWeChatClient.getAccessToken(weChatApp);
@@ -156,9 +156,8 @@ public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, Pla
                     }
                     fileKey = adminWeChatClient.uploadWeChatFile(accessToken, platformFileDto);
                 }
-                break;
             }
-            case FEI_SHU: {
+            case FEI_SHU -> {
                 FeiShuApp feiShuApp = JSONUtil.toBean(appConfig, FeiShuApp.class);
                 // 得到 token
                 String tenantAccessToken = adminFeiShuClient.getTenantAccessToken(feiShuApp);
@@ -180,9 +179,8 @@ public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, Pla
                     }
                     fileKey = adminFeiShuClient.uploadFeiShuFile(tenantAccessToken, platformFileDto);
                 }
-                break;
             }
-            default: {
+            default -> {
             }
         }
 
@@ -206,10 +204,18 @@ public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, Pla
 
         this.page(platformFilePage, wrapper);
 
+        LocalDateTime minusDays = LocalDateTime.now().minusDays(3L);
         Page<PlatformFileSearchResponseDto> platformFileSearchResponseDtoPage = new Page<>(platformFilePage.getPages(), platformFilePage.getSize());
         platformFileSearchResponseDtoPage.setRecords(platformFilePage.getRecords().stream().map(platformFile -> {
             PlatformFileSearchResponseDto platformFileSearchResponseDto = new PlatformFileSearchResponseDto();
             BeanUtil.copyProperties(platformFile, platformFileSearchResponseDto);
+            // 企微三天有效期
+            if (Objects.equals(AppTypeEnum.WECHAT.getCode(), platformFile.getAppType())) {
+                platformFileSearchResponseDto.setFileStatus(
+                        // 创建时间为3天前即失效
+                        platformFile.getCreateTime().isBefore(minusDays) ? 0 : 1
+                );
+            }
             platformFileSearchResponseDto.setFileType(PlatformFileConstant.FILE_TYPE_NAME_MAP.get(platformFile.getFileType()));
             return platformFileSearchResponseDto;
         }).collect(Collectors.toList()));
