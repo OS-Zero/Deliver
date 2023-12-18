@@ -63,7 +63,7 @@ const upload = (): void => {
 			uploadFileApi(formData)
 				.then((res) => {
 					if (res.code === 200) {
-						void message.success('发送成功~ (*^▽^*)')
+						void message.success('上传成功~ (*^▽^*)')
 						onClose()
 						emit('mes')
 					}
