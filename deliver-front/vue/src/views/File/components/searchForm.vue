@@ -71,7 +71,7 @@ defineExpose({
 			</a-col>
 			<a-col :span="8">
 				<a-form-item name="appType" label="APP 类型">
-					<a-select v-model:value="searchPage.appType" placeholder="请选择 APP 类型">
+					<a-select v-model:value="searchPage.appType" placeholder="请选择 APP 类型" @change="searchPage.fileType = undefined">
 						<a-select-option value="1">钉钉</a-select-option>
 						<a-select-option value="2">企业微信</a-select-option>
 						<a-select-option value="3">飞书</a-select-option>
@@ -85,6 +85,10 @@ defineExpose({
 						<a-select-option v-if="searchPage.appType == 1 || searchPage.appType == undefined" value="1-voice">钉钉-语音</a-select-option>
 						<a-select-option v-if="searchPage.appType == 1 || searchPage.appType == undefined" value="1-video">钉钉-视频</a-select-option>
 						<a-select-option v-if="searchPage.appType == 1 || searchPage.appType == undefined" value="1-file">钉钉-文件</a-select-option>
+						<a-select-option v-if="searchPage.appType == 2 || searchPage.appType == undefined" value="2-image">企业微信-图片</a-select-option>
+						<a-select-option v-if="searchPage.appType == 2 || searchPage.appType == undefined" value="2-voice">企业微信-语音</a-select-option>
+						<a-select-option v-if="searchPage.appType == 2 || searchPage.appType == undefined" value="2-video">企业微信-视频</a-select-option>
+						<a-select-option v-if="searchPage.appType == 2 || searchPage.appType == undefined" value="2-file">企业微信-普通文件</a-select-option>
 						<a-select-option v-if="searchPage.appType == 3 || searchPage.appType == undefined" value="3-image">飞书-图片</a-select-option>
 						<a-select-option v-if="searchPage.appType == 3 || searchPage.appType == undefined" value="3-opus">飞书-opus音频文件</a-select-option>
 						<a-select-option v-if="searchPage.appType == 3 || searchPage.appType == undefined" value="3-mp4">飞书-mp4视频文件</a-select-option>
