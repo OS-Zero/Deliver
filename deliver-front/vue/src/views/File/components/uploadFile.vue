@@ -114,7 +114,7 @@ const wrapperCol = { span: 20 }
 				<a-input show-count :maxlength="50" v-model:value="uploadFileTable.fileName" placeholder="请输入文件名"></a-input>
 			</a-form-item>
 			<a-form-item label="APP 类型" name="appType" style="margin-left: 10px">
-				<a-select v-model:value="uploadFileTable.appType" placeholder="请选择 APP 类型">
+				<a-select v-model:value="uploadFileTable.appType" placeholder="请选择 APP 类型" @change="uploadFileTable.fileType = undefined">
 					<a-select-option value="1">钉钉</a-select-option>
 					<a-select-option value="2">企业微信</a-select-option>
 					<a-select-option value="3">飞书</a-select-option>
@@ -126,6 +126,12 @@ const wrapperCol = { span: 20 }
 					<a-select-option v-if="uploadFileTable.appType == 1 || uploadFileTable.appType == undefined" value="voice">钉钉-语音</a-select-option>
 					<a-select-option v-if="uploadFileTable.appType == 1 || uploadFileTable.appType == undefined" value="video">钉钉-视频</a-select-option>
 					<a-select-option v-if="uploadFileTable.appType == 1 || uploadFileTable.appType == undefined" value="file">钉钉-文件</a-select-option>
+					<a-select-option v-if="uploadFileTable.appType == 2 || uploadFileTable.appType == undefined" value="image">企业微信-图片</a-select-option>
+					<a-select-option v-if="uploadFileTable.appType == 2 || uploadFileTable.appType == undefined" value="voice">企业微信-语音</a-select-option>
+					<a-select-option v-if="uploadFileTable.appType == 2 || uploadFileTable.appType == undefined" value="video">企业微信-视频</a-select-option>
+					<a-select-option v-if="uploadFileTable.appType == 2 || uploadFileTable.appType == undefined" value="file">
+						企业微信-普通文件
+					</a-select-option>
 					<a-select-option v-if="uploadFileTable.appType == 3 || uploadFileTable.appType == undefined" value="image">飞书-图片</a-select-option>
 					<a-select-option v-if="uploadFileTable.appType == 3 || uploadFileTable.appType == undefined" value="opus">
 						飞书-opus音频文件
