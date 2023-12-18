@@ -1,5 +1,7 @@
 package com.oszero.deliver.server.exception;
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import com.oszero.deliver.server.common.CommonResult;
 import com.oszero.deliver.server.enums.ResultEnum;
 import com.oszero.deliver.server.enums.StatusEnum;
@@ -10,10 +12,13 @@ import com.oszero.deliver.server.web.service.MessageRecordService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.Optional;
 
 /**
  * 全局异常处理器
@@ -35,10 +40,15 @@ public class GlobalExceptionHandler {
      * @param request 请求
      * @return CommonResult
      */
-    @ExceptionHandler({BindException.class, MethodArgumentNotValidException.class})
-    public CommonResult<?> handleBindingException(Exception e, HttpServletRequest request) {
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public CommonResult<Void> handleBindingException(MethodArgumentNotValidException e, HttpServletRequest request) {
         log.error("请求参数非预期异常: {} - {}, error = {}", request.getMethod(), request.getRequestURI(), e.getMessage());
-        return CommonResult.fail(e.getMessage());
+        BindingResult bindingResult = e.getBindingResult();
+        FieldError firstFieldError = CollectionUtil.getFirst(bindingResult.getFieldErrors());
+        String exceptionStr = Optional.ofNullable(firstFieldError)
+                .map(FieldError::getDefaultMessage)
+                .orElse(StrUtil.EMPTY);
+        return CommonResult.fail(exceptionStr);
     }
 
     /**
