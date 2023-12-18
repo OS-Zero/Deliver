@@ -6,7 +6,7 @@ import JsonEditorVue from 'json-editor-vue3'
 interface Props {
 	config: Form.Feedback
 	model: Record<Form.FieldItem['field'], Form.FieldItem['value']>
-	_options: Form.Options
+	_options: any
 }
 interface EmitEvent {
 	(e: 'submit', params: any): void
@@ -19,7 +19,7 @@ const cache = new Map()
 watch(
 	() => props.model,
 	() => {
-		drawerModel.value[props.model.key] = props.model[props.model.key]
+		drawerModel.value[props.model.rowKey] = props.model[props.model.rowKey]
 		props.config.formData.forEach((item) => {
 			if (item.type === 'cascader') {
 				item.options.forEach((opt: any) => {
