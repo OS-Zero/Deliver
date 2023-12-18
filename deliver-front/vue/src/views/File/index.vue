@@ -36,6 +36,11 @@ const columns: TableColumnsType = [
 		key: 'fileType'
 	},
 	{
+		title: '文件状态',
+		dataIndex: 'fileStatus',
+		key: 'fileStatus'
+	},
+	{
 		title: '创建用户',
 		dataIndex: 'createUser',
 		key: 'createUser'
@@ -232,6 +237,12 @@ onMounted(() => {
 					<template v-if="column.key === 'fileType'">
 						<span style="color: #1677ff">
 							{{ record.fileType }}
+						</span>
+					</template>
+					<template v-if="column.key === 'fileStatus'">
+						<span>
+							<a-tag v-if="record.fileStatus === 1" color="success">生效中</a-tag>
+							<a-tag v-if="record.fileStatus === 0" color="error">已过期</a-tag>
 						</span>
 					</template>
 					<template v-if="column.key === 'operation'">

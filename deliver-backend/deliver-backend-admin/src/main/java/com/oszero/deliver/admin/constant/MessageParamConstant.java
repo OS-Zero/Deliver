@@ -18,9 +18,59 @@ public class MessageParamConstant {
 
     static {
         // 电话消息参数
-
+        MESSAGE_PARAM_MAP.put(ChannelTypeEnum.CALL.getCode() + H + MessageTypeEnum.TEXT.getCode(), """
+                {
+                   "aliyun": {
+                     "callProvider": "aliyun --指定提供商 必须",
+                     "region": "服务地址",
+                     "calledShowNumber": "被叫显号  非必须",
+                     "ttsCode": "已通过审核的语音通知文本转语音模板或语音验证码模板的模板 ID 必须",
+                     "ttsParam": "模板中的变量参数   非必须",
+                     "playTimes": "一通电话内语音通知内容的播放次数 非必须",
+                     "volume": "语音通知的播放音量  非必须",
+                     "speed": "语速控制 非必须",
+                     "outId": "发起请求时预留给调用方的自定义 ID，最终会通过在回执消息中将此 ID 带回给调用方。非必须"
+                   },
+                   "tencent": {
+                     "callProvider": "tencent --指定提供商 必填",
+                     "region": "地域列表 ap-beijing 或者 ap-guangzhou 必填",
+                     "templateId": "模板 ID，在控制台审核通过的模板 ID。 必填",
+                     "templateParamSet": [
+                       "1 模板参数，若模板没有参数，请提供为空数组。 非必填"
+                     ],
+                     "playTimes": 1,
+                     "sessionContext": "1 用户的 session 内容，腾讯 server 回包中会原样返回。 非必填",
+                     "voiceSdkAppid": "1 在语音控制台添加应用后生成的实际SdkAppid 非必填"
+                   }
+                 }
+                """);
         // 短信消息参数
-
+        MESSAGE_PARAM_MAP.put(ChannelTypeEnum.SMS.getCode() + H + MessageTypeEnum.TEXT.getCode(), """
+                {
+                   "aliyun": {
+                     "smsProvider": "aliyun --指定提供商 必须",
+                     "region": "服务地址 cn-zhangjiakou 或者 cn-beijing 或者 cn-huhehaote 等 必须",
+                     "signName": "短信签名名称  必须",
+                     "templateCode": "短信模板Code 必须",
+                     "templateParam": "{有参数情况下必须}",
+                     "outId": "外部流水扩展字段   非必须",
+                     "smsUpExtendCode": "上行短信扩展码 非必须"
+                   },
+                   "tencent": {
+                     "smsProvider": "tencent 必填",
+                     "region": "ap-beijing 或 ap-guangzhou 或 ap-nanjing 必填",
+                     "smsSdkAppId": "必填",
+                     "signName": "必填",
+                     "templateId": "必填",
+                     "templateParam": [
+                       "有动态参数，必填"
+                     ],
+                     "extendCode": "短信码号扩展号 非必填",
+                     "sessionContext": "用户的 session 内容，可以携带用户侧 ID 等上下文信息，server 会原样返回 非必填",
+                     "senderId": "国内短信无需填写该项；国际/港澳台短信已申请独立 SenderId 需要填写该字段，默认使用公共 SenderId，无需填写该字段。 非必填"
+                   }
+                 }
+                """);
         // 邮件消息参数
         MESSAGE_PARAM_MAP.put(ChannelTypeEnum.MAIL.getCode() + H + MessageTypeEnum.TEXT.getCode(), """
                 {
@@ -205,6 +255,22 @@ public class MessageParamConstant {
                   }
                 }
                 """);
+
+        // 企业微信消息参数
+        MESSAGE_PARAM_MAP.put(ChannelTypeEnum.WECHAT.getCode() + H + MessageTypeEnum.TEXT.getCode(), """
+                {
+                  "pushSubject": "app 或者 robot",
+                  "wechatUserIdType": "touser 或者 toparty 或者 totag 或者 to_parent_userid 或者 to_student_userid 或者 to_party 或者 toall 或者 chatid 或者 webhook",
+                  "text": {
+                    "content": "你的快递已到，请携带工卡前往邮件中心领取。\\n出发前可查看<a href=\\"http://work.weixin.qq.com\\">邮件中心视频实况</a>，聪明避开排队。"
+                  },
+                  "safe": 0,
+                  "enable_id_trans": 0,
+                  "enable_duplicate_check": 0,
+                  "duplicate_check_interval": 1800
+                }
+                """);
+        //TODO:更多参数待补充
 
         // 飞书消息参数
         MESSAGE_PARAM_MAP.put(ChannelTypeEnum.FEI_SHU.getCode() + H + MessageTypeEnum.TEXT.getCode(), """
