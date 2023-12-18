@@ -2,7 +2,7 @@ package com.oszero.deliver.admin.exception;
 
 
 import com.oszero.deliver.admin.enums.ResultEnum;
-import com.oszero.deliver.admin.model.CommonResult;
+import com.oszero.deliver.admin.model.common.CommonResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;

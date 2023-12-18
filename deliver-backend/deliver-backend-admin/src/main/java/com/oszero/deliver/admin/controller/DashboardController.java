@@ -1,6 +1,6 @@
 package com.oszero.deliver.admin.controller;
 
-import com.oszero.deliver.admin.model.CommonResult;
+import com.oszero.deliver.admin.model.common.CommonResult;
 import com.oszero.deliver.admin.model.dto.request.DashboardDateSelectRequestDto;
 import com.oszero.deliver.admin.model.dto.response.DashboardHeadDataResponseDto;
 import com.oszero.deliver.admin.model.dto.response.DashboardInfoResponseDto;

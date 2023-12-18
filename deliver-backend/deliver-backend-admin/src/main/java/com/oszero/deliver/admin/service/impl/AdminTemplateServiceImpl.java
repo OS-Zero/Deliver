@@ -13,7 +13,7 @@ import com.oszero.deliver.admin.constant.MessageParamConstant;
 import com.oszero.deliver.admin.enums.MessageTypeEnum;
 import com.oszero.deliver.admin.exception.BusinessException;
 import com.oszero.deliver.admin.mapper.AdminTemplateMapper;
-import com.oszero.deliver.admin.model.CommonResult;
+import com.oszero.deliver.admin.model.common.CommonResult;
 import com.oszero.deliver.admin.model.dto.request.*;
 import com.oszero.deliver.admin.model.dto.response.MessageTypeResponseDto;
 import com.oszero.deliver.admin.model.dto.response.TemplateSearchResponseDto;
