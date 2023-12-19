@@ -9,7 +9,7 @@ interface Props {
 	_options: any
 }
 interface EmitEvent {
-	(e: 'submit', params: any): void
+	(e: 'submit', params: any, callback: (err: boolean) => void): void
 }
 const props = defineProps<Props>()
 const emit = defineEmits<EmitEvent>()
@@ -109,9 +109,12 @@ const submit = () => {
 	formRef.value
 		.validate()
 		.then(() => {
-			emit('submit', drawerModel.value)
-			resetForm()
-			open.value = false
+			const callback = (err: boolean) => {
+				if (err) return
+				resetForm()
+				open.value = false
+			}
+			emit('submit', drawerModel.value, callback)
 		})
 		.catch((err: any) => {
 			console.log('errot', err)
@@ -123,11 +126,17 @@ const submit = () => {
 		<slot name="button" :openModel="openModel">
 			<a-button @click="openModel" type="primary">{{ config.title }}</a-button>
 		</slot>
-		<a-drawer v-model:open="open" :title="config.title" width="650px" :footer="null" @close="resetForm">
-			<a-form ref="formRef" :model="drawerModel" :rules="config.rules" :label-col="{ span: 5 }" :wrapper-col="{ span: 20 }" class="centerForm">
+		<a-drawer v-model:open="open" :title="config.title" width="660px" :footer="null" @close="resetForm">
+			<a-form
+				ref="formRef"
+				:model="drawerModel"
+				:rules="config.rules"
+				:label-col="{ style: { width: '90px' } }"
+				:wrapper-col="{ span: 20 }"
+				class="centerForm">
 				<template v-for="item in config.formData" :key="item.field">
 					<a-form-item :label="item.label" :name="item.field" class="center-item" v-if="item.type === 'input'">
-						<a-input :maxlength="20" v-model:value="drawerModel[item.field]" :placeholder="item.placeholder" style="width: 70%" />
+						<a-input :maxlength="20" v-model:value="drawerModel[item.field]" :placeholder="item.placeholder" />
 					</a-form-item>
 					<a-form-item :label="item.label" :name="item.field" class="center-item" v-if="item.type === 'inputNumber'">
 						<a-input-number v-model:value="drawerModel[item.field]" :min="0" :max="3" />
@@ -141,8 +150,7 @@ const submit = () => {
 						<a-select
 							v-model:value="drawerModel[item.field]"
 							:options="item.options === 'function' ? requestOptions[item.field] : item.options"
-							:disabled="item.options === 'function' ? !requestOptions[item.field] || !requestOptions[item.field].length : !item.options.lengh"
-							style="width: 70%" />
+							:disabled="item.options === 'function' ? !requestOptions[item.field] || !requestOptions[item.field].length : !item.options.lengh" />
 					</a-form-item>
 					<a-form-item :label="item.label" :name="item.field" class="center-item" v-else-if="item.type === 'list'">
 						<List v-model:value="drawerModel[item.field]" :options="item.options"></List>
@@ -155,7 +163,6 @@ const submit = () => {
 							<a-select
 								v-model:value="drawerModel[option.field]"
 								:options="index === 0 ? option.options : Array.isArray(options[index]) ? options[index] : []"
-								style="width: 70%"
 								:disabled="index !== 0 && (!Array.isArray(options[index]) || !options[index].length)"
 								@change="selectChange(item.options, index)" />
 						</a-form-item>
