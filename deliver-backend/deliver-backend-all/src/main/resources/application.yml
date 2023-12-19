@@ -16,4 +16,4 @@ aes:
   key: oszero
 # 服务端发送接口地址
 deliver-server:
-  url: /backend/open/sendMessage
+  url: http://localhost:6060/backend/open/sendMessage

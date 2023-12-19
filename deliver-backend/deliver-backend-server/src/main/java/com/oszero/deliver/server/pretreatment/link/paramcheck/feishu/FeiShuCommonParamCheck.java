@@ -23,7 +23,7 @@ import java.util.Set;
 @Service
 public class FeiShuCommonParamCheck implements MessageLink<SendTaskDto> {
     private static final Set<String> FEI_SHU_USER_ID_TYPE_SET = new HashSet<>(
-            Arrays.asList("user_id ", "email", "chat_id ", "department_id"));
+            Arrays.asList("user_id", "email", "chat_id", "department_id"));
     /**
      * 可以通过 department_id 发送的消息类型
      */
