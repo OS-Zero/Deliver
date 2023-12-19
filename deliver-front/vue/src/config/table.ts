@@ -334,7 +334,7 @@ export const tableColumns: Table.Columns[] = [
 				icon: DeleteTwoTone,
 				color: 'red',
 				confirm: true,
-				options: { title: '确认删除吗' }
+				options: { rowKey: 'templateId', title: '确认删除吗' }
 			}
 		]
 	}

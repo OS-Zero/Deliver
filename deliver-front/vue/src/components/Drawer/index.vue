@@ -19,7 +19,7 @@ const cache = new Map()
 watch(
 	() => props.model,
 	() => {
-		drawerModel.value[props.model.rowKey] = props.model[props.model.rowKey]
+		drawerModel.value[props._options.rowKey] = props.model[props._options.rowKey]
 		props.config.formData.forEach((item) => {
 			if (item.type === 'cascader') {
 				item.options.forEach((opt: any) => {
