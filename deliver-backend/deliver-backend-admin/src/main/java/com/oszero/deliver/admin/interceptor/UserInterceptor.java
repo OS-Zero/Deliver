@@ -1,13 +1,13 @@
 package com.oszero.deliver.admin.interceptor;
 
-import com.oszero.deliver.admin.util.MdcUtils;
+import com.oszero.deliver.admin.model.entity.UserInfo;
+import com.oszero.deliver.admin.util.ThreadLocalUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import static com.oszero.deliver.admin.constant.CommonConstant.AUTH_HEARD_NAME;
-import static com.oszero.deliver.admin.constant.MdcConstant.USER_ID_NAME;
 
 /**
  * 用户拦截器
@@ -22,17 +22,20 @@ public class UserInterceptor implements HandlerInterceptor {
         // 获取token
         String token = request.getHeader(AUTH_HEARD_NAME);
         // 转换
-        String userId = getUserIdByToken(token);
-        MdcUtils.put(USER_ID_NAME, userId);
+        UserInfo userInfo = getUserInfoByToken(token);
+        ThreadLocalUtils.setUserInfo(userInfo);
         return true;
     }
 
-    private String getUserIdByToken(String token) {
-        return "oszero";
+    private UserInfo getUserInfoByToken(String token) {
+        return UserInfo.builder()
+                .userId("oszero-123456")
+                .username("oszero")
+                .realName("oszero").build();
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        MdcUtils.clear();
+        ThreadLocalUtils.clear();
     }
 }
