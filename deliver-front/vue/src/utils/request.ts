@@ -1,4 +1,3 @@
-import { message } from 'ant-design-vue'
 import axios from 'axios'
 
 const service = axios.create({
@@ -18,8 +17,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
 	async (res) => {
 		if (res?.data.code === 200) return res.data
-		message.error(res?.data.errorMessage)
-		return res.data
+		return await Promise.reject(res?.data.errorMessage)
 	},
 	async (err) => {
 		return await Promise.reject(err)
