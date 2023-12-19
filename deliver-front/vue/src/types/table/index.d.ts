@@ -63,7 +63,7 @@ declare namespace Table {
 	interface Pagination {
 		total?: number // 总条目数
 		current: number // 当前页数，支持 v-model 双向绑定
-		pageSize?: number // 每页显示条目个数，支持 v-model 双向绑定
+		pageSize: number // 每页显示条目个数，支持 v-model 双向绑定
 		defaultPageSize?: number // 每页显示个数选择器的选项设置
 		layout?: string // 组件布局，子组件名用逗号分隔
 		background?: boolean // 是否为分页按钮添加背景色

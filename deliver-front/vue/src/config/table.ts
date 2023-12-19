@@ -209,7 +209,7 @@ const sendTest: Form.Feedback = {
 			}
 		}
 	],
-	rules: { users: [{ required: true, message: '请至少添加一名用户' }] },
+	rules: {},
 	formData: [
 		{
 			type: 'list',
@@ -364,7 +364,18 @@ export const tableOptions: Record<string, Table.Options> = {
 		paginationConfig: {
 			current: 1,
 			pageSize: 10,
-			total: 0
+			total: 0,
+			pageSizeOptions: ['10', '20', '50', '100'],
+			showQuickJumper: true,
+			showSizeChanger: true,
+			locale: {
+				items_per_page: '条/页', // 每页显示条数的文字描述
+				jump_to: '跳至', // 跳转到某页的文字描述
+				page: '页', // 页的文字描述
+				prev_page: '上一页', // 上一页按钮文字描述
+				next_page: '下一页' // 下一页按钮文字描述
+			},
+			showTotal: (total: number) => `共 ${total} 条数据`
 		}
 	}
 }
