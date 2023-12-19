@@ -2,10 +2,9 @@
 import { h } from 'vue'
 import { ReloadOutlined } from '@ant-design/icons-vue'
 import Form from '@/types/form'
-import emitter from '@/utils/mitt'
 interface EmitEvent {
 	(e: 'reflash'): void
-	(e: 'submit', param: any): void
+	(e: 'submit', param: any, callback: (err: boolean) => void): void
 }
 interface Props {
 	config: Form.Feedback
@@ -19,16 +18,14 @@ defineProps<Props>()
  * 重新加载表格
  */
 const reflash = () => {
-	emitter.emit('loading', true)
 	emit('reflash')
 }
 
 /**
  * 提交表格
  */
-const submit = (params: any) => {
-	emitter.emit('loading', true)
-	emit('submit', params)
+const submit = (params: any, callback: (err: boolean) => void) => {
+	emit('submit', params, callback)
 }
 </script>
 <template>
@@ -39,8 +36,8 @@ const submit = (params: any) => {
 			</a-tooltip>
 		</span>
 		<span>
-			<Modal :_options="options" :config="config" @submit="submit" :model="model" v-if="config.type === 'modal'" />
-			<Drawer :_options="options" :config="config" @submit="submit" :model="model" v-else />
+			<Drawer :_options="options" :config="config" @submit="submit" :model="model" />
+			<!-- <Modal :_options="options" :config="config" @submit="submit" :model="model" v-if="config.type === 'modal'" /> -->
 		</span>
 	</div>
 </template>

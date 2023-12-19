@@ -26,27 +26,10 @@ const state = reactive<State>({
 	loading: true,
 	collapsed: false
 })
-const pagination = ref<Table.Pagination>({
-	current: 1,
-	pageSize: 10,
-	total: 0,
-	pageSizeOptions: ['10', '20', '50', '100'],
-	showQuickJumper: true,
-	showSizeChanger: true,
-	locale: {
-		items_per_page: '条/页', // 每页显示条数的文字描述
-		jump_to: '跳至', // 跳转到某页的文字描述
-		page: '页', // 页的文字描述
-		prev_page: '上一页', // 上一页按钮文字描述
-		next_page: '下一页' // 下一页按钮文字描述
-	},
-	showTotal: (total: number) => `共 ${total} 条数据`
-})
 watch(
 	props,
 	() => {
 		state.selectedRowKeys = []
-		pagination.value.total = props.options.paginationConfig.total
 	},
 	{
 		immediate: true
@@ -85,12 +68,11 @@ const toggleExpand = (expand: boolean, record: any) => {
 		expandedRowKeys.value.push(record[props.options.rowKey])
 	}
 }
-const change = (page: any) => {
-	pagination.value.current = page.current
-	pagination.value.pageSize = page.pageSize
-	pagination.value.total = page.pageSize
+const change = (page: number, pageSize: number) => {
+	console.log(props.options.paginationConfig)
+
 	emitter.emit('loading', true)
-	emit('actions', 'search', { currentPage: page.current, pageSize: page.pageSize })
+	emit('actions', 'search', { currentPage: page, pageSize: pageSize })
 }
 const changeStatus = (name1: string, val1: any, name2: string, val2: string) => {
 	const obj = {}
@@ -122,15 +104,14 @@ onUnmounted(() => {
 		<a-table
 			:columns="columns"
 			:data-source="model"
-			:pagination="pagination"
+			:pagination="false"
 			:scroll="{ x: 1200, y: undefined, scrollToFirstRowOnChange: true }"
 			:expandedRowKeys="expandedRowKeys"
 			:expandIconAsCell="false"
 			:expandIconColumnIndex="-1"
 			:loading="state.loading"
 			:row-key="(record: any) => record[props.options.rowKey]"
-			:row-selection="{ selectedRowKeys: state.selectedRowKeys, onChange: onSelectChange }"
-			@change="change">
+			:row-selection="{ selectedRowKeys: state.selectedRowKeys, onChange: onSelectChange }">
 			<template #headerCell="{ column }">
 				<template v-if="column.head === 'icon'">
 					<span>
@@ -246,6 +227,18 @@ onUnmounted(() => {
 				</a-row>
 			</template>
 		</a-table>
+		<div class="pagination">
+			<a-pagination
+				v-model:current="options.paginationConfig.current"
+				v-model:pageSize="options.paginationConfig.pageSize"
+				:total="options.paginationConfig.total"
+				:pageSizeOptions="options.paginationConfig.pageSizeOptions"
+				:show-total="options.paginationConfig.showTotal"
+				:showQuickJumper="options.paginationConfig.showQuickJumper"
+				:showSizeChanger="options.paginationConfig.showSizeChanger"
+				:locale="options.paginationConfig.locale"
+				@change="change" />
+		</div>
 		<div class="showDelete" v-show="state.selectedRowKeys.length" :style="{ left: state.collapsed ? '80px' : '200px' }">
 			<div class="box">{{ `已选择 ${state.selectedRowKeys.length} 项` }}</div>
 			<div class="del">
@@ -280,5 +273,11 @@ onUnmounted(() => {
 	bottom: 0;
 	right: 0;
 	transition: 0.2s;
+}
+.pagination {
+	height: 60px;
+	display: flex;
+	justify-content: end;
+	align-items: end;
 }
 </style>
