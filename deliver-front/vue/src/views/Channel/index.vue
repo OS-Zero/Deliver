@@ -12,7 +12,7 @@ import { ref, reactive, h, onMounted, computed } from 'vue'
 import type { UnwrapRef } from 'vue'
 import type { TableColumnsType } from 'ant-design-vue'
 import { message, Modal } from 'ant-design-vue'
-import type { appTemplate, searchMessage, updateTemp } from './type'
+import type { AppInterface, searchMessage, updateTemp } from './type'
 import searchForm from './components/searchForm.vue'
 import addTemplate from './components/addApp.vue'
 import { getDate } from '@/utils/date'
@@ -24,7 +24,7 @@ import type { Rule } from 'ant-design-vue/es/form'
 /**
  * 表格初始化
  */
-const templateTable: UnwrapRef<appTemplate[]> = reactive([])
+const appTable: UnwrapRef<AppInterface[]> = reactive([])
 
 const open = ref<boolean>(false)
 
@@ -97,7 +97,7 @@ const columns: TableColumnsType = [
  * 渲染 data
  */
 
-const innertemplatedata: UnwrapRef<appTemplate[]> = reactive([])
+const innertemplatedata: UnwrapRef<AppInterface[]> = reactive([])
 
 const expandedRowKeys: number[] = reactive([])
 
@@ -135,18 +135,15 @@ const addtemplate = ref()
 const saveApp = (): void => {
 	const saveApp = addtemplate.value.templateItem
 	addAppItem(saveApp)
-		.then((res) => {
-			if (res.code === 200) {
-				void message.success('新增成功~ (*^▽^*)')
-				addtemplate.value.open = false
-				searchTemplate({ page: 1, pageSize: pageSize.value, opt: 2 }) // 更新表单
-				addtemplate.value.iconLoading = false
-			}
+		.then(() => {
+			void message.success('新增成功~ (*^▽^*)')
+			addtemplate.value.open = false
+			searchTemplate({ page: 1, pageSize: pageSize.value, opt: 2 }) // 更新表单
+			addtemplate.value.iconLoading = false
 		})
 		.catch((err) => {
-			addtemplate.value.open = false
 			addtemplate.value.iconLoading = false
-			void message.error('新增失败，请检查网络~ (＞︿＜)')
+			void message.error('新增失败，' + err + '~ (＞︿＜)')
 			console.error('An error occurred:', err)
 		})
 }
@@ -182,7 +179,7 @@ const startDelete = (): void => {
 			state.loading = false
 		})
 		.catch((err) => {
-			void message.error('删除失败，请检查网络~ (＞︿＜)')
+			void message.error('删除失败，' + err + '~ (＞︿＜)')
 			console.error('An error occurred:', err)
 			state.loading = false
 		})
@@ -194,7 +191,6 @@ const cancelSelect = (): void => {
 }
 
 const onSelectChange = (selectedRowKeys: Key[]): void => {
-	console.log(selectedRowKeys)
 	state.selectedRowKeys = selectedRowKeys
 	if (state.selectedRowKeys.length !== 0) {
 		openDelete.value = true
@@ -216,7 +212,8 @@ const onDelete = (id: number): void => {
 			state.loading = false
 		})
 		.catch((err) => {
-			void message.error('删除失败，请检查网络~ (＞︿＜)')
+			console.log(err)
+			void message.error('删除失败，' + err + '~ (＞︿＜)')
 			console.error('An error occurred:', err)
 			state.loading = false
 		})
@@ -279,7 +276,7 @@ const searchTemplate = ({ page, pageSize, opt }: SearchOptions = {}): void => {
 	searchNeedMes.pageSize = pageSize
 	getAppInfo(searchNeedMes)
 		.then((res) => {
-			templateTable.length = 0
+			appTable.length = 0
 			current.value = page
 			tableLoadFlag.value = false
 			if (res.data.records.length > 0) {
@@ -288,7 +285,7 @@ const searchTemplate = ({ page, pageSize, opt }: SearchOptions = {}): void => {
 					item.createTime = getDate(item.createTime)
 					item.key = item.appId
 					const i = item
-					templateTable.push(i)
+					appTable.push(i)
 				})
 				if (opt === 1) {
 					void message.success('查询成功~ (*^▽^*)')
@@ -302,7 +299,7 @@ const searchTemplate = ({ page, pageSize, opt }: SearchOptions = {}): void => {
 		})
 		.catch((err) => {
 			searchform.value.iconLoading = false
-			void message.error('查询失败，请检查网络~ (＞︿＜)')
+			void message.error('查询失败，' + err + '~ (＞︿＜)')
 			console.error('An error occurred:', err)
 		})
 }
@@ -315,19 +312,17 @@ const changeStatus = (id: number, status: number): void => {
 		appStatus: status
 	}
 	updateAppStatus(obj)
-		.then((res) => {
-			if (res.code === 200) {
-				message.success('修改成功~ (*^▽^*)')
-			}
+		.then(() => {
+			message.success('修改成功~ (*^▽^*)')
 		})
 		.catch((err) => {
-			void message.error('修改失败，请检查网络~ (＞︿＜)')
+			void message.error('修改失败，' + err + '~ (＞︿＜)')
 			console.error('An error occurred:', err)
 		})
 }
 
 /// 修改 APP
-const templateForm = ref()
+const appForm = ref()
 
 interface DelayLoading {
 	delay: number
@@ -336,22 +331,19 @@ const iconLoading = ref<boolean | DelayLoading>(false)
 
 const handleOk = (): void => {
 	// 异步关闭，先添加，渲染成功后关闭
-	templateForm.value
+	appForm.value
 		.validate()
 		.then(() => {
 			updateDate.value.appConfig = JSON.stringify(jsonobj.value)
 			updateAppItem(updateDate.value)
-				.then((res) => {
-					if (res.code === 200) {
-						void message.success('修改成功~ (*^▽^*)')
-						searchTemplate({ page: current.value, pageSize: pageSize.value, opt: 2 }) // 更新表单
-					}
+				.then(() => {
+					void message.success('修改成功~ (*^▽^*)')
+					handleCancel()
+					searchTemplate({ page: current.value, pageSize: pageSize.value, opt: 2 }) // 更新表单
 				})
 				.catch((err) => {
-					void message.error('修改失败，请检查网络~ (＞︿＜)')
-					console.error('An error occurred:', err)
+					void message.error('修改失败，' + err + '~ (＞︿＜)')
 				})
-			handleCancel()
 		})
 		.catch((error) => {
 			console.log('error', error)
@@ -367,7 +359,7 @@ const handleCancel = (): void => {
 	open.value = false
 }
 const jsonChange = () => {
-	templateForm.value?.validate('appConfig').then(() => {})
+	appForm.value?.validate('appConfig').then(() => {})
 }
 const channelTypeSelect = (value) => {
 	getAppConfigByChannelType({ channelType: value }).then((res) => {
@@ -414,7 +406,7 @@ onMounted(() => {
 				res.data.records.forEach((item: any) => {
 					item.createTime = getDate(item.createTime)
 					item.key = item.appId
-					templateTable.push(item)
+					appTable.push(item)
 				})
 			}
 		})
@@ -452,7 +444,7 @@ const a = computed(() => {
 			<!-- 表格部分 -->
 			<a-table
 				:columns="columns"
-				:data-source="templateTable"
+				:data-source="appTable"
 				:scroll="{ x: 1200, y: undefined, scrollToFirstRowOnChange: true }"
 				class="components-table-demo-nested"
 				@expand="getInnerData"
@@ -532,7 +524,12 @@ const a = computed(() => {
 					<a-row :gutter="[16, 16]">
 						<a-col :span="24">
 							APP 配置：
-							<Code type="json" :code="record.appConfig"></Code>
+							<span v-for="(value, label) in JSON.parse(record.appConfig)" :key="label" style="padding-right: 10px" v-show="record.showAppConfig">
+								<span>{{ label }}:&nbsp;</span>
+								<span style="color: #1677ff">{{ value }}</span>
+							</span>
+							<span><a-button type="link" v-show="!record.showAppConfig" @click="record.showAppConfig = true">展示配置</a-button></span>
+							<span><a-button type="link" v-show="record.showAppConfig" @click="record.showAppConfig = false">隐藏配置</a-button></span>
 						</a-col>
 						<a-col :span="6">创建者：{{ record.createUser }}</a-col>
 						<a-col :span="6">创建时间：{{ record.createTime }}</a-col>
@@ -560,7 +557,7 @@ const a = computed(() => {
 		</div>
 	</div>
 	<a-drawer v-model:open="open" title="修改 APP " width="660px" :footer="null" @cancel="handleCancel">
-		<a-form ref="templateForm" :model="updateDate" :label-col="labelCol" :wrapper-col="wrapperCol" class="temform" :rules="rules">
+		<a-form ref="appForm" :model="updateDate" :label-col="labelCol" :wrapper-col="wrapperCol" class="temform" :rules="rules">
 			<a-form-item ref="appName" label="APP 名称" name="appName" class="tem-item">
 				<a-input :maxlength="20" v-model:value="updateDate.appName" placeholder="请填写长度在 3 到 20 个字符的 APP 名" />
 			</a-form-item>

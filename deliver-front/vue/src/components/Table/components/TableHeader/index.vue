@@ -37,7 +37,6 @@ const submit = (params: any, callback: (err: boolean) => void) => {
 		</span>
 		<span>
 			<Drawer :_options="options" :config="config" @submit="submit" :model="model" />
-			<!-- <Modal :_options="options" :config="config" @submit="submit" :model="model" v-if="config.type === 'modal'" /> -->
 		</span>
 	</div>
 </template>

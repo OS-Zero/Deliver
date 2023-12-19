@@ -179,6 +179,9 @@ const handleAction = (command: string, val: any, callback: any) => {
 		case 'edit':
 			callback(updatetemplate)
 			break
+		case 'clone':
+			callback(addTemp)
+			break
 		case 'send':
 			callback(sendTestMessage)
 			break

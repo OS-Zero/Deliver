@@ -161,8 +161,7 @@ const getPagesPlatformFile = ({ page, pageSize, opt }: SearchOptions = {}): void
 		})
 		.catch((err) => {
 			searchform.value.iconLoading = false
-			void message.error('查询失败，请检查网络~ (＞︿＜)')
-			console.error('An error occurred:', err)
+			void message.error('查询失败，请检查网络' + err + '~ (＞︿＜)')
 		})
 }
 
@@ -186,7 +185,7 @@ onMounted(() => {
 			}
 		})
 		.catch((err) => {
-			console.error('An error occurred:', err)
+			message.error('查询平台文件失败，' + err)
 		})
 })
 </script>

@@ -30,8 +30,8 @@ public class UserInterceptor implements HandlerInterceptor {
     private UserInfo getUserInfoByToken(String token) {
         return UserInfo.builder()
                 .userId("oszero-123456")
-                .username("oszero")
-                .realName("oszero").build();
+                .username("oszero.cn(零号开源)")
+                .realName("oszero大家庭").build();
     }
 
     @Override

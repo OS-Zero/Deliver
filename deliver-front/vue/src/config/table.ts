@@ -317,6 +317,16 @@ export const tableColumns: Table.Columns[] = [
 				options: { rowKey: 'templateId', resetButtonText: '重置', submitButtonText: '确认修改' }
 			},
 			{
+				command: 'clone',
+				type: 'link',
+				size: 'large',
+				feedback: 'drawer',
+				config: { ...editTemplateField, title: '新增模板' },
+				tip: '克隆消息模版',
+				icon: CopyTwoTone,
+				options: { resetButtonText: '重置', submitButtonText: '确认新建' }
+			},
+			{
 				command: 'send',
 				type: 'link',
 				size: 'large',
