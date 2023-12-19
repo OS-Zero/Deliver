@@ -432,7 +432,7 @@ const a = computed(() => {
 	<!-- 搜索部分 -->
 	<searchForm ref="searchform" @mes="searchTemplate({ page: 1, pageSize, opt: 1 })" />
 	<!-- 表格部分 -->
-	<div id="message-container" :style="{ height: hasSelected ? 'calc(100% + 940px)' : 'auto' }">
+	<div id="message-container" :style="{ height: hasSelected ? 'calc(100% + 94px)' : 'auto' }">
 		<div class="message-section">
 			<div class="splitter">
 				<a-tooltip title="刷新">
@@ -559,20 +559,19 @@ const a = computed(() => {
 			</div>
 		</div>
 	</div>
-	<a-modal v-model:open="open" title="修改 APP " width="650px" :footer="null" @cancel="handleCancel">
+	<a-drawer v-model:open="open" title="修改 APP " width="660px" :footer="null" @cancel="handleCancel">
 		<a-form ref="templateForm" :model="updateDate" :label-col="labelCol" :wrapper-col="wrapperCol" class="temform" :rules="rules">
 			<a-form-item ref="appName" label="APP 名称" name="appName" class="tem-item">
-				<a-input :maxlength="20" v-model:value="updateDate.appName" placeholder="请填写长度在 3 到 20 个字符的 APP 名" style="width: 70%" />
+				<a-input :maxlength="20" v-model:value="updateDate.appName" placeholder="请填写长度在 3 到 20 个字符的 APP 名" />
 			</a-form-item>
 
 			<a-form-item label="渠道选择" name="channelType" class="tem-item">
 				<a-select
 					v-model:value="updateDate.channelType"
 					:options="channelData.map((pro) => ({ value: pro.value, label: pro.label }))"
-					@select="channelTypeSelect"
-					style="width: 70%" />
+					@select="channelTypeSelect" />
 			</a-form-item>
-			<a-form-item label="APP 配置" name="appConfig" class="tem-item" :wrapper-col="{ span: 16 }">
+			<a-form-item label="APP 配置" name="appConfig" class="tem-item">
 				<json-editor-vue
 					class="editor"
 					v-model="jsonobj"
@@ -585,14 +584,12 @@ const a = computed(() => {
 			<a-form-item label="APP 状态" name="appStatus" class="tem-item">
 				<a-switch v-model:checked="updateDate.appStatus" checked-children="启用" un-checked-children="禁用" :checkedValue="1" :unCheckedValue="0" />
 			</a-form-item>
-			<a-form-item :wrapper-col="{ span: 20, offset: 17 }" class="tem-item">
-				<div class="between">
-					<a-button @click="handleCancel">取消</a-button>
-					<a-button type="primary" @click="handleOk" :loading="iconLoading">确认修改</a-button>
-				</div>
-			</a-form-item>
 		</a-form>
-	</a-modal>
+		<template #extra>
+			<a-button @click="handleCancel">取消</a-button>
+			<a-button style="margin-left: 10px" type="primary" @click="handleOk" :loading="iconLoading">确认修改</a-button>
+		</template>
+	</a-drawer>
 </template>
 
 <style lang="scss" scoped>

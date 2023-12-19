@@ -41,8 +41,8 @@ watch(
  * @param dateString
  */
 const onRangeChange = (_value: [Dayjs, Dayjs] | [string, string], dateString: [string, string]): void => {
-	searchModel.value.startTime = dateString[0]
-	searchModel.value.endTime = dateString[1]
+	searchModel.value.startTime = dateString[0] + ' 00:00:00'
+	searchModel.value.endTime = dateString[1] + ' 23:59:59'
 }
 
 /**
@@ -69,6 +69,8 @@ const onSubmit = (): void => {
 const resetForm = () => {
 	if (!formRef.value) return
 	formRef.value.resetFields()
+	emitter.emit('loading', true)
+	emit('submit', undefined, '')
 }
 
 onMounted(() => {

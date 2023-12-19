@@ -13,29 +13,38 @@ const messageStore = useMessageStore()
 const fieldList = searchForm.messageSearchForm
 //搜索框数据
 const searchModel = ref<SearchModel>({
-	templateName: '',
+	templateName: undefined,
 	pushRange: undefined,
 	usersType: undefined,
 	period: undefined,
 	startTime: undefined,
 	endTime: undefined
 })
-
+const searchSubmit = (val: any, msg: string) => {
+	searchTemplate(val, msg, {
+		currentPage: tableOptions.templateOption.paginationConfig.current,
+		pageSize: tableOptions.templateOption.paginationConfig.pageSize
+	})
+}
 /**
  * 搜索请求表单数据
  * @param data
  */
 const searchTemplate = async (data: SearchModel | undefined, msg: string, page?: { currentPage: number; pageSize: number }): Promise<void> => {
+	console.log(data)
+
 	try {
 		const { records, total } = await messageStore.getTemplatePages(data !== undefined ? data : searchModel.value, page)
 		tableOptions.templateOption.paginationConfig.total = total
-		emitter.emit('loading', false)
-		emitter.emit('iconLoading', false)
+
 		tableModel.value = records
 		if (msg !== '') message.success(msg)
 	} catch (error) {
 		console.error('An error occurred:', error)
 		message.error(error)
+	} finally {
+		emitter.emit('loading', false)
+		emitter.emit('iconLoading', false)
 	}
 }
 
@@ -54,15 +63,30 @@ const tableHeaderData = ref<AddTemp>({
  * 添加模板
  * @param param
  */
-const addTemp = async (param: AddTemp) => {
+const addTemp = async (param: AddTemp, callback: (err: boolean) => void) => {
 	try {
 		await messageStore.addTemplatePages(param)
-		searchTemplate(undefined, '')
+		tableOptions.templateOption.paginationConfig.current = 1
+		emitter.emit('loading', true)
+		callback(false)
+		searchTemplate(undefined, '', {
+			currentPage: tableOptions.templateOption.paginationConfig.current,
+			pageSize: tableOptions.templateOption.paginationConfig.pageSize
+		})
 		message.success('添加成功')
 	} catch (error) {
+		callback(true)
 		console.error('An error occurred:', error)
 		message.error(error)
 	}
+}
+
+const reflash = () => {
+	emitter.emit('loading', true)
+	searchTemplate(undefined, '', {
+		currentPage: tableOptions.templateOption.paginationConfig.current,
+		pageSize: tableOptions.templateOption.paginationConfig.pageSize
+	})
 }
 
 //表格数据
@@ -72,13 +96,18 @@ const tableModel = ref<MessageTemplate[]>([])
  * 修改表格数据
  * @param param
  */
-const updatetemplate = async (param: AddTemp) => {
+const updatetemplate = async (param: AddTemp, callback: (err: boolean) => void) => {
 	try {
 		await messageStore.updatetemplate(param)
+		callback(false)
 		emitter.emit('loading', true)
-		searchTemplate(undefined, '')
+		searchTemplate(undefined, '', {
+			currentPage: tableOptions.templateOption.paginationConfig.current,
+			pageSize: tableOptions.templateOption.paginationConfig.pageSize
+		})
 		message.success('修改成功')
 	} catch (error) {
+		callback(true)
 		console.error('An error occurred:', error)
 		message.error(error)
 	}
@@ -92,7 +121,11 @@ const deleteTemp = async (ids: Array<number>) => {
 	try {
 		await deleteTemplate({ ids })
 		emitter.emit('loading', true)
-		searchTemplate(undefined, '')
+		tableOptions.templateOption.paginationConfig.current = 1
+		searchTemplate(undefined, '', {
+			currentPage: tableOptions.templateOption.paginationConfig.current,
+			pageSize: tableOptions.templateOption.paginationConfig.pageSize
+		})
 		message.success('删除成功')
 	} catch (error) {
 		console.error('An error occurred:', error)
@@ -103,11 +136,13 @@ const deleteTemp = async (ids: Array<number>) => {
 /**
  * 发送测试消息
  */
-const sendTestMessage = async (data: SendTestMessage) => {
+const sendTestMessage = async (data: SendTestMessage, callback: (err: boolean) => void) => {
 	try {
 		await messageStore.sendTestMes(data)
 		message.success('发送成功')
+		callback(false)
 	} catch (error) {
+		callback(true)
 		console.error('An error occurred:', error)
 		message.error(error)
 	}
@@ -132,10 +167,10 @@ const updateStatu = async (obj: TemplateItem) => {
  * @param callback
  */
 const handleAction = (command: string, val: any, callback: any) => {
-	console.log(val)
-
 	switch (command) {
 		case 'search':
+			tableOptions.templateOption.paginationConfig.current = val.currentPage
+			tableOptions.templateOption.paginationConfig.pageSize = val.pageSize
 			searchTemplate(undefined, '', val)
 			break
 		case 'status':
@@ -162,13 +197,13 @@ onBeforeMount(() => {
 
 <template>
 	<div id="message-container">
-		<SearchForm :fieldList="fieldList" :model="searchModel" @submit="searchTemplate"></SearchForm>
+		<SearchForm :fieldList="fieldList" :model="searchModel" @submit="searchSubmit"></SearchForm>
 		<section>
 			<TableHeader
 				:options="tableHeaderOptions.templateOption"
 				:config="tableHeader.editTemplateField"
 				:model="tableHeaderData"
-				@reflash="searchTemplate(undefined, '')"
+				@reflash="reflash"
 				@submit="addTemp" />
 			<Table :options="tableOptions.templateOption" :model="tableModel" :columns="tableColumns" @actions="handleAction"></Table>
 		</section>
