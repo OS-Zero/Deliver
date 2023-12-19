@@ -130,19 +130,19 @@ defineExpose({
 
 <template>
 	<a-button type="primary" class="addModule" @click="addModules">新增 APP</a-button>
-	<a-modal v-model:open="open" title="新增 APP" width="650px" :footer="null" @cancel="handleCancel">
+	<a-drawer v-model:open="open" title="新增 APP" width="650px" :footer="null" @cancel="handleCancel">
 		<a-form ref="templateForm" :model="templateItem" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol" class="temform">
 			<a-form-item ref="templateName" label="APP 名称" name="appName" class="tem-item">
-				<a-input :maxlength="20" v-model:value="templateItem.appName" placeholder="请填写长度在 3 到 20 个字符的 APP 名" style="width: 70%" />
+				<a-input :maxlength="20" v-model:value="templateItem.appName" placeholder="请填写长度在 3 到 20 个字符的 APP 名" />
 			</a-form-item>
 			<a-form-item label="渠道选择" name="channelType" class="tem-item">
 				<a-select
+					placeholder="请选择渠道"
 					v-model:value="templateItem.channelType"
 					:options="channelData.map((pro) => ({ value: pro.value, label: pro.label }))"
-					@select="channelTypeSelect"
-					style="width: 70%" />
+					@select="channelTypeSelect" />
 			</a-form-item>
-			<a-form-item label="APP 配置" name="appConfig" class="tem-item" :wrapper-col="{ span: 16 }">
+			<a-form-item label="APP 配置" name="appConfig" class="tem-item">
 				<json-editor-vue
 					class="editor"
 					v-model="jsonobj"
@@ -155,14 +155,13 @@ defineExpose({
 			<a-form-item label="APP 状态" name="appStatus" class="tem-item">
 				<a-switch v-model:checked="templateItem.appStatus" checked-children="启用" un-checked-children="禁用" :checkedValue="1" :unCheckedValue="0" />
 			</a-form-item>
-			<a-form-item :wrapper-col="{ span: 20, offset: 17 }" class="tem-item">
-				<div class="between">
-					<a-button @click="handleCancel">重置</a-button>
-					<a-button type="primary" @click="handleOk" :loading="iconLoading">确认新建</a-button>
-				</div>
-			</a-form-item>
 		</a-form>
-	</a-modal>
+
+		<template #extra>
+			<a-button @click="handleCancel">重置</a-button>
+			<a-button type="primary" style="margin-left: 10px" @click="handleOk" :loading="iconLoading">确认新建</a-button>
+		</template>
+	</a-drawer>
 </template>
 
 <style scoped>

@@ -8,13 +8,13 @@ interface Props {
 }
 const props = defineProps<Props>()
 const emit = defineEmits(['update:value'])
-const list = ref<Array<string>>([])
+const users = ref<Array<string>>([])
 const input = ref<string>('')
 const show = ref<boolean>(false)
 watch(
-	list,
+	users.value,
 	() => {
-		emit('update:value', list.value)
+		emit('update:value', users.value)
 	},
 	{
 		immediate: true
@@ -23,20 +23,19 @@ watch(
 watch(
 	props,
 	() => {
-		list.value = props.value
+		users.value = props.value
 	},
 	{
 		immediate: true
 	}
 )
 const addItem = () => {
-	if (list.value.includes(input.value)) {
+	if (users.value.includes(input.value)) {
 		message.error('已存在相同 ID')
 		return
 	}
 	if (input.value !== '') {
-		list.value.push(input.value)
-
+		users.value.push(input.value)
 		input.value = ''
 		show.value = false
 	} else {
@@ -44,11 +43,14 @@ const addItem = () => {
 	}
 }
 const deleteItem = (item: string) => {
-	list.value = list.value.filter((s) => s != item)
+	users.value = users.value.filter((s) => s != item)
+}
+const onBlur = () => {
+	console.log('blur')
 }
 </script>
 <template>
-	<a-list :data-source="list" :locale="{ emptyText: ' ' }" bordered>
+	<a-list :data-source="users" :locale="{ emptyText: ' ' }" bordered>
 		<template #header>
 			<span style="color: #3883fa">{{ options.header }}</span>
 		</template>
@@ -69,7 +71,7 @@ const deleteItem = (item: string) => {
 				</a-tooltip>
 			</div>
 			<a-input-group compact v-show="show">
-				<a-input v-model:value="input" :maxlength="100" :placeholder="options.placeholder" style="width: 250px; text-align: left" />
+				<a-input v-model:value="input" :maxlength="100" :placeholder="options.placeholder" style="width: 250px; text-align: left" @blur="onBlur" />
 				<a-button @click="show = !show">取消</a-button>
 				<a-button type="primary" @click="addItem">确认</a-button>
 			</a-input-group>
