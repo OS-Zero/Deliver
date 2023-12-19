@@ -24,7 +24,7 @@ import java.util.Set;
 public class WeChatCommonParamCheck implements MessageLink<SendTaskDto> {
 
     private static final Set<String> WECHAT_APP_USER_ID_TYPE_SET = new HashSet<>(
-            Arrays.asList("touser ", "toparty", "totag "));
+            Arrays.asList("touser", "toparty", "totag"));
     private static final Set<String> WECHAT_SCHOOL_APP_USER_ID_TYPE_SET = new HashSet<>(
             Arrays.asList("to_parent_userid", "to_student_userid", "to_party", "toall"));
 
@@ -90,7 +90,7 @@ public class WeChatCommonParamCheck implements MessageLink<SendTaskDto> {
         if ("app".equals(pushSubject)) {
             if (!(WECHAT_APP_USER_ID_TYPE_SET.contains(wechatUserIdType)
                     || WECHAT_SCHOOL_APP_USER_ID_TYPE_SET.contains(wechatUserIdType)
-                    || "chatid ".equals(wechatUserIdType))) {
+                    || "chatid".equals(wechatUserIdType))) {
                 throw new MessageException(sendTaskDto, "企微 pushSubject 为 app 时，wechatUserIdType 参数必须为 touser 或者 toparty 或者 totag 或者 to_parent_userid 或者 to_student_userid 或者 to_party 或者 toall 或者 chatid");
             }
 
