@@ -4,15 +4,14 @@ import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
-import com.oszero.deliver.admin.util.MdcUtils;
+import com.oszero.deliver.admin.model.entity.UserInfo;
+import com.oszero.deliver.admin.util.ThreadLocalUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
-
-import static com.oszero.deliver.admin.constant.MdcConstant.USER_ID_NAME;
 
 /**
  * Mybatis-Plus 配置类
@@ -43,15 +42,16 @@ public class AdminMyBatisPlusConfig {
         @Override
         public void insertFill(MetaObject metaObject) {
             log.info("start insert fill ....");
-            this.strictInsertFill(metaObject, "createUser", () -> MdcUtils.get(USER_ID_NAME), String.class); // 起始版本 3.3.3(推荐)
-            this.strictInsertFill(metaObject, "updateUser", () -> MdcUtils.get(USER_ID_NAME), String.class); // 起始版本 3.3.3(推荐)
+            UserInfo userInfo = ThreadLocalUtils.getUserInfo();
+            this.strictInsertFill(metaObject, "createUser", userInfo::getUsername, String.class); // 起始版本 3.3.3(推荐)
+            this.strictInsertFill(metaObject, "updateUser", userInfo::getUsername, String.class); // 起始版本 3.3.3(推荐)
         }
 
         @Override
         public void updateFill(MetaObject metaObject) {
             log.info("start update fill ....");
-            // 或者
-            this.strictUpdateFill(metaObject, "updateUser", () -> MdcUtils.get(USER_ID_NAME), String.class); // 起始版本 3.3.3(推荐)
+            UserInfo userInfo = ThreadLocalUtils.getUserInfo();
+            this.strictUpdateFill(metaObject, "updateUser", userInfo::getUsername, String.class); // 起始版本 3.3.3(推荐)
         }
     }
 }
