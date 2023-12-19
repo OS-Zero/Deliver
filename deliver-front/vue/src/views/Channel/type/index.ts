@@ -1,5 +1,5 @@
 import type { Dayjs } from 'dayjs'
-export interface appTemplate {
+export interface AppInterface {
 	/**
 	 * Appid
 	 */
@@ -32,6 +32,8 @@ export interface appTemplate {
 	 * 创建时间
 	 */
 	createTime: string
+
+	showAppConfig: boolean
 }
 
 // 搜索框接口

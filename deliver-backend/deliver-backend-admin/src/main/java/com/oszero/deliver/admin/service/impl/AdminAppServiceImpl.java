@@ -79,7 +79,7 @@ public class AdminAppServiceImpl extends ServiceImpl<AdminAppMapper, App>
             }
         });
         if (!CollUtil.isEmpty(errRes)) {
-            throw new BusinessException("以下 app 已关联模板，请解除关联关系后再删除：" + errRes);
+            throw new BusinessException("以下 app 已关联模板，请解除关联关系后再删除，关联模板 ID 为：" + errRes);
         }
         int deleted = adminAppMapper.deleteBatchIds(dto.getIds());
         if (!Objects.equals(dto.getIds().size(), deleted)) {

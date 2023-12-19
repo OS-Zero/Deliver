@@ -67,9 +67,13 @@ const upload = (): void => {
 						onClose()
 						emit('mes')
 					}
+				})
+				.catch((err) => {
+					message.error(err)
+				})
+				.finally(() => {
 					iconLoading.value = false
 				})
-				.catch(() => {})
 		})
 		.catch((error) => {
 			console.log('error', error)

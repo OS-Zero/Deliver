@@ -21,7 +21,6 @@ export const useMessageStore = defineStore('message', {
 			} catch (error) {
 				console.log(error)
 				throw error
-				throw error
 			}
 		},
 		async getMessageType(num: number) {
