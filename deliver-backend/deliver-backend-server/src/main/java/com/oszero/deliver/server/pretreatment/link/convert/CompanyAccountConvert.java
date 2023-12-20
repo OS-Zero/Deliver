@@ -46,12 +46,12 @@ public class CompanyAccountConvert implements MessageLink<SendTaskDto> {
     private final CompanyAccount2Phone companyAccount2Phone;
     private final CompanyAccount2Mail companyAccount2Mail;
 
-    private static final Map<String, String> codeUpdateMap = new HashMap<>();
+    private static final Map<String, String> CODE_UPDATE_MAP = new HashMap<>();
 
     static {
-        codeUpdateMap.put(PretreatmentCodeConstant.COMPANY_ACCOUNT_DING, PretreatmentCodeConstant.PHONE_DING);
-        codeUpdateMap.put(PretreatmentCodeConstant.COMPANY_ACCOUNT_WECHAT, PretreatmentCodeConstant.PHONE_WECHAT);
-        codeUpdateMap.put(PretreatmentCodeConstant.COMPANY_ACCOUNT_FEI_SHU, PretreatmentCodeConstant.PHONE_FEI_SHU);
+        CODE_UPDATE_MAP.put(PretreatmentCodeConstant.COMPANY_ACCOUNT_DING, PretreatmentCodeConstant.PHONE_DING);
+        CODE_UPDATE_MAP.put(PretreatmentCodeConstant.COMPANY_ACCOUNT_WECHAT, PretreatmentCodeConstant.PHONE_WECHAT);
+        CODE_UPDATE_MAP.put(PretreatmentCodeConstant.COMPANY_ACCOUNT_FEI_SHU, PretreatmentCodeConstant.PHONE_FEI_SHU);
     }
 
     @Override
@@ -72,17 +72,35 @@ public class CompanyAccountConvert implements MessageLink<SendTaskDto> {
         } else {
             sendTaskDto.setUsers(companyAccount2Phone.convert(users));
             // 修改 code 码，以便于手机号转换平台 ID
-            context.setCode(codeUpdateMap.get(code));
+            context.setCode(CODE_UPDATE_MAP.get(code));
 
             MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成企业账号转换手机号");
         }
     }
 
+    /**
+     * 企业账号转手机号
+     */
     public interface CompanyAccount2Phone {
+        /**
+         * 批量转换手机号
+         *
+         * @param companyAccountList 企业账号列表
+         * @return 手机号列表
+         */
         List<String> convert(List<String> companyAccountList);
     }
 
+    /**
+     * 企业账号转邮箱
+     */
     public interface CompanyAccount2Mail {
+        /**
+         * 批量转换邮箱
+         *
+         * @param companyAccountList 企业账号列表
+         * @return 邮箱列表
+         */
         List<String> convert(List<String> companyAccountList);
     }
 }

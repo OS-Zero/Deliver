@@ -38,6 +38,12 @@ public class SmsFactory {
     private final AliYunSmsClient aliYunSmsClient;
     private final TencentSmsClient tencentSmsClient;
 
+    /**
+     * 获取客户端通过 smsProvider
+     *
+     * @param smsProvider 提供商
+     * @return 客户端
+     */
     public SmsClient getClient(String smsProvider) {
         if (SmsProviderTypeEnum.ALI_YUN.getName().equals(smsProvider)) {
             return aliYunSmsClient;

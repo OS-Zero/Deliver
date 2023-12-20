@@ -19,7 +19,7 @@ package com.oszero.deliver.server.interceptor;
 
 import com.oszero.deliver.server.constant.TraceIdConstant;
 import com.oszero.deliver.server.log.trace.TraceIdStrategy;
-import com.oszero.deliver.server.util.MDCUtils;
+import com.oszero.deliver.server.util.MdcUtils;
 import com.oszero.deliver.server.util.ThreadLocalUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -46,10 +46,10 @@ public class TraceIdInterceptor implements HandlerInterceptor {
         String traceId = request.getHeader(TraceIdConstant.TRACE_ID);
         if (!Objects.isNull(traceId)) {
             //  此处是为了适配网关
-            MDCUtils.put(TraceIdConstant.TRACE_ID, traceId);
+            MdcUtils.put(TraceIdConstant.TRACE_ID, traceId);
         } else {
-            String traceID = traceIdStrategy.createTraceId();
-            MDCUtils.put(TraceIdConstant.TRACE_ID, traceID);
+            String trace = traceIdStrategy.createTraceId();
+            MdcUtils.put(TraceIdConstant.TRACE_ID, trace);
         }
 
         return true;
@@ -57,7 +57,7 @@ public class TraceIdInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        MDCUtils.clear();
+        MdcUtils.clear();
         ThreadLocalUtils.clear();
     }
 }

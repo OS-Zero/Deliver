@@ -68,6 +68,8 @@ public class RabbitMQProducer implements Producer {
                     rabbitMQUtils.sendMessage(MQConstant.DELIVER_EXCHANGE, MQConstant.DING_KEY_NAME, message, correlationData);
             case FEI_SHU ->
                     rabbitMQUtils.sendMessage(MQConstant.DELIVER_EXCHANGE, MQConstant.FEI_SHU_KEY_NAME, message, correlationData);
+            default -> {
+            }
         }
     }
 }

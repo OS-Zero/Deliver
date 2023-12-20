@@ -42,6 +42,11 @@ public class AsyncConfig {
     private ThreadPoolTaskExecutor weChatAsyncExecutor;
     private ThreadPoolTaskExecutor feiShuAsyncExecutor;
 
+    /**
+     * 创建 callAsyncExecutor
+     *
+     * @return ThreadPoolTaskExecutor
+     */
     @Bean("callAsyncExecutor")
     public ThreadPoolTaskExecutor callAsyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
@@ -64,6 +69,11 @@ public class AsyncConfig {
         return executor;
     }
 
+    /**
+     * 创建 smsAsyncExecutor
+     *
+     * @return ThreadPoolTaskExecutor
+     */
     @Bean("smsAsyncExecutor")
     public ThreadPoolTaskExecutor smsAsyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
@@ -86,6 +96,11 @@ public class AsyncConfig {
         return executor;
     }
 
+    /**
+     * 创建 mailAsyncExecutor
+     *
+     * @return ThreadPoolTaskExecutor
+     */
     @Bean("mailAsyncExecutor")
     public ThreadPoolTaskExecutor mailAsyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
@@ -108,6 +123,11 @@ public class AsyncConfig {
         return executor;
     }
 
+    /**
+     * 创建 dingAsyncExecutor
+     *
+     * @return ThreadPoolTaskExecutor
+     */
     @Bean("dingAsyncExecutor")
     public ThreadPoolTaskExecutor dingAsyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
@@ -130,6 +150,11 @@ public class AsyncConfig {
         return executor;
     }
 
+    /**
+     * 创建 weChatAsyncExecutor
+     *
+     * @return ThreadPoolTaskExecutor
+     */
     @Bean("weChatAsyncExecutor")
     public ThreadPoolTaskExecutor weChatAsyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
@@ -152,6 +177,11 @@ public class AsyncConfig {
         return executor;
     }
 
+    /**
+     * 创建 feiShuAsyncExecutor
+     *
+     * @return ThreadPoolTaskExecutor
+     */
     @Bean("feiShuAsyncExecutor")
     public ThreadPoolTaskExecutor feiShuAsyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
@@ -174,6 +204,9 @@ public class AsyncConfig {
         return executor;
     }
 
+    /**
+     * 销毁所有线程池
+     */
     @PreDestroy
     public void destroy() {
 

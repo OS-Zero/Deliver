@@ -29,6 +29,11 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  */
 public class IpUtils {
 
+    /**
+     * 获取到请求IP
+     *
+     * @return IP地址
+     */
     public static String getClientIp() {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (attributes == null) {

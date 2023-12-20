@@ -36,6 +36,13 @@ public class RocketMQUtils {
 
     private final RocketMQTemplate rocketMQTemplate;
 
+    /**
+     * 发送消息
+     *
+     * @param topic   主题
+     * @param message 消息
+     * @return 发送状态
+     */
     public SendResult sendMessage(String topic, String message) {
         return rocketMQTemplate.syncSend(topic, message);
     }

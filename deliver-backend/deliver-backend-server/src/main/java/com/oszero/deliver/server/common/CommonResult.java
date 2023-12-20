@@ -46,22 +46,37 @@ public class CommonResult<T> {
      */
     private String errorMessage;
 
+    /**
+     * 成功返回无数据
+     */
     public static <T> CommonResult<T> success() {
         return new CommonResult<>(ResultEnum.SUCCESS.getCode(), null, null);
     }
 
+    /**
+     * 成功返回有数据
+     */
     public static <T> CommonResult<T> success(T data) {
         return new CommonResult<>(ResultEnum.SUCCESS.getCode(), data, null);
     }
 
+    /**
+     * 失败返回
+     */
     public static <T> CommonResult<T> fail() {
         return new CommonResult<>(ResultEnum.ERROR.getCode(), null, ResultEnum.ERROR.getMessage());
     }
 
+    /**
+     * 失败返回
+     */
     public static <T> CommonResult<T> fail(ResultEnum resultEnum) {
         return new CommonResult<>(resultEnum.getCode(), null, resultEnum.getMessage());
     }
 
+    /**
+     * 失败返回
+     */
     public static <T> CommonResult<T> fail(String errorMessage) {
         return new CommonResult<>(ResultEnum.ERROR.getCode(), null, errorMessage);
     }

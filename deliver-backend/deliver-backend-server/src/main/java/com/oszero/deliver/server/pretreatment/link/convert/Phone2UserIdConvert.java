@@ -67,6 +67,14 @@ public class Phone2UserIdConvert implements MessageLink<SendTaskDto> {
      * 手机号转 userId 接口
      */
     public interface Phone2UserId {
+        /**
+         * 转换
+         *
+         * @param appConfigJson app配置
+         * @param phones        电话列表
+         * @param sendTaskDto   发送任务
+         * @return 用户ID列表
+         */
         List<String> convert(String appConfigJson, List<String> phones, SendTaskDto sendTaskDto);
     }
 

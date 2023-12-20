@@ -28,21 +28,43 @@ import org.slf4j.LoggerFactory;
  */
 public class MessageLinkTraceLogger {
 
-    private final static Logger logger = LoggerFactory.getLogger("MessageLinkTraceLogger");
+    private final static Logger LOGGER = LoggerFactory.getLogger("MessageLinkTraceLogger");
 
+    /**
+     * 打印info信息
+     *
+     * @param s 信息
+     */
     public static void info(String s) {
-        logger.info(s);
+        LOGGER.info(s);
     }
 
+    /**
+     * 格式打印info信息
+     *
+     * @param s       信息
+     * @param objects 格式
+     */
     public static void info(String s, Object... objects) {
-        logger.info(s, objects);
+        LOGGER.info(s, objects);
     }
 
+    /**
+     * 打印error信息
+     *
+     * @param s 信息
+     */
     public static void error(String s) {
-        logger.error(s);
+        LOGGER.error(s);
     }
 
+    /**
+     * 格式打印error信息
+     *
+     * @param s       信息
+     * @param objects 格式
+     */
     public static void error(String s, Object... objects) {
-        logger.error(s, objects);
+        LOGGER.error(s, objects);
     }
 }

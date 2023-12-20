@@ -56,6 +56,9 @@ public class ServerCacheManager {
 
     /**
      * 缓存建立
+     *
+     * @param templateId 模板ID
+     * @return Template
      */
     @Cacheable(value = CacheConstant.TEMPLATE_CACHE_NAME, key = "#templateId",
             cacheManager = CacheConstant.REDIS_CACHE_MANAGER)
@@ -63,6 +66,12 @@ public class ServerCacheManager {
         return templateService.getById(templateId);
     }
 
+    /**
+     * 缓存建立
+     *
+     * @param templateId 模板ID
+     * @return TemplateApp
+     */
     @Cacheable(value = CacheConstant.TEMPLATE_APP_CACHE_NAME, key = "#templateId",
             cacheManager = CacheConstant.REDIS_CACHE_MANAGER)
     public TemplateApp getTemplateApp(Long templateId) {
@@ -71,25 +80,49 @@ public class ServerCacheManager {
         return templateAppService.getOne(wrapper);
     }
 
+    /**
+     * 缓存建立
+     *
+     * @param appId 应用ID
+     * @return app
+     */
     @Cacheable(value = CacheConstant.APP_CACHE_NAME, key = "#appId",
             cacheManager = CacheConstant.REDIS_CACHE_MANAGER)
     public App getApp(Long appId) {
         return appService.getById(appId);
     }
 
-//    @Cacheable(value = CacheConstant.CLIENT_TOKEN_CACHE_NAME, keyGenerator = "tokenKeyGenerator",
+    /**
+     * 缓存建立
+     *
+     * @param dingApp 应用
+     * @return Token
+     */
+    //    @Cacheable(value = CacheConstant.CLIENT_TOKEN_CACHE_NAME, keyGenerator = "tokenKeyGenerator",
 //            cacheManager = CacheConstant.REDIS_CACHE_MANAGER)
     public String getDingToken(DingApp dingApp, SendTaskDto sendTaskDto) {
         return dingClient.getAccessToken(dingApp, sendTaskDto);
     }
 
-//    @Cacheable(value = CacheConstant.CLIENT_TOKEN_CACHE_NAME, keyGenerator = "tokenKeyGenerator",
+    /**
+     * 缓存建立
+     *
+     * @param weChatApp 应用
+     * @return Token
+     */
+    //    @Cacheable(value = CacheConstant.CLIENT_TOKEN_CACHE_NAME, keyGenerator = "tokenKeyGenerator",
 //            cacheManager = CacheConstant.REDIS_CACHE_MANAGER)
     public String getWeChatToken(WeChatApp weChatApp, SendTaskDto sendTaskDto) {
         return weChatClient.getAccessToken(weChatApp, sendTaskDto);
     }
 
-//    @Cacheable(value = CacheConstant.CLIENT_TOKEN_CACHE_NAME, keyGenerator = "tokenKeyGenerator",
+    /**
+     * 缓存建立
+     *
+     * @param feiShuApp 应用
+     * @return Token
+     */
+    //    @Cacheable(value = CacheConstant.CLIENT_TOKEN_CACHE_NAME, keyGenerator = "tokenKeyGenerator",
 //            cacheManager = CacheConstant.REDIS_CACHE_MANAGER)
     public String getFeiShuToken(FeiShuApp feiShuApp, SendTaskDto sendTaskDto) {
         return feiShuClient.getTenantAccessToken(feiShuApp, sendTaskDto);

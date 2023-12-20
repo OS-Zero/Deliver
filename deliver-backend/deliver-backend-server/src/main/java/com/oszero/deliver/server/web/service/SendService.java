@@ -26,5 +26,11 @@ import com.oszero.deliver.server.model.dto.request.SendRequestDto;
  * @version 1.0.0
  */
 public interface SendService {
-    String send(SendRequestDto sendRequestDto) ;
+    /**
+     * 发送消息
+     *
+     * @param sendRequestDto 发送请求
+     * @return TraceId
+     */
+    String send(SendRequestDto sendRequestDto);
 }

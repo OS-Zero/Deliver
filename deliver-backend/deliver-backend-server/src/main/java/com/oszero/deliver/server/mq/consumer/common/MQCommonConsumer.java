@@ -24,7 +24,7 @@ import com.oszero.deliver.server.exception.MessageException;
 import com.oszero.deliver.server.handler.BaseHandler;
 import com.oszero.deliver.server.mq.producer.Producer;
 import com.oszero.deliver.server.model.dto.common.SendTaskDto;
-import com.oszero.deliver.server.util.MDCUtils;
+import com.oszero.deliver.server.util.MdcUtils;
 import com.oszero.deliver.server.util.MessageLinkTraceUtils;
 import com.oszero.deliver.server.web.service.MessageRecordService;
 
@@ -38,6 +38,13 @@ import java.util.Objects;
  */
 public class MQCommonConsumer {
 
+    /**
+     * try 块处理
+     *
+     * @param sendTaskDto 发送任务
+     * @param handler     渠道处理器
+     * @throws Exception 异常
+     */
     public static void tryHandle(SendTaskDto sendTaskDto, BaseHandler handler) throws Exception {
 
         // 记录链路追踪 id
@@ -45,7 +52,7 @@ public class MQCommonConsumer {
         if (StrUtil.isBlank(traceId)) {
             throw new MessageException(sendTaskDto, "traceId 为空");
         }
-        MDCUtils.put(TraceIdConstant.TRACE_ID, traceId);
+        MdcUtils.put(TraceIdConstant.TRACE_ID, traceId);
 
         MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "接收到消息队列消息，消息已送达消费者");
 
@@ -53,6 +60,14 @@ public class MQCommonConsumer {
         handler.doHandle(sendTaskDto);
     }
 
+    /**
+     * catch 块处理
+     *
+     * @param sendTaskDto          发送任务
+     * @param exception            异常
+     * @param messageRecordService 消息记录service
+     * @param producer             生产者
+     */
     public static void catchHandle(SendTaskDto sendTaskDto, Exception exception, MessageRecordService messageRecordService, Producer producer) {
         if (!Objects.isNull(sendTaskDto)) {
             // 记录错误日志
@@ -81,6 +96,6 @@ public class MQCommonConsumer {
             // 记录异常信息到生命周期日志中
             MessageLinkTraceUtils.recordMessageLifecycleError2InfoLog("消息消费失败，" + exception.getMessage() + "！！！");
         }
-        MDCUtils.clear();
+        MdcUtils.clear();
     }
 }

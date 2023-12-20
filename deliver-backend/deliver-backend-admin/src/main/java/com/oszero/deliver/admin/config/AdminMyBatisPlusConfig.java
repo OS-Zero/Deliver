@@ -52,6 +52,9 @@ public class AdminMyBatisPlusConfig {
         return interceptor;
     }
 
+    /**
+     * MyBatisPlus 字段自动注入配置
+     */
     @Slf4j
     @Component
     public static class MyMetaObjectHandler implements MetaObjectHandler {

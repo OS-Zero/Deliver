@@ -44,6 +44,12 @@ public class RocketMQCommonConsumer {
     private final MessageRecordService messageRecordService;
     private final Producer producer;
 
+    /**
+     * 确认消息
+     *
+     * @param messageExt 消息
+     * @param handler    渠道处理器
+     */
     public void omMessageAck(MessageExt messageExt, BaseHandler handler) {
         SendTaskDto sendTaskDto = null;
         try {

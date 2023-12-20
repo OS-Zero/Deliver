@@ -54,15 +54,15 @@ public class TencentCallClient implements CallClient {
             String secretKey = tencentCallApp.getSecretKey();
             Credential cred = new Credential(secretId, secretKey);
 
-            List<String> users = sendTaskDto.getUsers();
+            final List<String> users = sendTaskDto.getUsers();
             // 获取腾讯云语音通知相关参数
             Map<String, Object> paramMap = sendTaskDto.getParamMap();
-            String region = paramMap.get("region").toString();
-            String templateId = paramMap.get("templateId").toString();
-            List<String> templateParamSet = (List<String>) paramMap.getOrDefault("templateParamSet", new ArrayList<String>());
-            Long playTimes = (Long) paramMap.getOrDefault("playTimes", -1L);
-            String sessionContext = paramMap.getOrDefault("sessionContext", "").toString();
-            String voiceSdkAppid = paramMap.get("voiceSdkAppid").toString();
+            final String region = paramMap.get("region").toString();
+            final String templateId = paramMap.get("templateId").toString();
+            final List<String> templateParamSet = (List<String>) paramMap.getOrDefault("templateParamSet", new ArrayList<String>());
+            final Long playTimes = (Long) paramMap.getOrDefault("playTimes", -1L);
+            final String sessionContext = paramMap.getOrDefault("sessionContext", "").toString();
+            final String voiceSdkAppid = paramMap.get("voiceSdkAppid").toString();
 
             HttpProfile httpProfile = new HttpProfile();
             httpProfile.setEndpoint("vms.tencentcloudapi.com");
@@ -70,7 +70,7 @@ public class TencentCallClient implements CallClient {
             ClientProfile clientProfile = new ClientProfile();
             clientProfile.setHttpProfile(httpProfile);
 
-            VmsClient client = new VmsClient(cred, region, clientProfile);
+            final VmsClient client = new VmsClient(cred, region, clientProfile);
 
             SendTtsVoiceRequest req = new SendTtsVoiceRequest();
             // 设置腾讯云语音电话所需参数

@@ -22,5 +22,10 @@ package com.oszero.deliver.server.log.trace;
  * @version 1.0.0
  */
 public interface TraceIdStrategy {
+    /**
+     * 创建TraceId
+     *
+     * @return TraceId
+     */
     String createTraceId();
 }

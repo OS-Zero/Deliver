@@ -28,14 +28,27 @@ import com.oszero.deliver.server.model.dto.common.SendTaskDto;
 public class ThreadLocalUtils {
     private final static ThreadLocal<SendTaskDto> SEND_TASK_DTO_THREAD_LOCAL = new ThreadLocal<>();
 
+    /**
+     * 设置发送任务
+     *
+     * @param sendTaskDto 发送任务
+     */
     public static void setSendTaskDto(SendTaskDto sendTaskDto) {
         SEND_TASK_DTO_THREAD_LOCAL.set(sendTaskDto);
     }
 
+    /**
+     * 获取发送任务
+     *
+     * @return 发送任务
+     */
     public static SendTaskDto getSendTaskDto() {
         return SEND_TASK_DTO_THREAD_LOCAL.get();
     }
 
+    /**
+     * 清空
+     */
     public static void clear() {
         SEND_TASK_DTO_THREAD_LOCAL.remove();
     }

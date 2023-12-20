@@ -37,6 +37,12 @@ public enum CallProviderTypeEnum {
     private final Integer code;
     private final String name;
 
+    /**
+     * 通过 code 获取实例
+     *
+     * @param code code
+     * @return 实例
+     */
     public static CallProviderTypeEnum getInstanceByCode(Integer code) {
         for (CallProviderTypeEnum item : values()) {
             if (item.getCode().equals(code)) {

@@ -35,10 +35,25 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface JsonString {
+    /**
+     * 错误信息
+     *
+     * @return 信息
+     */
     String message() default "必须为 JSON 类型字符串";
 
+    /**
+     * 组
+     *
+     * @return 类型
+     */
     Class<?>[] groups() default {};
 
+    /**
+     * payload
+     *
+     * @return Class
+     */
     Class<? extends Payload>[] payload() default {};
 }
 

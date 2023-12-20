@@ -30,6 +30,12 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @ComponentScan(value = {"com.oszero.deliver"})
 public class DeliverAllApplication {
+
+    /**
+     * 主启动方法
+     *
+     * @param args 参数
+     */
     public static void main(String[] args) {
         SpringApplication.run(DeliverAllApplication.class, args);
     }

@@ -36,6 +36,11 @@ public class ApplicationEventUtils {
 
     private final ApplicationContext applicationContext;
 
+    /**
+     * 发布 Spring 事件
+     *
+     * @param applicationEvent ApplicationEvent
+     */
     public void publishCustomEvent(ApplicationEvent applicationEvent) {
         // 发布事件
         applicationContext.publishEvent(applicationEvent);

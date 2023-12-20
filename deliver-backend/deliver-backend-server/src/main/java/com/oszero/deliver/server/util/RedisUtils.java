@@ -39,18 +39,44 @@ import java.util.concurrent.TimeUnit;
 public class RedisUtils {
     private final StringRedisTemplate stringRedisTemplate;
 
+    /**
+     * 设置String值
+     *
+     * @param key   键
+     * @param value 值
+     */
     public void setStrValue(String key, String value) {
         stringRedisTemplate.opsForValue().set(key, value);
     }
 
+    /**
+     * 设置String值有效期
+     *
+     * @param key   键
+     * @param value 值
+     */
     public void setStrValueExpire(String key, String value, long timeout, TimeUnit unit) {
         stringRedisTemplate.opsForValue().set(key, value, timeout, unit);
     }
 
+    /**
+     * 获取String值
+     *
+     * @param key 键
+     * @return value 值
+     */
     public String getStrValue(String key) {
         return stringRedisTemplate.opsForValue().get(key);
     }
 
+    /**
+     * 执行Lua表达式
+     *
+     * @param luaScript lua脚本
+     * @param keys      keys
+     * @param args      args
+     * @return 标志
+     */
     public boolean executeLuaScript(String luaScript, List<String> keys, Object... args) {
         DefaultRedisScript<Boolean> redisScript = new DefaultRedisScript<>();
         redisScript.setScriptText(luaScript);
@@ -59,6 +85,13 @@ public class RedisUtils {
         return result != null && result;
     }
 
+    /**
+     * 发送 Stream 消息
+     *
+     * @param streamKey    streamKey
+     * @param messageValue 消息
+     * @return 消息记录
+     */
     public RecordId sendMessage(String streamKey, String messageValue) {
 
         // 使用 StringRedisTemplate 获取 StreamOperations 对象

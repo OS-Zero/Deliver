@@ -55,7 +55,16 @@ public class CompanyAccountCheck implements MessageLink<SendTaskDto> {
         MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "完成企业账号检查");
     }
 
+    /**
+     * 企业账号检查
+     */
     public interface CheckCompanyAccount {
+        /**
+         * 检查企业账号
+         *
+         * @param companyAccount 企业账号
+         * @param sendTaskDto    发送任务
+         */
         void check(String companyAccount, SendTaskDto sendTaskDto);
     }
 }
