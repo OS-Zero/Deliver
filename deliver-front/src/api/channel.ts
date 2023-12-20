@@ -1,5 +1,6 @@
 import request from '@/utils/request.ts'
 import type { searchMessage, addTemp, updateTemp } from '@/views/Channel/type'
+
 export async function getAppInfo(data: searchMessage): Promise<any> {
 	return await request({
 		url: '/app/search',

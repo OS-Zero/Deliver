@@ -40,6 +40,10 @@ module.exports = {
     "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off",
     "no-unexpected-multiline": "error", // 禁止空余的多行
     "no-useless-escape": "off", // 禁止不必要的转义字符
+    // 格式化
+    "space-before-function-paren":"off",//取消函数前的空格
+    "object-curly-spacing":"off",//取消括号内的间距一致
+    'indent': 'off',//取消对每行前空格的检测（该换行还是要换的）
 
     // typeScript (https://typescript-eslint.io/rules)
     "@typescript-eslint/no-unused-vars": "error", // 禁止定义未使用的变量

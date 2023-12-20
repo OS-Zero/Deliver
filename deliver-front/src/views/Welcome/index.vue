@@ -1,10 +1,12 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
+
 interface Card {
 	title: string
 	desc: string
 	link: string
 }
+
 const cards = ref<Card[]>([
 	{
 		title: '社区官网',
@@ -70,6 +72,7 @@ const cards = ref<Card[]>([
 	background-image: linear-gradient(to bottom, #eff3ff, #f0f5ff);
 	border-radius: 12px;
 	border: 1px solid #ececec;
+
 	.gutter-row {
 		box-shadow:
 			rgba(0, 0, 0, 0.08) 0px 6px 16px 0px,

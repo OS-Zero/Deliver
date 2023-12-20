@@ -1,5 +1,13 @@
 import { defineStore } from 'pinia'
-import { getTemplatePages, getMessageType, getApp, addTemplatePages, updatetemplate, getMessageParamByMessageType, sendTestMes } from '@/api/message.ts'
+import {
+	getTemplatePages,
+	getMessageType,
+	getApp,
+	addTemplatePages,
+	updatetemplate,
+	getMessageParamByMessageType,
+	sendTestMes
+} from '@/api/message.ts'
 import { SearchModel, AddTemp, SendTestMessage } from '@/views/Message/type'
 export const useMessageStore = defineStore('message', {
 	state: () => {
