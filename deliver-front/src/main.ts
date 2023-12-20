@@ -6,6 +6,7 @@ import router from './router'
 import { createPinia } from 'pinia'
 import './permisson.ts'
 import 'jsoneditor'
+
 const pinia = createPinia()
 
 createApp(App).use(router).use(pinia).mount('#app')

@@ -25,27 +25,27 @@ const routes: RouteRecordRaw[] = [
 				}
 			},
 			{
-				path: 'message',
-				name: '消息配置',
-				component: async () => await import('@/views/Message/index.vue'),
+				path: 'template',
+				name: '模板配置',
+				component: async () => await import('@/views/Template/index.vue'),
 				meta: {
 					parent: '首页',
-					title: '消息配置 - Deliver 企业消息推送平台'
+					title: '模板配置 - Deliver 企业消息推送平台'
 				}
 			},
 			{
-				path: 'channel',
-				name: 'APP 配置',
-				component: async () => await import('@/views/Channel/index.vue'),
+				path: 'app',
+				name: '应用配置',
+				component: async () => await import('@/views/App/index.vue'),
 				meta: {
 					parent: '首页',
-					title: 'APP 配置 - Deliver 企业消息推送平台'
+					title: '应用配置 - Deliver 企业消息推送平台'
 				}
 			},
 			{
 				path: 'file',
 				name: '文件管理',
-				component: async () => await import('@/views/File/index.vue'),
+				component: async () => await import('@/views/PlatformFile/index.vue'),
 				meta: {
 					parent: '首页',
 					title: '平台文件管理 - Deliver 企业消息推送平台'
