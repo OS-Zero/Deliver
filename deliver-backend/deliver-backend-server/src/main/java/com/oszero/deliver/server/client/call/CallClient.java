@@ -28,6 +28,13 @@ import com.oszero.deliver.server.model.dto.common.SendTaskDto;
  */
 public interface CallClient {
 
+    /**
+     * 发送电话消息
+     *
+     * @param callApp     电话应用
+     * @param sendTaskDto SendTaskDto
+     * @throws Exception 异常
+     */
     void sendCall(CallApp callApp, SendTaskDto sendTaskDto) throws Exception;
 
 }

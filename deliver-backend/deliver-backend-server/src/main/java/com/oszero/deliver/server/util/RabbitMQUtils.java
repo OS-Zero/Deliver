@@ -52,7 +52,7 @@ public class RabbitMQUtils {
             SendTaskDto sendTaskDto = null;
             if (correlationData != null) {
                 String[] split = correlationData.getId().split("&&&");
-                MDCUtils.put(TraceIdConstant.TRACE_ID, split[0]);
+                MdcUtils.put(TraceIdConstant.TRACE_ID, split[0]);
 
                 ReturnedMessage returned = correlationData.getReturned();
                 if (!Objects.isNull(returned)) { // 不为 null 代表发送失败
@@ -73,16 +73,31 @@ public class RabbitMQUtils {
                         retry(exchange, routingKey, sendTaskDto);
                     }
                 }
-                MDCUtils.clear();
+                MdcUtils.clear();
             }
         });
     }
 
+    /**
+     * 发送消息
+     *
+     * @param exchange        交换机
+     * @param routingKey      key
+     * @param message         消息
+     * @param correlationData 标识
+     */
     public void sendMessage(String exchange, String routingKey, String message, CorrelationData correlationData) {
         // 使用关联数据发送消息
         rabbitTemplate.convertAndSend(exchange, routingKey, message, correlationData);
     }
 
+    /**
+     * 重试
+     *
+     * @param exchange    交换机
+     * @param routingKey  key
+     * @param sendTaskDto 发送任务
+     */
     public void retry(String exchange, String routingKey, SendTaskDto sendTaskDto) {
         MessageLinkTraceUtils.recordMessageLifecycleErrorLog(sendTaskDto, "RabbitMQ 消息发送失败！！！");
         // 记录异常信息到生命周期日志中

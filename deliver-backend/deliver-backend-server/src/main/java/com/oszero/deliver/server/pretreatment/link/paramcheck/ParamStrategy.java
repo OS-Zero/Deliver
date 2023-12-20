@@ -33,5 +33,11 @@ public interface ParamStrategy {
     String WECHAT_STRATEGY_BEAN_PRE_NAME = "wechat-";
     String FEI_SHU_STRATEGY_BEAN_PRE_NAME = "feiShu-";
 
+    /**
+     * 参数检查
+     *
+     * @param sendTaskDto 发送任务
+     * @throws Exception 异常
+     */
     void paramCheck(SendTaskDto sendTaskDto) throws Exception;
 }

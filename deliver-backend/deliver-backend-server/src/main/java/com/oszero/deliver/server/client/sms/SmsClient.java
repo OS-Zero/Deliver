@@ -28,6 +28,12 @@ import com.oszero.deliver.server.model.dto.common.SendTaskDto;
  */
 public interface SmsClient {
 
+    /**
+     * 发送短息消息
+     *
+     * @param smsApp      Sms应用
+     * @param sendTaskDto 发送任务
+     */
     void sendSms(SmsApp smsApp, SendTaskDto sendTaskDto);
 
 }

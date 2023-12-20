@@ -33,6 +33,11 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableAsync // 开启异步功能
 public class DeliverServerApplication {
 
+    /**
+     * 主启动方法
+     *
+     * @param args 参数
+     */
     public static void main(String[] args) {
         SpringApplication.run(DeliverServerApplication.class);
     }

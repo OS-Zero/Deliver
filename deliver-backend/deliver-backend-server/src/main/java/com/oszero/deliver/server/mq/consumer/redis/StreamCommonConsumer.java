@@ -49,6 +49,12 @@ public class StreamCommonConsumer {
     private final Producer producer;
     private final StringRedisTemplate stringRedisTemplate;
 
+    /**
+     * 确认消息
+     *
+     * @param message 消息
+     * @param handler 渠道处理器
+     */
     public void omMessageAck(ObjectRecord<String, String> message, BaseHandler handler) {
         SendTaskDto sendTaskDto = null;
         try {
@@ -64,6 +70,12 @@ public class StreamCommonConsumer {
         }
     }
 
+    /**
+     * ACK
+     *
+     * @param message 消息
+     * @param handler 渠道处理器
+     */
     private void ack(ObjectRecord<String, String> message, BaseHandler handler) {
         // 消息确认
         Long acknowledge = 0L;

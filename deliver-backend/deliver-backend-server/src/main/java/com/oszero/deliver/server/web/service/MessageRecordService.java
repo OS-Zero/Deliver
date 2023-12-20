@@ -29,5 +29,13 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @version 1.0.0
  */
 public interface MessageRecordService extends IService<MessageRecord> {
+
+    /**
+     * 保存消息记录
+     *
+     * @param sendTaskDto   发送任务
+     * @param messageStatus 消息状态
+     * @param user          用户
+     */
     void saveMessageRecord(SendTaskDto sendTaskDto, StatusEnum messageStatus, String user);
 }

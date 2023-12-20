@@ -41,6 +41,12 @@ public class NoMQCommonListener {
     private final MessageRecordService messageRecordService;
     private final Producer producer;
 
+    /**
+     * 消息确认
+     *
+     * @param event   事件
+     * @param handler 渠道处理器
+     */
     public void omMessageAck(BaseApplicationEvent event, BaseHandler handler) {
         SendTaskDto sendTaskDto = event.getSendTaskDto();
         try {

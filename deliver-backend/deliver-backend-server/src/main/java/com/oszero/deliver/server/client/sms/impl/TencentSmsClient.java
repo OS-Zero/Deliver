@@ -56,16 +56,16 @@ public class TencentSmsClient implements SmsClient {
             String secretKey = tencentSmsApp.getSecretKey();
             // 获取短信相关参数
             Map<String, Object> paramMap = sendTaskDto.getParamMap();
-            String region = paramMap.get("region").toString();
-            String smsSdkAppId = paramMap.get("smsSdkAppId").toString();
-            String signName = paramMap.get("signName").toString();
-            String templateId = paramMap.get("templateId").toString();
-            List<String> templateParam = (List<String>) paramMap.getOrDefault("templateParam", new ArrayList<String>());
-            String extendCode = paramMap.getOrDefault("extendCode", "").toString();
-            String sessionContext = paramMap.getOrDefault("sessionContext", "").toString();
-            String senderId = paramMap.getOrDefault("senderId", "").toString();
+            final String region = paramMap.get("region").toString();
+            final String smsSdkAppId = paramMap.get("smsSdkAppId").toString();
+            final String signName = paramMap.get("signName").toString();
+            final String templateId = paramMap.get("templateId").toString();
+            final List<String> templateParam = (List<String>) paramMap.getOrDefault("templateParam", new ArrayList<String>());
+            final String extendCode = paramMap.getOrDefault("extendCode", "").toString();
+            final String sessionContext = paramMap.getOrDefault("sessionContext", "").toString();
+            final String senderId = paramMap.getOrDefault("senderId", "").toString();
             // 得到发送人
-            List<String> users = sendTaskDto.getUsers();
+            final List<String> users = sendTaskDto.getUsers();
 
             Credential cred = new Credential(secretId, secretKey);
 
@@ -75,7 +75,7 @@ public class TencentSmsClient implements SmsClient {
             ClientProfile clientProfile = new ClientProfile();
             clientProfile.setHttpProfile(httpProfile);
 
-            com.tencentcloudapi.sms.v20210111.SmsClient client =
+            final com.tencentcloudapi.sms.v20210111.SmsClient client =
                     new com.tencentcloudapi.sms.v20210111.SmsClient(cred, region, clientProfile);
 
             SendSmsRequest req = new SendSmsRequest();

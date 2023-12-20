@@ -28,11 +28,21 @@ import com.oszero.deliver.server.util.MessageLinkTraceUtils;
  */
 public abstract class CommonSend {
 
+    /**
+     * 模板方法，发送到消息队列
+     *
+     * @param sendTaskDto 发送任务
+     */
     public void sendToMq(SendTaskDto sendTaskDto) {
         MessageLinkTraceUtils.recordMessageLifecycleInfoLog(sendTaskDto, "开始准备发送消息到消息队列");
         send(sendTaskDto);
     }
 
+    /**
+     * 抽象方法，发送
+     *
+     * @param sendTaskDto 发送任务
+     */
     abstract void send(SendTaskDto sendTaskDto);
 
 }

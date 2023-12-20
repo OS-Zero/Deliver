@@ -129,6 +129,12 @@ public class TemplateController {
         return CommonResult.success();
     }
 
+    /**
+     * 获取消息参数通过消息类型
+     *
+     * @param dto TemplateMessageParamByMessageTypeRequestDto
+     * @return 消息参数
+     */
     @PostMapping("/getMessageParamByMessageType")
     public CommonResult<String> getMessageParamByMessageType(@Valid @RequestBody TemplateMessageParamByMessageTypeRequestDto dto) {
         return CommonResult.success(templateService.getMessageParamByMessageType(dto));

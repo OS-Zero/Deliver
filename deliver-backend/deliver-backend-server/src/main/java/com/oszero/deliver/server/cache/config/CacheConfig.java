@@ -51,6 +51,8 @@ public class CacheConfig {
 
     /**
      * Caffeine 缓存管理器
+     *
+     * @return CacheManager
      */
     @Bean
     public CacheManager caffeineCacheManager() {
@@ -74,6 +76,9 @@ public class CacheConfig {
 
     /**
      * Redis 缓存管理器
+     *
+     * @param connectionFactory Redis连接工厂
+     * @return CacheManager
      */
     @Bean
     @Primary

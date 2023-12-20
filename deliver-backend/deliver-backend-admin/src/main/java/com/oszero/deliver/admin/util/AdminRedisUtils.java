@@ -32,6 +32,12 @@ import org.springframework.stereotype.Component;
 public class AdminRedisUtils {
     private final StringRedisTemplate stringRedisTemplate;
 
+    /**
+     * 删除通过键
+     *
+     * @param key 键
+     * @return 是否成功
+     */
     public Boolean deleteByKey(String key) {
         return stringRedisTemplate.delete(key);
     }

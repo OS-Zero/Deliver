@@ -75,6 +75,8 @@ public class NoMQProducer implements Producer {
                 FeiShuEvent feiShuEvent = new FeiShuEvent(this, sendTaskDto);
                 applicationEventUtils.publishCustomEvent(feiShuEvent);
             }
+            default -> {
+            }
         }
     }
 }

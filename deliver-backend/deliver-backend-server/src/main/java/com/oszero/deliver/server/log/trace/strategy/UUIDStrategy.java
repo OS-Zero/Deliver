@@ -29,6 +29,11 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class UUIDStrategy implements TraceIdStrategy {
+    /**
+     * 创建TraceId
+     *
+     * @return TraceId
+     */
     @Override
     public String createTraceId() {
         return UUID.randomUUID().toString();

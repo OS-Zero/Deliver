@@ -27,5 +27,10 @@ import com.oszero.deliver.server.model.dto.common.SendTaskDto;
  */
 public interface Producer {
 
+    /**
+     * 发送消息
+     *
+     * @param sendTaskDto 发送任务
+     */
     void sendMessage(SendTaskDto sendTaskDto);
 }

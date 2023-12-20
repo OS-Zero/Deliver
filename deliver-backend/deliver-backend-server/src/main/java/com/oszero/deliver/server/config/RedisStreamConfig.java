@@ -123,6 +123,8 @@ public class RedisStreamConfig {
 
     /**
      * 构建监听器配置项
+     *
+     * @return StreamMessageListenerContainerOptions
      */
     public StreamMessageListenerContainer.StreamMessageListenerContainerOptions<String, ObjectRecord<String, String>> buildOptions() {
         return StreamMessageListenerContainer.StreamMessageListenerContainerOptions.builder()
@@ -132,7 +134,7 @@ public class RedisStreamConfig {
                 .batchSize(1)
                 //序列化规则
                 .serializer(new StringRedisSerializer())
-                //todo：后续使用自定义线程池
+                //TODO：后续使用自定义线程池
                 .executor(Executors.newFixedThreadPool(10))
                 //错误处理
                 .errorHandler(t -> log.error("Redis 消息推送错误，请检查 Redis！！！"))
@@ -145,12 +147,12 @@ public class RedisStreamConfig {
      */
     public void initListenerContainer() throws Exception {
 
-        StreamMessageListenerContainer<String, ObjectRecord<String, String>> callListenerContainer = StreamMessageListenerContainer.create(factory, buildOptions());
-        StreamMessageListenerContainer<String, ObjectRecord<String, String>> smsListenerContainer = StreamMessageListenerContainer.create(factory, buildOptions());
-        StreamMessageListenerContainer<String, ObjectRecord<String, String>> mailListenerContainer = StreamMessageListenerContainer.create(factory, buildOptions());
-        StreamMessageListenerContainer<String, ObjectRecord<String, String>> dingListenerContainer = StreamMessageListenerContainer.create(factory, buildOptions());
-        StreamMessageListenerContainer<String, ObjectRecord<String, String>> weChatListenerContainer = StreamMessageListenerContainer.create(factory, buildOptions());
-        StreamMessageListenerContainer<String, ObjectRecord<String, String>> feiShuListenerContainer = StreamMessageListenerContainer.create(factory, buildOptions());
+        final StreamMessageListenerContainer<String, ObjectRecord<String, String>> callListenerContainer = StreamMessageListenerContainer.create(factory, buildOptions());
+        final StreamMessageListenerContainer<String, ObjectRecord<String, String>> smsListenerContainer = StreamMessageListenerContainer.create(factory, buildOptions());
+        final StreamMessageListenerContainer<String, ObjectRecord<String, String>> mailListenerContainer = StreamMessageListenerContainer.create(factory, buildOptions());
+        final StreamMessageListenerContainer<String, ObjectRecord<String, String>> dingListenerContainer = StreamMessageListenerContainer.create(factory, buildOptions());
+        final StreamMessageListenerContainer<String, ObjectRecord<String, String>> weChatListenerContainer = StreamMessageListenerContainer.create(factory, buildOptions());
+        final StreamMessageListenerContainer<String, ObjectRecord<String, String>> feiShuListenerContainer = StreamMessageListenerContainer.create(factory, buildOptions());
 
         //注册消费者 消费者名称，从哪条消息开始消费，消费者类
         // > 表示没消费过的消息

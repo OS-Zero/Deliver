@@ -40,6 +40,12 @@ public enum UsersTypeEnum {
     private final Integer code;
     private final String name;
 
+    /**
+     * 获取实例通过CODE
+     *
+     * @param code Code
+     * @return 实例
+     */
     public static UsersTypeEnum getInstanceByCode(Integer code) {
         for (UsersTypeEnum v : values()) {
             if (v.getCode().equals(code)) {

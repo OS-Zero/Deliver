@@ -37,6 +37,12 @@ public class CallFactory {
     private final AliYunCallClient aliYunCallClient;
     private final TencentCallClient tencentCallClient;
 
+    /**
+     * 通过 callProvider 获取具体客户端
+     *
+     * @param callProvider 具体提供厂商
+     * @return 厂商客户端
+     */
     public CallClient getClient(String callProvider) {
         if (CallProviderTypeEnum.ALI_YUN.getName().equals(callProvider)) {
             return aliYunCallClient;

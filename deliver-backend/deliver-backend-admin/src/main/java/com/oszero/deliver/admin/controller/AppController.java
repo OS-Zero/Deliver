@@ -119,6 +119,12 @@ public class AppController {
         return CommonResult.success(appList);
     }
 
+    /**
+     * 获取应用配置通过渠道类型
+     *
+     * @param dto AppConfigByChannelRequestDto
+     * @return 应用配置
+     */
     @PostMapping("/getAppConfigByChannelType")
     public CommonResult<String> getAppConfigByChannelType(@Valid @RequestBody AppConfigByChannelRequestDto dto) {
         return CommonResult.success(appService.getAppConfigByChannelType(dto));
