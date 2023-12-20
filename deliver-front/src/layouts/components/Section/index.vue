@@ -79,16 +79,16 @@ const toggleCollapsed = (): void => {
 						<span>消息模板配置</span>
 					</span>
 				</template>
-				<ItemLink itemKey="消息配置-1" info="消息模板" to="message" />
+				<ItemLink itemKey="消息配置-1" info="消息模板" to="template" />
 			</a-sub-menu>
-			<a-sub-menu key="APP 配置">
+			<a-sub-menu key="应用配置">
 				<template #title>
 					<span>
 						<AppstoreOutlined />
-						<span>渠道 APP 配置</span>
+						<span>渠道应用配置</span>
 					</span>
 				</template>
-				<ItemLink itemKey="APP 配置-1" info="APP 配置" to="channel" />
+				<ItemLink itemKey="应用配置-1" info="应用配置" to="app" />
 			</a-sub-menu>
 			<a-sub-menu key="文件管理">
 				<template #title>

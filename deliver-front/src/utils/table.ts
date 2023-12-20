@@ -45,6 +45,6 @@ export const getUsersType = (num: number): string => {
 	return usersarr[num]
 }
 export const getImg = (num: number): string => {
-	const imgPaths = ['', '电话.png', '短信.png', '邮件.png', '钉钉.png', '企业微信.png', '飞书.png']
+	const imgPaths = ['', '/assets/电话.png', '/assets/短信.png', '/assets/邮件.png', '/assets/钉钉.png', '/assets/企业微信.png', '/assets/飞书.png']
 	return imgPaths[num]
 }
