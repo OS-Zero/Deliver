@@ -454,6 +454,7 @@ const a = computed(() => {
 			</div>
 			<!-- 表格部分 -->
 			<a-table
+				v-show="false"
 				:columns="columns"
 				:data-source="appTable"
 				:scroll="{ x: 1200, y: undefined, scrollToFirstRowOnChange: true }"
@@ -542,6 +543,23 @@ const a = computed(() => {
 					</a-row>
 				</template>
 			</a-table>
+			<a-row :span="24">
+				<a-col :span="6" style="padding-left: 10px; padding-top: 10px" v-for="(record, index) in appTable" :key="index">
+					<a-card>
+						<div>
+							<strong style="font-size: 14px">{{ record.appName }}</strong>
+						</div>
+						<div>AppId: {{ record.appId }}</div>
+						<a-switch
+							v-model:checked="record.appStatus"
+							checked-children="启用"
+							un-checked-children="禁用"
+							:checkedValue="1"
+							:unCheckedValue="0"
+							@change="changeStatus(record.appId, record.appStatus)" />
+					</a-card>
+				</a-col>
+			</a-row>
 			<a-pagination
 				v-model:current="current"
 				v-model:pageSize="pageSize"

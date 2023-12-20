@@ -3,14 +3,17 @@ import { watch, ref } from 'vue'
 import Form from '@/types/form'
 import type { FormInstance } from 'ant-design-vue'
 import JsonEditorVue from 'json-editor-vue3'
+
 interface Props {
 	config: Form.Feedback
 	model: Record<Form.FieldItem['field'], Form.FieldItem['value']>
 	_options: any
 }
+
 interface EmitEvent {
 	(e: 'submit', params: any, callback: (err: boolean) => void): void
 }
+
 const props = defineProps<Props>()
 const emit = defineEmits<EmitEvent>()
 const drawerModel = ref<Record<string, any>>({})
@@ -33,6 +36,7 @@ watch(
 	{ immediate: true }
 )
 const open = ref<boolean>(false)
+const iconLoading = ref<boolean>(false)
 
 const openModel = () => {
 	if (props.config.cascader) {
@@ -106,10 +110,14 @@ const resetForm = () => {
  * 提交表单
  */
 const submit = () => {
+	iconLoading.value = true
 	formRef.value
 		.validate()
 		.then(() => {
 			const callback = (err: boolean) => {
+				setTimeout(() => {
+					iconLoading.value = false
+				}, 500)
 				if (err) return
 				resetForm()
 				open.value = false
@@ -179,7 +187,7 @@ const submit = () => {
 			</a-form>
 			<template #extra>
 				<a-button @click="resetForm">{{ _options.resetButtonText }}</a-button>
-				<a-button style="margin-left: 10px" type="primary" @click="submit">{{ _options.submitButtonText }}</a-button>
+				<a-button style="margin-left: 10px" type="primary" @click="submit" :loading="iconLoading">{{ _options.submitButtonText }}</a-button>
 			</template>
 		</a-drawer>
 	</span>
