@@ -5,20 +5,25 @@ import { getColor } from '@/utils/table.ts'
 import emitter from '@/utils/mitt.ts'
 import { Modal } from 'ant-design-vue'
 import { ExclamationCircleOutlined, UpCircleTwoTone, DownCircleTwoTone } from '@ant-design/icons-vue'
+
 type Key = string | number
+
 interface Props {
 	model: Array<Record<string, any>>
 	columns: Table.Columns[]
 	options: Table.Options
 }
+
 interface EmitEvent {
 	(e: 'actions', command: any, val?: any, callback?: any): any
 }
+
 interface State {
 	selectedRowKeys: Key[]
 	loading: boolean
 	collapsed: boolean
 }
+
 const props = defineProps<Props>()
 const emit = defineEmits<EmitEvent>()
 const state = reactive<State>({
@@ -188,35 +193,19 @@ onUnmounted(() => {
 						</a-popconfirm>
 						<a-tooltip v-else>
 							<template #title>{{ btn.tip }}</template>
-							<Modal
-								@click="handleAction(btn.command)"
-								@submit="submit"
-								:_options="btn.options"
-								:config="btn.config"
-								:model="model[index]"
-								v-if="btn.feedback === 'modal'">
-								<template #button="{ openModel }">
-									<a-button :type="btn.type" :size="btn.size" @click="openModel">
-										<component :is="h(btn.icon)" :two-tone-color="btn.color"></component>
-									</a-button>
-								</template>
-							</Modal>
 							<Drawer
 								@click="handleAction(btn.command)"
 								@submit="submit"
 								:_options="btn.options"
 								:config="btn.config"
 								:model="model[index]"
-								v-else-if="btn.feedback === 'drawer'">
+								v-if="btn.feedback === 'drawer'">
 								<template #button="{ openModel }">
 									<a-button :type="btn.type" :size="btn.size" @click="openModel">
 										<component :is="h(btn.icon)" :two-tone-color="btn.color"></component>
 									</a-button>
 								</template>
 							</Drawer>
-							<a-button @click="emit('actions', btn.command, record[props.options.rowKey])" v-else :type="btn.type" :size="btn.size">
-								<component :is="h(btn.icon)" :two-tone-color="btn.color"></component>
-							</a-button>
 						</a-tooltip>
 					</template>
 				</template>
@@ -261,6 +250,7 @@ onUnmounted(() => {
 	color: gray;
 	border-radius: 6px;
 }
+
 .showDelete {
 	background-color: #fefefe;
 	z-index: 100;
@@ -274,6 +264,7 @@ onUnmounted(() => {
 	right: 0;
 	transition: 0.2s;
 }
+
 .pagination {
 	height: 60px;
 	display: flex;
