@@ -11,9 +11,9 @@ export default defineConfig({
 		host: 'localhost',
 		port: 8080, // 端口
 		proxy: {
-			'/backend': {
+			'/admin': {
 				// 请求接口中要替换的标识
-				target: 'http://localhost:6060', // 代理地址
+				target: 'http://localhost:9090', // 代理地址
 				changeOrigin: true, // 是否允许跨域
 				secure: true
 			}

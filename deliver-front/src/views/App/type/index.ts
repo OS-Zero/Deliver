@@ -1,4 +1,6 @@
 import type { Dayjs } from 'dayjs'
+import { Ref } from 'vue'
+
 export interface AppInterface {
 	/**
 	 * Appid
@@ -33,7 +35,14 @@ export interface AppInterface {
 	 */
 	createTime: string
 
+	/**
+	 * 最近更新时间
+	 */
+	updateTime: string
+
 	showAppConfig: boolean
+
+	appInfoOpen: Ref<boolean>
 }
 
 // 搜索框接口

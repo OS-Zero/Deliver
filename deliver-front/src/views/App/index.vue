@@ -1,22 +1,12 @@
 <script lang="ts" setup>
-import {
-	ReloadOutlined,
-	EditTwoTone,
-	DeleteTwoTone,
-	DownCircleTwoTone,
-	UpCircleTwoTone,
-	ExclamationCircleOutlined,
-	SettingOutlined
-} from '@ant-design/icons-vue'
+import { ReloadOutlined, EditTwoTone, CopyOutlined } from '@ant-design/icons-vue'
 import { ref, reactive, h, onMounted, computed } from 'vue'
 import type { UnwrapRef } from 'vue'
-import type { TableColumnsType } from 'ant-design-vue'
-import { message, Modal } from 'ant-design-vue'
+import { message } from 'ant-design-vue'
 import type { AppInterface, searchMessage, updateTemp } from './type'
 import searchForm from './components/searchForm.vue'
 import addTemplate from './components/addApp.vue'
 import { getDate } from '@/utils/date.ts'
-import { useStore } from '@/store'
 import { addAppItem, getAppInfo, deleteAppInfo, updateAppStatus, updateAppItem, getAppConfigByChannelType } from '@/api/app.ts'
 import JsonEditorVue from 'json-editor-vue3'
 import type { Rule } from 'ant-design-vue/es/form'
@@ -58,67 +48,6 @@ channelData.value = [
 	{ value: 6, label: '飞书' }
 ]
 
-// 表格数据
-const columns: TableColumnsType = [
-	{
-		title: 'AppId',
-		dataIndex: 'appId',
-		key: 'appId'
-	},
-	{
-		title: 'APP 名称',
-		dataIndex: 'appName',
-		key: 'appName'
-	},
-	{
-		title: '渠道类型',
-		dataIndex: 'channelType',
-		key: 'channelType'
-	},
-	{
-		title: '累计使用次数',
-		dataIndex: 'useCount',
-		key: 'useCount'
-	},
-	{
-		title: 'APP 状态',
-		dataIndex: 'appStatus',
-		key: 'appStatus'
-	},
-	{
-		title: '操作',
-		key: 'operation',
-		fixed: 'right',
-		width: 200
-	}
-]
-
-/**
- * 渲染 data
- */
-
-const innertemplatedata: UnwrapRef<AppInterface[]> = reactive([])
-
-const expandedRowKeys: number[] = reactive([])
-
-const getInnerData = (expanded, record): void => {
-	// 判断是否点开
-	expandedRowKeys.length = 0
-	if (expanded === true) {
-		const b = record.key
-		expandedRowKeys.push(b)
-		innertemplatedata.length = 0
-		innertemplatedata.push(record)
-	} else {
-		expandedRowKeys.length = 0
-		innertemplatedata.length = 0
-	}
-}
-
-const judgeInclude = (record): boolean => {
-	return innertemplatedata.includes(record)
-}
-
 /**
  * 相关操作: 增删改查
  */
@@ -138,7 +67,7 @@ const saveApp = (): void => {
 		.then(() => {
 			void message.success('新增成功~ (*^▽^*)')
 			addtemplate.value.open = false
-			searchTemplate({ page: 1, pageSize: pageSize.value, opt: 2 }) // 更新表单
+			searchApp({ page: 1, pageSize: pageSize.value, opt: 2 }) // 更新表单
 			addtemplate.value.iconLoading = false
 		})
 		.catch((err) => {
@@ -151,8 +80,6 @@ const saveApp = (): void => {
 /// 删除操作
 type Key = string | number
 
-const store = useStore()
-
 const state = reactive<{
 	selectedRowKeys: Key[]
 	loading: boolean
@@ -161,41 +88,7 @@ const state = reactive<{
 	loading: false
 })
 
-const openDelete = ref(false)
-
 const hasSelected = computed(() => state.selectedRowKeys.length > 0)
-
-const startDelete = (): void => {
-	state.loading = true
-	const templates = {
-		ids: state.selectedRowKeys as number[]
-	}
-	deleteAppInfo(templates)
-		.then((res) => {
-			if (res.code === 200) {
-				void message.success('删除成功~ (*^▽^*)')
-				searchTemplate({ page: 1, pageSize: pageSize.value, opt: 2 }) //
-			}
-			state.loading = false
-		})
-		.catch((err) => {
-			void message.error('删除失败，' + err + '~ (＞︿＜)')
-			console.error('An error occurred:', err)
-			state.loading = false
-		})
-	state.selectedRowKeys.length = 0
-}
-
-const cancelSelect = (): void => {
-	state.selectedRowKeys.length = 0
-}
-
-const onSelectChange = (selectedRowKeys: Key[]): void => {
-	state.selectedRowKeys = selectedRowKeys
-	if (state.selectedRowKeys.length !== 0) {
-		openDelete.value = true
-	}
-}
 
 const onDelete = (id: number): void => {
 	const arr: number[] = []
@@ -207,7 +100,7 @@ const onDelete = (id: number): void => {
 		.then((res) => {
 			if (res.code === 200) {
 				void message.success('删除成功~ (*^▽^*)')
-				searchTemplate({ page: 1, pageSize: pageSize.value, opt: 2 }) //
+				searchApp({ page: 1, pageSize: pageSize.value, opt: 2 }) //
 			}
 			state.loading = false
 		})
@@ -217,22 +110,6 @@ const onDelete = (id: number): void => {
 			console.error('An error occurred:', err)
 			state.loading = false
 		})
-}
-
-const [modal, contextHolder] = Modal.useModal()
-
-const showDeleteConfirm = (): void => {
-	modal.confirm({
-		title: '确认删除吗?',
-		icon: h(ExclamationCircleOutlined),
-		content: '删除后不可恢复，请谨慎删除！',
-		okText: '确认',
-		okType: 'danger',
-		cancelText: '取消',
-		onOk() {
-			startDelete()
-		}
-	})
 }
 
 /// 查询操作
@@ -251,10 +128,10 @@ const total = ref()
 
 const current = ref(1)
 
-const pageSize = ref(10)
+const pageSize = ref(12)
 
 const change = (page: number, pageSize: number): void => {
-	searchTemplate({ page, pageSize, opt: 1 })
+	searchApp({ page, pageSize, opt: 1 })
 }
 
 const locale = {
@@ -266,7 +143,7 @@ const locale = {
 }
 
 // 条件查询
-const searchTemplate = ({ page, pageSize, opt }: SearchOptions = {}): void => {
+const searchApp = ({ page, pageSize, opt }: SearchOptions = {}): void => {
 	tableLoadFlag.value = true
 	// 对象解构
 	const { perid, ...rest } = searchform.value.searchPage
@@ -280,7 +157,6 @@ const searchTemplate = ({ page, pageSize, opt }: SearchOptions = {}): void => {
 			current.value = page
 			tableLoadFlag.value = false
 			if (res.data.records.length > 0) {
-				total.value = res.data.total
 				res.data.records.forEach((item: any) => {
 					item.createTime = getDate(item.createTime)
 					item.key = item.appId
@@ -295,6 +171,7 @@ const searchTemplate = ({ page, pageSize, opt }: SearchOptions = {}): void => {
 					void message.success('未查询到任何数据   ≧ ﹏ ≦')
 				}
 			}
+			total.value = res.data.total
 			searchform.value.iconLoading = false
 		})
 		.catch((err) => {
@@ -317,7 +194,9 @@ const changeStatus = (id: number, status: number): void => {
 		})
 		.catch((err) => {
 			void message.error('修改失败，' + err + '~ (＞︿＜)')
-			console.error('An error occurred:', err)
+		})
+		.finally(() => {
+			searchApp({ page: current.value, pageSize: pageSize.value, opt: 2 }) // 更新表单
 		})
 }
 
@@ -327,6 +206,7 @@ const appForm = ref()
 interface DelayLoading {
 	delay: number
 }
+
 const iconLoading = ref<boolean | DelayLoading>(false)
 
 const handleOk = (): void => {
@@ -339,7 +219,7 @@ const handleOk = (): void => {
 				.then(() => {
 					void message.success('修改成功~ (*^▽^*)')
 					handleCancel()
-					searchTemplate({ page: current.value, pageSize: pageSize.value, opt: 2 }) // 更新表单
+					searchApp({ page: current.value, pageSize: pageSize.value, opt: 2 }) // 更新表单
 				})
 				.catch((err) => {
 					void message.error('修改失败，' + err + '~ (＞︿＜)')
@@ -407,6 +287,15 @@ const imageAddress: string[] = [
 	'/assets/企业微信.png',
 	'/assets/飞书.png'
 ]
+// 复制AppId
+const copyAppId = async (appId: number) => {
+	try {
+		await navigator.clipboard.writeText(String(appId))
+		message.success('已成功复制应用ID')
+	} catch (err) {
+		message.error('复制到剪贴板时出现错误：' + err)
+	}
+}
 
 onMounted(() => {
 	getAppInfo(searchItem)
@@ -425,139 +314,119 @@ onMounted(() => {
 			console.error('An error occurred:', err)
 		})
 })
-
-const a = computed(() => {
-	return store.getCollapse() ? 80 : 200 // 计算输入框应该有的高度
-})
 </script>
 
 <template>
 	<!-- 搜索部分 -->
-	<searchForm ref="searchform" @mes="searchTemplate({ page: 1, pageSize, opt: 1 })" />
-	<!-- 表格部分 -->
+	<searchForm ref="searchform" @mes="searchApp({ page: 1, pageSize, opt: 1 })" />
+	<!-- 卡片部分 -->
 	<div id="message-container" :style="{ height: hasSelected ? 'calc(100% + 94px)' : 'auto' }">
 		<div class="message-section">
 			<div class="splitter">
 				<a-tooltip title="刷新">
-					<a-button shape="circle" :icon="h(ReloadOutlined)" @click="searchTemplate({ page: 1, pageSize, opt: 1 })" />
+					<a-button shape="circle" :icon="h(ReloadOutlined)" @click="searchApp({ page: 1, pageSize, opt: 1 })" />
 				</a-tooltip>
 				<addTemplate ref="addtemplate" @add="saveApp()" />
 			</div>
-
-			<div class="describe" v-if="hasSelected">
-				<template v-if="hasSelected">
-					<span class="count">
-						{{ `已选择 ${state.selectedRowKeys.length} 项` }}
-					</span>
-					<a-button type="link" class="cancel" @click="cancelSelect">取消选择</a-button>
-				</template>
+			<!-- 卡片部分 -->
+			<div v-show="tableLoadFlag" style="text-align: center">
+				<a-spin size="large" />
 			</div>
-			<!-- 表格部分 -->
-			<a-table
-				v-show="false"
-				:columns="columns"
-				:data-source="appTable"
-				:scroll="{ x: 1200, y: undefined, scrollToFirstRowOnChange: true }"
-				class="components-table-demo-nested"
-				@expand="getInnerData"
-				:expandIconColumnIndex="-1"
-				:expandIconAsCell="false"
-				:pagination="false"
-				:expandedRowKeys="expandedRowKeys"
-				:loading="tableLoadFlag"
-				:row-selection="{ selectedRowKeys: state.selectedRowKeys, onChange: onSelectChange }">
-				>
-				<template #headerCell="{ column }">
-					<template v-if="column.key === 'operation'">
-						<span>
-							<SettingOutlined />
-							操作
-						</span>
-					</template>
-				</template>
-				<template #bodyCell="{ column, record }">
-					<template v-if="column.key === 'channelType'">
-						<span>
-							<!-- 根据 appType 的值显示不同的图片 -->
-							<img style="height: 30px; width: 30px" :src="imageAddress[record.channelType]" alt="图片" />
-							<!-- 添加更多条件根据需要显示不同的图片 -->
-						</span>
-					</template>
-					<template v-if="column.key === 'appStatus'">
-						<span>
-							<a-switch
-								v-model:checked="record.appStatus"
-								checked-children="启用"
-								un-checked-children="禁用"
-								:checkedValue="1"
-								:unCheckedValue="0"
-								@change="changeStatus(record.appId, record.appStatus)" />
-						</span>
-					</template>
-					<template v-if="column.key === 'useCount'">
-						<a-tag color="red">
-							{{ record.useCount }}
-						</a-tag>
-					</template>
-					<template v-if="column.key === 'operation'">
-						<a-button type="link" size="small" style="font-size: 14px" @click="getInnerData(false, record)" v-if="judgeInclude(record)">
-							<UpCircleTwoTone style="font-size: 18px" />
-						</a-button>
-						<a-tooltip v-if="!judgeInclude(record)">
-							<template #title>查看 APP 更多信息</template>
-							<a-button type="link" size="small" style="font-size: 14px" @click="getInnerData(true, record)" v-if="!judgeInclude(record)">
-								<DownCircleTwoTone style="font-size: 18px" />
-							</a-button>
-						</a-tooltip>
-						<a-divider type="vertical" />
-						<a-tooltip>
-							<template #title>修改 APP</template>
-							<a-button type="link" class="btn-manager" size="small" style="font-size: 14px" @click="update(record)">
-								<EditTwoTone two-tone-color="#1677FF" style="font-size: 18px" />
-							</a-button>
-						</a-tooltip>
-						<a-divider type="vertical" />
-						<a-popconfirm title="确认删除吗?" @confirm="onDelete(record.appId)" ok-text="确定" cancel-text="取消">
-							<a-tooltip placement="bottom">
-								<template #title>删除 APP</template>
-								<a-button type="link" danger size="small" style="font-size: 14px; margin-left: -5px">
-									<DeleteTwoTone two-tone-color="red" />
-								</a-button>
-							</a-tooltip>
-						</a-popconfirm>
-					</template>
-				</template>
-				<template #expandedRowRender="{ record }">
-					<a-row :gutter="[16, 16]">
-						<a-col :span="24">
-							APP 配置：
-							<span v-for="(value, label) in JSON.parse(record.appConfig)" :key="label" style="padding-right: 10px" v-show="record.showAppConfig">
-								<span>{{ label }}:&nbsp;</span>
-								<span style="color: #1677ff">{{ value }}</span>
-							</span>
-							<span><a-button type="link" v-show="!record.showAppConfig" @click="record.showAppConfig = true">展示配置</a-button></span>
-							<span><a-button type="link" v-show="record.showAppConfig" @click="record.showAppConfig = false">隐藏配置</a-button></span>
-						</a-col>
-						<a-col :span="6">创建者：{{ record.createUser }}</a-col>
-						<a-col :span="6">创建时间：{{ record.createTime }}</a-col>
-					</a-row>
-				</template>
-			</a-table>
-			<a-row :span="24">
-				<a-col :span="6" style="padding-left: 10px; padding-top: 10px" v-for="(record, index) in appTable" :key="index">
-					<a-card>
+			<a-row v-show="!tableLoadFlag" :span="24">
+				<a-col :span="6" style="padding-left: 10px; padding-top: 15px" v-for="(record, index) in appTable" :key="index">
+					<a-drawer
+						v-model:open="record.appInfoOpen"
+						title="应用信息"
+						width="600px"
+						:footer="null"
+						:placement="'left'"
+						@close="record.showAppConfig = false">
 						<div>
-							<strong style="font-size: 14px">{{ record.appName }}</strong>
+							<span style="color: #646a73">应用ID：</span>
+							<span>{{ record.appId }}</span>
+							&nbsp;
+							<a-tooltip title="复制应用ID">
+								<CopyOutlined @click.stop="copyAppId(record.appId)" style="color: #1677ff" />
+							</a-tooltip>
 						</div>
-						<div>AppId: {{ record.appId }}</div>
-						<a-switch
-							v-model:checked="record.appStatus"
-							checked-children="启用"
-							un-checked-children="禁用"
-							:checkedValue="1"
-							:unCheckedValue="0"
-							@change="changeStatus(record.appId, record.appStatus)" />
-					</a-card>
+						<div>
+							<span style="color: #646a73">应用名：</span>
+							<span>{{ record.appName }}</span>
+						</div>
+						<a-divider />
+						<a-descriptions title="APP 配置" :column="1" layout="vertical">
+							<a-descriptions-item :label="label" v-for="(value, label, index) in JSON.parse(record.appConfig)" :key="index">
+								<div v-show="record.showAppConfig" style="color: #1677ff">{{ value }}</div>
+								<div v-show="!record.showAppConfig">xxxxxxx</div>
+							</a-descriptions-item>
+						</a-descriptions>
+						<a v-show="!record.showAppConfig" @click="record.showAppConfig = true">显示</a>
+						<a v-show="record.showAppConfig" @click="record.showAppConfig = false">隐藏</a>
+						<a-divider />
+						<a-statistic title="累计使用量" :value="record.useCount" style="margin-right: 50px" />
+						<a-divider />
+						<div>
+							<span style="color: #646a73">创建时间：</span>
+							<span>{{ record.createTime }}</span>
+						</div>
+					</a-drawer>
+					<div style="border-color: #dee0e3; border-style: solid; border-width: 1px; padding: 15px 15px 8px; border-radius: 6px">
+						<div>
+							<div style="position: relative">
+								<span>
+									<!-- 根据 appType 的值显示不同的图片 -->
+									<img style="height: 48px; width: 48px" :src="imageAddress[record.channelType]" alt="图片" />
+									<!-- 添加更多条件根据需要显示不同的图片 -->
+								</span>
+								<span style="position: absolute; top: 0; margin-left: 10px">
+									<strong style="font-size: 15px">{{ record.appName.length > 10 ? record.appName.substring(0, 10) + '...' : record.appName }}</strong>
+									<span
+										:style="{
+											display: 'inline-block',
+											height: '8px',
+											width: '8px',
+											background: record.appStatus == 1 ? 'rgb(10, 191, 91)' : 'rgb(229, 69, 69)',
+											borderRadius: '7px',
+											verticalAlign: 'middle',
+											marginLeft: '10px',
+											marginBottom: '5px'
+										}"></span>
+								</span>
+								<a-tooltip>
+									<template #title>修改 APP</template>
+									<a style="font-size: 14px; position: absolute; right: 0" @click="update(record)">
+										<EditTwoTone two-tone-color="#1677FF" style="font-size: 18px" />
+									</a>
+								</a-tooltip>
+								<span style="position: absolute; top: 24px; margin-left: 10px">
+									<span style="color: #646a73">创建者：</span>
+									<span style="color: #1677ff">{{ record.createUser }}</span>
+								</span>
+							</div>
+							<div style="margin-top: 10px">
+								<span>
+									<span style="color: #646a73">最新动态：</span>
+									<span>{{ record.updateTime }}</span>
+								</span>
+							</div>
+						</div>
+						<a-divider style="margin-top: 8px" />
+						<div style="margin-top: -18px; position: relative">
+							<a-popconfirm
+								:title="record.appStatus == 1 ? '请确认停用操作' : '确定要启用该应用吗？'"
+								ok-text="确认"
+								cancel-text="取消"
+								@confirm="changeStatus(record.appId, record.appStatus == 1 ? 0 : 1)">
+								<a-button shape="default" :type="record.appStatus == 0 ? 'primary' : 'default'">
+									{{ record.appStatus == 1 ? '禁用' : '启用' }}
+								</a-button>
+							</a-popconfirm>
+							<a-popconfirm title="确认删除吗？" @confirm="onDelete(record.appId)" ok-text="确定" cancel-text="取消">
+								<a-button style="margin-left: 10px" v-show="record.appStatus == 0">删除</a-button>
+							</a-popconfirm>
+							<a style="position: absolute; right: 0; bottom: 5px" @click="record.appInfoOpen = true">更多信息</a>
+						</div>
+					</div>
 				</a-col>
 			</a-row>
 			<a-pagination
@@ -568,16 +437,9 @@ const a = computed(() => {
 				:total="total"
 				@change="change"
 				showSizeChanger
+				:pageSizeOptions="['12', '24', '48', '96']"
 				:locale="locale"
 				:show-total="(total) => `共 ${total} 条数据`" />
-		</div>
-		<!-- 对表格的操作 -->
-		<div class="showDelete" :style="{ width: `calc(100% - ${a}px)` }" v-if="hasSelected">
-			<div class="box">{{ `已选择 ${state.selectedRowKeys.length} 项` }}</div>
-			<div class="del">
-				<a-button type="primary" style="font-size: 14px" :loading="state.loading" @click="showDeleteConfirm">批量删除</a-button>
-				<contextHolder />
-			</div>
 		</div>
 	</div>
 	<a-drawer v-model:open="open" title="修改 APP " width="660px" :footer="null" @cancel="handleCancel">
@@ -662,41 +524,14 @@ const a = computed(() => {
 			line-height: 40px;
 			background-color: rgb(248 248 248);
 			border-radius: 10px;
-
-			.count {
-				margin-left: 30px;
-				color: gray;
-			}
-
-			.cancel {
-				position: absolute;
-				right: 50px;
-				padding-top: 7px;
-			}
 		}
 	}
 
-	.showDelete {
-		position: fixed; /* 将showDelete盒子设置为固定定位 */
-		right: 0; /* 将showDelete盒子的左侧与页面左侧对齐 */
-		bottom: 0; /* 将showDelete盒子的底部与页面底部对齐 */
-		z-index: 999;
-		box-sizing: border-box; /* 确保padding不会撑开盒子 */
+	.between {
 		display: flex;
-		align-items: center;
-		height: 60px;
-		padding: 10px;
-		line-height: 40px;
-		background-color: rgb(255 255 255 / 90%);
-		transition: 0.2s;
-		inset-inline-end: 0;
+		justify-content: space-between;
+		padding: 0;
+		margin-right: 16px;
 	}
-}
-
-.between {
-	display: flex;
-	justify-content: space-between;
-	padding: 0;
-	margin-right: 16px;
 }
 </style>
