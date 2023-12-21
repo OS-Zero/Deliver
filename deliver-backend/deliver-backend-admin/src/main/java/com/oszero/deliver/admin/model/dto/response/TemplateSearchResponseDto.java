@@ -81,6 +81,12 @@ public class TemplateSearchResponseDto {
     private LocalDateTime createTime;
 
     /**
+     * 最近更新时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime updateTime;
+
+    /**
      * 应用 id
      */
     private Long appId;
