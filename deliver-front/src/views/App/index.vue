@@ -357,7 +357,7 @@ onMounted(() => {
 						<a-descriptions title="APP 配置" :column="1" layout="vertical">
 							<a-descriptions-item :label="label" v-for="(value, label, index) in JSON.parse(record.appConfig)" :key="index">
 								<div v-show="record.showAppConfig" style="color: #1677ff">{{ value }}</div>
-								<div v-show="!record.showAppConfig">xxxxxxx</div>
+								<div v-show="!record.showAppConfig">{{ '*'.repeat((value + '').length) }}</div>
 							</a-descriptions-item>
 						</a-descriptions>
 						<a v-show="!record.showAppConfig" @click="record.showAppConfig = true">显示</a>
