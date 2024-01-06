@@ -9,10 +9,10 @@ const setShowAbout = (open: boolean): void => {
 <template>
 	<a-layout-header class="header">
 		<div class="left">
-			<a href="/deliver-front/public">
+			<a href="/">
 				<img src="logo.png" style="height: 28px; width: 33px; margin-top: 16px; margin-right: 8px" alt="空" />
 			</a>
-			<a href="/deliver-front/public"><h1>Deliver 企业消息推送平台</h1></a>
+			<a href="/"><h1>Deliver 企业消息推送平台</h1></a>
 		</div>
 		<div class="right">
 			<a-tooltip title="关于">
