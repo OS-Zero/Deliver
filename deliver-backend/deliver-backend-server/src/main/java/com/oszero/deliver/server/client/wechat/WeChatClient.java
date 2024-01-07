@@ -259,30 +259,4 @@ public class WeChatClient {
             }
         }).collect(Collectors.toList());
     }
-
-    /**
-     * 校验用户 ID
-     *
-     * @param accessToken Token
-     * @param userIdList  ID
-     */
-    public void checkUserId(String accessToken, List<String> userIdList, SendTaskDto sendTaskDto) {
-
-        userIdList.forEach(userId -> {
-            try (HttpResponse response = HttpRequest.get("https://qyapi.weixin.qq.com/cgi-bin/user/get?access_token=" + accessToken + "&userid=" + userId)
-                    .execute()) {
-                @Data
-                class WechatResponse {
-                    private Integer errcode;
-                    private String errmsg;
-                }
-                WechatResponse wechatResponse = JSONUtil.toBean(response.body(), WechatResponse.class);
-                if (!Objects.equals(wechatResponse.getErrcode(), 0)) {
-                    throw new MessageException(wechatResponse.getErrmsg());
-                }
-            } catch (Exception e) {
-                throw new MessageException(sendTaskDto, "企微校验用户 ID 失败，" + e.getMessage());
-            }
-        });
-    }
 }

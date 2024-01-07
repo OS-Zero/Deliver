@@ -69,9 +69,6 @@ public class LinkConfig {
     private final CompanyAccountCheck companyAccountCheck;
     private final MailCheck mailCheck;
     private final PhoneCheck phoneCheck;
-    private final DingUserIdCheck dingUserIdCheck;
-    private final WeChatUserIdCheck weChatUserIdCheck;
-    private final FeiShuUserIdCheck feiShuUserIdCheck;
 
     /**
      * convert 转换
@@ -233,21 +230,21 @@ public class LinkConfig {
         // 平台userId-钉钉
         LinkTemplate userId2DingTemplate = new LinkTemplate();
         userId2DingTemplate.setProcessList(Arrays.asList(
-                pushRangeCheck, dingCommonParamCheck, dingUserIdCheck, dingParamCheck, dingSend
+                pushRangeCheck, dingCommonParamCheck, dingParamCheck, dingSend
         ));
         map.put(PretreatmentCodeConstant.USERID_DING, userId2DingTemplate);
 
         // 平台userId-企业微信
         LinkTemplate userId2WeChatTemplate = new LinkTemplate();
         userId2WeChatTemplate.setProcessList(Arrays.asList(
-                pushRangeCheck, weChatCommonParamCheck, weChatUserIdCheck, weChatParamCheck, weChatSend
+                pushRangeCheck, weChatCommonParamCheck, weChatParamCheck, weChatSend
         ));
         map.put(PretreatmentCodeConstant.USERID_WECHAT, userId2WeChatTemplate);
 
         // 平台userId-飞书
         LinkTemplate userId2FeiShuTemplate = new LinkTemplate();
         userId2FeiShuTemplate.setProcessList(Arrays.asList(
-                pushRangeCheck, feiShuCommonParamCheck, feiShuUserIdCheck, feiShuParamCheck, feiShuSend
+                pushRangeCheck, feiShuCommonParamCheck, feiShuParamCheck, feiShuSend
         ));
         map.put(PretreatmentCodeConstant.USERID_FEI_SHU, userId2FeiShuTemplate);
     }
