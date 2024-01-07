@@ -158,47 +158,6 @@ public class DingClient {
     }
 
     /**
-     * 校验userId是否存在
-     *
-     * @param accessToken 钉钉accessToken
-     * @param userId      userId
-     */
-    public void checkId(String accessToken, String userId, SendTaskDto sendTaskDto) {
-
-        @Data
-        class RequestBody {
-            private String language;
-            private String userid;
-        }
-
-        @Data
-        class DingUserInfoBody {
-            private Integer errcode;
-            private String errmsg;
-            private Object result;
-
-        }
-
-        RequestBody requestBody = new RequestBody();
-        requestBody.setLanguage("zh_CN");
-        requestBody.setUserid(userId);
-
-        DingUserInfoBody dingUserInfoBody;
-
-        try (HttpResponse response = HttpRequest.post("https://oapi.dingtalk.com/topapi/v2/user/get?access_token=" + accessToken)
-                .body(JSONUtil.toJsonStr(requestBody))
-                .execute()) {
-            dingUserInfoBody = JSONUtil.toBean(response.body(), DingUserInfoBody.class);
-
-            if (!Objects.equals(dingUserInfoBody.getErrcode(), 0)) {
-                throw new MessageException(dingUserInfoBody.getErrmsg());
-            }
-        } catch (Exception e) {
-            throw new MessageException(sendTaskDto, "钉钉校验 userId 是否存在接口调用失败，" + e.getMessage());
-        }
-    }
-
-    /**
      * 根据电话号码获取userId
      *
      * @param accessToken 钉钉accessToken

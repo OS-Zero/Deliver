@@ -177,32 +177,6 @@ public class FeiShuClient {
     }
 
     /**
-     * 检查 userId 是否正确
-     *
-     * @param tenantAccessToken token
-     * @param userId            id
-     */
-    public void checkUserId(String tenantAccessToken, String userId, SendTaskDto sendTaskDto) {
-
-        try (HttpResponse execute = HttpRequest.get("https://open.feishu.cn/open-apis/contact/v3/users/" + userId + "?user_id_type=user_id")
-                .header("Authorization", tenantAccessToken)
-                .execute()) {
-            @Data
-            class FeiShuUserInfoRespBody {
-                private Integer code;
-                private String msg;
-                private Object data;
-            }
-            FeiShuUserInfoRespBody feiShuUserInfoRespBody = JSONUtil.toBean(execute.body(), FeiShuUserInfoRespBody.class);
-            if (!Objects.equals(feiShuUserInfoRespBody.getCode(), 0)) {
-                throw new MessageException(feiShuUserInfoRespBody.getMsg());
-            }
-        } catch (Exception e) {
-            throw new MessageException(sendTaskDto, "飞书用户 ID 校验失败，" + e.getMessage());
-        }
-    }
-
-    /**
      * 通过手机号获取用户id
      *
      * @param tenantAccessToken token
