@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const service = axios.create({
-	baseURL: '/admin',
+	baseURL: '/backend',
 	timeout: 20000
 })
 
