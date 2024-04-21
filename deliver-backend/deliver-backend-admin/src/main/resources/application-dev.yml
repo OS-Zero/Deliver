@@ -1,3 +1,6 @@
+# 缓存是否启用
+cache-enable: false
+
 spring:
   data:
     redis:

@@ -4,6 +4,9 @@
 #mq-type: redis
 mq-type: none
 
+# 缓存是否启用
+cache-enable: false
+
 #rocketmq:
 rocketmq:
   name-server: localhost:9876 # 访问地址
