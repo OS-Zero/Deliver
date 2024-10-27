@@ -2,7 +2,20 @@ drop database if exists deliver;
 create database if not exists deliver;
 
 use deliver;
-
+-- 分组表
+drop table if exists deliver.group;
+create table if not exists deliver.group
+(
+    group_id          bigint auto_increment comment '分组id'
+        primary key,
+    group_name        varchar(20)                        not null comment '分组名称',
+    group_description varchar(100)                       not null comment '分组描述',
+    create_user       varchar(50)                        null comment '创建者',
+    update_user       varchar(50)                        null comment '更新者',
+    create_time       datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+    update_time       datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+    deleted           tinyint  default 0                 not null comment '是否删除：0-不删除 1-删除'
+) comment '分组表';
 -- 消息模板表
 drop table if exists deliver.template;
 create table if not exists deliver.template
@@ -19,6 +32,7 @@ create table if not exists deliver.template
 }',
     use_count       int      default 0                 not null comment '模板使用数',
     template_status tinyint  default 1                 not null comment '应用状态（1-启用 0-禁用）',
+    group_id        bigint                             not null comment '分组id',
     create_user     varchar(50)                        null comment '创建者',
     update_user     varchar(50)                        null comment '更新者',
     create_time     datetime default CURRENT_TIMESTAMP not null comment '创建时间',
@@ -37,6 +51,7 @@ create table if not exists deliver.app
     app_config   text                               not null comment '应用信息配置 json',
     use_count    int      default 0                 not null comment 'APP 使用数',
     app_status   tinyint  default 1                 not null comment '应用状态（1-启用 0-禁用）',
+    group_id     bigint                             not null comment '分组id',
     create_user  varchar(50)                        null comment '创建者',
     update_user  varchar(50)                        null comment '更新者',
     create_time  datetime default CURRENT_TIMESTAMP not null comment '创建时间',
