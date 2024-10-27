@@ -67,6 +67,11 @@ public class App extends BaseEntity implements Serializable {
     private Integer appStatus;
 
     /**
+     * groupId
+     */
+    private Long groupId;
+
+    /**
      * 创建时间
      */
     private LocalDateTime createTime;

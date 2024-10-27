@@ -69,6 +69,9 @@ public class AdminTemplateServiceImpl extends ServiceImpl<AdminTemplateMapper, T
 
     @Override
     public Page<TemplateSearchResponseDto> search(TemplateSearchRequestDto dto) {
+        if (Objects.isNull(dto.getGroupId())) {
+            dto.setGroupId(-1L);
+        }
         Page<Template> templatePage =
                 new Page<>(dto.getCurrentPage(), dto.getPageSize());
         LambdaQueryWrapper<Template> wrapper = new LambdaQueryWrapper<>();
@@ -78,6 +81,7 @@ public class AdminTemplateServiceImpl extends ServiceImpl<AdminTemplateMapper, T
                 .eq(!Objects.isNull(dto.getTemplateStatus()), Template::getTemplateStatus, dto.getTemplateStatus())
                 .gt(!Objects.isNull(dto.getStartTime()), Template::getCreateTime, dto.getStartTime())
                 .lt(!Objects.isNull(dto.getEndTime()), Template::getCreateTime, dto.getEndTime())
+                .eq(Template::getGroupId, dto.getGroupId())
                 .orderBy(true, false, Template::getCreateTime);
 
         this.page(templatePage, wrapper);

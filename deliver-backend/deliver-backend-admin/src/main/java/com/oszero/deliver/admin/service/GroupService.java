@@ -15,29 +15,25 @@
  * limitations under the License.
  */
 
-package com.oszero.deliver.admin.model.dto.request;
+package com.oszero.deliver.admin.service;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.oszero.deliver.admin.model.dto.request.GroupSaveAndUpdateRequestDto;
+import com.oszero.deliver.admin.model.dto.response.GroupGetAllResponseDto;
+import com.oszero.deliver.admin.model.entity.Group;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 /**
- * app 查询 dto
+ * 分组 service
  *
  * @author oszero
  * @version 1.0.0
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
-public class AppSearchRequestDto extends PageRequest {
+public interface GroupService extends IService<Group> {
 
-    private String appName;
-    private Integer channelType;
-    private Long groupId;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime startTime;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime endTime;
+    List<GroupGetAllResponseDto> getAll();
+    void deleteGroup(Long groupId);
+    void updateGroup(GroupSaveAndUpdateRequestDto dto);
+    void saveGroup(GroupSaveAndUpdateRequestDto dto);
 }
