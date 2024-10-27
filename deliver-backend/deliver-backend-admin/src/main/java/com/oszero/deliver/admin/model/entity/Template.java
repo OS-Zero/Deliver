@@ -76,6 +76,11 @@ public class Template extends BaseEntity implements Serializable {
     private Integer templateStatus;
 
     /**
+     * groupId
+     */
+    private Long groupId;
+
+    /**
      * 创建时间
      */
     private LocalDateTime createTime;

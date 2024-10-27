@@ -61,11 +61,15 @@ public class AdminAppServiceImpl extends ServiceImpl<AdminAppMapper, App>
 
     @Override
     public Page<AppSearchResponseDto> getAppPagesByCondition(AppSearchRequestDto dto) {
+        if (Objects.isNull(dto.getGroupId())) {
+            dto.setGroupId(-1L);
+        }
         LambdaQueryWrapper<App> wrapper = new LambdaQueryWrapper<>();
         wrapper.like(StrUtil.isNotBlank(dto.getAppName()), App::getAppName, dto.getAppName())
                 .eq(!Objects.isNull(dto.getChannelType()), App::getChannelType, dto.getChannelType())
                 .gt(!Objects.isNull(dto.getStartTime()), App::getCreateTime, dto.getStartTime())
                 .lt(!Objects.isNull(dto.getStartTime()), App::getCreateTime, dto.getEndTime())
+                .eq(App::getGroupId, dto.getGroupId())
                 .orderByDesc(App::getCreateTime);
 
         Page<App> appPage = new Page<>(dto.getCurrentPage(), dto.getPageSize());

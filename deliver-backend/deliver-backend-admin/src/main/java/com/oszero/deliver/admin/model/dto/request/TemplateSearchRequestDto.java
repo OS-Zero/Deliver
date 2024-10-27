@@ -36,6 +36,7 @@ public class TemplateSearchRequestDto extends PageRequest {
     private Integer pushRange;
     private Integer usersType;
     private Integer templateStatus;
+    private Long groupId;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startTime;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

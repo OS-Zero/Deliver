@@ -15,29 +15,21 @@
  * limitations under the License.
  */
 
-package com.oszero.deliver.admin.model.dto.request;
+package com.oszero.deliver.admin.mapper;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
-import java.time.LocalDateTime;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.oszero.deliver.admin.model.entity.Group;
 
 /**
- * app 查询 dto
+ * 模板 mapper
  *
  * @author oszero
  * @version 1.0.0
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
-public class AppSearchRequestDto extends PageRequest {
+public interface AdminGroupMapper extends BaseMapper<Group> {
 
-    private String appName;
-    private Integer channelType;
-    private Long groupId;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime startTime;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime endTime;
 }
+
+
+
+
