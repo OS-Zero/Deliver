@@ -6,7 +6,7 @@
 
 <h4 align="center">一个轻量级企业消息推送平台，旨在提供企业内部沟通和协作的便捷解决方案！</h4>
 
-<a href="https://os-zero.gitee.io/deliver-website/" target="_blank">官方网站</a> |
+<a href="https://oszero.cn" target="_blank">官方网站</a> |
 <a href="https://gitee.com/OS-Zero/deliver/issues" target="_blank">需求收集</a> |
 <a href="https://gitee.com/OS-Zero/deliver/issues" target="_blank">问题反馈</a>
 
