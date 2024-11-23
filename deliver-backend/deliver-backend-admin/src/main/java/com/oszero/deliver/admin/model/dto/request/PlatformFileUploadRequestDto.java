@@ -55,6 +55,9 @@ public class PlatformFileUploadRequestDto {
     @NotNull
     private Long appId;
 
+    @NotNull
+    private Long groupId;
+
     /**
      * 平台文件
      */
