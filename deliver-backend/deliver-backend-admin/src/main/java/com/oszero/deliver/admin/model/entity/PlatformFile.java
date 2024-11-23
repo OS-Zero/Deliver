@@ -79,6 +79,8 @@ public class PlatformFile implements Serializable {
      */
     private Long appId;
 
+    private Long groupId;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

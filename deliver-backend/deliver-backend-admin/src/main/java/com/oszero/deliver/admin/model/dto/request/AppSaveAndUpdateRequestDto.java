@@ -62,4 +62,7 @@ public class AppSaveAndUpdateRequestDto {
      */
     @NotNull
     private Integer appStatus;
+
+    @NotNull
+    private Long groupId;
 }

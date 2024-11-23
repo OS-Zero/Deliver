@@ -208,6 +208,9 @@ public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, Pla
 
     @Override
     public Page<PlatformFileSearchResponseDto> getPagePlatformFile(PlatformFileSearchRequestDto dto) {
+        if (Objects.isNull(dto.getGroupId())) {
+            dto.setGroupId(-1L);
+        }
         LambdaQueryWrapper<PlatformFile> wrapper = new LambdaQueryWrapper<>();
         wrapper.like(StrUtil.isNotBlank(dto.getFileName()), PlatformFile::getFileName, dto.getFileName())
                 .eq(!Objects.isNull(dto.getAppType()), PlatformFile::getAppType, dto.getAppType())
@@ -216,6 +219,7 @@ public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, Pla
                 .eq(!Objects.isNull(dto.getAppId()), PlatformFile::getAppId, dto.getAppId())
                 .ge(!Objects.isNull(dto.getStartTime()), PlatformFile::getCreateTime, dto.getStartTime())
                 .le(!Objects.isNull(dto.getEndTime()), PlatformFile::getCreateTime, dto.getStartTime())
+                .eq(PlatformFile::getGroupId, dto.getGroupId())
                 .orderByDesc(PlatformFile::getCreateTime);
         Page<PlatformFile> platformFilePage = new Page<>(dto.getCurrentPage(), dto.getPageSize());
 

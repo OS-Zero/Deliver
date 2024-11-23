@@ -18,6 +18,7 @@
 package com.oszero.deliver.admin.model.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -37,6 +38,8 @@ public class PlatformFileSearchRequestDto extends PageRequest {
     private String fileType;
     private String fileKey;
     private Long appId;
+    @NotNull
+    private Long groupId;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startTime;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

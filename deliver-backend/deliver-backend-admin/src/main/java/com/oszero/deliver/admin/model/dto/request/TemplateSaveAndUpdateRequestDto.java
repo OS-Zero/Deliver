@@ -68,6 +68,8 @@ public class TemplateSaveAndUpdateRequestDto {
     @JsonString
     private String pushWays;
 
+    private Long groupId;
+
     /**
      * 模板状态
      */
