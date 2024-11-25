@@ -55,7 +55,7 @@ spring:
             threadCount: 5                  # 线程池中线程的数量，决定可以同时执行的任务数
             threadPriority: 5               # 线程优先级，范围1-10，默认是5
           jobStore:
-            class: org.quartz.simple.RAMJobStore # 使用内存存储（默认），所有任务信息存储在内存中
+            class: org.quartz.simpl.RAMJobStore # 使用内存存储（默认），所有任务信息存储在内存中
             misfireThreshold: 5000          # 错失触发时间的阈值，单位毫秒，默认60000ms（1分钟）
 
 mybatis-plus:
