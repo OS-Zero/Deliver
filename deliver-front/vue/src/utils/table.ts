@@ -32,7 +32,7 @@ export const getMessageType = (s: string): string | undefined => {
 		{ id: '6-6', name: '飞书-语音 audio' },
 		{ id: '6-7', name: '飞书-视频 media' },
 		{ id: '6-8', name: '飞书-文件 file' },
-		{ id: '6-9', name: '飞书-表情包 sticker' }
+		{ id: '6-9', name: '飞书-表情包 sticker' },
 	]
 	return arr.find((it) => it.id === s)?.name
 }
@@ -45,6 +45,14 @@ export const getUsersType = (num: number): string => {
 	return usersarr[num]
 }
 export const getImg = (num: number): string => {
-	const imgPaths = ['', '/assets/电话.png', '/assets/短信.png', '/assets/邮件.png', '/assets/钉钉.png', '/assets/企业微信.png', '/assets/飞书.png']
+	const imgPaths = [
+		'',
+		'/assets/电话.png',
+		'/assets/短信.png',
+		'/assets/邮件.png',
+		'/assets/钉钉.png',
+		'/assets/企业微信.png',
+		'/assets/飞书.png',
+	]
 	return imgPaths[num]
 }

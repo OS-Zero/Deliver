@@ -19,44 +19,44 @@ const columns: TableColumnsType = [
 	{
 		title: '文件 ID',
 		dataIndex: 'id',
-		key: 'id'
+		key: 'id',
 	},
 	{
 		title: '文件名',
 		dataIndex: 'fileName',
-		key: 'fileName'
+		key: 'fileName',
 	},
 	{
 		title: 'APP 类型',
 		dataIndex: 'appType',
-		key: 'appType'
+		key: 'appType',
 	},
 	{
 		title: '文件类型',
 		dataIndex: 'fileType',
-		key: 'fileType'
+		key: 'fileType',
 	},
 	{
 		title: '文件状态',
 		dataIndex: 'fileStatus',
-		key: 'fileStatus'
+		key: 'fileStatus',
 	},
 	{
 		title: '创建用户',
 		dataIndex: 'createUser',
-		key: 'createUser'
+		key: 'createUser',
 	},
 	{
 		title: '创建时间',
 		dataIndex: 'createTime',
-		key: 'createTime'
+		key: 'createTime',
 	},
 	{
 		title: '操作',
 		key: 'operation',
 		fixed: 'right',
-		width: 120
-	}
+		width: 120,
+	},
 ]
 
 // 表格加载中标志
@@ -109,7 +109,7 @@ const searchItem: searchPlatformFile = reactive({
 	currentPage: 1,
 	pageSize: 10,
 	startTime: undefined,
-	endTime: undefined
+	endTime: undefined,
 })
 
 const total = ref()
@@ -126,7 +126,7 @@ const locale = {
 	jump_to: '跳至', // 跳转到某页的文字描述
 	page: '页', // 页的文字描述
 	prev_page: '上一页', // 上一页按钮文字描述
-	next_page: '下一页' // 下一页按钮文字描述
+	next_page: '下一页', // 下一页按钮文字描述
 }
 
 // 条件查询
@@ -134,7 +134,7 @@ const getPagesPlatformFile = ({ page, pageSize, opt }: SearchOptions = {}): void
 	tableLoadFlag.value = true
 	// 对象解构
 	// eslint-disable-next-line
-	const { perid, ...rest } = searchform.value.searchPage
+		const { perid, ...rest } = searchform.value.searchPage
 	const searchNeedMes = { ...rest }
 	console.warn(searchNeedMes)
 	searchNeedMes.currentPage = page
@@ -210,7 +210,11 @@ onMounted(() => {
 		<div class="message-section">
 			<div class="splitter">
 				<a-tooltip title="刷新">
-					<a-button shape="circle" :icon="h(ReloadOutlined)" @click="getPagesPlatformFile({ page: current, pageSize, opt: 1 })" />
+					<a-button
+						shape="circle"
+						:icon="h(ReloadOutlined)"
+						@click="getPagesPlatformFile({ page: current, pageSize, opt: 1 })"
+					/>
 				</a-tooltip>
 				<uploadFile @mes="getPagesPlatformFile({ page: 1, pageSize, opt: 1 })" />
 			</div>
@@ -225,7 +229,8 @@ onMounted(() => {
 				:expandIconAsCell="false"
 				:pagination="false"
 				:loading="tableLoadFlag"
-				:expandedRowKeys="expandedRowKeys">
+				:expandedRowKeys="expandedRowKeys"
+			>
 				<template #headerCell="{ column }">
 					<template v-if="column.key === 'operation'">
 						<span>
@@ -255,12 +260,24 @@ onMounted(() => {
 						</span>
 					</template>
 					<template v-if="column.key === 'operation'">
-						<a-button type="link" size="small" style="font-size: 14px" @click="getInnerData(false, record)" v-if="judgeInclude(record)">
+						<a-button
+							type="link"
+							size="small"
+							style="font-size: 14px"
+							@click="getInnerData(false, record)"
+							v-if="judgeInclude(record)"
+						>
 							<UpCircleTwoTone style="font-size: 18px" />
 						</a-button>
 						<a-tooltip v-if="!judgeInclude(record)">
 							<template #title>查看平台文件更多信息</template>
-							<a-button type="link" size="small" style="font-size: 14px" @click="getInnerData(true, record)" v-if="!judgeInclude(record)">
+							<a-button
+								type="link"
+								size="small"
+								style="font-size: 14px"
+								@click="getInnerData(true, record)"
+								v-if="!judgeInclude(record)"
+							>
 								<DownCircleTwoTone style="font-size: 18px" />
 							</a-button>
 						</a-tooltip>
@@ -293,7 +310,8 @@ onMounted(() => {
 				@change="change"
 				showSizeChanger
 				:locale="locale"
-				:show-total="(total) => `共 ${total} 条数据`" />
+				:show-total="(total) => `共 ${total} 条数据`"
+			/>
 		</div>
 	</div>
 </template>

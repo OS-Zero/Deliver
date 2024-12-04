@@ -15,7 +15,12 @@ export const useDashboardStore = defineStore('dashboard', {
 		 */
 		async getDashboardData(): Promise<any> {
 			try {
-				const res = await Promise.all([this.getMessageInfo(1), this.getTemplateInfo(1), this.getAppInfo(1), this.getPushUserInfo(1)])
+				const res = await Promise.all([
+					this.getMessageInfo(1),
+					this.getTemplateInfo(1),
+					this.getAppInfo(1),
+					this.getPushUserInfo(1),
+				])
 				return res
 			} catch (error) {
 				console.log('Error:', error)
@@ -39,7 +44,7 @@ export const useDashboardStore = defineStore('dashboard', {
 			if (chartsMessageOption.dataset !== undefined) {
 				chartsMessageOption.dataset = {
 					dimensions: ['product', '成功', '失败'],
-					source: messageData.data.messageInfoList
+					source: messageData.data.messageInfoList,
 				}
 			}
 			return chartsMessageOption
@@ -76,6 +81,6 @@ export const useDashboardStore = defineStore('dashboard', {
 				chartsPushUserOption.series[0].data = pushUserInfo.data.dashboardInfoList
 			}
 			return chartsPushUserOption
-		}
-	}
+		},
+	},
 })

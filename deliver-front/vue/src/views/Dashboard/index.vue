@@ -11,7 +11,7 @@ const echartsOptionData = reactive<EChartsOptionData>({
 	chartsMessageOption: {},
 	chartsTemplateOption: {},
 	chartsAppOption: {},
-	chartsPushUserOption: {}
+	chartsPushUserOption: {},
 })
 const dashboardHeadData = ref<DashboardHeadData>({})
 

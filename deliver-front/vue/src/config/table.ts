@@ -1,4 +1,12 @@
-import { EditTwoTone, DeleteTwoTone, DownCircleTwoTone, ApiTwoTone, ThunderboltOutlined, SettingOutlined, CopyTwoTone } from '@ant-design/icons-vue'
+import {
+	EditTwoTone,
+	DeleteTwoTone,
+	DownCircleTwoTone,
+	ApiTwoTone,
+	ThunderboltOutlined,
+	SettingOutlined,
+	CopyTwoTone,
+} from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
 import { getMessageType, getPushRange, getUsersType, getImg } from '@/utils/table.ts'
 import { useMessageStore } from '@/store/modules/message.ts'
@@ -10,7 +18,7 @@ const editTemplateField: Form.Feedback = {
 	rules: {
 		templateName: [
 			{ required: true, message: '请输入模板名', trigger: 'change' },
-			{ min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
+			{ min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' },
 		],
 		pushRange: [{ required: true, message: '请选择推送范围', trigger: 'change' }],
 		usersType: [{ required: true, message: '请选择用户类型', trigger: 'change' }],
@@ -18,32 +26,32 @@ const editTemplateField: Form.Feedback = {
 			{
 				required: true,
 				message: '请选择渠道',
-				trigger: 'change'
-			}
+				trigger: 'change',
+			},
 		],
 		appId: [
 			{
 				required: true,
-				trigger: 'blur'
-			}
+				trigger: 'blur',
+			},
 		],
 		messageType: [{ required: true, message: '请选择消息类型', trigger: 'change' }],
-		templateStatus: [{ required: true, message: '请选择模板状态', trigger: 'change' }]
+		templateStatus: [{ required: true, message: '请选择模板状态', trigger: 'change' }],
 	},
 	filter: (nums: Array<string | number>) => {
 		const res: Array<Record<string, any>> = [
 			[
 				{ label: '不限', value: 0 },
 				{ label: '企业内部', value: 1 },
-				{ label: '企业外部', value: 2 }
-			]
+				{ label: '企业外部', value: 2 },
+			],
 		]
 		if (nums[0] === 0 || nums[0] === 1) {
 			res.push([
 				{ value: 1, label: '企业账号' },
 				{ value: 2, label: '电话' },
 				{ value: 3, label: '邮箱' },
-				{ value: 4, label: '平台 UserId' }
+				{ value: 4, label: '平台 UserId' },
 			])
 			switch (nums[1]) {
 				case 1:
@@ -53,7 +61,7 @@ const editTemplateField: Form.Feedback = {
 						{ value: 3, label: '邮件' },
 						{ value: 4, label: '钉钉' },
 						{ value: 5, label: '企业微信' },
-						{ value: 6, label: '飞书' }
+						{ value: 6, label: '飞书' },
 					])
 					break
 				case 2:
@@ -62,7 +70,7 @@ const editTemplateField: Form.Feedback = {
 						{ value: 2, label: '短信' },
 						{ value: 4, label: '钉钉' },
 						{ value: 5, label: '企业微信' },
-						{ value: 6, label: '飞书' }
+						{ value: 6, label: '飞书' },
 					])
 					break
 				case 3:
@@ -72,7 +80,7 @@ const editTemplateField: Form.Feedback = {
 					res.push([
 						{ value: 4, label: '钉钉' },
 						{ value: 5, label: '企业微信' },
-						{ value: 6, label: '飞书' }
+						{ value: 6, label: '飞书' },
 					])
 					break
 				default:
@@ -82,13 +90,13 @@ const editTemplateField: Form.Feedback = {
 		} else {
 			res.push([
 				{ value: 2, label: '电话' },
-				{ value: 3, label: '邮箱' }
+				{ value: 3, label: '邮箱' },
 			])
 			switch (nums[1]) {
 				case 2:
 					res.push([
 						{ value: 1, label: '电话' },
-						{ value: 2, label: '短信' }
+						{ value: 2, label: '短信' },
 					])
 					break
 				case 3:
@@ -112,7 +120,7 @@ const editTemplateField: Form.Feedback = {
 					console.log(error)
 					throw error
 				}
-			}
+			},
 		},
 		{
 			field: 'messageType',
@@ -124,8 +132,8 @@ const editTemplateField: Form.Feedback = {
 					console.log(error)
 					throw error
 				}
-			}
-		}
+			},
+		},
 	],
 	cascader: [{ field: 'pushRange' }, { field: 'usersType' }, { field: 'channelType' }],
 	formData: [
@@ -133,7 +141,7 @@ const editTemplateField: Form.Feedback = {
 			label: '模板名',
 			field: 'templateName',
 			type: 'input',
-			placeholder: '请填写长度在3到20个字符的模板名'
+			placeholder: '请填写长度在3到20个字符的模板名',
 		},
 		{
 			type: 'cascader',
@@ -145,8 +153,8 @@ const editTemplateField: Form.Feedback = {
 					options: [
 						{ label: '不限', value: 0 },
 						{ label: '企业内部', value: 1 },
-						{ label: '企业外部', value: 2 }
-					]
+						{ label: '企业外部', value: 2 },
+					],
 				},
 				{
 					label: '用户类型',
@@ -155,8 +163,8 @@ const editTemplateField: Form.Feedback = {
 						{ value: 1, label: '企业账号' },
 						{ value: 2, label: '电话' },
 						{ value: 3, label: '邮箱' },
-						{ value: 4, label: '平台 UserId' }
-					]
+						{ value: 4, label: '平台 UserId' },
+					],
 				},
 				{
 					label: '渠道选择',
@@ -167,29 +175,29 @@ const editTemplateField: Form.Feedback = {
 						{ value: 3, label: '邮件' },
 						{ value: 4, label: '钉钉' },
 						{ value: 5, label: '企业微信' },
-						{ value: 6, label: '飞书' }
-					]
-				}
-			]
+						{ value: 6, label: '飞书' },
+					],
+				},
+			],
 		},
 		{
 			label: '渠道 App',
 			field: 'appId',
 			type: 'select',
-			options: 'function'
+			options: 'function',
 		},
 		{
 			label: '消息类型',
 			field: 'messageType',
 			type: 'select',
-			options: 'function'
+			options: 'function',
 		},
 		{
 			label: '模板状态',
 			field: 'templateStatus',
-			type: 'switch'
-		}
-	]
+			type: 'switch',
+		},
+	],
 }
 //测试发送表单
 const sendTest: Form.Feedback = {
@@ -206,8 +214,8 @@ const sendTest: Form.Feedback = {
 					console.log(error)
 					throw error
 				}
-			}
-		}
+			},
+		},
 	],
 	rules: {},
 	formData: [
@@ -218,20 +226,20 @@ const sendTest: Form.Feedback = {
 			options: {
 				header: '用户 ID 列表',
 				tip: '添加用户',
-				placeholder: '请输入用户 ID 添加至用户列表'
-			}
+				placeholder: '请输入用户 ID 添加至用户列表',
+			},
 		},
 		{
 			type: 'jsonEditor',
 			label: '发送参数',
-			field: 'paramMap'
+			field: 'paramMap',
 		},
 		{
 			type: 'inputNumber',
 			label: '重试次数',
-			field: 'retry'
-		}
-	]
+			field: 'retry',
+		},
+	],
 }
 // 基本表格配置
 export const tableColumns: Table.Columns[] = [
@@ -249,47 +257,47 @@ export const tableColumns: Table.Columns[] = [
 			func: (text: string): void => {
 				navigator.clipboard.writeText(text)
 				message.success('复制成功')
-			}
-		}
+			},
+		},
 	},
 	{
 		title: '模板名',
 		dataIndex: 'templateName',
-		key: 'templateName'
+		key: 'templateName',
 	},
 	{
 		type: 'blue',
 		title: '消息类型',
 		dataIndex: 'messageType',
 		key: 'messageType',
-		filter: getMessageType
+		filter: getMessageType,
 	},
 	{
 		type: 'tag',
 		title: '推送范围',
 		dataIndex: 'pushRange',
 		key: 'pushRange',
-		filter: getPushRange
+		filter: getPushRange,
 	},
 	{
 		type: 'tag',
 		title: '用户类型',
 		dataIndex: 'usersType',
 		key: 'usersType',
-		filter: getUsersType
+		filter: getUsersType,
 	},
 	{
 		type: 'img',
 		title: '渠道类型',
 		dataIndex: 'channelType',
 		key: 'channelType',
-		filter: getImg
+		filter: getImg,
 	},
 	{
 		type: 'switch',
 		title: '模板状态',
 		dataIndex: 'templateStatus',
-		key: 'templateStatus'
+		key: 'templateStatus',
 	},
 	{
 		type: 'operation',
@@ -304,7 +312,7 @@ export const tableColumns: Table.Columns[] = [
 				type: 'link',
 				size: 'large',
 				tip: '查看消息模版更多信息',
-				icon: DownCircleTwoTone
+				icon: DownCircleTwoTone,
 			},
 			{
 				command: 'edit',
@@ -314,7 +322,7 @@ export const tableColumns: Table.Columns[] = [
 				config: { ...editTemplateField, title: '修改模板' },
 				tip: '修改消息模版',
 				icon: EditTwoTone,
-				options: { rowKey: 'templateId', resetButtonText: '重置', submitButtonText: '确认修改' }
+				options: { rowKey: 'templateId', resetButtonText: '重置', submitButtonText: '确认修改' },
 			},
 			{
 				command: 'clone',
@@ -324,7 +332,7 @@ export const tableColumns: Table.Columns[] = [
 				config: { ...editTemplateField, title: '新增模板' },
 				tip: '克隆消息模版',
 				icon: CopyTwoTone,
-				options: { resetButtonText: '重置', submitButtonText: '确认新建' }
+				options: { resetButtonText: '重置', submitButtonText: '确认新建' },
 			},
 			{
 				command: 'send',
@@ -334,7 +342,7 @@ export const tableColumns: Table.Columns[] = [
 				config: sendTest,
 				tip: '测试消息模板发送',
 				icon: ApiTwoTone,
-				options: { rowKey: 'templateId', resetButtonText: '清空', submitButtonText: '发送' }
+				options: { rowKey: 'templateId', resetButtonText: '清空', submitButtonText: '发送' },
 			},
 			{
 				command: 'delete',
@@ -344,10 +352,10 @@ export const tableColumns: Table.Columns[] = [
 				icon: DeleteTwoTone,
 				color: 'red',
 				confirm: true,
-				options: { rowKey: 'templateId', title: '确认删除吗' }
-			}
-		]
-	}
+				options: { rowKey: 'templateId', title: '确认删除吗' },
+			},
+		],
+	},
 ]
 
 //表头表单配置
@@ -357,8 +365,8 @@ export const tableHeader: Record<string, Form.Feedback> = { editTemplateField }
 export const tableHeaderOptions: Record<string, Form.Options> = {
 	templateOption: {
 		resetButtonText: '重置',
-		submitButtonText: '确认新建'
-	}
+		submitButtonText: '确认新建',
+	},
 }
 //表单选项
 export const tableOptions: Record<string, Table.Options> = {
@@ -369,7 +377,7 @@ export const tableOptions: Record<string, Table.Options> = {
 			{ field: 'appId', alias: '关联 AppId' },
 			{ field: 'appName', alias: '关联 AppName' },
 			{ field: 'createUser', alias: '创建者' },
-			{ field: 'createTime', alias: '创建时间' }
+			{ field: 'createTime', alias: '创建时间' },
 		],
 		paginationConfig: {
 			current: 1,
@@ -383,11 +391,11 @@ export const tableOptions: Record<string, Table.Options> = {
 				jump_to: '跳至', // 跳转到某页的文字描述
 				page: '页', // 页的文字描述
 				prev_page: '上一页', // 上一页按钮文字描述
-				next_page: '下一页' // 下一页按钮文字描述
+				next_page: '下一页', // 下一页按钮文字描述
 			},
-			showTotal: (total: number) => `共 ${total} 条数据`
-		}
-	}
+			showTotal: (total: number) => `共 ${total} 条数据`,
+		},
+	},
 }
 //表格表单配置
 export const tableForm = {}

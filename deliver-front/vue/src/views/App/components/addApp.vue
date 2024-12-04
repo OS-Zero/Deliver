@@ -18,7 +18,7 @@ const templateItem: addTemp = reactive({
 	appName: '',
 	channelType: undefined,
 	appStatus: 0,
-	appConfig: ''
+	appConfig: '',
 })
 
 const open = ref<boolean>(false)
@@ -46,7 +46,7 @@ const addModules = (): void => {
 
 const options = ref({
 	search: false,
-	history: false
+	history: false,
 })
 
 const modeList = ref(['code']) // 可选模式
@@ -66,7 +66,7 @@ channelData.value = [
 	{ value: '3', label: '邮件' },
 	{ value: '4', label: '钉钉' },
 	{ value: '5', label: '企业微信' },
-	{ value: '6', label: '飞书' }
+	{ value: '6', label: '飞书' },
 ]
 
 const channelTypeSelect = (value) => {
@@ -105,16 +105,16 @@ const handleCancel = (): void => {
 const rules: Record<string, Rule[]> = {
 	appName: [
 		{ required: true, message: '请输入模板名', trigger: 'change' },
-		{ min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
+		{ min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' },
 	],
 	channelType: [
 		{
 			required: true,
 			message: '请选择渠道',
-			trigger: 'change'
-		}
+			trigger: 'change',
+		},
 	],
-	appConfig: [{ required: true, validator: appConfigValidate, trigger: 'change' }]
+	appConfig: [{ required: true, validator: appConfigValidate, trigger: 'change' }],
 }
 
 const jsonChange = () => {
@@ -124,23 +124,35 @@ const jsonChange = () => {
 defineExpose({
 	open,
 	templateItem,
-	iconLoading
+	iconLoading,
 })
 </script>
 
 <template>
 	<a-button type="primary" class="addModule" @click="addModules">新增 APP</a-button>
 	<a-drawer v-model:open="open" title="新增 APP" width="650px" :footer="null" @cancel="handleCancel">
-		<a-form ref="templateForm" :model="templateItem" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol" class="temform">
+		<a-form
+			ref="templateForm"
+			:model="templateItem"
+			:rules="rules"
+			:label-col="labelCol"
+			:wrapper-col="wrapperCol"
+			class="temform"
+		>
 			<a-form-item ref="templateName" label="APP 名称" name="appName" class="tem-item">
-				<a-input :maxlength="20" v-model:value="templateItem.appName" placeholder="请填写长度在 3 到 20 个字符的 APP 名" />
+				<a-input
+					:maxlength="20"
+					v-model:value="templateItem.appName"
+					placeholder="请填写长度在 3 到 20 个字符的 APP 名"
+				/>
 			</a-form-item>
 			<a-form-item label="渠道选择" name="channelType" class="tem-item">
 				<a-select
 					placeholder="请选择渠道"
 					v-model:value="templateItem.channelType"
 					:options="channelData.map((pro) => ({ value: pro.value, label: pro.label }))"
-					@select="channelTypeSelect" />
+					@select="channelTypeSelect"
+				/>
 			</a-form-item>
 			<a-form-item label="APP 配置" name="appConfig" class="tem-item">
 				<json-editor-vue
@@ -150,10 +162,17 @@ defineExpose({
 					:modeList="modeList"
 					:options="options"
 					@change="jsonChange"
-					language="cn" />
+					language="cn"
+				/>
 			</a-form-item>
 			<a-form-item label="APP 状态" name="appStatus" class="tem-item">
-				<a-switch v-model:checked="templateItem.appStatus" checked-children="启用" un-checked-children="禁用" :checkedValue="1" :unCheckedValue="0" />
+				<a-switch
+					v-model:checked="templateItem.appStatus"
+					checked-children="启用"
+					un-checked-children="禁用"
+					:checkedValue="1"
+					:unCheckedValue="0"
+				/>
 			</a-form-item>
 		</a-form>
 

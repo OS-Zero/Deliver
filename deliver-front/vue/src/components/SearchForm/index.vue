@@ -32,7 +32,7 @@ watch(
 			searchModel.value = props.model
 		}
 	},
-	{ immediate: true }
+	{ immediate: true },
 )
 
 /**
@@ -57,9 +57,9 @@ const onSubmit = (): void => {
 		Object.fromEntries(
 			Object.entries(searchModel.value).filter(([key]) => {
 				return key !== 'period'
-			})
+			}),
 		),
-		'查询成功~ (*^▽^*)'
+		'查询成功~ (*^▽^*)',
 	)
 }
 
@@ -104,7 +104,8 @@ onUnmounted(() => {
 							v-model:value="searchModel[item.field]"
 							@change="onRangeChange"
 							:format="item.format"
-							:placeholder="item.placeholder" />
+							:placeholder="item.placeholder"
+						/>
 					</a-form-item>
 				</a-col>
 			</template>
@@ -112,8 +113,9 @@ onUnmounted(() => {
 				:span="8"
 				:style="{
 					'text-align': 'right',
-					'margin-bottom': expand === true ? '24px' : '0'
-				}">
+					'margin-bottom': expand === true ? '24px' : '0',
+				}"
+			>
 				<a-button type="primary" html-type="submit" @click="onSubmit" :loading="iconLoading">查询</a-button>
 				<a-button style="margin: 0 8px" @click="resetForm">重置</a-button>
 				<a style="font-size: 14px" @click="expand = !expand">

@@ -4,7 +4,7 @@ export const useStore = defineStore('store', {
 	state: () => {
 		return {
 			collapse: false,
-			showBannerFlag: true
+			showBannerFlag: true,
 		}
 	},
 	getters: {},
@@ -17,6 +17,6 @@ export const useStore = defineStore('store', {
 		},
 		closeBanner() {
 			this.showBannerFlag = false
-		}
-	}
+		},
+	},
 })

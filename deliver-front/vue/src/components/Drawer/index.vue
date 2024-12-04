@@ -33,7 +33,7 @@ watch(
 			}
 		})
 	},
-	{ immediate: true }
+	{ immediate: true },
 )
 const open = ref<boolean>(false)
 const iconLoading = ref<boolean>(false)
@@ -141,7 +141,8 @@ const submit = () => {
 				:rules="config.rules"
 				:label-col="{ style: { width: '90px' } }"
 				:wrapper-col="{ span: 20 }"
-				class="centerForm">
+				class="centerForm"
+			>
 				<template v-for="item in config.formData" :key="item.field">
 					<a-form-item :label="item.label" :name="item.field" class="center-item" v-if="item.type === 'input'">
 						<a-input :maxlength="20" v-model:value="drawerModel[item.field]" :placeholder="item.placeholder" />
@@ -151,28 +152,52 @@ const submit = () => {
 					</a-form-item>
 					<a-form-item :label="item.label" :name="item.field" class="center-item" v-else-if="item.type === 'radio'">
 						<a-radio-group v-model:value="drawerModel[item.field]" button-style="solid">
-							<a-radio-button :value="radio.value" v-for="radio in item.options" :key="radio.value">{{ item.label }}</a-radio-button>
+							<a-radio-button :value="radio.value" v-for="radio in item.options" :key="radio.value">{{
+								item.label
+							}}</a-radio-button>
 						</a-radio-group>
 					</a-form-item>
 					<a-form-item :label="item.label" :name="item.field" class="center-item" v-else-if="item.type === 'select'">
 						<a-select
 							v-model:value="drawerModel[item.field]"
 							:options="item.options === 'function' ? requestOptions[item.field] : item.options"
-							:disabled="item.options === 'function' ? !requestOptions[item.field] || !requestOptions[item.field].length : !item.options.lengh" />
+							:disabled="
+								item.options === 'function'
+									? !requestOptions[item.field] || !requestOptions[item.field].length
+									: !item.options.lengh
+							"
+						/>
 					</a-form-item>
 					<a-form-item :label="item.label" :name="item.field" class="center-item" v-else-if="item.type === 'list'">
 						<List v-model:value="drawerModel[item.field]" :options="item.options"></List>
 					</a-form-item>
-					<a-form-item :label="item.label" :name="item.field" class="center-item" v-else-if="item.type === 'jsonEditor'">
-						<json-editor-vue v-model="drawerModel[item.field]" langua="zh" :mode="'text'" :modeList="modeList"></json-editor-vue>
+					<a-form-item
+						:label="item.label"
+						:name="item.field"
+						class="center-item"
+						v-else-if="item.type === 'jsonEditor'"
+					>
+						<json-editor-vue
+							v-model="drawerModel[item.field]"
+							langua="zh"
+							:mode="'text'"
+							:modeList="modeList"
+						></json-editor-vue>
 					</a-form-item>
 					<template v-else-if="item.type === 'cascader'">
-						<a-form-item :label="option.label" :name="option.field" class="center-item" v-for="(option, index) in item.options" :key="option.field">
+						<a-form-item
+							:label="option.label"
+							:name="option.field"
+							class="center-item"
+							v-for="(option, index) in item.options"
+							:key="option.field"
+						>
 							<a-select
 								v-model:value="drawerModel[option.field]"
 								:options="index === 0 ? option.options : Array.isArray(options[index]) ? options[index] : []"
 								:disabled="index !== 0 && (!Array.isArray(options[index]) || !options[index].length)"
-								@change="selectChange(item.options, index)" />
+								@change="selectChange(item.options, index)"
+							/>
 						</a-form-item>
 					</template>
 					<a-form-item :label="item.label" :name="item.field" class="center-item" v-else-if="item.type === 'switch'">
@@ -181,13 +206,16 @@ const submit = () => {
 							checked-children="启用"
 							un-checked-children="禁用"
 							:checkedValue="1"
-							:unCheckedValue="0" />
+							:unCheckedValue="0"
+						/>
 					</a-form-item>
 				</template>
 			</a-form>
 			<template #extra>
 				<a-button @click="resetForm">{{ _options.resetButtonText }}</a-button>
-				<a-button style="margin-left: 10px" type="primary" @click="submit" :loading="iconLoading">{{ _options.submitButtonText }}</a-button>
+				<a-button style="margin-left: 10px" type="primary" @click="submit" :loading="iconLoading">{{
+					_options.submitButtonText
+				}}</a-button>
 			</template>
 		</a-drawer>
 	</span>

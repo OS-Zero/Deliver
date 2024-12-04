@@ -5,13 +5,13 @@ export async function getPagePlatformFile(data: searchPlatformFile): Promise<any
 	return await request({
 		url: '/platformFile/getPagePlatformFile',
 		method: 'post',
-		data
+		data,
 	})
 }
 export async function uploadFileApi(formData): Promise<any> {
 	return await request({
 		url: '/platformFile/uploadFile',
 		method: 'post',
-		data: formData
+		data: formData,
 	})
 }

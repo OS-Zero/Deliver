@@ -7,7 +7,14 @@ import type { AppInterface, searchMessage, updateTemp } from './type'
 import searchForm from './components/searchForm.vue'
 import addTemplate from './components/addApp.vue'
 import { getDate } from '@/utils/date.ts'
-import { addAppItem, getAppInfo, deleteAppInfo, updateAppStatus, updateAppItem, getAppConfigByChannelType } from '@/api/app.ts'
+import {
+	addAppItem,
+	getAppInfo,
+	deleteAppInfo,
+	updateAppStatus,
+	updateAppItem,
+	getAppConfigByChannelType,
+} from '@/api/app.ts'
 import JsonEditorVue from 'json-editor-vue3'
 import type { Rule } from 'ant-design-vue/es/form'
 
@@ -45,7 +52,7 @@ channelData.value = [
 	{ value: 3, label: '邮件' },
 	{ value: 4, label: '钉钉' },
 	{ value: 5, label: '企业微信' },
-	{ value: 6, label: '飞书' }
+	{ value: 6, label: '飞书' },
 ]
 
 /**
@@ -85,7 +92,7 @@ const state = reactive<{
 	loading: boolean
 }>({
 	selectedRowKeys: [],
-	loading: false
+	loading: false,
 })
 
 const hasSelected = computed(() => state.selectedRowKeys.length > 0)
@@ -94,7 +101,7 @@ const onDelete = (id: number): void => {
 	const arr: number[] = []
 	arr.push(id)
 	const templates = {
-		ids: arr
+		ids: arr,
 	}
 	deleteAppInfo(templates)
 		.then((res) => {
@@ -119,7 +126,7 @@ const searchItem: searchMessage = reactive({
 	currentPage: 1,
 	pageSize: 10,
 	startTime: undefined,
-	endTime: undefined
+	endTime: undefined,
 })
 // 表格加载中标志
 const tableLoadFlag = ref<boolean>(true)
@@ -139,7 +146,7 @@ const locale = {
 	jump_to: '跳至', // 跳转到某页的文字描述
 	page: '页', // 页的文字描述
 	prev_page: '上一页', // 上一页按钮文字描述
-	next_page: '下一页' // 下一页按钮文字描述
+	next_page: '下一页', // 下一页按钮文字描述
 }
 
 // 条件查询
@@ -183,10 +190,9 @@ const searchApp = ({ page, pageSize, opt }: SearchOptions = {}): void => {
 
 /// 修改操作
 const changeStatus = (id: number, status: number): void => {
-	// eslint-disable-next-line
 	const obj = {
 		appId: id,
-		appStatus: status
+		appStatus: status,
 	}
 	updateAppStatus(obj)
 		.then(() => {
@@ -258,22 +264,22 @@ const appConfigValidate = async (): Promise<any> => {
 const rules: Record<string, Rule[]> = {
 	appName: [
 		{ required: true, message: '请输入 APP 名', trigger: 'change' },
-		{ min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
+		{ min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' },
 	],
 	channelType: [
 		{
 			required: true,
 			message: '请选择渠道',
-			trigger: 'change'
-		}
+			trigger: 'change',
+		},
 	],
 	appConfig: [{ required: true, validator: appConfigValidate, trigger: 'change' }],
-	appStatus: [{ required: true, message: '请选择 APP 状态', trigger: 'change' }]
+	appStatus: [{ required: true, message: '请选择 APP 状态', trigger: 'change' }],
 }
 
 const options = ref({
 	search: false,
-	history: false
+	history: false,
 })
 const modeList = ref(['code']) // 可选模式
 
@@ -285,7 +291,7 @@ const imageAddress: string[] = [
 	'/assets/邮件.png',
 	'/assets/钉钉.png',
 	'/assets/企业微信.png',
-	'/assets/飞书.png'
+	'/assets/飞书.png',
 ]
 // 复制AppId
 const copyAppId = async (appId: number) => {
@@ -340,7 +346,8 @@ onMounted(() => {
 						width="600px"
 						:footer="null"
 						:placement="'left'"
-						@close="record.showAppConfig = false">
+						@close="record.showAppConfig = false"
+					>
 						<div>
 							<span style="color: #646a73">应用ID：</span>
 							<span>{{ record.appId }}</span>
@@ -355,7 +362,11 @@ onMounted(() => {
 						</div>
 						<a-divider />
 						<a-descriptions title="APP 配置" :column="1" layout="vertical">
-							<a-descriptions-item :label="label" v-for="(value, label, index) in JSON.parse(record.appConfig)" :key="index">
+							<a-descriptions-item
+								:label="label"
+								v-for="(value, label, index) in JSON.parse(record.appConfig)"
+								:key="index"
+							>
 								<div v-show="record.showAppConfig" style="color: #1677ff">{{ value }}</div>
 								<div v-show="!record.showAppConfig">{{ '*'.repeat((value + '').length) }}</div>
 							</a-descriptions-item>
@@ -370,7 +381,15 @@ onMounted(() => {
 							<span>{{ record.createTime }}</span>
 						</div>
 					</a-drawer>
-					<div style="border-color: #dee0e3; border-style: solid; border-width: 1px; padding: 15px 15px 8px; border-radius: 6px">
+					<div
+						style="
+							border-color: #dee0e3;
+							border-style: solid;
+							border-width: 1px;
+							padding: 15px 15px 8px;
+							border-radius: 6px;
+						"
+					>
 						<div>
 							<div style="position: relative">
 								<span>
@@ -379,7 +398,9 @@ onMounted(() => {
 									<!-- 添加更多条件根据需要显示不同的图片 -->
 								</span>
 								<span style="position: absolute; top: 0; margin-left: 10px">
-									<strong style="font-size: 15px">{{ record.appName.length > 10 ? record.appName.substring(0, 10) + '...' : record.appName }}</strong>
+									<strong style="font-size: 15px">{{
+										record.appName.length > 10 ? record.appName.substring(0, 10) + '...' : record.appName
+									}}</strong>
 									<span
 										:style="{
 											display: 'inline-block',
@@ -389,8 +410,9 @@ onMounted(() => {
 											borderRadius: '7px',
 											verticalAlign: 'middle',
 											marginLeft: '10px',
-											marginBottom: '5px'
-										}"></span>
+											marginBottom: '5px',
+										}"
+									></span>
 								</span>
 								<a-tooltip>
 									<template #title>修改 APP</template>
@@ -416,7 +438,8 @@ onMounted(() => {
 								:title="record.appStatus == 1 ? '请确认停用操作' : '确定要启用该应用吗？'"
 								ok-text="确认"
 								cancel-text="取消"
-								@confirm="changeStatus(record.appId, record.appStatus == 1 ? 0 : 1)">
+								@confirm="changeStatus(record.appId, record.appStatus == 1 ? 0 : 1)"
+							>
 								<a-button shape="default" :type="record.appStatus == 0 ? 'primary' : 'default'">
 									{{ record.appStatus == 1 ? '禁用' : '启用' }}
 								</a-button>
@@ -439,20 +462,33 @@ onMounted(() => {
 				showSizeChanger
 				:pageSizeOptions="['12', '24', '48', '96']"
 				:locale="locale"
-				:show-total="(total) => `共 ${total} 条数据`" />
+				:show-total="(total) => `共 ${total} 条数据`"
+			/>
 		</div>
 	</div>
 	<a-drawer v-model:open="open" title="修改 APP " width="660px" :footer="null" @cancel="handleCancel">
-		<a-form ref="appForm" :model="updateDate" :label-col="labelCol" :wrapper-col="wrapperCol" class="temform" :rules="rules">
+		<a-form
+			ref="appForm"
+			:model="updateDate"
+			:label-col="labelCol"
+			:wrapper-col="wrapperCol"
+			class="temform"
+			:rules="rules"
+		>
 			<a-form-item ref="appName" label="APP 名称" name="appName" class="tem-item">
-				<a-input :maxlength="20" v-model:value="updateDate.appName" placeholder="请填写长度在 3 到 20 个字符的 APP 名" />
+				<a-input
+					:maxlength="20"
+					v-model:value="updateDate.appName"
+					placeholder="请填写长度在 3 到 20 个字符的 APP 名"
+				/>
 			</a-form-item>
 
 			<a-form-item label="渠道选择" name="channelType" class="tem-item">
 				<a-select
 					v-model:value="updateDate.channelType"
 					:options="channelData.map((pro) => ({ value: pro.value, label: pro.label }))"
-					@select="channelTypeSelect" />
+					@select="channelTypeSelect"
+				/>
 			</a-form-item>
 			<a-form-item label="APP 配置" name="appConfig" class="tem-item">
 				<json-editor-vue
@@ -462,10 +498,17 @@ onMounted(() => {
 					:modeList="modeList"
 					:options="options"
 					@change="jsonChange"
-					language="cn" />
+					language="cn"
+				/>
 			</a-form-item>
 			<a-form-item label="APP 状态" name="appStatus" class="tem-item">
-				<a-switch v-model:checked="updateDate.appStatus" checked-children="启用" un-checked-children="禁用" :checkedValue="1" :unCheckedValue="0" />
+				<a-switch
+					v-model:checked="updateDate.appStatus"
+					checked-children="启用"
+					un-checked-children="禁用"
+					:checkedValue="1"
+					:unCheckedValue="0"
+				/>
 			</a-form-item>
 		</a-form>
 		<template #extra>

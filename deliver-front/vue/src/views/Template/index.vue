@@ -18,19 +18,23 @@ const searchModel = ref<SearchModel>({
 	usersType: undefined,
 	period: undefined,
 	startTime: undefined,
-	endTime: undefined
+	endTime: undefined,
 })
 const searchSubmit = (val: any, msg: string) => {
 	searchTemplate(val, msg, {
 		currentPage: tableOptions.templateOption.paginationConfig.current,
-		pageSize: tableOptions.templateOption.paginationConfig.pageSize
+		pageSize: tableOptions.templateOption.paginationConfig.pageSize,
 	})
 }
 /**
  * 搜索请求表单数据
  * @param data
  */
-const searchTemplate = async (data: SearchModel | undefined, msg: string, page?: { currentPage: number; pageSize: number }): Promise<void> => {
+const searchTemplate = async (
+	data: SearchModel | undefined,
+	msg: string,
+	page?: { currentPage: number; pageSize: number },
+): Promise<void> => {
 	console.log(data)
 
 	try {
@@ -56,7 +60,7 @@ const tableHeaderData = ref<AddTemp>({
 	templateStatus: 0,
 	appId: undefined,
 	channelType: undefined,
-	messageType: ''
+	messageType: '',
 })
 /**
  * 添加模板
@@ -70,7 +74,7 @@ const addTemp = async (param: AddTemp, callback: (err: boolean) => void) => {
 		callback(false)
 		searchTemplate(undefined, '', {
 			currentPage: tableOptions.templateOption.paginationConfig.current,
-			pageSize: tableOptions.templateOption.paginationConfig.pageSize
+			pageSize: tableOptions.templateOption.paginationConfig.pageSize,
 		})
 		message.success('添加成功')
 	} catch (error) {
@@ -84,7 +88,7 @@ const reflash = () => {
 	emitter.emit('loading', true)
 	searchTemplate(undefined, '', {
 		currentPage: tableOptions.templateOption.paginationConfig.current,
-		pageSize: tableOptions.templateOption.paginationConfig.pageSize
+		pageSize: tableOptions.templateOption.paginationConfig.pageSize,
 	})
 }
 
@@ -102,7 +106,7 @@ const updatetemplate = async (param: AddTemp, callback: (err: boolean) => void) 
 		emitter.emit('loading', true)
 		searchTemplate(undefined, '', {
 			currentPage: tableOptions.templateOption.paginationConfig.current,
-			pageSize: tableOptions.templateOption.paginationConfig.pageSize
+			pageSize: tableOptions.templateOption.paginationConfig.pageSize,
 		})
 		message.success('修改成功')
 	} catch (error) {
@@ -123,7 +127,7 @@ const deleteTemp = async (ids: Array<number>) => {
 		tableOptions.templateOption.paginationConfig.current = 1
 		searchTemplate(undefined, '', {
 			currentPage: tableOptions.templateOption.paginationConfig.current,
-			pageSize: tableOptions.templateOption.paginationConfig.pageSize
+			pageSize: tableOptions.templateOption.paginationConfig.pageSize,
 		})
 		message.success('删除成功')
 	} catch (error) {
@@ -201,13 +205,10 @@ onBeforeMount(() => {
 	<div id="message-container">
 		<SearchForm :fieldList="fieldList" :model="searchModel" @submit="searchSubmit"></SearchForm>
 		<section>
-			<TableHeader
-				:options="tableHeaderOptions.templateOption"
-				:config="tableHeader.editTemplateField"
-				:model="tableHeaderData"
-				@reflash="reflash"
-				@submit="addTemp" />
-			<Table :options="tableOptions.templateOption" :model="tableModel" :columns="tableColumns" @actions="handleAction"></Table>
+			<TableHeader :options="tableHeaderOptions.templateOption" :config="tableHeader.editTemplateField"
+				:model="tableHeaderData" @reflash="reflash" @submit="addTemp" />
+			<Table :options="tableOptions.templateOption" :model="tableModel" :columns="tableColumns" @actions="handleAction">
+			</Table>
 		</section>
 	</div>
 </template>

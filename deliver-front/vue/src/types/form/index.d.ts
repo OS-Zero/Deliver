@@ -2,7 +2,16 @@ import type { Rule } from 'ant-design-vue'
 export = Form
 export as namespace Form
 declare namespace Form {
-	type ItemType = 'input' | 'inputNumber' | 'timePicker' | 'select' | 'radio' | 'switch' | 'cascader' | 'jsonEditor' | 'list'
+	type ItemType =
+		| 'input'
+		| 'inputNumber'
+		| 'timePicker'
+		| 'select'
+		| 'radio'
+		| 'switch'
+		| 'cascader'
+		| 'jsonEditor'
+		| 'list'
 	interface FieldItem {
 		label?: string
 		field: string

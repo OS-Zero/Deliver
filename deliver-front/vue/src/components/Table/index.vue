@@ -29,7 +29,7 @@ const emit = defineEmits<EmitEvent>()
 const state = reactive<State>({
 	selectedRowKeys: [],
 	loading: true,
-	collapsed: false
+	collapsed: false,
 })
 watch(
 	props,
@@ -37,8 +37,8 @@ watch(
 		state.selectedRowKeys = []
 	},
 	{
-		immediate: true
-	}
+		immediate: true,
+	},
 )
 const onSelectChange = (selectedRowKeys: Key[]): void => {
 	state.selectedRowKeys = selectedRowKeys
@@ -63,7 +63,7 @@ const showDeleteConfirm = () => {
 		cancelText: '取消',
 		onOk() {
 			emit('actions', 'delete', state.selectedRowKeys)
-		}
+		},
 	})
 }
 const expandedRowKeys = ref<number[]>([])
@@ -116,7 +116,8 @@ onUnmounted(() => {
 			:expandIconColumnIndex="-1"
 			:loading="state.loading"
 			:row-key="(record: any) => record[props.options.rowKey]"
-			:row-selection="{ selectedRowKeys: state.selectedRowKeys, onChange: onSelectChange }">
+			:row-selection="{ selectedRowKeys: state.selectedRowKeys, onChange: onSelectChange }"
+		>
 			<template #headerCell="{ column }">
 				<template v-if="column.head === 'icon'">
 					<span>
@@ -141,10 +142,16 @@ onUnmounted(() => {
 					</a-tag>
 				</template>
 				<template v-else-if="column.type === 'blue'">
-					<span style="color: #1677ff">{{ column.filter ? column.filter(record[column.dataIndex]) : record[column.dataIndex] }}</span>
+					<span style="color: #1677ff">{{
+						column.filter ? column.filter(record[column.dataIndex]) : record[column.dataIndex]
+					}}</span>
 				</template>
 				<template v-else-if="column.type === 'img'">
-					<img style="height: 30px; width: 30px" :src="column.filter(record[column.dataIndex])" :alt="record[column.dataIndex]" />
+					<img
+						style="height: 30px; width: 30px"
+						:src="column.filter(record[column.dataIndex])"
+						:alt="record[column.dataIndex]"
+					/>
 				</template>
 				<template v-else-if="column.type === 'switch'">
 					<a-switch
@@ -153,7 +160,8 @@ onUnmounted(() => {
 						un-checked-children="禁用"
 						:checkedValue="1"
 						:unCheckedValue="0"
-						@click="changeStatus(options.rowKey, record[options.rowKey], column.dataIndex, record[column.dataIndex])" />
+						@click="changeStatus(options.rowKey, record[options.rowKey], column.dataIndex, record[column.dataIndex])"
+					/>
 				</template>
 				<template v-else-if="column.type === 'operation'">
 					<template v-for="btn in column.buttons" :key="btn.command">
@@ -163,7 +171,8 @@ onUnmounted(() => {
 								size="small"
 								style="font-size: 14px"
 								@click="toggleExpand(false, record)"
-								v-show="expandedRowKeys[0] === record[props.options.rowKey]">
+								v-show="expandedRowKeys[0] === record[props.options.rowKey]"
+							>
 								<UpCircleTwoTone style="font-size: 18px" />
 							</a-button>
 							<a-tooltip>
@@ -173,7 +182,8 @@ onUnmounted(() => {
 									size="small"
 									style="font-size: 14px"
 									@click="toggleExpand(true, record)"
-									v-show="expandedRowKeys[0] !== record[props.options.rowKey]">
+									v-show="expandedRowKeys[0] !== record[props.options.rowKey]"
+								>
 									<DownCircleTwoTone style="font-size: 18px" />
 								</a-button>
 							</a-tooltip>
@@ -183,7 +193,8 @@ onUnmounted(() => {
 							@confirm="emit('actions', btn.command, record[props.options.rowKey])"
 							ok-text="确定"
 							cancel-text="取消"
-							v-else-if="btn.confirm">
+							v-else-if="btn.confirm"
+						>
 							<a-tooltip placement="bottom">
 								<template #title>{{ btn.tip }}</template>
 								<a-button :type="btn.type" :size="btn.size">
@@ -199,7 +210,8 @@ onUnmounted(() => {
 								:_options="btn.options"
 								:config="btn.config"
 								:model="model[index]"
-								v-if="btn.feedback === 'drawer'">
+								v-if="btn.feedback === 'drawer'"
+							>
 								<template #button="{ openModel }">
 									<a-button :type="btn.type" :size="btn.size" @click="openModel">
 										<component :is="h(btn.icon)" :two-tone-color="btn.color"></component>
@@ -212,7 +224,9 @@ onUnmounted(() => {
 			</template>
 			<template #expandedRowRender="{ record }">
 				<a-row :gutter="24">
-					<a-col :span="8" v-for="item in options.expands" :key="item">{{ item.alias }} : {{ record[item.field] }}</a-col>
+					<a-col :span="8" v-for="item in options.expands" :key="item"
+						>{{ item.alias }} : {{ record[item.field] }}</a-col
+					>
 				</a-row>
 			</template>
 		</a-table>
@@ -226,12 +240,15 @@ onUnmounted(() => {
 				:showQuickJumper="options.paginationConfig.showQuickJumper"
 				:showSizeChanger="options.paginationConfig.showSizeChanger"
 				:locale="options.paginationConfig.locale"
-				@change="change" />
+				@change="change"
+			/>
 		</div>
 		<div class="showDelete" v-show="state.selectedRowKeys.length" :style="{ left: state.collapsed ? '80px' : '200px' }">
 			<div class="box">{{ `已选择 ${state.selectedRowKeys.length} 项` }}</div>
 			<div class="del">
-				<a-button type="primary" style="font-size: 14px" :loading="state.loading" @click="showDeleteConfirm">批量删除</a-button>
+				<a-button type="primary" style="font-size: 14px" :loading="state.loading" @click="showDeleteConfirm"
+					>批量删除</a-button
+				>
 				<contextHolder />
 			</div>
 		</div>

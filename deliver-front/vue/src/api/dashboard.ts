@@ -9,7 +9,7 @@ import { DashboardHeadData, MessageInfoList, DashboardInfoList } from '@/views/D
 export async function getDashboardHeadData(): Promise<R<DashboardHeadData>> {
 	return await request({
 		url: '/dashboard/getDashboardHeadData',
-		method: 'post'
+		method: 'post',
 	})
 }
 
@@ -22,7 +22,7 @@ export async function getMessageInfo(data: { dateSelect: number }): Promise<R<Me
 	return await request({
 		url: '/dashboard/getMessageInfo/vue',
 		method: 'post',
-		data
+		data,
 	})
 }
 
@@ -35,7 +35,7 @@ export async function getTemplateInfo(data: { dateSelect: number }): Promise<R<D
 	return await request({
 		url: '/dashboard/getTemplateInfo',
 		method: 'post',
-		data
+		data,
 	})
 }
 
@@ -48,7 +48,7 @@ export async function getAppInfo(data: { dateSelect: number }): Promise<R<Dashbo
 	return await request({
 		url: '/dashboard/getAppInfo',
 		method: 'post',
-		data
+		data,
 	})
 }
 
@@ -61,6 +61,6 @@ export async function getPushUserInfo(data: { dateSelect: number }): Promise<R<D
 	return await request({
 		url: '/dashboard/getPushUserInfo',
 		method: 'post',
-		data
+		data,
 	})
 }

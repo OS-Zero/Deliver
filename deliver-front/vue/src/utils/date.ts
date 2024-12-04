@@ -22,7 +22,7 @@ export const getDate = (d): string => {
 export const getPushWays = (channelType: string | undefined, messageType: string | undefined): string => {
 	const obj = {
 		channelType: Number(channelType),
-		messageType
+		messageType,
 	}
 	return JSON.stringify(obj)
 }
@@ -66,7 +66,7 @@ export const getMessageTypeArr = (s: string): string | undefined => {
 		{ id: '6-6', name: '飞书-语音 audio' },
 		{ id: '6-7', name: '飞书-视频 media' },
 		{ id: '6-8', name: '飞书-文件 file' },
-		{ id: '6-9', name: '飞书-表情包 sticker' }
+		{ id: '6-9', name: '飞书-表情包 sticker' },
 	]
 	return arr.find((it) => it.id === s)?.name
 }
@@ -100,7 +100,7 @@ export const getAllMessage = (mod, record: MessageTemplate): void => {
 		{ value: '3', label: '邮件' },
 		{ value: '4', label: '钉钉' },
 		{ value: '5', label: '企业微信' },
-		{ value: '6', label: '飞书' }
+		{ value: '6', label: '飞书' },
 	]
 	const user = mod.updateTemp.usersType
 	if (user === 1) {

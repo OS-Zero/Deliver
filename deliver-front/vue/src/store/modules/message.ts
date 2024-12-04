@@ -6,7 +6,7 @@ import {
 	addTemplatePages,
 	updatetemplate,
 	getMessageParamByMessageType,
-	sendTestMes
+	sendTestMes,
 } from '@/api/message.ts'
 import { SearchModel, AddTemp, SendTestMessage } from '@/views/Message/type'
 export const useMessageStore = defineStore('message', {
@@ -59,7 +59,7 @@ export const useMessageStore = defineStore('message', {
 			try {
 				obj.pushWays = JSON.stringify({
 					channelType: obj.channelType,
-					messageType: obj.messageType
+					messageType: obj.messageType,
 				})
 				await addTemplatePages(obj)
 			} catch (error) {
@@ -71,7 +71,7 @@ export const useMessageStore = defineStore('message', {
 			try {
 				obj.pushWays = JSON.stringify({
 					channelType: obj.channelType,
-					messageType: obj.messageType
+					messageType: obj.messageType,
 				})
 				await updatetemplate(obj)
 			} catch (error) {
@@ -95,6 +95,6 @@ export const useMessageStore = defineStore('message', {
 				console.log(error)
 				throw error
 			}
-		}
-	}
+		},
+	},
 })

@@ -22,7 +22,7 @@ const searchPage = reactive<searchMessage>({
 	pageSize: 10,
 	startTime: undefined,
 	endTime: undefined,
-	perid: undefined
+	perid: undefined,
 })
 
 const selectedRange = ref<Array<Dayjs | null>>([null, null])
@@ -56,7 +56,7 @@ const searchMes = (): void => {
 
 defineExpose({
 	searchPage,
-	iconLoading
+	iconLoading,
 })
 </script>
 
@@ -87,15 +87,17 @@ defineExpose({
 						v-model:value="searchPage.perid"
 						@change="onRangeChange"
 						format="YYYY-MM-DD"
-						:placeholder="['起始日期', '结束日期']" />
+						:placeholder="['起始日期', '结束日期']"
+					/>
 				</a-form-item>
 			</a-col>
 			<a-col
 				:span="8"
 				:style="{
 					'text-align': expand === true ? 'right' : 'center',
-					'margin-bottom': expand === true ? '24px' : '0'
-				}">
+					'margin-bottom': expand === true ? '24px' : '0',
+				}"
+			>
 				<a-button type="primary" html-type="submit" @click="searchMes" :loading="iconLoading">查询</a-button>
 				<a-button style="margin: 0 8px" @click="clearForm">清空</a-button>
 				<a style="font-size: 14px" @click="expand = !expand">

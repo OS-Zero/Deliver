@@ -17,8 +17,8 @@ watch(
 		emit('update:value', users.value)
 	},
 	{
-		immediate: true
-	}
+		immediate: true,
+	},
 )
 watch(
 	props,
@@ -26,8 +26,8 @@ watch(
 		users.value = props.value
 	},
 	{
-		immediate: true
-	}
+		immediate: true,
+	},
 )
 const addItem = () => {
 	if (users.value.includes(input.value)) {
@@ -71,7 +71,13 @@ const onBlur = () => {
 				</a-tooltip>
 			</div>
 			<a-input-group compact v-show="show">
-				<a-input v-model:value="input" :maxlength="100" :placeholder="options.placeholder" style="width: 320px; text-align: left" @blur="onBlur" />
+				<a-input
+					v-model:value="input"
+					:maxlength="100"
+					:placeholder="options.placeholder"
+					style="width: 320px; text-align: left"
+					@blur="onBlur"
+				/>
 				<a-button @click="show = !show">取消</a-button>
 				<a-button type="primary" @click="addItem">确认</a-button>
 			</a-input-group>

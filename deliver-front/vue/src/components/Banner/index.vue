@@ -11,8 +11,15 @@ const store = useStore()
 		style="
 			width: 100%;
 			padding: 0;
-			background: repeating-linear-gradient(35deg, rgb(179 235 255), rgb(179 235 255) 20px, rgb(230 248 255) 10px, rgb(230 248 255) 40px);
-		">
+			background: repeating-linear-gradient(
+				35deg,
+				rgb(179 235 255),
+				rgb(179 235 255) 20px,
+				rgb(230 248 255) 10px,
+				rgb(230 248 255) 40px
+			);
+		"
+	>
 		<div style="overflow: hidden; color: black; text-align: center; text-overflow: ellipsis; white-space: nowrap">
 			<span>
 				⭐️ 如果你喜欢 Deliver 消息推送平台，请给它一个 Star&nbsp;

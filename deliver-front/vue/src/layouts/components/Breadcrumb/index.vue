@@ -20,8 +20,8 @@ watch(
 		})
 	},
 	{
-		immediate: true
-	}
+		immediate: true,
+	},
 )
 </script>
 <template>

@@ -27,7 +27,8 @@ const setShowAbout = (open: boolean): void => {
 				@ok="setShowAbout(false)"
 				:ok-button-props="{ disabled: true }"
 				:cancel-button-props="{ disabled: true }"
-				:footer="null">
+				:footer="null"
+			>
 				<div style="display: flex; margin-top: 20px">
 					<div style="display: flex">
 						<img src="logo.png" style="width: 66px; height: 56px" alt="" />
@@ -36,7 +37,9 @@ const setShowAbout = (open: boolean): void => {
 					<div style="margin-left: 60px">
 						<p>产品：Deliver 企业消息推送平台</p>
 						<p>版本：v1.0.0</p>
-						<a target="_blank" href="https://os-zero.gitee.io/deliver-website">https://os-zero.gitee.io/deliver-website</a>
+						<a target="_blank" href="https://os-zero.gitee.io/deliver-website"
+							>https://os-zero.gitee.io/deliver-website</a
+						>
 					</div>
 				</div>
 			</a-modal>

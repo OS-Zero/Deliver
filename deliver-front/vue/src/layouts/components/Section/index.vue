@@ -7,7 +7,7 @@ import {
 	RightOutlined,
 	SmileOutlined,
 	AppstoreOutlined,
-	GithubOutlined
+	GithubOutlined,
 } from '@ant-design/icons-vue'
 import { ref } from 'vue'
 import ItemLink from '../ItemLink/index.vue'
@@ -37,23 +37,30 @@ const toggleCollapsed = (): void => {
 			top: store.$state.showBannerFlag ? '85px' : '60px',
 			bottom: 0,
 			zIndex: 998,
-			borderRight: '1px solid #ececec'
+			borderRight: '1px solid #ececec',
 		}"
 		style="background: #fff"
-		:collapsed="collapsed">
+		:collapsed="collapsed"
+	>
 		<a-button
 			shape="circle"
 			size="small"
 			style="position: fixed"
 			:style="{
 				left: collapsed ? '70px' : '190px',
-				top: store.$state.showBannerFlag ? '115px' : '90px'
+				top: store.$state.showBannerFlag ? '115px' : '90px',
 			}"
-			@click="toggleCollapsed">
+			@click="toggleCollapsed"
+		>
 			<RightOutlined v-if="collapsed" />
 			<LeftOutlined v-else />
 		</a-button>
-		<a-menu v-model:selectedKeys="selectedKeys2" v-model:openKeys="openKeys" mode="inline" style="border-right: 0px solid #ececec">
+		<a-menu
+			v-model:selectedKeys="selectedKeys2"
+			v-model:openKeys="openKeys"
+			mode="inline"
+			style="border-right: 0px solid #ececec"
+		>
 			<a-sub-menu key="欢迎">
 				<template #title>
 					<span>
@@ -105,8 +112,9 @@ const toggleCollapsed = (): void => {
 		style="padding: 0 42px 24px; background: #f8f8f8"
 		:style="{
 			marginLeft: collapsed ? '80px' : '200px',
-			marginTop: store.$state.showBannerFlag ? '85px' : '60px'
-		}">
+			marginTop: store.$state.showBannerFlag ? '85px' : '60px',
+		}"
+	>
 		<Breadcrumb style="margin-bottom: 24px"></Breadcrumb>
 		<a-layout-content>
 			<RouterView></RouterView>
@@ -115,8 +123,9 @@ const toggleCollapsed = (): void => {
 			:style="{
 				textAlign: 'center',
 				backgroundColor: '#F8F8F8',
-				color: '#1E1E1E'
-			}">
+				color: '#1E1E1E',
+			}"
+		>
 			<div style="margin-bottom: 6px">
 				Deliver 企业消息推送平台
 				<a href="https://gitee.com/OS-Zero" target="_blank" style="color: #1e1e1e; font-size: 16px; margin: 0 5px 0">

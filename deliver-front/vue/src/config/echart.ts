@@ -8,24 +8,24 @@ export interface EChartsOptionData {
 
 export const chartsMessageOption: EChartsOption = {
 	legend: {
-		top: '20%'
+		top: '20%',
 	},
 	tooltip: {},
 	dataset: {},
 	grid: {
 		top: '30%',
-		bottom: '10%'
+		bottom: '10%',
 	},
 	xAxis: { type: 'category' },
 	yAxis: {},
 	series: [
 		{ type: 'bar', color: '#5470C6' },
-		{ type: 'bar', color: '#a90000' }
-	]
+		{ type: 'bar', color: '#a90000' },
+	],
 }
 export const chartsTemplateOption: EChartsOption = {
 	tooltip: {
-		trigger: 'item'
+		trigger: 'item',
 	},
 	series: [
 		{
@@ -41,17 +41,17 @@ export const chartsTemplateOption: EChartsOption = {
 				rich: {
 					time: {
 						fontSize: 10,
-						color: '#999'
-					}
-				}
+						color: '#999',
+					},
+				},
 			},
-			data: []
-		}
-	]
+			data: [],
+		},
+	],
 }
 export const chartsAppOption: EChartsOption = {
 	tooltip: {
-		trigger: 'item'
+		trigger: 'item',
 	},
 	series: [
 		{
@@ -67,24 +67,24 @@ export const chartsAppOption: EChartsOption = {
 				rich: {
 					time: {
 						fontSize: 10,
-						color: '#999'
-					}
-				}
+						color: '#999',
+					},
+				},
 			},
 			data: [],
 			emphasis: {
 				itemStyle: {
 					shadowBlur: 10,
 					shadowOffsetX: 0,
-					shadowColor: 'rgba(0, 0, 0, 0.5)'
-				}
-			}
-		}
-	]
+					shadowColor: 'rgba(0, 0, 0, 0.5)',
+				},
+			},
+		},
+	],
 }
 export const chartsPushUserOption: EChartsOption = {
 	tooltip: {
-		trigger: 'item'
+		trigger: 'item',
 	},
 	series: [
 		{
@@ -101,16 +101,16 @@ export const chartsPushUserOption: EChartsOption = {
 				rich: {
 					time: {
 						fontSize: 10,
-						color: '#999'
-					}
-				}
+						color: '#999',
+					},
+				},
 			},
 			itemStyle: {
 				borderRadius: 10,
 				borderColor: '#fff',
-				borderWidth: 2
+				borderWidth: 2,
 			},
-			data: []
-		}
-	]
+			data: [],
+		},
+	],
 }
