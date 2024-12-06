@@ -10,9 +10,12 @@ const setShowAbout = (open: boolean): void => {
 	<a-layout-header class="header">
 		<div class="left">
 			<a href="/">
-				<img src="logo.png" style="height: 28px; width: 33px; margin-top: 16px; margin-right: 8px" alt="空" />
+				<img src="../../../../public/logo.png" style="height: 28px; width: 33px; margin-top: 16px; margin-right: 8px"
+					alt="空" />
 			</a>
-			<a href="/"><h1>Deliver 企业消息推送平台</h1></a>
+			<a href="/">
+				<h1>Deliver 企业消息推送平台</h1>
+			</a>
 		</div>
 		<div class="right">
 			<a-tooltip title="关于">
@@ -20,26 +23,18 @@ const setShowAbout = (open: boolean): void => {
 					<ExclamationCircleOutlined />
 				</a>
 			</a-tooltip>
-			<a-modal
-				v-model:open="showAbout"
-				title="关于"
-				centered
-				@ok="setShowAbout(false)"
-				:ok-button-props="{ disabled: true }"
-				:cancel-button-props="{ disabled: true }"
-				:footer="null"
-			>
+			<a-modal v-model:open="showAbout" title="关于" centered @ok="setShowAbout(false)"
+				:ok-button-props="{ disabled: true }" :cancel-button-props="{ disabled: true }" :footer="null">
 				<div style="display: flex; margin-top: 20px">
 					<div style="display: flex">
-						<img src="logo.png" style="width: 66px; height: 56px" alt="" />
+						<img src="../../../../public/logo.png" style="width: 66px; height: 56px" alt="null" />
 						<h1 style="display: inline-block; height: 60px; line-height: 60px">Deliver</h1>
 					</div>
 					<div style="margin-left: 60px">
 						<p>产品：Deliver 企业消息推送平台</p>
 						<p>版本：v1.0.0</p>
-						<a target="_blank" href="https://os-zero.gitee.io/deliver-website"
-							>https://os-zero.gitee.io/deliver-website</a
-						>
+						<a target="_blank"
+							href="https://os-zero.gitee.io/deliver-website">https://os-zero.gitee.io/deliver-website</a>
 					</div>
 				</div>
 			</a-modal>
@@ -68,8 +63,10 @@ const setShowAbout = (open: boolean): void => {
 	height: 60px;
 	margin-left: -28px;
 	margin-right: -28px;
+
 	.left {
 		display: flex;
+
 		h1 {
 			color: #000;
 			font-size: 18px;
