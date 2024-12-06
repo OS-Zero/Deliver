@@ -2,56 +2,57 @@
 import { ref } from 'vue'
 import { ExclamationCircleOutlined, QuestionCircleOutlined, GithubOutlined } from '@ant-design/icons-vue'
 const showAbout = ref(false)
-const setShowAbout = (open: boolean): void => {
+const setShowAbout = (open: boolean) => {
 	showAbout.value = open
 }
 </script>
 <template>
 	<a-layout-header class="header">
-		<div class="left">
+		<div class="organization">
 			<a href="/">
-				<img src="../../../../public/logo.png" style="height: 28px; width: 33px; margin-top: 16px; margin-right: 8px"
-					alt="空" />
+				<img class="organization-img" src="/logo.png" style="" alt="空" />
 			</a>
 			<a href="/">
 				<h1>Deliver 企业消息推送平台</h1>
 			</a>
 		</div>
-		<div class="right">
-			<a-tooltip title="关于">
-				<a style="color: #8b8b8b; font-size: 16px" @click="showAbout = true">
-					<ExclamationCircleOutlined />
-				</a>
-			</a-tooltip>
-			<a-modal v-model:open="showAbout" title="关于" centered @ok="setShowAbout(false)"
-				:ok-button-props="{ disabled: true }" :cancel-button-props="{ disabled: true }" :footer="null">
-				<div style="display: flex; margin-top: 20px">
-					<div style="display: flex">
-						<img src="../../../../public/logo.png" style="width: 66px; height: 56px" alt="null" />
-						<h1 style="display: inline-block; height: 60px; line-height: 60px">Deliver</h1>
+		<div class="extra">
+			<div>
+				<a-tooltip title="关于">
+					<a @click="showAbout = true">
+						<ExclamationCircleOutlined />
+					</a>
+				</a-tooltip>
+				<a-modal v-model:open="showAbout" title="关于" centered @ok="setShowAbout(false)"
+					:ok-button-props="{ disabled: true }" :cancel-button-props="{ disabled: true }" :footer="null">
+					<div class="modal-container">
+						<div class="container-info">
+							<img class="info_img" src="/logo.png" alt="null" />
+							<h1 class="info_title">Deliver</h1>
+						</div>
+						<div style="margin-left: 60px">
+							<p>产品：Deliver 企业消息推送平台</p>
+							<p>版本：v1.0.0</p>
+							<a target="_blank"
+								href="https://os-zero.gitee.io/deliver-website">https://os-zero.gitee.io/deliver-website</a>
+						</div>
 					</div>
-					<div style="margin-left: 60px">
-						<p>产品：Deliver 企业消息推送平台</p>
-						<p>版本：v1.0.0</p>
-						<a target="_blank"
-							href="https://os-zero.gitee.io/deliver-website">https://os-zero.gitee.io/deliver-website</a>
-					</div>
-				</div>
-			</a-modal>
-			<a-tooltip title="疑问">
-				<a target="_blank" href="https://os-zero.gitee.io/deliver-website" style="color: #8b8b8b; font-size: 16px">
-					<QuestionCircleOutlined />
-				</a>
-			</a-tooltip>
-			<a-tooltip title="Gitee">
-				<a href="https://gitee.com/OS-Zero/deliver" target="_blank" style="color: #8b8b8b; font-size: 16px">
-					<GithubOutlined />
-				</a>
-			</a-tooltip>
-			<span class="avatar">
-				<a-avatar style="width: 30px; height: 30px; font-size: 16px" src="mayi.png"></a-avatar>
+				</a-modal>
+				<a-tooltip title="疑问">
+					<a target="_blank" href="https://os-zero.gitee.io/deliver-website">
+						<QuestionCircleOutlined />
+					</a>
+				</a-tooltip>
+				<a-tooltip title="Gitee">
+					<a href="https://gitee.com/OS-Zero/deliver" target="_blank">
+						<GithubOutlined />
+					</a>
+				</a-tooltip>
+			</div>
+			<div class="avatar">
+				<a-avatar style="" src="mayi.png"></a-avatar>
 				<span class="name">Deliver</span>
-			</span>
+			</div>
 		</div>
 	</a-layout-header>
 </template>
@@ -59,46 +60,95 @@ const setShowAbout = (open: boolean): void => {
 .header {
 	display: flex;
 	justify-content: space-between;
-	background-color: #fff;
+	align-items: center;
+	background-color: var(--white-color);
 	height: 60px;
-	margin-left: -28px;
-	margin-right: -28px;
+	padding-inline: var(--spacing-md);
 
-	.left {
+	.organization {
 		display: flex;
 
 		h1 {
-			color: #000;
-			font-size: 18px;
+			color: var(--dark-color);
+			font-size: var(--font-size-large);
 			height: 60px;
 			line-height: 60px;
 		}
-	}
-
-	.right {
-		font-size: 20px;
-		color: #8b8b8b;
 
 		a {
-			margin-right: 12px;
+			text-decoration: none;
 		}
+	}
 
-		.avatar {
-			display: inline-block;
-			height: 100%;
-			padding-right: 20px;
-			padding-left: 20px;
+	.organization-img {
+		height: 28px;
+		width: 33px;
+		margin-top: var(--spacing-md);
+		margin-right: var(--spacing-sm)
+	}
 
-			.name {
-				margin-left: 10px;
-				font-size: 15px;
+	.extra {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		font-size: var(--font-size-base);
+		color: var(--dark-color);
+
+		a {
+			color: var(--gray-medium-dark);
+			font-size: var(--font-size-base);
+			margin-right: var(--spacing-sm);
+			padding: 0 var(--spacing-xs);
+
+			&:hover {
+				background-color: var(--gray-lightest);
+				border-radius: 4px;
 			}
 		}
 
-		.avatar:hover {
-			cursor: pointer;
-			background-color: #f7f7f7;
+		.avatar {
+			height: 50px;
+			display: flex;
+			align-items: center;
+			margin-left: var(--spacing-md);
+			padding: 0 var(--spacing-sm);
+
+			.ant-avatar {
+				width: 25px;
+				height: 25px;
+				font-size: var(--font-size-base);
+			}
+
+			.name {
+				margin-left: var(--spacing-sm);
+				font-size: var(--font-size-small);
+			}
+
+			&:hover {
+				cursor: pointer;
+				background-color: var(--gray-lightest);
+			}
 		}
+	}
+}
+
+.modal-container {
+	display: flex;
+	margin-top: var(--spacing-md);
+
+	.container-info {
+		display: flex;
+	}
+
+	.info_img {
+		width: 66px;
+		height: 56px;
+	}
+
+	.info_title {
+		display: inline-block;
+		height: 60px;
+		line-height: 60px;
 	}
 }
 </style>

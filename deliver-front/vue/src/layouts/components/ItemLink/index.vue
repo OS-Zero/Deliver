@@ -1,13 +1,21 @@
 <script lang="ts" setup>
-defineProps(['itemKey', 'info', 'to'])
+defineProps(['label', 'to'])
 </script>
 <template>
 	<div class="item-link">
 		<RouterLink :to="to">
-			<KeepAlive>
-				<a-menu-item style="color: #656464" :key="itemKey">{{ info }}</a-menu-item>
-			</KeepAlive>
+			{{ label }}
 		</RouterLink>
 	</div>
 </template>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+a {
+	text-decoration: none;
+	color: var(--white-color);
+}
+
+.router-link-active {
+	text-decoration: none;
+	color: var(--white-color);
+}
+</style>

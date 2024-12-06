@@ -1,9 +1,9 @@
 {
 	"compilerOptions": {
 		/* config path*/
-		"baseUrl": "./vue",
+		"baseUrl": "./",
 		"paths": {
-			"@/*": ["src/*"]
+			"@/*": ["./src/*"]
 		},
 		"target": "ES2020",
 		"useDefineForClassFields": true,
