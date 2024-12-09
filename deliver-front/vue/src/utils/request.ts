@@ -9,18 +9,19 @@ service.interceptors.request.use(
 	(config) => {
 		return config
 	},
-	async (err) => {
-		return await Promise.reject(err)
+	(err) => {
+		return Promise.reject(err)
 	},
 )
 
 service.interceptors.response.use(
-	async (res) => {
+	(res) => {
+		if (res?.data.code === 600) return Promise.reject(res?.data.errorMessage)
 		if (res?.data.code === 200) return res.data
-		return await Promise.reject(res?.data.errorMessage)
+		return Promise.reject('请求错误')
 	},
-	async (err) => {
-		return await Promise.reject(err)
+	(err) => {
+		return Promise.reject(err)
 	},
 )
 export default service
