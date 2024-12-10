@@ -1,37 +1,9 @@
 import { h } from 'vue'
-import {
-	MessageOutlined,
-	FileTextOutlined,
-	DashboardOutlined,
-	SmileOutlined,
-	AppstoreOutlined,
-} from '@ant-design/icons-vue'
+import { MessageOutlined, FileTextOutlined, AppstoreOutlined } from '@ant-design/icons-vue'
 import { ItemType } from 'ant-design-vue'
-import ItemLink from '../layouts/components/ItemLink/index.vue'
+import ItemLink from '@/views/Layout/components/ItemLink/index.vue'
 
 export const menuConfig: ItemType[] = [
-	{
-		key: 'WC',
-		icon: h(SmileOutlined),
-		label: '欢迎',
-		children: [
-			{
-				key: 'welcome',
-				label: h(ItemLink, { label: '欢迎', to: 'welcome' }),
-			},
-		],
-	},
-	{
-		key: 'CDB',
-		icon: h(DashboardOutlined),
-		label: '控制面板',
-		children: [
-			{
-				key: 'SysMD',
-				label: h(ItemLink, { label: '系统监控看板', to: 'dashboard' }),
-			},
-		],
-	},
 	{
 		key: 'MC',
 		icon: h(MessageOutlined),
