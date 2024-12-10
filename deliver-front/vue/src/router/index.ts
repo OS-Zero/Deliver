@@ -68,6 +68,15 @@ const routes: RouteRecordRaw[] = [
 					name: '规则配置 - Deliver 企业消息推送平台',
 				},
 			},
+			{
+				path: 'systemSettings',
+				name: '系统设置',
+				component: () => import('@/views/SystemSettings/index.vue'),
+				meta: {
+					parent: '首页',
+					name: '系统设置 - Deliver 企业消息推送平台',
+				},
+			},
 		],
 	},
 	{

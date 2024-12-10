@@ -1,8 +1,7 @@
 import { h } from 'vue'
-import { MessageOutlined, FileTextOutlined, AppstoreOutlined } from '@ant-design/icons-vue'
+import { MessageOutlined, FileTextOutlined, AppstoreOutlined, SettingOutlined } from '@ant-design/icons-vue'
 import { ItemType } from 'ant-design-vue'
 import ItemLink from '@/views/Layout/components/ItemLink/index.vue'
-
 export const menuConfig: ItemType[] = [
 	{
 		key: 'MC',
@@ -36,5 +35,10 @@ export const menuConfig: ItemType[] = [
 				label: h(ItemLink, { label: '平台文件管理', to: 'file' }),
 			},
 		],
+	},
+	{
+		key: 'SS',
+		icon: h(SettingOutlined),
+		label: h(ItemLink, { label: '系统设置', to: 'systemSettings' }),
 	},
 ]

@@ -1,9 +1,26 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { ExclamationCircleOutlined, QuestionCircleOutlined, GithubOutlined } from '@ant-design/icons-vue'
+import { useRouter } from 'vue-router';
+import { logout } from "@/api/user";
 const showAbout = ref(false)
 const setShowAbout = (open: boolean) => {
 	showAbout.value = open
+}
+const router = useRouter()
+const handleAction = async (opt: string) => {
+	switch (opt) {
+		case 'account':
+			router.push('/systemSettings')
+			break;
+		case 'logout':
+			await logout()
+			localStorage.removeItem("access_token")
+			router.push('/login')
+			break;
+		default:
+			break;
+	}
 }
 </script>
 <template>
@@ -49,10 +66,22 @@ const setShowAbout = (open: boolean) => {
 					</a>
 				</a-tooltip>
 			</div>
-			<div class="avatar">
-				<a-avatar style="" src="mayi.png"></a-avatar>
-				<span class="name">Deliver</span>
-			</div>
+			<a-dropdown placement="bottom">
+				<div class="avatar">
+					<a-avatar src="mayi.png"></a-avatar>
+					<span class="name">Deliver</span>
+				</div>
+				<template #overlay>
+					<a-menu class="dropdown">
+						<a-menu-item>
+							<a @click="handleAction('account')">我的账户</a>
+						</a-menu-item>
+						<a-menu-item>
+							<a @click="handleAction('logout')">退出登录</a>
+						</a-menu-item>
+					</a-menu>
+				</template>
+			</a-dropdown>
 		</div>
 	</a-layout-header>
 </template>
@@ -110,7 +139,6 @@ const setShowAbout = (open: boolean) => {
 			height: 50px;
 			display: flex;
 			align-items: center;
-			margin-left: var(--spacing-md);
 			padding: 0 var(--spacing-sm);
 
 			.ant-avatar {
@@ -149,6 +177,12 @@ const setShowAbout = (open: boolean) => {
 		display: inline-block;
 		height: 60px;
 		line-height: 60px;
+	}
+}
+
+.dropdown {
+	a {
+		text-decoration: none
 	}
 }
 </style>

@@ -3,7 +3,7 @@ import { ref, reactive } from 'vue';
 import { UserInfo } from '../type';
 import type { Rule } from 'ant-design-vue/es/form';
 import { validateEmail } from '@/utils/validate';
-import { login } from "@/api/user";
+import { login, getCurrentLoginUserInfo } from "@/api/user";
 import { useRouter } from 'vue-router';
 import { message } from 'ant-design-vue'
 const router = useRouter()
@@ -24,6 +24,8 @@ const handleLogin = function () {
 			localStorage.setItem('access_token', res.token)
 			message.success('登录成功')
 			router.push('/')
+			const _res = await getCurrentLoginUserInfo()
+			localStorage.setItem('userInfo', JSON.stringify(_res))
 		})
 		.catch(error => {
 			console.log('error', error);

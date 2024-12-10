@@ -40,6 +40,9 @@ const handleForgot = () => {
 			console.log('error', error);
 		});
 }
+const handleVarify = () => {
+
+}
 </script>
 
 <template>
@@ -56,7 +59,7 @@ const handleForgot = () => {
 		<a-form-item name="verificationCode">
 			<div class="verify">
 				<a-input v-model:value.trim="forgotData.verificationCode" placeholder="请输入验证码" />
-				<a-button class="verify_btn">获取验证码</a-button>
+				<a-button class="verify_btn" @click="handleVarify">获取验证码</a-button>
 			</div>
 		</a-form-item>
 		<a-form-item>
