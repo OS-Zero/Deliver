@@ -4,6 +4,9 @@ const routes: RouteRecordRaw[] = [
 		path: '/login',
 		name: '登录',
 		component: () => import('@/views/Login/index.vue'),
+		meta: {
+			title: 'Deliver 企业消息推送平台',
+		},
 	},
 	{
 		path: '/',
@@ -80,5 +83,13 @@ const routes: RouteRecordRaw[] = [
 const router = createRouter({
 	history: createWebHistory(),
 	routes,
+})
+router.beforeEach(function (to, _from, next) {
+	if (!localStorage.getItem('access_token')) {
+		if (to.path !== '/login') {
+			return next('/login')
+		}
+	}
+	next()
 })
 export default router

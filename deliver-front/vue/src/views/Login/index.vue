@@ -3,39 +3,19 @@ import { reactive, ref } from "vue"
 import LoginForm from "./components/LoginForm.vue";
 import RegisterForm from "./components/RegisterForm.vue";
 import ForgotForm from "./components/ForgotForm.vue";
-import { UserInfo, RegisterInfo, ForgotInfo } from "./type";
 import { LeftOutlined } from '@ant-design/icons-vue'
-const activeKey = ref('login');
-const loginData = reactive<UserInfo>({
-	userEmail: '',
-	userPassword: ''
-})
-const registerData = reactive<RegisterInfo>({
-	userEmail: '',
-	userPassword: '',
-	confirmPwd: '',
-	userRealName: '',
-	verificationCode: ''
-})
-const forgotData = reactive<ForgotInfo>({
-	userEmail: '',
-	userPassword: '',
-	confirmPwd: '',
-	verificationCode: ''
-})
-
-const onOk = (data) => {
-
-}
-
-const onFailed = (err) => {
-
-}
 const state = reactive({
+	activeKey: 'login',
 	autoLogin: false,
 	showForgot: false
 })
 
+const registerOk = () => {
+	state.activeKey = 'login'
+}
+const forgotOk = () => {
+	state.showForgot = false
+}
 </script>
 
 <template>
@@ -52,12 +32,12 @@ const state = reactive({
 					</div>
 				</header>
 				<section>
-					<a-tabs v-model:activeKey="activeKey" centered>
+					<a-tabs v-model:activeKey="state.activeKey" centered>
 						<a-tab-pane key="login" tab="邮箱密码登录">
-							<LoginForm :formData="loginData" />
+							<LoginForm />
 						</a-tab-pane>
 						<a-tab-pane key="register" tab="用户注册">
-							<RegisterForm :formData="registerData" />
+							<RegisterForm @onOk="registerOk" />
 						</a-tab-pane>
 					</a-tabs>
 					<div class="login--auto">
@@ -74,7 +54,7 @@ const state = reactive({
 					<h1 class="forgot_title">
 						重置密码
 					</h1>
-					<ForgotForm :formData="forgotData"></ForgotForm>
+					<ForgotForm @onOk="forgotOk"></ForgotForm>
 				</div>
 			</template>
 		</div>
