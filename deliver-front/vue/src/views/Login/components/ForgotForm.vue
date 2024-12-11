@@ -1,11 +1,13 @@
 <script lang="ts" setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, watch } from 'vue';
 import { ForgotInfo } from '../type';
 import type { Rule } from 'ant-design-vue/es/form';
 import { validateEmail } from '@/utils/validate';
 import { forgotPwd } from '@/api/user';
 import { omitProperty } from '@/utils/utils';
 import { message } from 'ant-design-vue';
+import { useVerify } from '@/utils/hooks';
+import { getRules } from '@/config/rules';
 
 const emits = defineEmits<{
 	onOk: []
@@ -17,13 +19,12 @@ const forgotData = reactive<ForgotInfo>({
 	verificationCode: ''
 })
 const validatePwd = () => {
+	if (forgotData.confirmPwd === '') return Promise.reject("请确认密码")
 	return forgotData.confirmPwd === forgotData.userPassword ? Promise.resolve() : Promise.reject("两次输入密码不相同")
 }
 const rules: Record<string, Rule[]> = {
-	userEmail: [{ required: true, message: '请输入邮箱!', trigger: 'blur' }, { validator: validateEmail, trigger: 'blur' }],
-	userPassword: [{ required: true, message: '请输入密码!', trigger: 'blur' }, { min: 6, message: '密码长度范围为6-16位', trigger: 'blur' }, { max: 16, message: '密码长度范围为6-16位', trigger: 'blur' }],
-	confirmPwd: [{ required: true, message: '请确认密码!', trigger: 'blur' }, { validator: validatePwd, trigger: 'blur' }],
-	verificationCode: [{ required: true, message: '请输入验证码!', trigger: 'blur' }, { len: 6, message: '验证码长度为6位', trigger: 'blur' }],
+	confirmPwd: [{ validator: validatePwd, trigger: 'blur' }],
+	...getRules(['userEmail', 'userPassword', 'verificationCode'])
 };
 
 const formRef = ref()
@@ -40,9 +41,18 @@ const handleForgot = () => {
 			console.log('error', error);
 		});
 }
-const handleVarify = () => {
-
-}
+const { state, handleVarify } = useVerify()
+watch(forgotData, async () => {
+	try {
+		await validateEmail(null, forgotData.userEmail)
+		state.verifyDisabled = false
+	} catch (error) {
+		state.verifyDisabled = true
+		state.verifyContent = '获取验证码'
+	}
+}, {
+	immediate: true
+})
 </script>
 
 <template>
@@ -59,7 +69,9 @@ const handleVarify = () => {
 		<a-form-item name="verificationCode">
 			<div class="verify">
 				<a-input v-model:value.trim="forgotData.verificationCode" placeholder="请输入验证码" />
-				<a-button class="verify_btn" @click="handleVarify">获取验证码</a-button>
+				<a-button class="verify_btn" :disabled="state.verifyDisabled" @click="handleVarify(forgotData.userEmail)">{{
+					state.verifyContent
+				}}</a-button>
 			</div>
 		</a-form-item>
 		<a-form-item>

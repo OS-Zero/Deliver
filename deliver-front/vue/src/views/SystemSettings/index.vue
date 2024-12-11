@@ -4,6 +4,8 @@ import type { Rule } from 'ant-design-vue/es/form';
 import { updatePwd } from '@/api/user';
 import { omitProperty } from '@/utils/utils';
 import { message } from 'ant-design-vue';
+import { getRules } from '@/config/rules';
+import { useVerify } from '@/utils/hooks';
 
 const editorData = reactive({
 	userPassword: '',
@@ -35,11 +37,10 @@ const validatePwd = () => {
 	return editorData.confirmPwd === editorData.userPassword ? Promise.resolve() : Promise.reject("两次输入密码不相同")
 }
 const rules: Record<string, Rule[]> = {
-	userPassword: [{ required: true, message: '请输入密码!', trigger: 'blur' }, { min: 6, message: '密码长度范围为6-16位', trigger: 'blur' }, { max: 16, message: '密码长度范围为6-16位', trigger: 'blur' }],
 	confirmPwd: [{ required: true, message: '请确认密码!', trigger: 'blur' }, { validator: validatePwd, trigger: 'blur' }],
-	verificationCode: [{ required: true, message: '请输入验证码!', trigger: 'blur' }, { len: 6, message: '验证码长度为6位', trigger: 'blur' }],
+	...getRules(['userPassword', 'verificationCode'])
 };
-
+const { state, handleVarify } = useVerify()
 </script>
 
 <template>
@@ -61,7 +62,9 @@ const rules: Record<string, Rule[]> = {
 				<a-form-item name="verificationCode">
 					<div class="verify">
 						<a-input v-model:value.trim="editorData.verificationCode" placeholder="请输入验证码" />
-						<a-button class="verify_btn">获取验证码</a-button>
+						<a-button class="verify_btn" :disabled="state.verifyDisabled">{{
+							state.verifyContent
+						}}</a-button>
 					</div>
 				</a-form-item>
 			</a-form>

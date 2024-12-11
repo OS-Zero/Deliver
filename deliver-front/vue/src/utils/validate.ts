@@ -6,7 +6,7 @@ export async function validateList(_rule: any, value: any) {
 }
 
 export async function validateEmail(_r: any, value: string) {
-	if (value === '') return
+	if (value === '') return Promise.reject('请输入邮箱')
 	const regExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 	return regExp.test(value) ? Promise.resolve() : Promise.reject('邮箱格式错误')
 }

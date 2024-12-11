@@ -2,19 +2,16 @@
 import { ref, reactive } from 'vue';
 import { UserInfo } from '../type';
 import type { Rule } from 'ant-design-vue/es/form';
-import { validateEmail } from '@/utils/validate';
 import { login, getCurrentLoginUserInfo } from "@/api/user";
 import { useRouter } from 'vue-router';
 import { message } from 'ant-design-vue'
+import { getRules } from '@/config/rules';
 const router = useRouter()
 const loginData = reactive<UserInfo>({
 	userEmail: '',
 	userPassword: ''
 })
-const rules: Record<string, Rule[]> = {
-	userEmail: [{ required: true, message: '请输入邮箱!', trigger: 'blur' }, { validator: validateEmail, trigger: 'blur' }],
-	userPassword: [{ required: true, message: '请输入密码!', trigger: 'blur' }, { min: 6, message: '密码长度范围为6-16位', trigger: 'blur' }, { max: 16, message: '密码长度范围为6-16位', trigger: 'blur' }],
-};
+const rules: Record<string, Rule[]> = getRules(['userEmail', 'userPassword'])
 const formRef = ref()
 const handleLogin = function () {
 	formRef.value
