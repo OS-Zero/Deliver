@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { onUnmounted, ref } from 'vue'
 import Header from './components/Header/index.vue'
 import Banner from './components/Banner/index.vue'
 import Breadcrumb from './components/Breadcrumb/index.vue'
@@ -6,16 +7,33 @@ import SideBar from './components/SideBar/index.vue'
 import {
 	GithubOutlined
 } from '@ant-design/icons-vue'
+import { menuConfig } from "@/config/menu"
+import { ItemType } from 'ant-design-vue'
+import emitter from '@/utils/mitt'
+let items = ref<ItemType[] | null>(null)
+const onTabChange = (tab: string) => {
+	items.value = null
+	const groupId = localStorage.getItem("group_id");
+	(tab === 'systemManage' || groupId) && (items.value = menuConfig[tab])
+}
+const onCardSelected = (card: string) => {
+	localStorage.setItem("group_id", card)
+	items.value = menuConfig["groupManage"]
+}
+emitter.on("card", onCardSelected)
+onUnmounted(() => {
+	emitter.off("card", onCardSelected)
+})
 </script>
 
 <template>
 	<a-layout>
 		<div class="layout_header">
 			<Banner class="header_banner" />
-			<Header></Header>
+			<Header @on-tab-change="onTabChange"></Header>
 		</div>
 		<a-layout>
-			<SideBar></SideBar>
+			<SideBar v-if="items !== null" :items="items"></SideBar>
 			<a-layout class="layout-section">
 				<Breadcrumb class="section_breadcrumb" />
 				<a-layout-content>

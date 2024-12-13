@@ -15,66 +15,87 @@ const routes: RouteRecordRaw[] = [
 		redirect: 'welcome',
 		children: [
 			{
+				path: '/groupManage',
+				name: '分组管理',
+				component: () => import('@/views/GroupManage/index.vue'),
+				meta: {
+					title: 'Deliver 分组管理',
+				},
+				children: [
+					// {
+					// 	path: 'dashboard',
+					// 	name: '控制面板',
+					// 	component: async () => await import('@/views/Dashboard/index.vue'),
+					// 	meta: {
+					// 		parent: '首页',
+					// 		title: '控制面板 - Deliver 企业消息推送平台',
+					// 	},
+					// },
+					{
+						path: 'template',
+						name: '模板配置',
+						component: () => import('@/views/GroupManage/pages/Template/index.vue'),
+						meta: {
+							parent: '首页',
+							title: '模板配置 - Deliver 企业消息推送平台',
+						},
+					},
+					{
+						path: 'app',
+						name: '应用配置',
+						component: () => import('@/views/GroupManage/pages/App/index.vue'),
+						meta: {
+							parent: '首页',
+							title: '应用配置 - Deliver 企业消息推送平台',
+						},
+					},
+					{
+						path: 'file',
+						name: '文件管理',
+						component: () => import('@/views/GroupManage/pages/PlatformFile/index.vue'),
+						meta: {
+							parent: '首页',
+							title: '平台文件管理 - Deliver 企业消息推送平台',
+						},
+					},
+					{
+						path: 'flowControlRule',
+						name: '规则配置',
+						component: () => import('@/views/GroupManage/pages/FlowControlRule/index.vue'),
+						meta: {
+							parent: '首页',
+							name: '规则配置 - Deliver 企业消息推送平台',
+						},
+					},
+				],
+			},
+			{
+				path: '/systemManage',
+				name: '系统管理',
+				component: () => import('@/views/SystemManage/index.vue'),
+				redirect: '/systemManage/myAccount',
+				meta: {
+					title: 'Deliver 系统管理',
+				},
+				children: [
+					{
+						path: 'myAccount',
+						name: '我的账户',
+						component: () => import('@/views/SystemManage/pages/MyAccount/index.vue'),
+						meta: {
+							parent: '首页',
+							name: '我的账户 - Deliver 企业消息推送平台',
+						},
+					},
+				],
+			},
+			{
 				path: 'welcome',
 				name: '欢迎',
 				component: () => import('@/views/Welcome/index.vue'),
 				meta: {
 					parent: 'welcome',
 					title: '欢迎 - Deliver 企业消息推送平台',
-				},
-			},
-			// {
-			// 	path: 'dashboard',
-			// 	name: '控制面板',
-			// 	component: async () => await import('@/views/Dashboard/index.vue'),
-			// 	meta: {
-			// 		parent: '首页',
-			// 		title: '控制面板 - Deliver 企业消息推送平台',
-			// 	},
-			// },
-			{
-				path: 'template',
-				name: '模板配置',
-				component: () => import('@/views/Template/index.vue'),
-				meta: {
-					parent: '首页',
-					title: '模板配置 - Deliver 企业消息推送平台',
-				},
-			},
-			{
-				path: 'app',
-				name: '应用配置',
-				component: () => import('@/views/App/index.vue'),
-				meta: {
-					parent: '首页',
-					title: '应用配置 - Deliver 企业消息推送平台',
-				},
-			},
-			{
-				path: 'file',
-				name: '文件管理',
-				component: () => import('@/views/PlatformFile/index.vue'),
-				meta: {
-					parent: '首页',
-					title: '平台文件管理 - Deliver 企业消息推送平台',
-				},
-			},
-			{
-				path: 'flowControlRule',
-				name: '规则配置',
-				component: () => import('@/views/FlowControlRule/index.vue'),
-				meta: {
-					parent: '首页',
-					name: '规则配置 - Deliver 企业消息推送平台',
-				},
-			},
-			{
-				path: 'systemSettings',
-				name: '系统设置',
-				component: () => import('@/views/SystemSettings/index.vue'),
-				meta: {
-					parent: '首页',
-					name: '系统设置 - Deliver 企业消息推送平台',
 				},
 			},
 		],

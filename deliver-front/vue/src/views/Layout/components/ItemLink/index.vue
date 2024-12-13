@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { RouterLink } from 'vue-router';
 defineProps(['label', 'to'])
 </script>
 <template>

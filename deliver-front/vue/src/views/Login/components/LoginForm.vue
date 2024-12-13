@@ -22,7 +22,7 @@ const handleLogin = function () {
 			message.success('登录成功')
 			router.push('/')
 			const _res = await getCurrentLoginUserInfo()
-			localStorage.setItem('userInfo', JSON.stringify(_res))
+			localStorage.setItem('user_info', JSON.stringify(_res))
 		})
 		.catch(error => {
 			console.log('error', error);

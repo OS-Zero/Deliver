@@ -1,11 +1,13 @@
 <script lang="ts" setup>
 import { reactive } from 'vue'
-import { menuConfig } from '@/config/menu'
 import {
 	MenuUnfoldOutlined,
 	MenuFoldOutlined
 } from '@ant-design/icons-vue'
-const items = reactive(menuConfig)
+import { ItemType } from 'ant-design-vue'
+defineProps<{
+	items: ItemType[]
+}>()
 const state = reactive({
 	collapsed: false
 });

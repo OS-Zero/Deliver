@@ -1,11 +1,14 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { reactive } from 'vue'
 import { ExclamationCircleOutlined, QuestionCircleOutlined, GithubOutlined } from '@ant-design/icons-vue'
 import { useRouter } from 'vue-router';
 import { logout } from "@/api/user";
-const showAbout = ref(false)
+const state = reactive({
+	showAbout: false,
+	topTab: ''
+})
 const setShowAbout = (open: boolean) => {
-	showAbout.value = open
+	state.showAbout = open
 }
 const router = useRouter()
 const handleAction = async (opt: string) => {
@@ -16,31 +19,47 @@ const handleAction = async (opt: string) => {
 		case 'logout':
 			await logout()
 			localStorage.removeItem("access_token")
+			localStorage.removeItem("user_info")
 			router.push('/login')
 			break;
 		default:
 			break;
 	}
 }
+const emits = defineEmits<{
+	onTabChange: [tab: string]
+}>()
+const handleClickTabs = (url: string) => {
+	emits("onTabChange", url)
+	router.push(url)
+}
+
+
 </script>
 <template>
 	<a-layout-header class="header">
-		<div class="organization">
-			<a href="/">
-				<img class="organization-img" src="/logo.png" style="" alt="空" />
-			</a>
-			<a href="/">
-				<h1>Deliver 企业消息推送平台</h1>
-			</a>
+		<div class="header-container">
+			<div class="organization">
+				<a href="/">
+					<img class="organization-img" src="/logo.png" style="" alt="空" />
+				</a>
+				<a href="/">
+					<h1>Deliver 企业消息推送平台</h1>
+				</a>
+			</div>
+			<div class="header-tabs">
+				<a-button @click="handleClickTabs('groupManage')">分组管理</a-button>
+				<a-button @click="handleClickTabs('systemManage')">系统管理</a-button>
+			</div>
 		</div>
 		<div class="extra">
 			<div>
 				<a-tooltip title="关于">
-					<a @click="showAbout = true">
+					<a @click="state.showAbout = true">
 						<ExclamationCircleOutlined />
 					</a>
 				</a-tooltip>
-				<a-modal v-model:open="showAbout" title="关于" centered @ok="setShowAbout(false)"
+				<a-modal v-model:open="state.showAbout" title="关于" centered @ok="setShowAbout(false)"
 					:ok-button-props="{ disabled: true }" :cancel-button-props="{ disabled: true }" :footer="null">
 					<div class="modal-container">
 						<div class="container-info">
@@ -158,6 +177,15 @@ const handleAction = async (opt: string) => {
 			}
 		}
 	}
+}
+
+.header-container {
+	display: flex;
+	align-items: center;
+}
+
+.header-tabs {
+	margin-left: var(--spacing-md);
 }
 
 .modal-container {

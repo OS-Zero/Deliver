@@ -41,16 +41,19 @@ const handleForgot = () => {
 			console.log('error', error);
 		});
 }
-const { state, handleVarify } = useVerify()
-watch(forgotData, async () => {
+const { state, handleVarify, onFinished } = useVerify()
+const _validateEmail = async () => {
 	try {
 		await validateEmail(null, forgotData.userEmail)
-		state.verifyDisabled = false
+		!state.loading && (state.verifyDisabled = false)
 	} catch (error) {
 		state.verifyDisabled = true
-		state.verifyContent = '获取验证码'
 	}
-}, {
+}
+onFinished(() => {
+	_validateEmail()
+})
+watch(forgotData, _validateEmail, {
 	immediate: true
 })
 </script>

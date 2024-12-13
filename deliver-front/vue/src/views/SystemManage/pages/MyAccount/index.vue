@@ -6,7 +6,9 @@ import { omitProperty } from '@/utils/utils';
 import { message } from 'ant-design-vue';
 import { getRules } from '@/config/rules';
 import { useVerify } from '@/utils/hooks';
+import { UserInfo } from '@/views/Login/type';
 
+const userInfo: UserInfo = JSON.parse(localStorage.getItem("user_info") as string)
 const editorData = reactive({
 	userPassword: '',
 	confirmPwd: '',
@@ -41,14 +43,15 @@ const rules: Record<string, Rule[]> = {
 	...getRules(['userPassword', 'verificationCode'])
 };
 const { state, handleVarify } = useVerify()
+state.verifyDisabled = false
 </script>
 
 <template>
 	<a-card title="基础信息">
 		<div class="card_content">
-			<p>邮箱</p>
-			<p>姓名:xxx</p>
-			<p>用户类型:xxx</p>
+			<p>邮箱: {{ userInfo.userEmail }}</p>
+			<p>姓名: {{ userInfo.userRealName }}</p>
+			<p>用户类型: {{ userInfo.userRole }}</p>
 			<a-button @click="showDrawer">修改密码</a-button>
 		</div>
 		<a-drawer title="修改密码" :open="open" placement="right" @close="onClose">
@@ -62,7 +65,7 @@ const { state, handleVarify } = useVerify()
 				<a-form-item name="verificationCode">
 					<div class="verify">
 						<a-input v-model:value.trim="editorData.verificationCode" placeholder="请输入验证码" />
-						<a-button class="verify_btn" :disabled="state.verifyDisabled">{{
+						<a-button class="verify_btn" :disabled="state.verifyDisabled" @click="handleVarify(userInfo.userEmail)">{{
 							state.verifyContent
 						}}</a-button>
 					</div>
@@ -78,7 +81,7 @@ const { state, handleVarify } = useVerify()
 
 <style lang="scss" scoped>
 .ant-card {
-	width: 300px;
+	width: 500px;
 
 	.card_content {
 		text-align: center;

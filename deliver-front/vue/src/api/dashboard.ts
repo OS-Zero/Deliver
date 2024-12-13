@@ -1,6 +1,6 @@
 import request from '@/utils/request.ts'
 import { R } from '@/types'
-import { DashboardHeadData, MessageInfoList, DashboardInfoList } from '@/views/Dashboard/type'
+import { DashboardHeadData, MessageInfoList, DashboardInfoList } from '@/views/GroupManage/pages/Dashboard/type'
 
 /**
  * 请求控制面板头部数据

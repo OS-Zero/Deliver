@@ -4,5 +4,5 @@ declare type MittType = {
 	data?: object
 	collapsed: boolean
 	total: number
-	// err: boolean
+	card: string
 }

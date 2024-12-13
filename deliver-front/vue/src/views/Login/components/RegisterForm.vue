@@ -42,16 +42,19 @@ const handleRegister = () => {
 			console.log('error', error);
 		});
 }
-const { state, handleVarify } = useVerify()
-watch(registerData, async () => {
+const { state, handleVarify, onFinished } = useVerify()
+const _validateEmail = async () => {
 	try {
 		await validateEmail(null, registerData.userEmail)
-		state.verifyDisabled = false
+		!state.loading && (state.verifyDisabled = false)
 	} catch (error) {
 		state.verifyDisabled = true
-		state.verifyContent = '获取验证码'
 	}
-}, {
+}
+onFinished(() => {
+	_validateEmail()
+})
+watch(registerData, _validateEmail, {
 	immediate: true
 })
 </script>

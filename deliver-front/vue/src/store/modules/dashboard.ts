@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { getDashboardHeadData, getMessageInfo, getTemplateInfo, getAppInfo, getPushUserInfo } from '@/api/dashboard.ts'
-import { DashboardHeadData } from '@/views/Dashboard/type'
+import { DashboardHeadData } from '@/views/GroupManage/pages/Dashboard/type'
 import { type EChartsOption } from 'echarts'
 import { chartsAppOption, chartsMessageOption, chartsPushUserOption, chartsTemplateOption } from '@/config/echart.ts'
 export const useDashboardStore = defineStore('dashboard', {
