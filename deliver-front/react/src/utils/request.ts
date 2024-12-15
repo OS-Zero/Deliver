@@ -7,7 +7,7 @@ const service = axios.create({
 
 service.interceptors.request.use(
   (config) => {
-    config.headers['FrontPlatform'] = 'react';
+    config.headers['FrontPlatform'] = 'React';
     config.headers['Authorization'] = 'Bearer ' + localStorage.getItem('access_token');
     return config;
   },

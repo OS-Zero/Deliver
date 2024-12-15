@@ -12,7 +12,7 @@ import { omitProperty } from '@/utils/omitProperty';
 
 interface ForgotInfo {
   userEmail: string;
-  userPassWord: string;
+  userPassword: string;
   confirmPwd: string;
   verificationCode: string;
 }
@@ -20,7 +20,7 @@ interface ForgotInfo {
 const ForgotForm: React.FC<{ onOk: () => void }> = ({ onOk }) => {
   const [forgotData, setForgotData] = useState<ForgotInfo>({
     userEmail: '',
-    userPassWord: '',
+    userPassword: '',
     confirmPwd: '',
     verificationCode: ''
   });
@@ -29,7 +29,7 @@ const ForgotForm: React.FC<{ onOk: () => void }> = ({ onOk }) => {
   const { verifyDisabled, verifyContent, handleVerify, checkEmailFormat } = useVerify();
 
   const validatePwd = (_: any, value: string) => {
-    if (value !== forgotData.userPassWord) {
+    if (value !== forgotData.userPassword) {
       return Promise.reject('两次输入密码不相同');
     }
     return Promise.resolve();
@@ -71,11 +71,11 @@ const ForgotForm: React.FC<{ onOk: () => void }> = ({ onOk }) => {
           placeholder="请输入邮箱"
         />
       </Form.Item>
-      <Form.Item name="userPassWord" rules={[passwordValidationRule]} validateTrigger={['onBlur']}>
+      <Form.Item name="userPassword" rules={[passwordValidationRule]} validateTrigger={['onBlur']}>
         <Input.Password
-          value={forgotData.userPassWord}
+          value={forgotData.userPassword}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setForgotData({ ...forgotData, userPassWord: e.target.value })
+            setForgotData({ ...forgotData, userPassword: e.target.value })
           }
           placeholder="请输入密码"
         />

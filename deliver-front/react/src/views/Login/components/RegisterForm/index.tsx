@@ -12,7 +12,7 @@ import { omitProperty } from '@/utils/omitProperty';
 
 interface RegisterInfo {
   userEmail: string;
-  userPassWord: string;
+  userPassword: string;
   userRealName: string;
   confirmPwd: string;
   verificationCode: string;
@@ -27,7 +27,7 @@ const RegisterForm = (props: RegisterFormProps) => {
 
   const [registerData, setRegisterData] = useState<RegisterInfo>({
     userEmail: '',
-    userPassWord: '',
+    userPassword: '',
     userRealName: '',
     confirmPwd: '',
     verificationCode: ''
@@ -38,7 +38,7 @@ const RegisterForm = (props: RegisterFormProps) => {
   const { verifyDisabled, verifyContent, handleVerify, checkEmailFormat } = useVerify();
 
   const validatePwd = (_: any, value: string) => {
-    if (value !== registerData.userPassWord) {
+    if (value !== registerData.userPassword) {
       return Promise.reject('两次输入密码不相同');
     }
     return Promise.resolve();
@@ -80,11 +80,11 @@ const RegisterForm = (props: RegisterFormProps) => {
           placeholder="请输入邮箱"
         />
       </Form.Item>
-      <Form.Item name="userPassWord" rules={[passwordValidationRule]} validateTrigger={['onBlur']}>
+      <Form.Item name="userPassword" rules={[passwordValidationRule]} validateTrigger={['onBlur']}>
         <Input.Password
-          value={registerData.userPassWord}
+          value={registerData.userPassword}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setRegisterData({ ...registerData, userPassWord: e.target.value })
+            setRegisterData({ ...registerData, userPassword: e.target.value })
           }
           placeholder="请输入密码"
         />

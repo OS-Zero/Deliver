@@ -10,6 +10,7 @@
     "lint": "eslint src/**/*.{ts,tsx} --fix --quiet"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.5.2",
     "antd": "^5.22.3",
     "axios": "^1.7.9",
     "react": "^18.3.1",

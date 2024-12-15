@@ -6,7 +6,7 @@ export interface LoginState {
 
 export interface UserInfo {
   userEmail: string;
-  userPassWord: string;
+  userPassword: string;
   userRealName?: string;
   userRole?: string;
 }

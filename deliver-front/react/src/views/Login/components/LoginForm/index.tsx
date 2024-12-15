@@ -6,13 +6,13 @@ import { emailValidationRule, passwordValidationRule } from '@/views/Login/const
 
 interface UserInfo {
   userEmail: string;
-  userPassWord: string;
+  userPassword: string;
 }
 
 const LoginForm: React.FC = () => {
   const [loginData, setLoginData] = useState<UserInfo>({
     userEmail: '',
-    userPassWord: ''
+    userPassword: ''
   });
 
   const formRef = useRef<any>(null);
@@ -45,11 +45,11 @@ const LoginForm: React.FC = () => {
           placeholder="请输入邮箱"
         />
       </Form.Item>
-      <Form.Item name="userPassWord" rules={[passwordValidationRule]} validateTrigger={['onBlur']}>
+      <Form.Item name="userPassword" rules={[passwordValidationRule]} validateTrigger={['onBlur']}>
         <Input.Password
-          value={loginData.userPassWord}
+          value={loginData.userPassword}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setLoginData({ ...loginData, userPassWord: e.target.value })
+            setLoginData({ ...loginData, userPassword: e.target.value })
           }
           placeholder="请输入密码"
         />

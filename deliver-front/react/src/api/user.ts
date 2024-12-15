@@ -26,7 +26,7 @@ export function register(data: Omit<RegisterInfo, 'confirmPwd'>): Promise<never>
 
 export function forgotPwd(data: Omit<ForgotInfo, 'confirmPwd'>): Promise<never> {
   return request({
-    url: '/user/forgetPassWord',
+    url: '/user/forgetPassword',
     method: 'post',
     data
   });
@@ -36,7 +36,7 @@ export function updatePwd(
   data: Omit<RegisterInfo, 'confirmPwd' | 'userEmail' | 'userRealName'>
 ): Promise<never> {
   return request({
-    url: '/user/updatePassWord',
+    url: '/user/updatePassword',
     method: 'post',
     data
   });
