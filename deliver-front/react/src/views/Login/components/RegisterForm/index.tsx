@@ -64,7 +64,7 @@ const RegisterForm = (props: RegisterFormProps) => {
   useEffect(() => {
     const validateEmailFormat = async () => {
       if (registerData.userEmail) {
-        await checkEmailFormat(registerData.userEmail);
+        await checkEmailFormat();
       }
     };
 
@@ -84,6 +84,7 @@ const RegisterForm = (props: RegisterFormProps) => {
       </Form.Item>
       <Form.Item name="userPassword" rules={[passwordValidationRule]} validateTrigger={['onBlur']}>
         <Input.Password
+          maxLength={16}
           value={registerData.userPassword}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setRegisterData({ ...registerData, userPassword: e.target.value })
@@ -97,6 +98,7 @@ const RegisterForm = (props: RegisterFormProps) => {
         validateTrigger={['onBlur']}
       >
         <Input.Password
+          maxLength={16}
           value={registerData.confirmPwd}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setRegisterData({ ...registerData, confirmPwd: e.target.value })
@@ -138,7 +140,7 @@ const RegisterForm = (props: RegisterFormProps) => {
             <Button
               className={styles.verifyBtn}
               disabled={verifyDisabled}
-              onClick={() => handleVerify(registerData.userEmail)}
+              onClick={() => handleVerify()}
             >
               {verifyContent}
             </Button>

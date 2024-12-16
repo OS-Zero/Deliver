@@ -73,6 +73,7 @@ const ForgotForm: React.FC<{ onOk: () => void }> = ({ onOk }) => {
       </Form.Item>
       <Form.Item name="userPassword" rules={[passwordValidationRule]} validateTrigger={['onBlur']}>
         <Input.Password
+          maxLength={16}
           value={forgotData.userPassword}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setForgotData({ ...forgotData, userPassword: e.target.value })
@@ -86,6 +87,7 @@ const ForgotForm: React.FC<{ onOk: () => void }> = ({ onOk }) => {
         validateTrigger={['onBlur']}
       >
         <Input.Password
+          maxLength={16}
           value={forgotData.confirmPwd}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setForgotData({ ...forgotData, confirmPwd: e.target.value })

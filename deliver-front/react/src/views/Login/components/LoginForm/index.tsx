@@ -47,6 +47,7 @@ const LoginForm: React.FC = () => {
       </Form.Item>
       <Form.Item name="userPassword" rules={[passwordValidationRule]} validateTrigger={['onBlur']}>
         <Input.Password
+          maxLength={16}
           value={loginData.userPassword}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setLoginData({ ...loginData, userPassword: e.target.value })
