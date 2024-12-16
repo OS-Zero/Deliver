@@ -35,7 +35,9 @@ const RegisterForm = (props: RegisterFormProps) => {
 
   const formRef = useRef<any>(null);
 
-  const { verifyDisabled, verifyContent, handleVerify, checkEmailFormat } = useVerify();
+  const { verifyDisabled, verifyContent, handleVerify, checkEmailFormat } = useVerify({
+    email: registerData.userEmail
+  });
 
   const validatePwd = (_: any, value: string) => {
     if (value !== registerData.userPassword) {
