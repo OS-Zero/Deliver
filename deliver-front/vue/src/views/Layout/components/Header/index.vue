@@ -3,6 +3,7 @@ import { reactive } from 'vue'
 import { ExclamationCircleOutlined, QuestionCircleOutlined, GithubOutlined } from '@ant-design/icons-vue'
 import { useRouter } from 'vue-router';
 import { logout } from "@/api/user";
+import type { AnchorProps } from 'ant-design-vue';
 const state = reactive({
 	showAbout: false,
 	topTab: ''
@@ -29,9 +30,10 @@ const handleAction = async (opt: string) => {
 const emits = defineEmits<{
 	onTabChange: [tab: string]
 }>()
-const handleClickTabs = (url: string) => {
-	emits("onTabChange", url)
-	router.push(url)
+const handleClickTabs: AnchorProps['onClick'] = (e, link) => {
+	e.preventDefault()
+	emits("onTabChange", link.href)
+	router.push(`/${link.href}`)
 }
 
 
@@ -48,8 +50,18 @@ const handleClickTabs = (url: string) => {
 				</a>
 			</div>
 			<div class="header-tabs">
-				<a-button @click="handleClickTabs('groupManage')">分组管理</a-button>
-				<a-button @click="handleClickTabs('systemManage')">系统管理</a-button>
+				<a-anchor direction="horizontal" :items="[
+					{
+						key: 'groupManage',
+						href: 'groupManage',
+						title: '分组管理',
+					},
+					{
+						key: 'systemManage',
+						href: 'systemManage',
+						title: '系统管理',
+					},
+				]" @click="handleClickTabs" />
 			</div>
 		</div>
 		<div class="extra">

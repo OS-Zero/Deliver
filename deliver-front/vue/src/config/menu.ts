@@ -10,7 +10,7 @@ export const menuConfig: Record<string, ItemType[]> = {
 			label: '消息配置',
 			children: [
 				{
-					key: 'MTC',
+					key: '/groupManage/template',
 					label: h(ItemLink, { label: '消息模板配置', to: '/groupManage/template' }),
 				},
 			],
@@ -21,7 +21,7 @@ export const menuConfig: Record<string, ItemType[]> = {
 			label: '应用配置',
 			children: [
 				{
-					key: 'CAC',
+					key: '/groupManage/app',
 					label: h(ItemLink, { label: '渠道应用配置', to: '/groupManage/app' }),
 				},
 			],
@@ -32,7 +32,7 @@ export const menuConfig: Record<string, ItemType[]> = {
 			label: '文件管理',
 			children: [
 				{
-					key: 'PFM',
+					key: '/groupManage/file',
 					label: h(ItemLink, { label: '平台文件管理', to: '/groupManage/file' }),
 				},
 			],
@@ -40,7 +40,7 @@ export const menuConfig: Record<string, ItemType[]> = {
 	],
 	systemManage: [
 		{
-			key: 'myAccount',
+			key: '/systemManage/myAccount',
 			icon: h(UserOutlined),
 			label: h(ItemLink, { label: '我的账户', to: '/systemManage/myAccount' }),
 		},

@@ -52,11 +52,8 @@ const cards = ref<Card[]>([
 				<a-card style="height: 100%; border: 0px solid #ececec" class="gutter-row">
 					<a-card-meta :title="item.title" :description="item.desc" style="height: 100px">
 						<template #avatar>
-							<a-avatar
-								:size="40"
-								class="avatar"
-								src="https://gw.alipayobjects.com/zos/bmw-prod/daaf8d50-8e6d-4251-905d-676a24ddfa12.svg"
-							/>
+							<a-avatar :size="40" class="avatar"
+								src="https://gw.alipayobjects.com/zos/bmw-prod/daaf8d50-8e6d-4251-905d-676a24ddfa12.svg" />
 							<span style="position: absolute; top: 24.5px; left: 38.5px; color: #fff">
 								{{ index + 1 }}
 							</span>
@@ -89,7 +86,7 @@ const cards = ref<Card[]>([
 		font-size: 20px;
 	}
 
-	& > p {
+	&>p {
 		width: 65%;
 		margin-top: 16px;
 		margin-bottom: 32px;

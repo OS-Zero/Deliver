@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { reactive } from 'vue';
+import { reactive, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import emitter from '@/utils/mitt'
 const router = useRouter()
@@ -7,14 +7,15 @@ const state = reactive({
 	mainPage: true
 })
 const handleMore = () => {
-	router.push('/groupManage/template')
+	router.push('groupManage')
 	state.mainPage = false
+	localStorage.setItem("group_id", 'test')
 	emitter.emit("card", 'test')
 }
-if (localStorage.getItem('group_id')) {
+watch(() => router.currentRoute.value.path, (to: string) => {
+	if (!!!localStorage.getItem('group_id') && to === '/groupManage') return state.mainPage = true
 	state.mainPage = false
-	router.push('groupManage/template')
-}
+}, { immediate: true })
 </script>
 
 <template>
@@ -25,7 +26,6 @@ if (localStorage.getItem('group_id')) {
 			<p>card content</p>
 			<p>card content</p>
 		</a-card>
-		<RouterView></RouterView>
 	</template>
 	<template v-else>
 		<RouterView />

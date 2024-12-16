@@ -1,24 +1,32 @@
 <script lang="ts" setup>
-import { reactive } from 'vue'
+import { reactive, watch } from 'vue'
 import {
 	MenuUnfoldOutlined,
 	MenuFoldOutlined
 } from '@ant-design/icons-vue'
 import { ItemType } from 'ant-design-vue'
+import { useRouter } from 'vue-router';
 defineProps<{
 	items: ItemType[]
 }>()
 const state = reactive({
-	collapsed: false
+	collapsed: false,
+	selectedKeys: ['']
 });
 const toggleCollapsed = () => {
 	state.collapsed = !state.collapsed;
 };
+const router = useRouter()
+watch(() => router.currentRoute.value.path, (to: string) => {
+	state.selectedKeys = [to]
+}, {
+	immediate: true
+})
 </script>
 
 <template>
 	<a-layout-sider :collapsed="state.collapsed" theme="light">
-		<a-menu :items="items" mode="inline" />
+		<a-menu v-model:selected-keys="state.selectedKeys" :items="items" mode="inline" />
 		<footer class="sider-footer">
 			<a-button type="text" class="footer_button" @click="toggleCollapsed">
 				<MenuUnfoldOutlined v-if="state.collapsed" />

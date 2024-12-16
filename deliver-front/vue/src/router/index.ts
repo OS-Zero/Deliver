@@ -15,7 +15,7 @@ const routes: RouteRecordRaw[] = [
 		redirect: 'welcome',
 		children: [
 			{
-				path: '/groupManage',
+				path: 'groupManage',
 				name: '分组管理',
 				component: () => import('@/views/GroupManage/index.vue'),
 				meta: {
@@ -73,10 +73,10 @@ const routes: RouteRecordRaw[] = [
 				path: '/systemManage',
 				name: '系统管理',
 				component: () => import('@/views/SystemManage/index.vue'),
-				redirect: '/systemManage/myAccount',
 				meta: {
 					title: 'Deliver 系统管理',
 				},
+				redirect: '/systemManage/myAccount',
 				children: [
 					{
 						path: 'myAccount',
@@ -114,11 +114,18 @@ const router = createRouter({
 	history: createWebHistory(),
 	routes,
 })
-router.beforeEach(function (to, _from, next) {
-	if (!localStorage.getItem('access_token')) {
-		if (to.path !== '/login') {
-			return next('/login')
-		}
+router.beforeEach(function (to, from, next) {
+	if (!localStorage.getItem('access_token') && to.path !== '/login') return next('/login')
+	//如果想访问groupManage子目录必须要有group_id
+	const arr_to = to.path.split('/').slice(1)
+	const arr_from = from.path.split('/').slice(1)
+	const hasGroupId = !!localStorage.getItem('group_id')
+	if (arr_to[0] === 'groupManage' && arr_to.length > 1 && !hasGroupId) {
+		return next('/groupManage')
+	}
+	if (arr_to[0] === 'groupManage' && arr_to.length === 1 && hasGroupId) {
+		if (from.path.includes('groupManage') && arr_from.length > 1) return next(from.path)
+		else return next('/groupManage/template')
 	}
 	next()
 })

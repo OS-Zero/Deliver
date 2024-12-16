@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onUnmounted, ref } from 'vue'
+import { onUnmounted, ref, watch } from 'vue'
 import Header from './components/Header/index.vue'
 import Banner from './components/Banner/index.vue'
 import Breadcrumb from './components/Breadcrumb/index.vue'
@@ -10,6 +10,8 @@ import {
 import { menuConfig } from "@/config/menu"
 import { ItemType } from 'ant-design-vue'
 import emitter from '@/utils/mitt'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 let items = ref<ItemType[] | null>(null)
 const onTabChange = (tab: string) => {
 	items.value = null
@@ -17,10 +19,16 @@ const onTabChange = (tab: string) => {
 	(tab === 'systemManage' || groupId) && (items.value = menuConfig[tab])
 }
 const onCardSelected = (card: string) => {
-	localStorage.setItem("group_id", card)
 	items.value = menuConfig["groupManage"]
 }
 emitter.on("card", onCardSelected)
+
+watch(() => router.currentRoute.value.path, (to: string) => {
+	if (to.includes("groupManage")) return onTabChange("groupManage")
+	if (to.includes("systemManage")) return onTabChange("systemManage")
+}, {
+	immediate: true
+})
 onUnmounted(() => {
 	emitter.off("card", onCardSelected)
 })
@@ -30,7 +38,7 @@ onUnmounted(() => {
 	<a-layout>
 		<div class="layout_header">
 			<Banner class="header_banner" />
-			<Header @on-tab-change="onTabChange"></Header>
+			<Header></Header>
 		</div>
 		<a-layout>
 			<SideBar v-if="items !== null" :items="items"></SideBar>
