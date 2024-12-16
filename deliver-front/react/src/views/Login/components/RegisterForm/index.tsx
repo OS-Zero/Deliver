@@ -86,9 +86,12 @@ const RegisterForm = (props: RegisterFormProps) => {
         <Input.Password
           maxLength={16}
           value={registerData.userPassword}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setRegisterData({ ...registerData, userPassword: e.target.value })
-          }
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            setRegisterData({ ...registerData, userPassword: e.target.value });
+            if (registerData?.confirmPwd) {
+              formRef.current.validateFields(['confirmPwd']);
+            }
+          }}
           placeholder="请输入密码"
         />
       </Form.Item>

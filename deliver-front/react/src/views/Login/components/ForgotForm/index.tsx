@@ -26,7 +26,9 @@ const ForgotForm: React.FC<{ onOk: () => void }> = ({ onOk }) => {
   });
 
   const formRef = useRef<any>(null);
-  const { verifyDisabled, verifyContent, handleVerify, checkEmailFormat } = useVerify();
+  const { verifyDisabled, verifyContent, handleVerify, checkEmailFormat } = useVerify({
+    email: forgotData.userEmail
+  });
 
   const validatePwd = (_: any, value: string) => {
     if (value !== forgotData.userPassword) {
@@ -53,7 +55,7 @@ const ForgotForm: React.FC<{ onOk: () => void }> = ({ onOk }) => {
   useEffect(() => {
     const validateEmailFormat = async () => {
       if (forgotData.userEmail) {
-        await checkEmailFormat(forgotData.userEmail);
+        await checkEmailFormat();
       }
     };
 
@@ -75,9 +77,12 @@ const ForgotForm: React.FC<{ onOk: () => void }> = ({ onOk }) => {
         <Input.Password
           maxLength={16}
           value={forgotData.userPassword}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setForgotData({ ...forgotData, userPassword: e.target.value })
-          }
+            if (forgotData?.confirmPwd) {
+              formRef.current.validateFields(['confirmPwd']);
+            }
+          }}
           placeholder="请输入密码"
         />
       </Form.Item>
@@ -113,7 +118,7 @@ const ForgotForm: React.FC<{ onOk: () => void }> = ({ onOk }) => {
             <Button
               className={styles.verifyBtn}
               disabled={verifyDisabled}
-              onClick={() => handleVerify(forgotData.userEmail)}
+              onClick={() => handleVerify()}
             >
               {verifyContent}
             </Button>
