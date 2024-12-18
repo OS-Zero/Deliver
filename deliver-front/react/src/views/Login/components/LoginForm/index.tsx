@@ -25,9 +25,9 @@ const LoginForm: React.FC = () => {
       if (res?.token) {
         localStorage.setItem('access_token', res.token);
         message.success('登录成功');
-        navigate('/');
         const _res = await getCurrentLoginUserInfo();
         localStorage.setItem('userInfo', JSON.stringify(_res));
+        navigate('/', { replace: true });
       }
     } catch (error) {
       console.log('error', error);

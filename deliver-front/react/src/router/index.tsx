@@ -1,10 +1,9 @@
 import { Suspense, lazy } from 'react';
 import { RouteObject, Navigate } from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
-import LoadingSpinner from '../components/LoadingSpinner';
 
+const LoadingPage = lazy(() => import('../components/Loading'));
 const LoginPage = lazy(() => import('../views/Login'));
-const LayoutPage = lazy(() => import('../views/Layout'));
 const GroupManagePage = lazy(() => import('../views/GroupManage'));
 const TemplatePage = lazy(() => import('../views/GroupManage/pages/Template'));
 const AppPage = lazy(() => import('../views/GroupManage/pages/AppConfig'));
@@ -17,101 +16,92 @@ const NotFoundPage = lazy(() => import('../views/NotFoundPage'));
 
 const routes: RouteObject[] = [
   {
-    path: '/',
-    element: (
-      <Suspense fallback={<LoadingSpinner />}>
-        {localStorage.getItem('access_token') ? (
-          <Navigate to="/welcome" replace />
-        ) : (
-          <Navigate to="/login" replace />
-        )}
-      </Suspense>
-    )
-  },
-  {
     path: '/login',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <Suspense fallback={<LoadingPage />}>
         <LoginPage />
       </Suspense>
     )
   },
   {
+    path: '/',
     element: <PrivateRoute />,
     children: [
       {
-        path: '/',
+        path: '',
+        element: <Navigate to="/welcome" replace />,
+      },
+      {
+        path: 'welcome',
         element: (
-          <Suspense fallback={<LoadingSpinner />}>
-            <LayoutPage />
+          <Suspense fallback={<LoadingPage />}>
+            <WelcomePage />
+          </Suspense>
+        )
+      },
+      {
+        path: 'groupManage',
+        element: (
+          <Suspense fallback={<LoadingPage />}>
+            <GroupManagePage />
           </Suspense>
         ),
         children: [
           {
-            path: 'groupManage',
-            element: (
-              <Suspense fallback={<LoadingSpinner />}>
-                <GroupManagePage />
-              </Suspense>
-            ),
-            children: [
-              {
-                path: 'template',
-                element: (
-                  <Suspense fallback={<LoadingSpinner />}>
-                    <TemplatePage />
-                  </Suspense>
-                )
-              },
-              {
-                path: 'app',
-                element: (
-                  <Suspense fallback={<LoadingSpinner />}>
-                    <AppPage />
-                  </Suspense>
-                )
-              },
-              {
-                path: 'file',
-                element: (
-                  <Suspense fallback={<LoadingSpinner />}>
-                    <PlatformFilePage />
-                  </Suspense>
-                )
-              },
-              {
-                path: 'flowControlRule',
-                element: (
-                  <Suspense fallback={<LoadingSpinner />}>
-                    <FlowControlRulePage />
-                  </Suspense>
-                )
-              }
-            ]
+            path: '',
+            element: <Navigate to="template" replace />,
           },
           {
-            path: 'systemManage',
+            path: 'template',
             element: (
-              <Suspense fallback={<LoadingSpinner />}>
-                <SystemManagePage />
+              <Suspense fallback={<LoadingPage />}>
+                <TemplatePage />
               </Suspense>
-            ),
-            children: [
-              {
-                path: 'myAccount',
-                element: (
-                  <Suspense fallback={<LoadingSpinner />}>
-                    <MyAccountPage />
-                  </Suspense>
-                )
-              }
-            ]
+            )
           },
           {
-            path: 'welcome',
+            path: 'app',
             element: (
-              <Suspense fallback={<LoadingSpinner />}>
-                <WelcomePage />
+              <Suspense fallback={<LoadingPage />}>
+                <AppPage />
+              </Suspense>
+            )
+          },
+          {
+            path: 'file',
+            element: (
+              <Suspense fallback={<LoadingPage />}>
+                <PlatformFilePage />
+              </Suspense>
+            )
+          },
+          {
+            path: 'flowControlRule',
+            element: (
+              <Suspense fallback={<LoadingPage />}>
+                <FlowControlRulePage />
+              </Suspense>
+            )
+          }
+        ]
+      },
+      {
+        path: 'systemManage',
+        element: (
+          <Suspense fallback={<LoadingPage />}>
+            <SystemManagePage />
+          </Suspense>
+        ),
+        children: [
+          {
+            path: '',
+            element: <Navigate to="myAccount" replace />,
+          },
+          {
+            path: 'myAccount',
+            element: (
+              <Suspense fallback={<LoadingPage />}>
+                <MyAccountPage />
               </Suspense>
             )
           }
@@ -122,7 +112,7 @@ const routes: RouteObject[] = [
   {
     path: '*',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <Suspense fallback={<LoadingPage />}>
         <NotFoundPage />
       </Suspense>
     )
