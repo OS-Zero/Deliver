@@ -5,11 +5,12 @@ import {
   QuestionCircleOutlined,
   GithubOutlined,
   AppstoreOutlined,
-  SettingOutlined
+  SettingOutlined,
+  UserOutlined
 } from '@ant-design/icons';
 import { Dropdown, Avatar, Modal, Menu, MenuProps, Tooltip } from 'antd';
 import { logout } from '@/api/user';
-import style from './index.module.scss';
+import styles from './index.module.scss';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ const Header: React.FC = () => {
   const handleAction = async (key: string) => {
     switch (key) {
       case 'account':
-        navigate('/systemSettings');
+        navigate('/systemManage');
         break;
       case 'logout':
         await logout();
@@ -45,26 +46,37 @@ const Header: React.FC = () => {
     }
   };
 
+  const userItems = [
+    {
+      label: <a onClick={() => handleAction('account')}>我的账户</a>,
+      key: 'account'
+    },
+    {
+      label: <a onClick={() => handleAction('logout')}>退出登录</a>,
+      key: 'logout'
+    }
+  ];
+
   const onClick: MenuProps['onClick'] = (e) => {
     setCurrent(e.key);
-    navigate(`/${e.key}`, { replace: true });
+    navigate(`/${e.key}`);
   };
 
   return (
-    <div className={style['header']}>
-      <div className={style['headerContainer']}>
-        <div className={style['organization']}>
+    <div className={styles['header']}>
+      <div className={styles['headerContainer']}>
+        <div className={styles['organization']}>
           <a href="/">
-            <img className={style['organizationImg']} src="/logo.png" alt="Deliver Logo" />
+            <img className={styles['organizationImg']} src="/logo.png" alt="Deliver Logo" />
           </a>
           <a href="/">
             <h1>Deliver 企业消息推送平台</h1>
           </a>
-          <div className={style['header-tabs']}>
+          <div className={styles['header-tabs']}>
             <Menu onClick={onClick} mode="horizontal" selectedKeys={[current]} items={items} />
           </div>
         </div>
-        <div className={style['headerRight']}>
+        <div className={styles['headerRight']}>
           <Modal
             title="关于"
             open={showAbout}
@@ -72,10 +84,10 @@ const Header: React.FC = () => {
             onCancel={() => setShowAbout(false)}
             footer={null}
           >
-            <div className={style['modal-container']}>
-              <div className={style['container-info']}>
-                <img className={style['info_img']} src="/logo.png" alt="Logo" />
-                <h1 className={style['info_title']}>Deliver</h1>
+            <div className={styles['modal-container']}>
+              <div className={styles['container-info']}>
+                <img className={styles['info_img']} src="/logo.png" alt="Logo" />
+                <h1 className={styles['info_title']}>Deliver</h1>
               </div>
               <div style={{ marginLeft: '60px' }}>
                 <p>产品：Deliver 企业消息推送平台</p>
@@ -101,8 +113,11 @@ const Header: React.FC = () => {
               <GithubOutlined />
             </a>
           </Tooltip>
-          <Dropdown menu={{ items }} placement="bottomRight">
-            <Avatar>U</Avatar>
+          <Dropdown menu={{ items: userItems }} placement="bottomRight">
+            <div className={styles['avatar']}>
+              <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
+              <span className={styles['name']}>Deliver</span>
+            </div>
           </Dropdown>
         </div>
       </div>
