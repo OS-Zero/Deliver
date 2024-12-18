@@ -65,6 +65,27 @@ const Header: React.FC = () => {
           </div>
         </div>
         <div className={style['headerRight']}>
+          <Modal
+            title="关于"
+            open={showAbout}
+            centered
+            onCancel={() => setShowAbout(false)}
+            footer={null}
+          >
+            <div className={style['modal-container']}>
+              <div className={style['container-info']}>
+                <img className={style['info_img']} src="/logo.png" alt="Logo" />
+                <h1 className={style['info_title']}>Deliver</h1>
+              </div>
+              <div style={{ marginLeft: '60px' }}>
+                <p>产品：Deliver 企业消息推送平台</p>
+                <p>版本：v1.0.0</p>
+                <a target="_blank" href="https://os-zero.gitee.io/deliver-website" rel="noreferrer">
+                  https://os-zero.gitee.io/deliver-website
+                </a>
+              </div>
+            </div>
+          </Modal>
           <Tooltip title="关于">
             <a onClick={() => setShowAbout(true)}>
               <ExclamationCircleOutlined />
@@ -85,19 +106,6 @@ const Header: React.FC = () => {
           </Dropdown>
         </div>
       </div>
-
-      <Modal
-        title="关于 Deliver"
-        open={showAbout}
-        onCancel={() => setShowAbout(false)}
-        footer={null}
-      >
-        <p>Deliver 企业消息推送平台 - 致力于提供高效、可靠的消息通知服务</p>
-        <p>版本：1.0.0</p>
-        <p>
-          <ExclamationCircleOutlined /> 项目正在积极开发中，欢迎提交 PR 和 Issue
-        </p>
-      </Modal>
     </div>
   );
 };
