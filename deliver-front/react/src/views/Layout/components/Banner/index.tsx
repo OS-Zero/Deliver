@@ -11,7 +11,7 @@ const Banner: React.FC = () => {
   return (
     <div className={styles['banner']}>
       <div>
-        ⭐️ 如果你喜欢 Deliver 消息推送平台，请给它一个 Star{' '}
+        ⭐️ 如果你喜欢 Deliver 消息推送平台，请给它一个 Star&nbsp;
         <a target="_blank" rel="noopener noreferrer" href="https://gitee.com/OS-Zero/deliver">
           Gitee
         </a>
