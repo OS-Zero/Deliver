@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ExclamationCircleOutlined,
@@ -61,6 +61,16 @@ const Header: React.FC = () => {
     setCurrent(e.key);
     navigate(`/${e.key}`);
   };
+
+  useEffect(() => {
+    if (location.pathname.includes('groupManage')) {
+      setCurrent('groupManage');
+    } else if (location.pathname.includes('systemManage')) {
+      setCurrent('systemManage');
+    } else {
+      setCurrent('');
+    }
+  }, [location.pathname]);
 
   return (
     <div className={styles['header']}>
