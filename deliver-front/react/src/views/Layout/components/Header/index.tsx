@@ -11,11 +11,12 @@ import {
 import { Dropdown, Avatar, Modal, Menu, MenuProps, Tooltip } from 'antd';
 import { logout } from '@/api/user';
 import styles from './index.module.scss';
+import { usePathMatch } from '../../../../hooks/usePathMatch';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
+  const { current } = usePathMatch();
   const [showAbout, setShowAbout] = useState(false);
-  const [current, setCurrent] = useState('');
 
   const items = [
     {
@@ -58,19 +59,8 @@ const Header: React.FC = () => {
   ];
 
   const onClick: MenuProps['onClick'] = (e) => {
-    setCurrent(e.key);
     navigate(`/${e.key}`);
   };
-
-  useEffect(() => {
-    if (location.pathname.includes('groupManage')) {
-      setCurrent('groupManage');
-    } else if (location.pathname.includes('systemManage')) {
-      setCurrent('systemManage');
-    } else {
-      setCurrent('');
-    }
-  }, [location.pathname]);
 
   return (
     <div className={styles['header']}>
