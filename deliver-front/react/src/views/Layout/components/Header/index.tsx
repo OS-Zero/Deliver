@@ -113,7 +113,7 @@ const Header: React.FC = () => {
               <GithubOutlined />
             </a>
           </Tooltip>
-          <Dropdown menu={{ items: userItems }} placement="bottomRight">
+          <Dropdown menu={{ items: userItems }} placement="bottom">
             <div className={styles['avatar']}>
               <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
               <span className={styles['name']}>Deliver</span>

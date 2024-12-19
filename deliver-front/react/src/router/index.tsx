@@ -1,6 +1,7 @@
 import { Suspense, lazy } from 'react';
 import { RouteObject, Navigate } from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
+import Layout from '../views/Layout';
 
 const LoadingPage = lazy(() => import('../components/Loading'));
 const LoginPage = lazy(() => import('../views/Login'));
@@ -25,85 +26,90 @@ const routes: RouteObject[] = [
   },
   {
     path: '/',
-    element: <PrivateRoute />,
+    element: <Layout />,
     children: [
       {
-        path: '',
-        element: <Navigate to="/welcome" replace />,
-      },
-      {
-        path: 'welcome',
-        element: (
-          <Suspense fallback={<LoadingPage />}>
-            <WelcomePage />
-          </Suspense>
-        )
-      },
-      {
-        path: 'groupManage',
-        element: (
-          <Suspense fallback={<LoadingPage />}>
-            <GroupManagePage />
-          </Suspense>
-        ),
+        element: <PrivateRoute />,
         children: [
           {
-            path: '',
-            element: <Navigate to="template" replace />,
+            index: true,
+            element: <Navigate to="/welcome" replace />
           },
           {
-            path: 'template',
+            path: 'welcome',
             element: (
               <Suspense fallback={<LoadingPage />}>
-                <TemplatePage />
+                <WelcomePage />
               </Suspense>
             )
           },
           {
-            path: 'app',
+            path: 'groupManage',
             element: (
               <Suspense fallback={<LoadingPage />}>
-                <AppPage />
+                <GroupManagePage />
               </Suspense>
-            )
+            ),
+            children: [
+              {
+                index: true,
+                element: <Navigate to="template" replace />
+              },
+              {
+                path: 'template',
+                element: (
+                  <Suspense fallback={<LoadingPage />}>
+                    <TemplatePage />
+                  </Suspense>
+                )
+              },
+              {
+                path: 'app',
+                element: (
+                  <Suspense fallback={<LoadingPage />}>
+                    <AppPage />
+                  </Suspense>
+                )
+              },
+              {
+                path: 'file',
+                element: (
+                  <Suspense fallback={<LoadingPage />}>
+                    <PlatformFilePage />
+                  </Suspense>
+                )
+              },
+              {
+                path: 'flowControlRule',
+                element: (
+                  <Suspense fallback={<LoadingPage />}>
+                    <FlowControlRulePage />
+                  </Suspense>
+                )
+              }
+            ]
           },
           {
-            path: 'file',
+            path: 'systemManage',
             element: (
               <Suspense fallback={<LoadingPage />}>
-                <PlatformFilePage />
+                <SystemManagePage />
               </Suspense>
-            )
-          },
-          {
-            path: 'flowControlRule',
-            element: (
-              <Suspense fallback={<LoadingPage />}>
-                <FlowControlRulePage />
-              </Suspense>
-            )
-          }
-        ]
-      },
-      {
-        path: 'systemManage',
-        element: (
-          <Suspense fallback={<LoadingPage />}>
-            <SystemManagePage />
-          </Suspense>
-        ),
-        children: [
-          {
-            path: '',
-            element: <Navigate to="myAccount" replace />,
-          },
-          {
-            path: 'myAccount',
-            element: (
-              <Suspense fallback={<LoadingPage />}>
-                <MyAccountPage />
-              </Suspense>
-            )
+            ),
+            children: [
+              {
+                index: true,
+                element: <Navigate to="myAccount" replace />
+              },
+              {
+                path: 'myAccount',
+                element: (
+                  <Suspense fallback={<LoadingPage />}>
+                    <MyAccountPage />
+                  </Suspense>
+                )
+              }
+            ]
           }
         ]
       }
