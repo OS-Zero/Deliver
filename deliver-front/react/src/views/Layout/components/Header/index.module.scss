@@ -1,6 +1,6 @@
 :local {
   .header {
-    height: 48px;
+    height: 60px;
     background-color: white;
     padding: 0 16px;
     display: flex;
@@ -102,5 +102,15 @@
       height: 60px;
       line-height: 60px;
     }
+  }
+}
+
+:global {
+  .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item {
+    justify-content: center;
+  }
+
+  .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-title-content {
+    flex: inherit;
   }
 }
