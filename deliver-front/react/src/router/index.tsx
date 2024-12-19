@@ -1,12 +1,12 @@
 import { Suspense, lazy } from 'react';
-import { RouteObject, Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
 import Layout from '../views/Layout';
 
 const LoadingPage = lazy(() => import('../components/Loading'));
 const LoginPage = lazy(() => import('../views/Login'));
 const GroupManagePage = lazy(() => import('../views/GroupManage'));
-const TemplatePage = lazy(() => import('../views/GroupManage/pages/Template'));
+const TemplatePage = lazy(() => import('../views/GroupManage/pages/MessageTemplate'));
 const AppPage = lazy(() => import('../views/GroupManage/pages/AppConfig'));
 const PlatformFilePage = lazy(() => import('../views/GroupManage/pages/PlatformFile'));
 const FlowControlRulePage = lazy(() => import('../views/GroupManage/pages/FlowControlRule'));
@@ -15,7 +15,7 @@ const MyAccountPage = lazy(() => import('../views/SystemManage/pages/MyAccount')
 const WelcomePage = lazy(() => import('../views/Welcome'));
 const NotFoundPage = lazy(() => import('../views/NotFoundPage'));
 
-const routes: RouteObject[] = [
+const routes = [
   {
     path: '/login',
     element: (
@@ -27,6 +27,7 @@ const routes: RouteObject[] = [
   {
     path: '/',
     element: <Layout />,
+    name: '首页',
     children: [
       {
         element: <PrivateRoute />,
@@ -41,7 +42,8 @@ const routes: RouteObject[] = [
               <Suspense fallback={<LoadingPage />}>
                 <WelcomePage />
               </Suspense>
-            )
+            ),
+            name: '欢迎'
           },
           {
             path: 'groupManage',
@@ -50,6 +52,7 @@ const routes: RouteObject[] = [
                 <GroupManagePage />
               </Suspense>
             ),
+            name: '分组管理',
             children: [
               {
                 index: true,
@@ -61,7 +64,8 @@ const routes: RouteObject[] = [
                   <Suspense fallback={<LoadingPage />}>
                     <TemplatePage />
                   </Suspense>
-                )
+                ),
+                name: '模板管理'
               },
               {
                 path: 'app',
@@ -69,7 +73,8 @@ const routes: RouteObject[] = [
                   <Suspense fallback={<LoadingPage />}>
                     <AppPage />
                   </Suspense>
-                )
+                ),
+                name: '应用配置'
               },
               {
                 path: 'file',
@@ -77,7 +82,8 @@ const routes: RouteObject[] = [
                   <Suspense fallback={<LoadingPage />}>
                     <PlatformFilePage />
                   </Suspense>
-                )
+                ),
+                name: '文件管理'
               },
               {
                 path: 'flowControlRule',
@@ -85,7 +91,8 @@ const routes: RouteObject[] = [
                   <Suspense fallback={<LoadingPage />}>
                     <FlowControlRulePage />
                   </Suspense>
-                )
+                ),
+                name: '规则配置'
               }
             ]
           },
@@ -96,6 +103,7 @@ const routes: RouteObject[] = [
                 <SystemManagePage />
               </Suspense>
             ),
+            name: '系统管理',
             children: [
               {
                 index: true,
@@ -107,7 +115,8 @@ const routes: RouteObject[] = [
                   <Suspense fallback={<LoadingPage />}>
                     <MyAccountPage />
                   </Suspense>
-                )
+                ),
+                name: '我的账户'
               }
             ]
           }

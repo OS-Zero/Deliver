@@ -3,7 +3,7 @@ import React from 'react';
 const Template: React.FC = () => {
   return (
     <div>
-      <h2>模版</h2>
+      <h2>消息模版</h2>
     </div>
   );
 };
