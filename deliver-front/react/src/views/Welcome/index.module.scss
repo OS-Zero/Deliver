@@ -1,0 +1,33 @@
+:local {
+  .welcomeContainer {
+    padding: 24px;
+    background-image: linear-gradient(to bottom, #eff3ff, #f0f5ff);
+    border-radius: 12px;
+    border: 1px solid #ececec;
+
+    .gutterRow {
+      box-shadow:
+        rgba(0, 0, 0, 0.08) 0px 6px 16px 0px,
+        rgba(0, 0, 0, 0.12) 0px 3px 6px -4px,
+        rgba(0, 0, 0, 0.05) 0px 9px 28px 8px;
+      border-radius: 8px;
+    }
+
+    h1 {
+      font-size: 20px;
+    }
+
+    & > p {
+      // width: 65%;
+      margin-top: 16px;
+      margin-bottom: 32px;
+      font-size: 14px;
+      line-height: 22px;
+      color: rgb(0 0 0 / 65%);
+    }
+
+    a:hover {
+      color: #6ea2d7 !important;
+    }
+  }
+}
