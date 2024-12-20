@@ -1,0 +1,34 @@
+:local {
+  .top-cards,
+  .bottom-cards {
+    display: flex;
+    gap: var(--spacing-md);
+  }
+
+  .card-bottom {
+    display: flex;
+    flex-wrap: wrap; // 允许换行
+    max-height: 400px; // 设置最大高度
+    overflow-y: auto; // 添加垂直滚动条
+    padding-bottom: 25px;
+  }
+
+  .card-top {
+    margin-bottom: var(--spacing-md);
+
+    h3 {
+      margin-bottom: var(--spacing-md);
+    }
+  }
+
+  .bottom-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+
+    h3 {
+      margin-right: var(--spacing-md);
+    }
+  }
+}

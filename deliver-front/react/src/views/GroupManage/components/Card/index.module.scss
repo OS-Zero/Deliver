@@ -1,0 +1,29 @@
+:local {
+  .empty_card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &:hover {
+      cursor: pointer;
+      background-color: var(--blue-medium);
+
+      .empty_icon {
+        color: var(--white-color);
+        transform: scale(1.2);
+      }
+    }
+  }
+
+  .empty_icon {
+    color: var(--gray-darker);
+    font-size: 60px;
+    transition: 0.5s all;
+  }
+}
+
+:global {
+  .ant-card {
+    width: 200px;
+  }
+}
