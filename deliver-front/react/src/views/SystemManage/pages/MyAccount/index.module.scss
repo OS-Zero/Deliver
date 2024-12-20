@@ -1,0 +1,21 @@
+:local {
+  .ant_card {
+    width: 500px;
+
+    .card_content {
+      text-align: center;
+    }
+
+    p {
+      margin: var(--spacing-md) 0;
+    }
+  }
+
+  .verify {
+    display: flex;
+
+    .verify_btn {
+      margin-left: var(--spacing-sm);
+    }
+  }
+}
