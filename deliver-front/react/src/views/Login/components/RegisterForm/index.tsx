@@ -33,7 +33,7 @@ const RegisterForm = (props: RegisterFormProps) => {
     verificationCode: ''
   });
 
-  const formRef = useRef<any>(null);
+  const registerRef = useRef<any>(null);
 
   const { verifyDisabled, verifyContent, handleVerify, checkEmailFormat } = useVerify({
     email: registerData.userEmail
@@ -48,7 +48,7 @@ const RegisterForm = (props: RegisterFormProps) => {
 
   const handleRegister = async () => {
     try {
-      await formRef.current.validateFields();
+      await registerRef.current.validateFields();
       await register(omitProperty(registerData, 'confirmPwd'));
       message.success('注册成功');
       onOk();
@@ -72,55 +72,35 @@ const RegisterForm = (props: RegisterFormProps) => {
   }, [registerData.userEmail, checkEmailFormat]);
 
   return (
-    <Form ref={formRef} layout="vertical">
+    <Form
+      ref={registerRef}
+      layout="vertical"
+      onValuesChange={(changedValues) => {
+        setRegisterData((prev) => ({ ...prev, ...changedValues }));
+        if (registerData.confirmPwd && changedValues.userPassword) {
+          registerRef.current.validateFields(['confirmPwd']);
+        }
+      }}
+    >
       <Form.Item name="userEmail" rules={[emailValidationRule]} validateTrigger={['onBlur']}>
-        <Input
-          value={registerData.userEmail}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setRegisterData({ ...registerData, userEmail: e.target.value })
-          }
-          placeholder="请输入邮箱"
-        />
+        <Input value={registerData.userEmail} placeholder="请输入邮箱" />
       </Form.Item>
       <Form.Item name="userPassword" rules={[passwordValidationRule]} validateTrigger={['onBlur']}>
-        <Input.Password
-          maxLength={16}
-          value={registerData.userPassword}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            setRegisterData({ ...registerData, userPassword: e.target.value });
-            if (registerData?.confirmPwd) {
-              formRef.current.validateFields(['confirmPwd']);
-            }
-          }}
-          placeholder="请输入密码"
-        />
+        <Input.Password maxLength={16} value={registerData.userPassword} placeholder="请输入密码" />
       </Form.Item>
       <Form.Item
         name="confirmPwd"
         rules={[{ validator: validatePwd }]}
         validateTrigger={['onBlur']}
       >
-        <Input.Password
-          maxLength={16}
-          value={registerData.confirmPwd}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setRegisterData({ ...registerData, confirmPwd: e.target.value })
-          }
-          placeholder="请确认密码"
-        />
+        <Input.Password maxLength={16} value={registerData.confirmPwd} placeholder="请确认密码" />
       </Form.Item>
       <Form.Item
         name="userRealName"
         rules={[{ required: true, message: '请输入真实姓名' }]}
         validateTrigger={['onBlur']}
       >
-        <Input
-          value={registerData.userRealName}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setRegisterData({ ...registerData, userRealName: e.target.value })
-          }
-          placeholder="请输入真实姓名"
-        />
+        <Input value={registerData.userRealName} placeholder="请输入真实姓名" />
       </Form.Item>
       <Form.Item
         name="verificationCode"
@@ -131,12 +111,6 @@ const RegisterForm = (props: RegisterFormProps) => {
           <Input
             maxLength={6}
             value={registerData.verificationCode}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setRegisterData({
-                ...registerData,
-                verificationCode: e.target.value
-              })
-            }
             placeholder="请输入6位验证码"
           />
           <Tooltip title={verifyDisabled ? handleBtnTips() : ''}>

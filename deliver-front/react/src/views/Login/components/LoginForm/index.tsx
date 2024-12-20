@@ -35,25 +35,18 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <Form ref={formRef} layout="vertical">
+    <Form
+      ref={formRef}
+      layout="vertical"
+      onValuesChange={(changedValues) => {
+        setLoginData((prev) => ({ ...prev, ...changedValues }));
+      }}
+    >
       <Form.Item name="userEmail" rules={[emailValidationRule]} validateTrigger={['onBlur']}>
-        <Input
-          value={loginData.userEmail}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setLoginData({ ...loginData, userEmail: e.target.value })
-          }
-          placeholder="请输入邮箱"
-        />
+        <Input value={loginData.userEmail} placeholder="请输入邮箱" />
       </Form.Item>
       <Form.Item name="userPassword" rules={[passwordValidationRule]} validateTrigger={['onBlur']}>
-        <Input.Password
-          maxLength={16}
-          value={loginData.userPassword}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setLoginData({ ...loginData, userPassword: e.target.value })
-          }
-          placeholder="请输入密码"
-        />
+        <Input.Password maxLength={16} value={loginData.userPassword} placeholder="请输入密码" />
       </Form.Item>
       <Form.Item>
         <Button style={{ width: '100%' }} type="primary" onClick={handleLogin}>

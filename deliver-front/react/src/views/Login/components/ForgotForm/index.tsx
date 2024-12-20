@@ -25,7 +25,7 @@ const ForgotForm: React.FC<{ onOk: () => void }> = ({ onOk }) => {
     verificationCode: ''
   });
 
-  const formRef = useRef<any>(null);
+  const forgotRef = useRef<any>(null);
   const { verifyDisabled, verifyContent, handleVerify, checkEmailFormat } = useVerify({
     email: forgotData.userEmail
   });
@@ -43,7 +43,7 @@ const ForgotForm: React.FC<{ onOk: () => void }> = ({ onOk }) => {
 
   const handleForgot = async () => {
     try {
-      await formRef.current.validateFields();
+      await forgotRef.current.validateFields();
       await forgotPwd(omitProperty(forgotData, 'confirmPwd'));
       message.success('修改密码成功');
       onOk();
@@ -63,42 +63,28 @@ const ForgotForm: React.FC<{ onOk: () => void }> = ({ onOk }) => {
   }, [forgotData.userEmail, checkEmailFormat]);
 
   return (
-    <Form ref={formRef} layout="vertical">
+    <Form
+      ref={forgotRef}
+      layout="vertical"
+      onValuesChange={(changedValues) => {
+        setForgotData((prev) => ({ ...prev, ...changedValues }));
+        if (forgotData.confirmPwd && changedValues.userPassword) {
+          forgotRef.current.validateFields(['confirmPwd']);
+        }
+      }}
+    >
       <Form.Item name="userEmail" rules={[emailValidationRule]} validateTrigger={['onBlur']}>
-        <Input
-          value={forgotData.userEmail}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setForgotData({ ...forgotData, userEmail: e.target.value })
-          }
-          placeholder="请输入邮箱"
-        />
+        <Input value={forgotData.userEmail} placeholder="请输入邮箱" />
       </Form.Item>
       <Form.Item name="userPassword" rules={[passwordValidationRule]} validateTrigger={['onBlur']}>
-        <Input.Password
-          maxLength={16}
-          value={forgotData.userPassword}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            setForgotData({ ...forgotData, userPassword: e.target.value })
-            if (forgotData?.confirmPwd) {
-              formRef.current.validateFields(['confirmPwd']);
-            }
-          }}
-          placeholder="请输入密码"
-        />
+        <Input.Password maxLength={16} value={forgotData.userPassword} placeholder="请输入密码" />
       </Form.Item>
       <Form.Item
         name="confirmPwd"
         rules={[{ validator: validatePwd }]}
         validateTrigger={['onBlur']}
       >
-        <Input.Password
-          maxLength={16}
-          value={forgotData.confirmPwd}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setForgotData({ ...forgotData, confirmPwd: e.target.value })
-          }
-          placeholder="请确认密码"
-        />
+        <Input.Password maxLength={16} value={forgotData.confirmPwd} placeholder="请确认密码" />
       </Form.Item>
       <Form.Item
         name="verificationCode"
@@ -106,14 +92,7 @@ const ForgotForm: React.FC<{ onOk: () => void }> = ({ onOk }) => {
         validateTrigger={['onBlur']}
       >
         <div className={styles.verify}>
-          <Input
-            maxLength={6}
-            value={forgotData.verificationCode}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setForgotData({ ...forgotData, verificationCode: e.target.value })
-            }
-            placeholder="请输入6位验证码"
-          />
+          <Input maxLength={6} value={forgotData.verificationCode} placeholder="请输入6位验证码" />
           <Tooltip title={verifyDisabled ? handleBtnTips() : ''}>
             <Button
               className={styles.verifyBtn}

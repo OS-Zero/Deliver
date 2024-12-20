@@ -44,9 +44,9 @@ const MyAccount: React.FC = () => {
   return (
     <Card title="基础信息" className={styles['ant_card']}>
       <div className={styles['card_content']}>
-        <p>邮箱: {userInfo.userEmail}</p>
-        <p>姓名: {userInfo.userName}</p>
-        <p>用户类型: {userInfo.userType}</p>
+        <p>邮箱: {userInfo?.userEmail}</p>
+        <p>姓名: {userInfo?.userName}</p>
+        <p>用户类型: {userInfo?.userType}</p>
         <Button onClick={() => setOpen(true)}>修改密码</Button>
       </div>
       <Drawer
