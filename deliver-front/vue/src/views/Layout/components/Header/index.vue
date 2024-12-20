@@ -35,8 +35,6 @@ const handleClickTabs: AnchorProps['onClick'] = (e, link) => {
 	emits("onTabChange", link.href)
 	router.push(`/${link.href}`)
 }
-
-
 </script>
 <template>
 	<a-layout-header class="header">

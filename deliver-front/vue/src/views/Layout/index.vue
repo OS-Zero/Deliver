@@ -14,24 +14,26 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 let items = ref<ItemType[] | null>(null)
 const onTabChange = (tab: string) => {
-	items.value = null
 	const groupId = localStorage.getItem("group_id");
 	(tab === 'systemManage' || groupId) && (items.value = menuConfig[tab])
 }
-const onCardSelected = (card: string) => {
+const onCardSelected = (_card: string) => {
 	items.value = menuConfig["groupManage"]
 }
 emitter.on("card", onCardSelected)
-
+const showBreadcrumb = ref(false)
 watch(() => router.currentRoute.value.path, (to: string) => {
-	if (to.includes("groupManage")) return onTabChange("groupManage")
-	if (to.includes("systemManage")) return onTabChange("systemManage")
+	showBreadcrumb.value = false
+	items.value = null
+	to.includes("groupManage") && (showBreadcrumb.value = true) && onTabChange("groupManage");
+	to.includes("systemManage") && (showBreadcrumb.value = true) && onTabChange("systemManage");
 }, {
 	immediate: true
 })
 onUnmounted(() => {
 	emitter.off("card", onCardSelected)
 })
+
 </script>
 
 <template>
@@ -43,8 +45,8 @@ onUnmounted(() => {
 		<a-layout>
 			<SideBar v-if="items !== null" :items="items"></SideBar>
 			<a-layout class="layout-section">
-				<Breadcrumb class="section_breadcrumb" />
-				<a-layout-content>
+				<Breadcrumb v-if="showBreadcrumb" class="section_breadcrumb" />
+				<a-layout-content class="layout-content">
 					<RouterView></RouterView>
 				</a-layout-content>
 				<a-layout-footer>
@@ -87,5 +89,9 @@ onUnmounted(() => {
 			font-size: var(--spacing-md);
 		}
 	}
+}
+
+.layout-content {
+	overflow: auto;
 }
 </style>

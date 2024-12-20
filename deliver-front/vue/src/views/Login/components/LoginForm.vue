@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, reactive } from 'vue';
-import { UserInfo } from '../type';
+import { UserInfo } from '../../../types/user';
 import type { Rule } from 'ant-design-vue/es/form';
 import { login, getCurrentLoginUserInfo } from "@/api/user";
 import { useRouter } from 'vue-router';

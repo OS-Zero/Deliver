@@ -6,7 +6,7 @@ import { omitProperty } from '@/utils/utils';
 import { message } from 'ant-design-vue';
 import { getRules } from '@/config/rules';
 import { useVerify } from '@/utils/hooks';
-import { UserInfo } from '@/views/Login/type';
+import { UserInfo } from '@/types/user';
 
 const userInfo: UserInfo = JSON.parse(localStorage.getItem("user_info") as string)
 const editorData = reactive({

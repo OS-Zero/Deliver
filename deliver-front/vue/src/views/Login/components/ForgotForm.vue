@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, reactive, watch } from 'vue';
-import { ForgotInfo } from '../type';
+import { ForgotInfo } from '../../../types/user';
 import type { Rule } from 'ant-design-vue/es/form';
 import { validateEmail } from '@/utils/validate';
 import { forgotPwd } from '@/api/user';

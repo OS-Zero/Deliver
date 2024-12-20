@@ -1,4 +1,4 @@
-import { createRouter, type RouteRecordRaw, createWebHistory } from 'vue-router'
+import { createRouter, type RouteRecordRaw, createWebHistory } from 'vue-router';
 const routes: RouteRecordRaw[] = [
 	{
 		path: '/login',
@@ -12,10 +12,10 @@ const routes: RouteRecordRaw[] = [
 		path: '/',
 		name: '首页',
 		component: () => import('@/views/Layout/index.vue'),
-		redirect: 'welcome',
+		redirect: '/welcome',
 		children: [
 			{
-				path: 'groupManage',
+				path: '/groupManage',
 				name: '分组管理',
 				component: () => import('@/views/GroupManage/index.vue'),
 				meta: {
@@ -36,7 +36,6 @@ const routes: RouteRecordRaw[] = [
 						name: '模板配置',
 						component: () => import('@/views/GroupManage/pages/Template/index.vue'),
 						meta: {
-							parent: '首页',
 							title: '模板配置 - Deliver 企业消息推送平台',
 						},
 					},
@@ -45,7 +44,6 @@ const routes: RouteRecordRaw[] = [
 						name: '应用配置',
 						component: () => import('@/views/GroupManage/pages/App/index.vue'),
 						meta: {
-							parent: '首页',
 							title: '应用配置 - Deliver 企业消息推送平台',
 						},
 					},
@@ -54,7 +52,6 @@ const routes: RouteRecordRaw[] = [
 						name: '文件管理',
 						component: () => import('@/views/GroupManage/pages/PlatformFile/index.vue'),
 						meta: {
-							parent: '首页',
 							title: '平台文件管理 - Deliver 企业消息推送平台',
 						},
 					},
@@ -63,7 +60,6 @@ const routes: RouteRecordRaw[] = [
 						name: '规则配置',
 						component: () => import('@/views/GroupManage/pages/FlowControlRule/index.vue'),
 						meta: {
-							parent: '首页',
 							name: '规则配置 - Deliver 企业消息推送平台',
 						},
 					},
@@ -83,18 +79,16 @@ const routes: RouteRecordRaw[] = [
 						name: '我的账户',
 						component: () => import('@/views/SystemManage/pages/MyAccount/index.vue'),
 						meta: {
-							parent: '首页',
 							name: '我的账户 - Deliver 企业消息推送平台',
 						},
 					},
 				],
 			},
 			{
-				path: 'welcome',
+				path: '/welcome',
 				name: '欢迎',
 				component: () => import('@/views/Welcome/index.vue'),
 				meta: {
-					parent: 'welcome',
 					title: '欢迎 - Deliver 企业消息推送平台',
 				},
 			},
@@ -108,25 +102,25 @@ const routes: RouteRecordRaw[] = [
 			title: 'Deliver 企业消息推送平台',
 		},
 	},
-]
+];
 
 const router = createRouter({
 	history: createWebHistory(),
 	routes,
-})
+});
 router.beforeEach(function (to, from, next) {
-	if (!localStorage.getItem('access_token') && to.path !== '/login') return next('/login')
+	if (!localStorage.getItem('access_token') && to.path !== '/login') return next('/login');
 	//如果想访问groupManage子目录必须要有group_id
-	const arr_to = to.path.split('/').slice(1)
-	const arr_from = from.path.split('/').slice(1)
-	const hasGroupId = !!localStorage.getItem('group_id')
+	const arr_to = to.path.split('/').slice(1);
+	const arr_from = from.path.split('/').slice(1);
+	const hasGroupId = !!localStorage.getItem('group_id');
 	if (arr_to[0] === 'groupManage' && arr_to.length > 1 && !hasGroupId) {
-		return next('/groupManage')
+		return next('/groupManage');
 	}
 	if (arr_to[0] === 'groupManage' && arr_to.length === 1 && hasGroupId) {
-		if (from.path.includes('groupManage') && arr_from.length > 1) return next(from.path)
-		else return next('/groupManage/template')
+		if (from.path.includes('groupManage') && arr_from.length > 1) return next(from.path);
+		else return next('/groupManage/template');
 	}
-	next()
-})
-export default router
+	next();
+});
+export default router;

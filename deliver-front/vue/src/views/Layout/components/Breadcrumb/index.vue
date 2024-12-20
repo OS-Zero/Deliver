@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 interface Route {
 	path: string
 	breadcrumbName: string
@@ -11,6 +11,7 @@ interface Route {
 }
 const routes = ref<Route[]>([])
 const route = useRoute()
+const router = useRouter()
 watch(
 	route,
 	() => {
@@ -18,21 +19,27 @@ watch(
 		route.matched.forEach((item) => {
 			routes.value.push({ path: item.path, breadcrumbName: item.name as string })
 		})
+		console.log(routes.value)
 	},
 	{
 		immediate: true,
 	},
 )
+const handleClick = (path: string) => {
+	if (path === '/groupManage') localStorage.removeItem('group_id')
+	router.push(path)
+}
+
 </script>
 <template>
 	<a-breadcrumb :routes="routes" separator="/">
-		<template #itemRender="{ route, paths }">
+		<template #itemRender="{ route }">
 			<span v-if="routes.indexOf(route) === routes.length - 1">
 				{{ route.breadcrumbName }}
 			</span>
-			<router-link v-else :to="`${paths.join('/')}`">
+			<a @click="handleClick(route.path)" v-else>
 				{{ route.breadcrumbName }}
-			</router-link>
+			</a>
 		</template>
 	</a-breadcrumb>
 </template>
