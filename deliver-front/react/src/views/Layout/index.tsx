@@ -22,10 +22,10 @@ const AppLayout: React.FC = () => {
     let menuItems: any[] = [];
 
     switch (true) {
-      case path.includes('groupManage'):
+      case path.includes('groupManage') && !path.endsWith('groupManage'):
         menuItems = menuConfig?.groupManage;
         break;
-      case path.includes('systemManage'):
+      case path.includes('systemManage') && !path.endsWith('systemManage'):
         menuItems = menuConfig?.systemManage;
         break;
       default:

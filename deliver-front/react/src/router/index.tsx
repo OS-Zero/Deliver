@@ -54,10 +54,10 @@ const routes = [
             ),
             name: '分组管理',
             children: [
-              {
-                index: true,
-                element: <Navigate to="template" replace />
-              },
+              // {
+              //   index: true,
+              //   element: <Navigate to="template" replace />
+              // },
               {
                 path: 'template',
                 element: (
