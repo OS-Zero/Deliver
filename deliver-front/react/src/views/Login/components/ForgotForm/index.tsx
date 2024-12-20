@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Form, Input, Button, message, Tooltip } from 'antd';
 import { forgotPwd } from '@/api/user';
-import { useVerify } from '@/views/Login/useVerify';
+import { useVerify } from '@/hooks/useVerify';
 import styles from './index.module.scss';
 import {
   emailValidationRule,
