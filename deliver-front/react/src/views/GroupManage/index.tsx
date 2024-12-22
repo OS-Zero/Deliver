@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Drawer, Form, Input, Button, message } from 'antd';
-import { useLocation } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import Card from './components/Card';
 import { addGroup, getGroupData, updateGroup, deleteGroup, toTopGroup } from '@/api/group';
 import { GroupCard, GroupCardList } from './type';
@@ -64,7 +64,17 @@ const GroupManage: React.FC = () => {
   };
 
   const onOpen = () => setState((prev) => ({ ...prev, open: true }));
-  const onClose = () => setState((prev) => ({ ...prev, open: false }));
+  const onClose = () => {
+    setState((prev) => ({ ...prev, open: false }));
+    // 重置表单数据为初始状态
+    setGroupFormData({
+      groupId: 0,
+      groupName: '',
+      groupDescription: ''
+    });
+    // 重置表单验证状态
+    form.resetFields();
+  };
 
   useEffect(() => {
     const checkMainPage = async () => {
@@ -83,89 +93,112 @@ const GroupManage: React.FC = () => {
     fetchCardData();
   }, []);
 
-  const changeOperation = (op: 'add' | 'edit' | 'delete' | 'toTop', data?: GroupCard) => {
+  const changeOperation = async (op: 'add' | 'edit' | 'delete' | 'toTop', data?: GroupCard) => {
     setState((prev) => ({ ...prev, operation: op }));
-    if (data) setGroupFormData(data);
+    console.log(data);
+
+    // 对于编辑操作，更新表单数据
+    if (op === 'edit' && data) {
+      setGroupFormData(data);
+      // 重置表单并设置初始值
+      form.resetFields();
+      form.setFieldsValue(data);
+    }
+
+    // 对于新增操作，重置表单
+    if (op === 'add') {
+      setGroupFormData({
+        groupId: 0,
+        groupName: '',
+        groupDescription: ''
+      });
+      form.resetFields();
+    }
+
     if (op === 'add' || op === 'edit') onOpen();
     else handleSuccess(op);
   };
 
   return (
-    <div>
-      <div className={styles['card-top']}>
-        <h3>置顶分组</h3>
-        <div className={styles['top-cards']}>
-          {groupList.topUpGroupList.map((item) => (
-            <Card key={item.groupId} data={item} />
-          ))}
+    state.mainPage ? (
+      <div>
+        <div className={styles['card-top']}>
+          <h3>置顶分组</h3>
+          <div className={styles['top-cards']}>
+            {groupList.topUpGroupList.map((item) => (
+              <Card key={item.groupId} data={item} />
+            ))}
+          </div>
         </div>
-      </div>
-      <div className={styles['card-bottom']}>
-        <div className={styles['bottom-section']}>
-          <h3>全部分组</h3>
-          <Input.Search
-            value={state.search}
-            onChange={(e) => setState((prev) => ({ ...prev, search: e.target.value }))}
-            placeholder="请输入分组名"
-            enterButton
-            style={{ width: 200 }}
-            onSearch={() => fetchCardData(state.search)}
-          />
-        </div>
-        <div className={styles['bottom-cards']}>
-          <Card isEmpty onClick={() => changeOperation('add')} />
-          {groupList.defaultGroupList.map((item) => (
-            <Card
-              key={item.groupId}
-              data={item}
-              showAction
-              onTop={() => changeOperation('toTop', item)}
-              onEdit={() => changeOperation('edit', item)}
-              onDelete={() => changeOperation('delete', item)}
+        <div className={styles['card-bottom']}>
+          <div className={styles['bottom-section']}>
+            <h3>全部分组</h3>
+            <Input.Search
+              value={state.search}
+              onChange={(e) => setState((prev) => ({ ...prev, search: e.target.value }))}
+              placeholder="请输入分组名"
+              enterButton
+              style={{ width: 200 }}
+              onSearch={() => fetchCardData(state.search)}
             />
-          ))}
+          </div>
+          <div className={styles['bottom-cards']}>
+            <Card isEmpty onClick={() => changeOperation('add')} />
+            {groupList.defaultGroupList.map((item) => (
+              <Card
+                key={item.groupId}
+                data={item}
+                showAction
+                onTop={() => changeOperation('toTop', item)}
+                onEdit={() => changeOperation('edit', item)}
+                onDelete={() => changeOperation('delete', item)}
+              />
+            ))}
+          </div>
         </div>
-      </div>
-      <Drawer
-        width={500}
-        title={state.operation === 'add' ? '新增分组' : '编辑分组'}
-        placement="right"
-        open={state.open}
-        onClose={onClose}
-        extra={
-          <>
-            <Button style={{ marginRight: 8 }} onClick={onClose}>
-              取消
-            </Button>
-            <Button type="primary" onClick={() => handleSuccess(state.operation)}>
-              确定
-            </Button>
-          </>
-        }
-      >
-        <Form
-          form={form}
-          initialValues={groupFormData}
-          onValuesChange={(changedValues) =>
-            setGroupFormData((prev) => ({ ...prev, ...changedValues }))
+        <Drawer
+          width={500}
+          title={state.operation === 'add' ? '新增分组' : '编辑分组'}
+          placement="right"
+          open={state.open}
+          onClose={onClose}
+          extra={
+            <>
+              <Button style={{ marginRight: 8 }} onClick={onClose}>
+                取消
+              </Button>
+              <Button type="primary" onClick={() => handleSuccess(state.operation)}>
+                确定
+              </Button>
+            </>
           }
-          name="basic"
-          labelCol={{ span: 5 }}
         >
-          <Form.Item label="分组名" name="groupName" required rules={[groupNameRule]}>
-            <Input placeholder="请输入分组名" maxLength={10} />
-          </Form.Item>
-          <Form.Item
-            label="分组描述"
-            name="groupDescription"
-            required
-            rules={[groupDescriptionRule]}
+          <Form
+            form={form}
+            initialValues={groupFormData}
+            onValuesChange={(changedValues) =>
+              setGroupFormData((prev) => ({ ...prev, ...changedValues }))
+            }
+            name="basic"
+            labelCol={{ span: 5 }}
           >
-            <Input.TextArea placeholder="请输入分组描述" maxLength={50} />
-          </Form.Item>
-        </Form>
-      </Drawer>
-    </div>
+            <Form.Item label="分组名" name="groupName" required rules={[groupNameRule]}>
+              <Input placeholder="请输入分组名" maxLength={10} />
+            </Form.Item>
+            <Form.Item
+              label="分组描述"
+              name="groupDescription"
+              required
+              rules={[groupDescriptionRule]}
+            >
+              <Input.TextArea placeholder="请输入分组描述" maxLength={50} />
+            </Form.Item>
+          </Form>
+        </Drawer>
+      </div>
+    ) : (
+      <Outlet />
+    )
   );
 };
 
