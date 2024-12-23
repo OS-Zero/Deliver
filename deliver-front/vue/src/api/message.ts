@@ -1,5 +1,5 @@
-import request from '@/utils/request.ts'
-import { R, SearchData } from '@/types'
+import request from '@/utils/request.ts';
+import { R, SearchData } from '@/types';
 import type {
 	MessageTemplate,
 	SearchMessage,
@@ -8,19 +8,19 @@ import type {
 	MessageItem,
 	TemplateItem,
 	AddTemp,
-} from '@/views/Message/type'
+} from '@/views/Message/type';
 
 /**
  * 模版分页查询
  * @param data 搜索框数据
  * @returns 返回模板数据
  */
-export async function getTemplatePages(data: SearchMessage): Promise<R<SearchData<MessageTemplate>>> {
+export async function getTemplatePages(data: SearchMessage): Promise<SearchData<MessageTemplate>> {
 	return await request({
 		url: '/template/search',
 		method: 'post',
 		data,
-	})
+	});
 }
 
 /**
@@ -33,7 +33,7 @@ export async function getMessageType(data: { channelType: number }): Promise<R<A
 		url: '/template/getMessageTypeByChannelType',
 		method: 'post',
 		data,
-	})
+	});
 }
 
 /**
@@ -46,7 +46,7 @@ export async function getApp(data: { channelType: number }): Promise<R<Array<App
 		url: '/app/getAppByChannelType',
 		method: 'post',
 		data,
-	})
+	});
 }
 
 /**
@@ -59,7 +59,7 @@ export async function addTemplatePages(data: AddTemp): Promise<R<null>> {
 		url: '/template/saveTemplate',
 		method: 'post',
 		data,
-	})
+	});
 }
 
 /**
@@ -72,7 +72,7 @@ export async function updateStatus(data: TemplateItem): Promise<R<null>> {
 		url: '/template/updateStatusById',
 		method: 'post',
 		data,
-	})
+	});
 }
 
 /**
@@ -85,7 +85,7 @@ export async function updatetemplate(data: AddTemp): Promise<R<null>> {
 		url: '/template/updateById',
 		method: 'post',
 		data,
-	})
+	});
 }
 
 /**
@@ -98,7 +98,7 @@ export async function deleteTemplate(data: { ids: Array<number> }): Promise<R<nu
 		url: '/template/deleteByIds',
 		method: 'post',
 		data,
-	})
+	});
 }
 
 /**
@@ -111,7 +111,7 @@ export async function sendTestMes(data: SendTestMessage): Promise<R<null>> {
 		url: '/template/testSendMessage',
 		method: 'post',
 		data,
-	})
+	});
 }
 
 /**
@@ -124,5 +124,5 @@ export async function getMessageParamByMessageType(data: { messageType: number; 
 		url: '/template/getMessageParamByMessageType',
 		method: 'post',
 		data,
-	})
+	});
 }

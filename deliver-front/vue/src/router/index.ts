@@ -33,8 +33,8 @@ const routes: RouteRecordRaw[] = [
 					// },
 					{
 						path: 'template',
-						name: '模板配置',
-						component: () => import('@/views/GroupManage/pages/Template/index.vue'),
+						name: '消息模板配置',
+						component: () => import('@/views/GroupManage/pages/MessageTemplate/index.vue'),
 						meta: {
 							title: '模板配置 - Deliver 企业消息推送平台',
 						},
