@@ -36,7 +36,7 @@ const AppLayout: React.FC = () => {
   }, [location.pathname]);
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout style={{ height: '100vh' }}>
       <Banner />
       <Layout>
         <Header />

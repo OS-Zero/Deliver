@@ -5,14 +5,6 @@
     gap: var(--spacing-md);
   }
 
-  .card-bottom {
-    display: flex;
-    flex-wrap: wrap; // 允许换行
-    max-height: 400px; // 设置最大高度
-    overflow-y: auto; // 添加垂直滚动条
-    padding-bottom: 25px;
-  }
-
   .card-top {
     margin-bottom: var(--spacing-md);
 
@@ -29,6 +21,64 @@
 
     h3 {
       margin-right: var(--spacing-md);
+    }
+  }
+
+  .search-box {
+    background-color: white;
+    box-shadow: 0 2px 25px 0 rgba(0, 0, 0, 0.1);
+    height: 40px;
+    border-radius: 40px;
+    display: flex;
+    margin-right: var(--spacing-md);
+  }
+
+  .search-txt {
+    border: none;
+    background: none;
+    outline: none;
+    padding: 0;
+    color: #222;
+    font-size: 16px;
+    // line-height: 40px;
+    width: 0;
+    transition: 0.4s;
+  }
+
+  .search-btn {
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.4s;
+  }
+
+  .search-box:hover .search-txt {
+    width: 200px;
+    padding: 0 12px;
+  }
+
+  .search-box:hover .search-btn {
+    background-color: #fff;
+    animation: rotate 0.4s linear;
+  }
+
+  .search-txt:focus {
+    width: 200px;
+    padding: 0 12px;
+  }
+
+  @keyframes rotate {
+    0% {
+      transform: rotate(0deg);
+    }
+
+    100% {
+      transform: rotate(360deg);
     }
   }
 }

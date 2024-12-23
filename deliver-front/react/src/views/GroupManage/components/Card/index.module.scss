@@ -1,23 +1,76 @@
 :local {
+  .card {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border-radius: var(--border-radius-small);
+    padding: var(--spacing-md);
+    border: 1px solid var(--gray-lightest);
+    box-shadow: var(--box-shadow-small);
+    background-image: url('/folder.svg');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    &:hover {
+      box-shadow: var(--box-shadow-large);
+    }
+
+    .card_content {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+
+      .card_title {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .card_time {
+    position: absolute;
+    bottom: var(--spacing-md);
+    right: var(--spacing-md);
+    left: var(--spacing-md);
+    text-align: center;
+    box-shadow: var(--box-shadow-small);
+    padding: var(--spacing-xs) 0;
+    border-radius: var(--border-radius-large);
+    color: var(--gray-medium-dark);
+  }
+
+  .card_more {
+    position: absolute;
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+  }
+
   .empty_card {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    background-image: none;
+    font-size: small;
 
     &:hover {
       cursor: pointer;
       background-color: var(--blue-medium);
 
-      .empty_icon {
+      .empty_icon,
+      .empty_desc {
         color: var(--white-color);
         transform: scale(1.2);
       }
     }
   }
 
-  .empty_icon {
-    color: var(--gray-darker);
-    font-size: 60px;
+  .empty_icon,
+  .empty_desc {
     transition: 0.5s all;
+  }
+
+  .empty_icon {
+    font-size: 32px;
   }
 }

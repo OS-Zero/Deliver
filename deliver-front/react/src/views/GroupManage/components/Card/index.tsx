@@ -1,10 +1,9 @@
 import React from 'react';
-import { Card, Modal } from 'antd';
+import { Card, Dropdown, Menu, Modal } from 'antd';
 import {
-  DeleteOutlined,
-  EditOutlined,
-  VerticalAlignTopOutlined,
+  EllipsisOutlined,
   PlusOutlined,
+  FieldTimeOutlined,
   ExclamationCircleOutlined
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
@@ -47,28 +46,48 @@ const GroupCardComponent: React.FC<CardProps> = ({
     });
   };
 
-  const renderActions = () =>
-    showAction
-      ? [
-          <VerticalAlignTopOutlined key="top" onClick={onTop} />,
-          <EditOutlined key="edit" onClick={onEdit} />,
-          <DeleteOutlined key="delete" onClick={showConfirm} />
-        ]
-      : [];
+  const handleOperation = (op: 'onTop' | 'onEdit' | 'onDelete') => {
+    if (op === 'onTop' && onTop) onTop();
+    if (op === 'onEdit' && onEdit) onEdit();
+    if (op === 'onDelete') showConfirm();
+  };
+
+  const menu = (
+    <Menu>
+      <Menu.Item key="top" onClick={() => handleOperation('onTop')}>
+        置顶
+      </Menu.Item>
+      <Menu.Item key="edit" onClick={() => handleOperation('onEdit')}>
+        编辑
+      </Menu.Item>
+      <Menu.Item key="delete" onClick={() => handleOperation('onDelete')}>
+        删除
+      </Menu.Item>
+    </Menu>
+  );
 
   return isEmpty ? (
     <Card className={styles['empty_card']} onClick={onClick}>
       <PlusOutlined className={styles['empty_icon']} />
+      <div className={styles['empty_desc']}>添加</div>
     </Card>
   ) : (
     <Card
-      className={styles['ant_card']}
+      className={styles['card']}
       hoverable
-      cover={<img onClick={handleMore} alt="example" src="/folder.svg" />}
-      actions={renderActions()}
+      // cover={onClick={handleMore}></img>}
     >
-      <Card.Meta description={data?.groupDescription} />
-      <Card.Meta description={data?.updateTime} />
+      <Dropdown overlay={menu} placement="bottom">
+        <EllipsisOutlined className={styles['card_more']} />
+      </Dropdown>
+      <div className={styles['card_content']}>
+        <h3 className={styles['card_title']}>{data?.groupName}</h3>
+        <div>{data?.groupDescription}</div>
+      </div>
+      <div className={styles['card_time']}>
+        <FieldTimeOutlined />
+        {data?.updateTime}
+      </div>
     </Card>
   );
 };

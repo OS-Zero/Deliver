@@ -6,6 +6,7 @@ import { addGroup, getGroupData, updateGroup, deleteGroup, toTopGroup } from '@/
 import { GroupCard, GroupCardList } from './type';
 import styles from './index.module.scss';
 import { groupDescriptionRule, groupNameRule } from './constant';
+import { SearchOutlined } from '@ant-design/icons';
 
 const GroupManage: React.FC = () => {
   const location = useLocation();
@@ -133,14 +134,10 @@ const GroupManage: React.FC = () => {
         <div className={styles['card-bottom']}>
           <div className={styles['bottom-section']}>
             <h3>全部分组</h3>
-            <Input.Search
-              value={state.search}
-              onChange={(e) => setState((prev) => ({ ...prev, search: e.target.value }))}
-              placeholder="请输入分组名"
-              enterButton
-              style={{ width: 200 }}
-              onSearch={() => fetchCardData(state.search)}
-            />
+            <div className={styles['search-box']}>
+              <Button className={styles['search-btn']} shape="circle" icon={<SearchOutlined/ >} onClick={() => fetchCardData} />
+              <Input value={state.search} type="text" className="search-txt" placeholder="请输入分组名" />
+            </div>
           </div>
           <div className={styles['bottom-cards']}>
             <Card isEmpty onClick={() => changeOperation('add')} />
