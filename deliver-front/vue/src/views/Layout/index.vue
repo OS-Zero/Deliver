@@ -38,7 +38,7 @@ onUnmounted(() => {
 
 <template>
 	<a-layout>
-		<div class="layout_header">
+		<div>
 			<Banner class="header_banner" />
 			<Header></Header>
 		</div>
@@ -89,6 +89,10 @@ onUnmounted(() => {
 			font-size: var(--spacing-md);
 		}
 	}
+}
+
+.ant-layout {
+	background-color: var(--white-color);
 }
 
 .layout-content {

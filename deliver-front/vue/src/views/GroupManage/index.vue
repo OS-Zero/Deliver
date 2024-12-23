@@ -1,18 +1,18 @@
 <script lang="ts" setup>
-import { ref, reactive, watch } from 'vue';
+import { ref, reactive, watch, h } from 'vue';
 import { useRouter } from 'vue-router';
 import Card from './components/Card.vue';
 import { addGroup, getGroupData, updateGroup, deleteGroup, toTopGroup } from '@/api/group';
 import { GroupCard, GroupCardList } from '@/types/group';
 import { getRules } from '@/config/rules';
 import { message } from 'ant-design-vue';
-
+import { SearchOutlined } from '@ant-design/icons-vue';
 const router = useRouter()
 const state = reactive({
 	mainPage: true,
 	open: false,
 	operation: 'add',
-	search: ''
+	search: '',
 })
 const onOpen = () => {
 	state.open = true
@@ -25,7 +25,7 @@ const groupList = reactive<GroupCardList>({
 	defaultGroupList: []
 })
 const groupFormData = reactive<GroupCard>({
-	groupId: 0,
+	groupId: -1,
 	groupName: '',
 	groupDescription: '',
 })
@@ -91,7 +91,7 @@ watch(() => router.currentRoute.value.path, async (to: string) => {
 
 const changeOperation = (op: 'add' | 'edit' | 'delete' | 'top', data?: GroupCard) => {
 	state.operation = op
-	data && Object.assign(data);
+	data && Object.assign(groupFormData, data);
 	(op === 'add' || op === 'edit') && onOpen()
 	op === 'delete' && formMeta.delete.success()
 	op === 'top' && formMeta.toTop.success()
@@ -105,14 +105,17 @@ const changeOperation = (op: 'add' | 'edit' | 'delete' | 'top', data?: GroupCard
 			<div class="card-top">
 				<h3>置顶分组</h3>
 				<div class="top_cards">
-					<Card v-for="item in groupList.topUpGroupList" :data="item"></Card>
+					<Card v-for="item in groupList.topUpGroupList" :data="item" @on-top="changeOperation('top', item)"
+						@on-edit="changeOperation('edit', item)" @on-delete="changeOperation('delete', item)"></Card>
 				</div>
 			</div>
 			<div class="card-bottom">
 				<div class="bottom-section">
 					<h3>全部分组</h3>
-					<a-input-search v-model:value="state.search" placeholder="请输入分组名" enter-button style="width: 200px"
-						@search="flashData(state.search)" />
+					<div class="search-box">
+						<a-button class="search-btn" shape="circle" :icon="h(SearchOutlined)" @click="flashData(state.search)" />
+						<input v-model="state.search" type="text" class="search-txt" placeholder="请输入分组名" />
+					</div>
 				</div>
 				<div class="bottom_cards">
 					<Card is-empty @click="changeOperation('add')"></Card>
@@ -167,6 +170,66 @@ const changeOperation = (op: 'add' | 'edit' | 'delete' | 'top', data?: GroupCard
 
 	h3 {
 		margin-right: var(--spacing-md);
+	}
+}
+
+
+.search-box {
+	background-color: white;
+	box-shadow: 0 2px 25px 0 rgba(0, 0, 0, 0.1);
+	height: 40px;
+	border-radius: 40px;
+	display: flex;
+	margin-right: var(--spacing-md);
+}
+
+.search-txt {
+	border: none;
+	background: none;
+	outline: none;
+	padding: 0;
+	color: #222;
+	font-size: 16px;
+	// line-height: 40px;
+	width: 0;
+	transition: 0.4s;
+}
+
+.search-btn {
+	border: none;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	transition: 0.4s;
+}
+
+.search-box:hover .search-txt {
+	width: 200px;
+	padding: 0 12px;
+}
+
+.search-box:hover .search-btn {
+	background-color: #fff;
+	animation: rotate 0.4s linear;
+}
+
+.search-txt:focus {
+	width: 200px;
+	padding: 0 12px;
+}
+
+
+@keyframes rotate {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
 	}
 }
 </style>

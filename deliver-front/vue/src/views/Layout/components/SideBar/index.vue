@@ -39,6 +39,11 @@ watch(() => router.currentRoute.value.path, (to: string) => {
 <style lang="scss" scoped>
 .ant-layout-sider {
 	position: relative;
+	border-right: 1px solid var(--gray-lighter);
+
+	.ant-menu {
+		border: none;
+	}
 
 	.sider-footer {
 		position: absolute;
@@ -46,7 +51,7 @@ watch(() => router.currentRoute.value.path, (to: string) => {
 		height: 40px;
 		bottom: 0;
 		width: 100%;
-		border-top: 1px solid var(--gray-lightest);
+		border-top: 1px solid var(--gray-lighter);
 
 		.footer_button {
 			width: 100%;

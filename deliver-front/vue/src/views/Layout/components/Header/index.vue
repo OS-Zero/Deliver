@@ -1,17 +1,18 @@
 <script lang="ts" setup>
-import { reactive } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
 import { ExclamationCircleOutlined, QuestionCircleOutlined, GithubOutlined } from '@ant-design/icons-vue'
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { logout } from "@/api/user";
-import type { AnchorProps } from 'ant-design-vue';
 const state = reactive({
 	showAbout: false,
-	topTab: ''
+	topTab: 'groupManage'
 })
 const setShowAbout = (open: boolean) => {
 	state.showAbout = open
 }
 const router = useRouter()
+const route = useRoute()
+const tabItemDoms = ref()
 const handleAction = async (opt: string) => {
 	switch (opt) {
 		case 'account':
@@ -30,11 +31,25 @@ const handleAction = async (opt: string) => {
 const emits = defineEmits<{
 	onTabChange: [tab: string]
 }>()
-const handleClickTabs: AnchorProps['onClick'] = (e, link) => {
-	e.preventDefault()
-	emits("onTabChange", link.href)
-	router.push(`/${link.href}`)
+const tabItems = [
+	{
+		name: '分组管理',
+		path: 'groupManage'
+	},
+	{
+		name: '系统管理',
+		path: 'systemManage'
+	}
+]
+const handleClickTabs = (path: string) => {
+	emits("onTabChange", path)
+	router.push(`/${path}`)
 }
+onMounted(() => {
+
+	// console.dir(window.getComputedStyle(tabItemDoms.value[0]).width);
+
+})
 </script>
 <template>
 	<a-layout-header class="header">
@@ -48,21 +63,18 @@ const handleClickTabs: AnchorProps['onClick'] = (e, link) => {
 				</a>
 			</div>
 			<div class="header-tabs">
-				<a-anchor direction="horizontal" :items="[
-					{
-						key: 'groupManage',
-						href: 'groupManage',
-						title: '分组管理',
-					},
-					{
-						key: 'systemManage',
-						href: 'systemManage',
-						title: '系统管理',
-					},
-				]" @click="handleClickTabs" />
+				<!-- <a-tabs v-model:activeKey="state.topTab">
+					<a-tab-pane key="groupManage" tab="分组管理" @click="handleClickTabs('groupManage')"></a-tab-pane>
+					<a-tab-pane key="systemManage" tab="系统管理" @click="handleClickTabs('systemManage')"> </a-tab-pane>
+				</a-tabs> -->
+				<a ref="tabItemDoms" v-for="item in tabItems" class="tab-item"
+					:class="{ active: route.path.includes(item.path) }" @click="handleClickTabs(item.path)">
+					{{ item.name }}
+				</a>
+				<div class="slider"></div>
 			</div>
 		</div>
-		<div class="extra">
+		<div div class=" extra">
 			<div>
 				<a-tooltip title="关于">
 					<a @click="state.showAbout = true">
@@ -122,6 +134,7 @@ const handleClickTabs: AnchorProps['onClick'] = (e, link) => {
 	background-color: var(--white-color);
 	height: 60px;
 	padding-inline: var(--spacing-md);
+	border-bottom: 1px solid var(--gray-lighter);
 
 	.organization {
 		display: flex;
@@ -195,7 +208,33 @@ const handleClickTabs: AnchorProps['onClick'] = (e, link) => {
 }
 
 .header-tabs {
+	position: relative;
+	display: flex;
+	height: 30px;
+	line-height: 30px;
 	margin-left: var(--spacing-md);
+	border-bottom: 1px solid var(--gray-lighter);
+}
+
+.tab-item {
+	color: var(--dark-color);
+	text-decoration: none;
+
+	&:not(:last-child) {
+		margin-right: var(--spacing-md);
+	}
+
+	&.active {
+		color: var(--blue-darker);
+		border-bottom: 2px solid var(--blue-darker);
+	}
+}
+
+.slider {
+	position: absolute;
+	background-color: red;
+	height: 2px;
+	bottom: 0;
 }
 
 .modal-container {
