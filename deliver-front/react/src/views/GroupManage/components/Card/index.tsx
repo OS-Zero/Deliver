@@ -67,7 +67,7 @@ const GroupCardComponent: React.FC<CardProps> = ({
   );
 
   return isEmpty ? (
-    <Card className={styles['empty_card']} onClick={onClick}>
+    <Card className={styles['empty_card']} onClick={onClick} style={{ width: 200 }}>
       <PlusOutlined className={styles['empty_icon']} />
       <div className={styles['empty_desc']}>添加</div>
     </Card>
@@ -75,7 +75,7 @@ const GroupCardComponent: React.FC<CardProps> = ({
     <Card
       className={styles['card']}
       hoverable
-      // cover={onClick={handleMore}></img>}
+      onClick={() => handleMore()}
     >
       <Dropdown overlay={menu} placement="bottom">
         <EllipsisOutlined className={styles['card_more']} />

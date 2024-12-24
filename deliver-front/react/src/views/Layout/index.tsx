@@ -36,38 +36,40 @@ const AppLayout: React.FC = () => {
   }, [location.pathname]);
 
   return (
-    <Layout style={{ height: '100vh' }}>
-      <Banner />
+    <div style={{ height: '100vh' }}>
       <Layout>
-        <Header />
+        <Banner />
         <Layout>
-          {menuItems.length > 0 && <SideBar items={menuItems} />}
-          <Layout className={styles['layout-section']}>
-            <div className={styles['section_breadcrumb']}>
-              <Breadcrumb />
-            </div>
-            <Content>
-              <Outlet />
-            </Content>
-            <Footer style={{ textAlign: 'center', background: 'var(--gray-lightest)' }}>
-              <div className={styles['footer_organization']}>
-                Deliver 企业消息推送平台{' '}
-                <a
-                  className={styles['organization_link']}
-                  href="https://gitee.com/OS-Zero"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <GithubOutlined />
-                </a>{' '}
-                OSZero 开源社区出品
+          <Header />
+          <Layout>
+            {menuItems.length > 0 && <SideBar items={menuItems} />}
+            <Layout className={styles['layout-section']}>
+              <div className={styles['section_breadcrumb']}>
+                <Breadcrumb />
               </div>
-              <div>Copyright 2023 OSZero. All rights reserved.</div>
-            </Footer>
+              <Content style={{ paddingBottom: '20px' }}>
+                <Outlet />
+              </Content>
+              <Footer style={{ textAlign: 'center', background: 'var(--gray-lightest)' }}>
+                <div className={styles['footer_organization']}>
+                  Deliver 企业消息推送平台{' '}
+                  <a
+                    className={styles['organization_link']}
+                    href="https://gitee.com/OS-Zero"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <GithubOutlined />
+                  </a>{' '}
+                  OSZero 开源社区出品
+                </div>
+                <div>Copyright 2023 OSZero. All rights reserved.</div>
+              </Footer>
+            </Layout>
           </Layout>
         </Layout>
       </Layout>
-    </Layout>
+    </div>
   );
 };
 
