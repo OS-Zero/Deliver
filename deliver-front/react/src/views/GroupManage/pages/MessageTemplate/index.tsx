@@ -1,82 +1,50 @@
 import React from 'react';
-import type { ProColumns } from '@ant-design/pro-components';
-import { ProTable } from '@ant-design/pro-components';
-import { Button, Space, Input, Tag, Typography } from 'antd';
-import { FilterOutlined } from '@ant-design/icons';
+import { ProColumns, ProTable } from '@ant-design/pro-components';
+import { Button, Space, Input, Switch } from 'antd';
+import { ApiOutlined, DeleteOutlined, EditOutlined, FilterOutlined } from '@ant-design/icons';
 import styles from './index.module.scss';
 import { MessageTemplate } from './type';
 import { getTemplatePages } from '@/api/message';
+import { messageTableSchema } from './constant';
+import deleteConfirmModal from '@/components/DeleteConfirmModal';
 
 const Template: React.FC = () => {
-  const { Paragraph } = Typography;
   const { Search } = Input;
 
-  const getColor = (num: number) => {
-    const colors = ['green', 'blue', 'purple', 'cyan', 'orange', 'pink', 'red'];
-    return colors[num];
-  };
-
-  const getImg = (num: number | string) => {
-    const imgPaths = [
-      { src: '', alt: '' },
-      { src: '/assets/电话.png', alt: '电话' },
-      { src: '/assets/短信.png', alt: '短信' },
-      { src: '/assets/邮件.png', alt: '邮件' },
-      { src: '/assets/钉钉.png', alt: '钉钉' },
-      { src: '/assets/企业微信.png', alt: '企业微信' },
-      { src: '/assets/飞书.png', alt: '飞书' }
-    ];
-    return imgPaths[Number(num)];
-  };
-
+  // 这两列涉及到状态的改变，于是写在视图层
   const columns: ProColumns<MessageTemplate>[] = [
+    ...messageTableSchema,
     {
-      title: '模板 ID',
-      width: 80,
-      dataIndex: 'templateId',
-      fixed: 'left',
-      render: (_, record) => <Paragraph copyable>{record?.templateId}</Paragraph>
-    },
-    {
-      title: '模版名',
+      title: '模板状态',
       width: 120,
-      dataIndex: 'templateName'
-    },
-    {
-      title: '消息类型',
-      width: 120,
-      dataIndex: 'messageTypeName',
-      render: (_) => <a>{_}</a>
-    },
-    {
-      title: '推送范围',
-      width: 120,
-      dataIndex: 'channelProviderTypeName',
-      render: (_, record) => <Tag color={getColor(record?.channelProviderType)}>{_}</Tag>
-    },
-    {
-      title: '用户类型',
-      width: 120,
-      dataIndex: 'usersTypeName',
-      render: (_, record) => <Tag color={getColor(record?.usersType)}>{_}</Tag>
-    },
-    {
-      title: '渠道类型',
-      width: 120,
-      dataIndex: 'channelTypeName',
-      valueType: 'image',
-      render: (_, record) => {
-        const { src, alt } = getImg(record?.channelType);
-        return <img src={src} alt={alt} style={{ width: 30, height: 30 }} />;
-      }
+      dataIndex: 'templateStatus',
+      render: (_, record: MessageTemplate) => (
+        <Switch
+          checkedChildren="启用"
+          unCheckedChildren="禁用"
+          checked={Boolean(record?.templateStatus)}
+        />
+      )
     },
     {
       title: '操作',
-      width: 80,
-      key: 'option',
+      width: 160,
       valueType: 'option',
       fixed: 'right',
-      render: () => [<a key="link">链路</a>]
+      render: (_, record) => [
+        <a className={styles['link-button']} key="edit">
+          <EditOutlined style={{ fontSize: '18px' }} />
+        </a>,
+        <a key="linkTest" className={styles['link-button']}>
+          <ApiOutlined style={{ fontSize: '18px' }} />
+        </a>,
+        <a
+          key="delete"
+          onClick={() => deleteConfirmModal({ onConfirm: () => console.log('delete') })}
+        >
+          <DeleteOutlined style={{ fontSize: '18px', color: 'red' }} />
+        </a>
+      ]
     }
   ];
 
@@ -88,7 +56,12 @@ const Template: React.FC = () => {
     const { pageSize = 10, current = 1 } = params; // 提供默认值
     const res = await getTemplatePages({
       currentPage: current,
-      pageSize: pageSize
+      pageSize: pageSize,
+      templateName: 'String',
+      usersType: 0,
+      templateStatus: 0,
+      startTime: 'yyyy-MM-dd HH:mm:ss',
+      endTime: 'yyyy-MM-dd HH:mm:ss'
     });
     return {
       data: res?.data?.records,
@@ -134,7 +107,7 @@ const Template: React.FC = () => {
           showTotal: (_) => `共 ${_} 条`,
           size: 'default'
         }}
-        rowKey="key"
+        rowKey="templateId"
         headerTitle={<Search placeholder="请输入" enterButton />}
         toolBarRender={() => [
           <>
