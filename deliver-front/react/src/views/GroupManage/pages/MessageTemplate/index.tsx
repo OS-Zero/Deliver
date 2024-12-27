@@ -1,135 +1,74 @@
 import React from 'react';
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
-import { Button, DatePicker, Space, Table, Input, Tag, Pagination } from 'antd';
+import { Button, Space, Input, Tag, Typography } from 'antd';
 import { FilterOutlined } from '@ant-design/icons';
-import { DingDing } from '../../../../../public/assets/钉钉.png';
+import styles from './index.module.scss';
+import { MessageTemplate } from './type';
+import { getTemplatePages } from '@/api/message';
 
 const Template: React.FC = () => {
-  const { RangePicker } = DatePicker;
+  const { Paragraph } = Typography;
   const { Search } = Input;
 
-  const valueEnum = {
-    0: 'close',
-    1: 'running',
-    2: 'online',
-    3: 'error'
+  const getColor = (num: number) => {
+    const colors = ['green', 'blue', 'purple', 'cyan', 'orange', 'pink', 'red'];
+    return colors[num];
   };
 
-  const ProcessMap = {
-    close: 'normal',
-    running: 'active',
-    online: 'success',
-    error: 'exception'
-  } as const;
-
-  type TableListItem = {
-    key: number;
-    name: string;
-    progress: number;
-    containers: number;
-    callNumber: number;
-    creator: string;
-    status: string;
-    createdAt: number;
-    memo: string;
+  const getImg = (num: number | string) => {
+    const imgPaths = [
+      { src: '', alt: '' },
+      { src: '/assets/电话.png', alt: '电话' },
+      { src: '/assets/短信.png', alt: '短信' },
+      { src: '/assets/邮件.png', alt: '邮件' },
+      { src: '/assets/钉钉.png', alt: '钉钉' },
+      { src: '/assets/企业微信.png', alt: '企业微信' },
+      { src: '/assets/飞书.png', alt: '飞书' }
+    ];
+    return imgPaths[Number(num)];
   };
-  const tableListDataSource: TableListItem[] = [];
 
-  const creators = ['付小小', '曲丽丽', '林东东', '陈帅帅', '兼某某'];
-
-  for (let i = 0; i < 50; i += 1) {
-    tableListDataSource.push({
-      key: i,
-      name: 'AppName-' + i,
-      containers: Math.floor(Math.random() * 20),
-      callNumber: Math.floor(Math.random() * 2000),
-      progress: Math.ceil(Math.random() * 100) + 1,
-      creator: creators[Math.floor(Math.random() * creators.length)],
-      status: valueEnum[((Math.floor(Math.random() * 10) % 4) + '') as '0'],
-      createdAt: Date.now() - Math.floor(Math.random() * 100000),
-      memo: i % 2 === 1 ? '很长很长很长很长很长很长很长的文字要展示但是要留下尾巴' : '简短备注文案'
-    });
-  }
-
-  const columns: ProColumns<TableListItem>[] = [
+  const columns: ProColumns<MessageTemplate>[] = [
     {
-      title: '应用名称',
-      width: 120,
-      dataIndex: 'name',
+      title: '模板 ID',
+      width: 80,
+      dataIndex: 'templateId',
       fixed: 'left',
+      render: (_, record) => <Paragraph copyable>{record?.templateId}</Paragraph>
+    },
+    {
+      title: '模版名',
+      width: 120,
+      dataIndex: 'templateName'
+    },
+    {
+      title: '消息类型',
+      width: 120,
+      dataIndex: 'messageTypeName',
       render: (_) => <a>{_}</a>
     },
     {
-      title: '容器数量',
+      title: '推送范围',
       width: 120,
-      dataIndex: 'containers',
-      align: 'right',
-      search: false
+      dataIndex: 'channelProviderTypeName',
+      render: (_, record) => <Tag color={getColor(record?.channelProviderType)}>{_}</Tag>
     },
     {
-      title: '调用次数',
+      title: '用户类型',
       width: 120,
-      align: 'right',
-      dataIndex: 'callNumber'
+      dataIndex: 'usersTypeName',
+      render: (_, record) => <Tag color={getColor(record?.usersType)}>{_}</Tag>
     },
     {
-      title: '执行进度',
-      dataIndex: 'progress',
-      valueType: (item) => ({
-        type: 'progress',
-        status: ProcessMap[item.status as 'close']
-      })
-    },
-    {
-      title: '创建者',
+      title: '渠道类型',
       width: 120,
-      dataIndex: 'creator',
-      valueType: 'select',
-      valueEnum: {
-        all: { text: '全部' },
-        付小小: { text: '付小小' },
-        曲丽丽: { text: '曲丽丽' },
-        林东东: { text: '林东东' },
-        陈帅帅: { text: '陈帅帅' },
-        兼某某: { text: '兼某某' }
-      }
-    },
-    {
-      title: '创建时间',
-      width: 140,
-      key: 'since',
-      dataIndex: 'createdAt',
-      valueType: 'date',
-      renderFormItem: () => {
-        return <RangePicker />;
-      }
-    },
-    {
-      title: '备注',
-      dataIndex: 'memo',
-      ellipsis: true,
-      copyable: true,
-      search: false
-    },
-    {
-      title: 'tag',
-      dataIndex: 'tag',
-      key: 'tag',
-      render: (_, record) => <Tag color="magenta">magenta</Tag>
-    },
-    {
-      title: '图片',
-      dataIndex: 'image',
-      key: 'image',
+      dataIndex: 'channelTypeName',
       valueType: 'image',
-      render: (_, record) => (
-        <img
-          src={'../../../../../public/assets/飞书.png'}
-          alt={record.key === 1 ? '飞书' : '钉钉'}
-          style={{ width: 30, height: 30 }}
-        />
-      )
+      render: (_, record) => {
+        const { src, alt } = getImg(record?.channelType);
+        return <img src={src} alt={alt} style={{ width: 30, height: 30 }} />;
+      }
     },
     {
       title: '操作',
@@ -141,16 +80,28 @@ const Template: React.FC = () => {
     }
   ];
 
+  /**
+   * 搜索请求表单数据
+   * @param data
+   */
+  const fetchTemplateData = async (params: { pageSize?: number; current?: number }) => {
+    const { pageSize = 10, current = 1 } = params; // 提供默认值
+    const res = await getTemplatePages({
+      currentPage: current,
+      pageSize: pageSize
+    });
+    return {
+      data: res?.data?.records,
+      success: true,
+      total: res?.data?.total
+    };
+  };
+
   return (
-    <div>
-      <ProTable<TableListItem>
+    <div className={styles['template-container']}>
+      <ProTable<MessageTemplate>
         columns={columns}
-        rowSelection={{
-          // 自定义选择项参考: https://ant.design/components/table-cn/#components-table-demo-row-selection-custom
-          // 注释该行则默认不显示下拉选项
-          // selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
-          defaultSelectedRowKeys: [1]
-        }}
+        request={fetchTemplateData}
         tableAlertRender={({ selectedRowKeys, selectedRows, onCleanSelected }) => {
           console.log(selectedRowKeys, selectedRows);
           return (
@@ -172,17 +123,15 @@ const Template: React.FC = () => {
             </Space>
           );
         }}
-        dataSource={tableListDataSource}
         scroll={{ x: 1300 }}
         options={false}
         search={false}
         pagination={{
-          current: 1,
           defaultCurrent: 1,
           defaultPageSize: 10,
           showSizeChanger: true,
           showQuickJumper: true,
-          showTotal: () => `Total items`,
+          showTotal: (_) => `共 ${_} 条`,
           size: 'default'
         }}
         rowKey="key"

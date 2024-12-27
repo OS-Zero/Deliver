@@ -1,0 +1,9 @@
+:local {
+  .template-container {
+    :global {
+      .ant-typography {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
