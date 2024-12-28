@@ -6,7 +6,7 @@ import { validateEmail } from '@/utils/validate';
 import { forgotPwd } from '@/api/user';
 import { omitProperty } from '@/utils/utils';
 import { message } from 'ant-design-vue';
-import { useVerify } from '@/utils/hooks';
+import { useVerify } from '@/hooks/verify';
 import { getRules } from '@/config/rules';
 
 const emits = defineEmits<{

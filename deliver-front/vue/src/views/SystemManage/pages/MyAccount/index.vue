@@ -1,14 +1,18 @@
 <script lang="ts" setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, onBeforeMount } from 'vue';
 import type { Rule } from 'ant-design-vue/es/form';
-import { updatePwd } from '@/api/user';
+import { getCurrentLoginUserInfo, updatePwd } from '@/api/user';
 import { omitProperty } from '@/utils/utils';
 import { message } from 'ant-design-vue';
 import { getRules } from '@/config/rules';
-import { useVerify } from '@/utils/hooks';
+import { useVerify } from '@/hooks/verify';
 import { UserInfo } from '@/types/user';
 
-const userInfo: UserInfo = JSON.parse(localStorage.getItem("user_info") as string)
+const userInfo = reactive<UserInfo>({
+	userEmail: '',
+	userRealName: '',
+	userPassword: ''
+})
 const editorData = reactive({
 	userPassword: '',
 	confirmPwd: '',
@@ -44,6 +48,10 @@ const rules: Record<string, Rule[]> = {
 };
 const { state, handleVarify } = useVerify()
 state.verifyDisabled = false
+onBeforeMount(async () => {
+	const res = await getCurrentLoginUserInfo()
+	Object.assign(userInfo, res)
+})
 </script>
 
 <template>

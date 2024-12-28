@@ -7,7 +7,7 @@ import { register } from '@/api/user';
 import { message } from 'ant-design-vue'
 import { omitProperty } from "@/utils/utils"
 import { getRules } from '@/config/rules';
-import { useVerify } from '@/utils/hooks';
+import { useVerify } from '@/hooks/verify';
 
 const emits = defineEmits<{
 	onOk: []
