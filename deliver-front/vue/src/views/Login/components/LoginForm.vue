@@ -2,10 +2,11 @@
 import { ref, reactive } from 'vue';
 import { UserInfo } from '../../../types/user';
 import type { Rule } from 'ant-design-vue/es/form';
-import { login, getCurrentLoginUserInfo } from "@/api/user";
+import { login, } from "@/api/user";
 import { useRouter } from 'vue-router';
 import { message } from 'ant-design-vue'
 import { getRules } from '@/config/rules';
+import { startup } from '@/api/startup';
 const router = useRouter()
 const loginData = reactive<UserInfo>({
 	userEmail: '',
@@ -21,10 +22,8 @@ const handleLogin = function () {
 			localStorage.setItem('access_token', res.token)
 			message.success('登录成功')
 			router.push('/')
-			const _res = await getCurrentLoginUserInfo()
-			console.log(_res);
-
-			localStorage.setItem('user_info', JSON.stringify(_res))
+			const _res = await startup()
+			localStorage.setItem('startup', JSON.stringify(_res))
 		})
 		.catch(error => {
 			console.log('error', error);
