@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { Key, useState } from 'react';
 import { ProColumns, ProTable } from '@ant-design/pro-components';
 import { Button, Space, Input, Switch } from 'antd';
 import { ApiOutlined, DeleteOutlined, EditOutlined, FilterOutlined } from '@ant-design/icons';
 import styles from './index.module.scss';
 import { MessageTemplate } from './type';
-import { getTemplatePages } from '@/api/message';
 import { messageTableSchema } from './constant';
-import deleteConfirmModal from '@/components/DeleteConfirmModal';
+import useTemplateData from './useTemplateData';
 
 const Template: React.FC = () => {
   const { Search } = Input;
+  const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
+  const { fetchTemplateData, deleteTemplateData } = useTemplateData();
 
   // 这两列涉及到状态的改变，于是写在视图层
   const columns: ProColumns<MessageTemplate>[] = [
@@ -38,45 +39,21 @@ const Template: React.FC = () => {
         <a key="linkTest" className={styles['link-button']}>
           <ApiOutlined style={{ fontSize: '18px' }} />
         </a>,
-        <a
-          key="delete"
-          onClick={() => deleteConfirmModal({ onConfirm: () => console.log('delete') })}
-        >
+        <a key="delete" onClick={() => deleteTemplateData([record?.templateId])}>
           <DeleteOutlined style={{ fontSize: '18px', color: 'red' }} />
         </a>
       ]
     }
   ];
 
-  /**
-   * 搜索请求表单数据
-   * @param data
-   */
-  const fetchTemplateData = async (params: { pageSize?: number; current?: number }) => {
-    const { pageSize = 10, current = 1 } = params; // 提供默认值
-    const res = await getTemplatePages({
-      currentPage: current,
-      pageSize: pageSize,
-      templateName: 'String',
-      usersType: 0,
-      templateStatus: 0,
-      startTime: 'yyyy-MM-dd HH:mm:ss',
-      endTime: 'yyyy-MM-dd HH:mm:ss'
-    });
-    return {
-      data: res?.data?.records,
-      success: true,
-      total: res?.data?.total
-    };
-  };
-
   return (
     <div className={styles['template-container']}>
       <ProTable<MessageTemplate>
         columns={columns}
+        rowSelection={{}}
         request={fetchTemplateData}
-        tableAlertRender={({ selectedRowKeys, selectedRows, onCleanSelected }) => {
-          console.log(selectedRowKeys, selectedRows);
+        tableAlertRender={({ selectedRowKeys, onCleanSelected }) => {
+          setSelectedRowKeys(selectedRowKeys);
           return (
             <Space size={24}>
               <span>
@@ -91,8 +68,7 @@ const Template: React.FC = () => {
         tableAlertOptionRender={() => {
           return (
             <Space size={16}>
-              <a>批量删除</a>
-              <a>导出数据</a>
+              <a onClick={() => deleteTemplateData(selectedRowKeys as number[])}>批量删除</a>
             </Space>
           );
         }}
@@ -103,7 +79,6 @@ const Template: React.FC = () => {
           defaultCurrent: 1,
           defaultPageSize: 10,
           showSizeChanger: true,
-          showQuickJumper: true,
           showTotal: (_) => `共 ${_} 条`,
           size: 'default'
         }}

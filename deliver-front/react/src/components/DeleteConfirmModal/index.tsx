@@ -1,10 +1,10 @@
-import { Modal, ModalFuncProps } from 'antd';
+import { message, Modal, ModalFuncProps } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 interface DeleteConfirmModalProps {
   title?: string;
   content?: string;
-  onConfirm: () => Promise<void>;
+  onConfirm: () => any;
   onCancel?: () => void;
   modalProps?: Partial<ModalFuncProps>;
 }
@@ -26,6 +26,7 @@ const deleteConfirmModal = ({
       try {
         await onConfirm();
         Modal.destroyAll();
+        message.success('删除成功');
       } catch (error) {
         console.error('Delete operation failed:', error);
         throw error;

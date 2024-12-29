@@ -97,7 +97,7 @@ export async function updatetemplate(data: AddTemp): Promise<R<null>> {
  */
 export async function deleteTemplate(data: { ids: Array<number> }): Promise<R<null>> {
   return await request({
-    url: '/messageTemplate/deleteByIds',
+    url: '/messageTemplate/delete',
     method: 'post',
     data
   });
