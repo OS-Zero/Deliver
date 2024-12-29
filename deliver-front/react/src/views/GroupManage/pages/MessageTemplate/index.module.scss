@@ -8,7 +8,16 @@
 
     .link-button {
       display: block;
-      margin-right: 20px;
+      margin-right: 10px;
+
+      &-delete {
+        margin-right: 10px;
+        color: red;
+      }
+    }
+
+    .more-button {
+      font-size: 16px;
     }
   }
 }

@@ -1,16 +1,30 @@
-import React, { Key, useState } from 'react';
+import React, { Key, useRef, useState } from 'react';
 import { ProColumns, ProTable } from '@ant-design/pro-components';
-import { Button, Space, Input, Switch } from 'antd';
-import { ApiOutlined, DeleteOutlined, EditOutlined, FilterOutlined } from '@ant-design/icons';
-import styles from './index.module.scss';
+import { Button, Space, Input, Switch, Dropdown, MenuProps } from 'antd';
+import { FilterOutlined, SearchOutlined } from '@ant-design/icons';
 import { MessageTemplate } from './type';
 import { messageTableSchema } from './constant';
 import useTemplateData from './useTemplateData';
+import styles from './index.module.scss';
+import DetailDrawer from './components/DetailDrawer';
 
 const Template: React.FC = () => {
-  const { Search } = Input;
+  const detailRef = useRef<{ getDetail: () => void }>();
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
   const { fetchTemplateData, deleteTemplateData } = useTemplateData();
+
+  const items: MenuProps['items'] = [
+    {
+      label: '测试发送',
+      key: 'test',
+      onClick: () => console.log('asdsad')
+    },
+    {
+      label: '查看详情',
+      key: 'detail',
+      onClick: () => detailRef?.current?.getDetail()
+    }
+  ];
 
   // 这两列涉及到状态的改变，于是写在视图层
   const columns: ProColumns<MessageTemplate>[] = [
@@ -34,14 +48,20 @@ const Template: React.FC = () => {
       fixed: 'right',
       render: (_, record) => [
         <a className={styles['link-button']} key="edit">
-          <EditOutlined style={{ fontSize: '18px' }} />
+          编辑
         </a>,
-        <a key="linkTest" className={styles['link-button']}>
-          <ApiOutlined style={{ fontSize: '18px' }} />
+        <a
+          className={styles['link-button-delete']}
+          key="delete"
+          onClick={() => deleteTemplateData([record?.templateId])}
+        >
+          删除
         </a>,
-        <a key="delete" onClick={() => deleteTemplateData([record?.templateId])}>
-          <DeleteOutlined style={{ fontSize: '18px', color: 'red' }} />
-        </a>
+        <Dropdown menu={{ items }} key="more" placement="bottom">
+          <a className={styles['more-button']} onClick={(e) => e.preventDefault()}>
+            · · ·
+          </a>
+        </Dropdown>
       ]
     }
   ];
@@ -83,7 +103,12 @@ const Template: React.FC = () => {
           size: 'default'
         }}
         rowKey="templateId"
-        headerTitle={<Search placeholder="请输入" enterButton />}
+        headerTitle={
+          <Input
+            placeholder="请输入模板名进行查询"
+            prefix={<SearchOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
+          />
+        }
         toolBarRender={() => [
           <>
             <Button shape="circle" icon={<FilterOutlined />} style={{ marginRight: '10px' }} />
@@ -93,6 +118,7 @@ const Template: React.FC = () => {
           </>
         ]}
       />
+      <DetailDrawer ref={detailRef} />
     </div>
   );
 };

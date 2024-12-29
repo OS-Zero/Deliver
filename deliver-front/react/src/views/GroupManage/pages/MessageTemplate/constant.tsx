@@ -60,7 +60,7 @@ export const messageTableSchema: ProColumns<MessageTemplate>[] = [
     valueType: 'image',
     render: (_, record) => {
       const { src, alt } = getImg(record?.channelType);
-      return <img src={src} alt={alt} style={{ width: 30, height: 30 }} />;
+      return <img src={src} alt={alt} style={{ width: 35, height: 35 }} />;
     }
   }
 ];
