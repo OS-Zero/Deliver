@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia';
 import {
 	getTemplatePages,
 	getMessageType,
@@ -7,52 +7,52 @@ import {
 	updatetemplate,
 	getMessageParamByMessageType,
 	sendTestMes,
-} from '@/api/message.ts'
-import { SearchModel, AddTemp, SendTestMessage } from '@/views/Message/type'
+} from '@/api/messageTemplate';
+import { SearchModel, AddTemp, SendTestMessage } from '@/views/Message/type';
 export const useMessageStore = defineStore('message', {
 	state: () => {
-		return {}
+		return {};
 	},
 	getters: {},
 	actions: {
 		async getTemplatePages(data: SearchModel, page?: { currentPage: number; pageSize: number }) {
 			try {
-				const res = await getTemplatePages(Object.assign(data, page ? page : { currentPage: 1, pageSize: 10 }))
+				const res = await getTemplatePages(Object.assign(data, page ? page : { currentPage: 1, pageSize: 10 }));
 				res.data.records.forEach((item) => {
 					if (item.pushWays) {
-						const obj = JSON.parse(item.pushWays)
-						item.channelType = obj.channelType
-						item.messageType = obj.messageType
+						const obj = JSON.parse(item.pushWays);
+						item.channelType = obj.channelType;
+						item.messageType = obj.messageType;
 					}
-				})
-				return res.data
+				});
+				return res.data;
 			} catch (error) {
-				console.log(error)
-				throw error
+				console.log(error);
+				throw error;
 			}
 		},
 		async getMessageType(num: number) {
 			try {
-				const res = await getMessageType({ channelType: num })
+				const res = await getMessageType({ channelType: num });
 				return res.data.map((item) => {
-					return { label: item.name, value: item.code }
-				})
+					return { label: item.name, value: item.code };
+				});
 			} catch (error) {
-				console.log(error)
-				throw error
-				throw error
+				console.log(error);
+				throw error;
+				throw error;
 			}
 		},
 		async getApp(num: number) {
 			try {
-				const res = await getApp({ channelType: num })
+				const res = await getApp({ channelType: num });
 				return res.data.map((item) => {
-					return { label: item.appName, value: item.appId }
-				})
+					return { label: item.appName, value: item.appId };
+				});
 			} catch (error) {
-				console.log(error)
-				throw error
-				throw error
+				console.log(error);
+				throw error;
+				throw error;
 			}
 		},
 		async addTemplatePages(obj: AddTemp) {
@@ -60,11 +60,11 @@ export const useMessageStore = defineStore('message', {
 				obj.pushWays = JSON.stringify({
 					channelType: obj.channelType,
 					messageType: obj.messageType,
-				})
-				await addTemplatePages(obj)
+				});
+				await addTemplatePages(obj);
 			} catch (error) {
-				console.log(error)
-				throw error
+				console.log(error);
+				throw error;
 			}
 		},
 		async updatetemplate(obj: AddTemp) {
@@ -72,29 +72,29 @@ export const useMessageStore = defineStore('message', {
 				obj.pushWays = JSON.stringify({
 					channelType: obj.channelType,
 					messageType: obj.messageType,
-				})
-				await updatetemplate(obj)
+				});
+				await updatetemplate(obj);
 			} catch (error) {
-				console.log(error)
-				throw error
+				console.log(error);
+				throw error;
 			}
 		},
 		async getMessageParamByMessageType(messageType: number, channelType: number) {
 			try {
-				const res = await getMessageParamByMessageType({ messageType, channelType })
-				return JSON.parse(res.data)
+				const res = await getMessageParamByMessageType({ messageType, channelType });
+				return JSON.parse(res.data);
 			} catch (error) {
-				console.log(error)
-				throw error
+				console.log(error);
+				throw error;
 			}
 		},
 		async sendTestMes(data: SendTestMessage) {
 			try {
-				await sendTestMes(data)
+				await sendTestMes(data);
 			} catch (error) {
-				console.log(error)
-				throw error
+				console.log(error);
+				throw error;
 			}
 		},
 	},
-})
+});

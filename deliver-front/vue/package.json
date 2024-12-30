@@ -15,7 +15,7 @@
     "ant-design-vue": "^4.0.6",
     "axios": "^1.5.1",
     "echarts": "^5.4.3",
-    "json-editor-vue3": "^1.0.9",
+    "json-editor-vue3": "^1.1.1",
     "mitt": "^3.0.1",
     "nprogress": "^0.2.0",
     "pinia": "^2.1.7",

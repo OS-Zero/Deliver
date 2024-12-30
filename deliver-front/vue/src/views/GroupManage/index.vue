@@ -7,6 +7,7 @@ import { GroupCard, GroupCardList } from '@/types/group';
 import { getRules } from '@/config/rules';
 import { message } from 'ant-design-vue';
 import { SearchOutlined } from '@ant-design/icons-vue';
+import Drawer from "@/components/Drawer/index.vue"
 const router = useRouter()
 const state = reactive({
 	mainPage: true,
@@ -16,6 +17,8 @@ const state = reactive({
 })
 const onOpen = () => {
 	state.open = true
+	console.log('hello');
+
 }
 const onClose = () => {
 	state.open = false
@@ -45,7 +48,10 @@ const onOk = (cb: () => void) => {
 			console.log('error', error);
 		});
 }
-const formMeta = {
+const formMeta: Record<string, {
+	title: string,
+	success: () => void
+}> = {
 	add: {
 		title: '添加分组',
 		success: () => {
@@ -58,6 +64,8 @@ const formMeta = {
 	edit: {
 		title: '编辑分组',
 		success: () => {
+			console.log('编辑分组');
+
 			onOk(async () => {
 				await updateGroup(groupFormData)
 				message.success('编辑成功')
@@ -73,6 +81,7 @@ const formMeta = {
 		}
 	},
 	toTop: {
+		title: '置顶分组',
 		success: async () => {
 			await toTopGroup({ groupId: groupFormData.groupId })
 			flashData()
@@ -124,12 +133,8 @@ const changeOperation = (op: 'add' | 'edit' | 'delete' | 'top', data?: GroupCard
 						@on-delete="changeOperation('delete', item)"></Card>
 				</div>
 			</div>
-			<a-drawer :width="500" :title="formMeta[state.operation].title" placement="right" :open="state.open"
+			<Drawer :open="state.open" :title="formMeta[state.operation].title" @ok="formMeta[state.operation].success"
 				@close="onClose">
-				<template #extra>
-					<a-button style="margin-right: 8px" @click="onClose">取消</a-button>
-					<a-button type="primary" @click="formMeta[state.operation].success">确定</a-button>
-				</template>
 				<a-form ref="formRef" :model="groupFormData" name="basic" :rules="groupRules" :label-col="{ span: 4 }">
 					<a-form-item label="分组名" name="groupName">
 						<a-input v-model:value="groupFormData.groupName" />
@@ -138,7 +143,7 @@ const changeOperation = (op: 'add' | 'edit' | 'delete' | 'top', data?: GroupCard
 						<a-textarea v-model:value="groupFormData.groupDescription" />
 					</a-form-item>
 				</a-form>
-			</a-drawer>
+			</Drawer>
 		</template>
 		<template v-else>
 			<RouterView />

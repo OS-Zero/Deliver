@@ -1,7 +1,7 @@
 import { validateEmail } from '@/utils/validate';
 import type { Rule } from 'ant-design-vue/es/form';
 type RuleType = 'userEmail' | 'userPassword' | 'userRealName' | 'verificationCode' | 'groupName' | 'groupDescription';
-function getRangeRule(min: number, max: number, message: string, trigger: 'blur' | 'change' = 'blur'): Rule[] {
+export function getRangeRule(min: number, max: number, message: string, trigger: 'blur' | 'change' = 'blur'): Rule[] {
 	if (min === max) {
 		return [{ len: min, message, trigger }];
 	}
@@ -10,7 +10,7 @@ function getRangeRule(min: number, max: number, message: string, trigger: 'blur'
 		{ max, message, trigger },
 	];
 }
-function getRequiredRule(message: string, trigger: 'blur' | 'change' = 'blur') {
+export function getRequiredRule(message: string, trigger: 'blur' | 'change' = 'blur') {
 	return {
 		required: true,
 		message,

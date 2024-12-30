@@ -245,7 +245,7 @@ const handleCancel = (): void => {
 	open.value = false
 }
 const jsonChange = () => {
-	appForm.value?.validate('appConfig').then(() => {})
+	appForm.value?.validate('appConfig').then(() => { })
 }
 const channelTypeSelect = (value) => {
 	getAppConfigByChannelType({ channelType: value }).then((res) => {
@@ -340,14 +340,8 @@ onMounted(() => {
 			</div>
 			<a-row v-show="!tableLoadFlag" :span="24">
 				<a-col :span="6" style="padding-left: 10px; padding-top: 15px" v-for="(record, index) in appTable" :key="index">
-					<a-drawer
-						v-model:open="record.appInfoOpen"
-						title="应用信息"
-						width="600px"
-						:footer="null"
-						:placement="'left'"
-						@close="record.showAppConfig = false"
-					>
+					<a-drawer v-model:open="record.appInfoOpen" title="应用信息" width="600px" :footer="null" :placement="'left'"
+						@close="record.showAppConfig = false">
 						<div>
 							<span style="color: #646a73">应用ID：</span>
 							<span>{{ record.appId }}</span>
@@ -362,11 +356,8 @@ onMounted(() => {
 						</div>
 						<a-divider />
 						<a-descriptions title="APP 配置" :column="1" layout="vertical">
-							<a-descriptions-item
-								:label="label"
-								v-for="(value, label, index) in JSON.parse(record.appConfig)"
-								:key="index"
-							>
+							<a-descriptions-item :label="label" v-for="(value, label, index) in JSON.parse(record.appConfig)"
+								:key="index">
 								<div v-show="record.showAppConfig" style="color: #1677ff">{{ value }}</div>
 								<div v-show="!record.showAppConfig">{{ '*'.repeat((value + '').length) }}</div>
 							</a-descriptions-item>
@@ -381,15 +372,13 @@ onMounted(() => {
 							<span>{{ record.createTime }}</span>
 						</div>
 					</a-drawer>
-					<div
-						style="
+					<div style="
 							border-color: #dee0e3;
 							border-style: solid;
 							border-width: 1px;
 							padding: 15px 15px 8px;
 							border-radius: 6px;
-						"
-					>
+						">
 						<div>
 							<div style="position: relative">
 								<span>
@@ -401,18 +390,16 @@ onMounted(() => {
 									<strong style="font-size: 15px">{{
 										record.appName.length > 10 ? record.appName.substring(0, 10) + '...' : record.appName
 									}}</strong>
-									<span
-										:style="{
-											display: 'inline-block',
-											height: '8px',
-											width: '8px',
-											background: record.appStatus == 1 ? 'rgb(10, 191, 91)' : 'rgb(229, 69, 69)',
-											borderRadius: '7px',
-											verticalAlign: 'middle',
-											marginLeft: '10px',
-											marginBottom: '5px',
-										}"
-									></span>
+									<span :style="{
+										display: 'inline-block',
+										height: '8px',
+										width: '8px',
+										background: record.appStatus == 1 ? 'rgb(10, 191, 91)' : 'rgb(229, 69, 69)',
+										borderRadius: '7px',
+										verticalAlign: 'middle',
+										marginLeft: '10px',
+										marginBottom: '5px',
+									}"></span>
 								</span>
 								<a-tooltip>
 									<template #title>修改 APP</template>
@@ -434,12 +421,8 @@ onMounted(() => {
 						</div>
 						<a-divider style="margin-top: 8px" />
 						<div style="margin-top: -18px; position: relative">
-							<a-popconfirm
-								:title="record.appStatus == 1 ? '请确认停用操作' : '确定要启用该应用吗？'"
-								ok-text="确认"
-								cancel-text="取消"
-								@confirm="changeStatus(record.appId, record.appStatus == 1 ? 0 : 1)"
-							>
+							<a-popconfirm :title="record.appStatus == 1 ? '请确认停用操作' : '确定要启用该应用吗？'" ok-text="确认" cancel-text="取消"
+								@confirm="changeStatus(record.appId, record.appStatus == 1 ? 0 : 1)">
 								<a-button shape="default" :type="record.appStatus == 0 ? 'primary' : 'default'">
 									{{ record.appStatus == 1 ? '禁用' : '启用' }}
 								</a-button>
@@ -452,63 +435,29 @@ onMounted(() => {
 					</div>
 				</a-col>
 			</a-row>
-			<a-pagination
-				v-model:current="current"
-				v-model:pageSize="pageSize"
-				class="pagination"
-				show-quick-jumper
-				:total="total"
-				@change="change"
-				showSizeChanger
-				:pageSizeOptions="['12', '24', '48', '96']"
-				:locale="locale"
-				:show-total="(total) => `共 ${total} 条数据`"
-			/>
+			<a-pagination v-model:current="current" v-model:pageSize="pageSize" class="pagination" show-quick-jumper
+				:total="total" @change="change" showSizeChanger :pageSizeOptions="['12', '24', '48', '96']" :locale="locale"
+				:show-total="(total) => `共 ${total} 条数据`" />
 		</div>
 	</div>
 	<a-drawer v-model:open="open" title="修改 APP " width="660px" :footer="null" @cancel="handleCancel">
-		<a-form
-			ref="appForm"
-			:model="updateDate"
-			:label-col="labelCol"
-			:wrapper-col="wrapperCol"
-			class="temform"
-			:rules="rules"
-		>
+		<a-form ref="appForm" :model="updateDate" :label-col="labelCol" :wrapper-col="wrapperCol" class="temform"
+			:rules="rules">
 			<a-form-item ref="appName" label="APP 名称" name="appName" class="tem-item">
-				<a-input
-					:maxlength="20"
-					v-model:value="updateDate.appName"
-					placeholder="请填写长度在 3 到 20 个字符的 APP 名"
-				/>
+				<a-input :maxlength="20" v-model:value="updateDate.appName" placeholder="请填写长度在 3 到 20 个字符的 APP 名" />
 			</a-form-item>
 
 			<a-form-item label="渠道选择" name="channelType" class="tem-item">
-				<a-select
-					v-model:value="updateDate.channelType"
-					:options="channelData.map((pro) => ({ value: pro.value, label: pro.label }))"
-					@select="channelTypeSelect"
-				/>
+				<a-select v-model:value="updateDate.channelType"
+					:options="channelData.map((pro) => ({ value: pro.value, label: pro.label }))" @select="channelTypeSelect" />
 			</a-form-item>
 			<a-form-item label="APP 配置" name="appConfig" class="tem-item">
-				<json-editor-vue
-					class="editor"
-					v-model="jsonobj"
-					currentMode="code"
-					:modeList="modeList"
-					:options="options"
-					@change="jsonChange"
-					language="cn"
-				/>
+				<json-editor-vue class="editor" v-model="jsonobj" currentMode="code" :modeList="modeList" :options="options"
+					@change="jsonChange" language="cn" />
 			</a-form-item>
 			<a-form-item label="APP 状态" name="appStatus" class="tem-item">
-				<a-switch
-					v-model:checked="updateDate.appStatus"
-					checked-children="启用"
-					un-checked-children="禁用"
-					:checkedValue="1"
-					:unCheckedValue="0"
-				/>
+				<a-switch v-model:checked="updateDate.appStatus" checked-children="启用" un-checked-children="禁用"
+					:checkedValue="1" :unCheckedValue="0" />
 			</a-form-item>
 		</a-form>
 		<template #extra>

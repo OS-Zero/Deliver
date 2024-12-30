@@ -6,12 +6,12 @@ import {
 	ThunderboltOutlined,
 	SettingOutlined,
 	CopyTwoTone,
-} from '@ant-design/icons-vue'
-import { message } from 'ant-design-vue'
-import { getMessageType, getPushRange, getUsersType, getImg } from '@/utils/table.ts'
-import { useMessageStore } from '@/store/modules/message.ts'
-import Table from '@/types/table'
-const messageStore = useMessageStore()
+} from '@ant-design/icons-vue';
+import { message } from 'ant-design-vue';
+import { getMessageType, getPushRange, getUsersType, getImg } from '@/utils/table.ts';
+import { useMessageStore } from '@/store/modules/message.ts';
+import Table from '@/types/table';
+const messageStore = useMessageStore();
 const editTemplateField: Form.Feedback = {
 	type: 'drawer',
 	title: '新增模板',
@@ -45,14 +45,14 @@ const editTemplateField: Form.Feedback = {
 				{ label: '企业内部', value: 1 },
 				{ label: '企业外部', value: 2 },
 			],
-		]
+		];
 		if (nums[0] === 0 || nums[0] === 1) {
 			res.push([
 				{ value: 1, label: '企业账号' },
 				{ value: 2, label: '电话' },
 				{ value: 3, label: '邮箱' },
 				{ value: 4, label: '平台 UserId' },
-			])
+			]);
 			switch (nums[1]) {
 				case 1:
 					res.push([
@@ -62,8 +62,8 @@ const editTemplateField: Form.Feedback = {
 						{ value: 4, label: '钉钉' },
 						{ value: 5, label: '企业微信' },
 						{ value: 6, label: '飞书' },
-					])
-					break
+					]);
+					break;
 				case 2:
 					res.push([
 						{ value: 1, label: '电话' },
@@ -71,43 +71,43 @@ const editTemplateField: Form.Feedback = {
 						{ value: 4, label: '钉钉' },
 						{ value: 5, label: '企业微信' },
 						{ value: 6, label: '飞书' },
-					])
-					break
+					]);
+					break;
 				case 3:
-					res.push([{ value: 3, label: '邮件' }])
-					break
+					res.push([{ value: 3, label: '邮件' }]);
+					break;
 				case 4:
 					res.push([
 						{ value: 4, label: '钉钉' },
 						{ value: 5, label: '企业微信' },
 						{ value: 6, label: '飞书' },
-					])
-					break
+					]);
+					break;
 				default:
-					res.push([])
-					break
+					res.push([]);
+					break;
 			}
 		} else {
 			res.push([
 				{ value: 2, label: '电话' },
 				{ value: 3, label: '邮箱' },
-			])
+			]);
 			switch (nums[1]) {
 				case 2:
 					res.push([
 						{ value: 1, label: '电话' },
 						{ value: 2, label: '短信' },
-					])
-					break
+					]);
+					break;
 				case 3:
-					res.push([{ value: 3, label: '邮件' }])
-					break
+					res.push([{ value: 3, label: '邮件' }]);
+					break;
 				default:
-					res.push([])
-					break
+					res.push([]);
+					break;
 			}
 		}
-		return res
+		return res;
 	},
 	requests: [
 		{
@@ -115,10 +115,10 @@ const editTemplateField: Form.Feedback = {
 			param: ['appId'],
 			request: async (num: number) => {
 				try {
-					return await messageStore.getApp(num)
+					return await messageStore.getApp(num);
 				} catch (error) {
-					console.log(error)
-					throw error
+					console.log(error);
+					throw error;
 				}
 			},
 		},
@@ -127,10 +127,10 @@ const editTemplateField: Form.Feedback = {
 			param: ['messageType'],
 			request: async (num: number) => {
 				try {
-					return await messageStore.getMessageType(num)
+					return await messageStore.getMessageType(num);
 				} catch (error) {
-					console.log(error)
-					throw error
+					console.log(error);
+					throw error;
 				}
 			},
 		},
@@ -198,7 +198,7 @@ const editTemplateField: Form.Feedback = {
 			type: 'switch',
 		},
 	],
-}
+};
 //测试发送表单
 const sendTest: Form.Feedback = {
 	type: 'drawer',
@@ -209,10 +209,10 @@ const sendTest: Form.Feedback = {
 			params: ['messageType', 'channelType'],
 			request: async (messageType: number, channelType: number) => {
 				try {
-					return await messageStore.getMessageParamByMessageType(messageType, channelType)
+					return await messageStore.getMessageParamByMessageType(messageType, channelType);
 				} catch (error) {
-					console.log(error)
-					throw error
+					console.log(error);
+					throw error;
 				}
 			},
 		},
@@ -240,7 +240,7 @@ const sendTest: Form.Feedback = {
 			field: 'retry',
 		},
 	],
-}
+};
 // 基本表格配置
 export const tableColumns: Table.Columns[] = [
 	{
@@ -255,8 +255,8 @@ export const tableColumns: Table.Columns[] = [
 		options: {
 			tip: '复制 TemplateId 发送消息吧~',
 			func: (text: string): void => {
-				navigator.clipboard.writeText(text)
-				message.success('复制成功')
+				navigator.clipboard.writeText(text);
+				message.success('复制成功');
 			},
 		},
 	},
@@ -356,10 +356,10 @@ export const tableColumns: Table.Columns[] = [
 			},
 		],
 	},
-]
+];
 
 //表头表单配置
-export const tableHeader: Record<string, Form.Feedback> = { editTemplateField }
+export const tableHeader: Record<string, Form.Feedback> = { editTemplateField };
 
 //表头选项配置
 export const tableHeaderOptions: Record<string, Form.Options> = {
@@ -367,7 +367,7 @@ export const tableHeaderOptions: Record<string, Form.Options> = {
 		resetButtonText: '重置',
 		submitButtonText: '确认新建',
 	},
-}
+};
 //表单选项
 export const tableOptions: Record<string, Table.Options> = {
 	templateOption: {
@@ -396,6 +396,6 @@ export const tableOptions: Record<string, Table.Options> = {
 			showTotal: (total: number) => `共 ${total} 条数据`,
 		},
 	},
-}
+};
 //表格表单配置
-export const tableForm = {}
+export const tableForm = {};

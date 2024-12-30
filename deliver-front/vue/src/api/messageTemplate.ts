@@ -1,21 +1,13 @@
 import request from '@/utils/request.ts';
-import { R, SearchData } from '@/types';
-import type {
-	MessageTemplate,
-	SearchMessage,
-	SendTestMessage,
-	AppItem,
-	MessageItem,
-	TemplateItem,
-	AddTemp,
-} from '@/views/Message/type';
+import { TableData } from '@/types';
+import type { MessageTemplate, Message, SearchParams, TestSendMessage } from '@/types/messageTemplate';
 
 /**
  * 模版分页查询
  * @param data 搜索框数据
  * @returns 返回模板数据
  */
-export async function getTemplatePages(data: SearchMessage): Promise<SearchData<MessageTemplate>> {
+export async function getMessageTemplates(data: SearchParams): Promise<TableData<MessageTemplate>> {
 	return await request({
 		url: '/template/search',
 		method: 'post',
@@ -28,7 +20,7 @@ export async function getTemplatePages(data: SearchMessage): Promise<SearchData<
  * @param data 1-电话、2-短信、3-邮件、4-钉钉、5-企业微信、6-飞书
  * @returns 返回消息类型
  */
-export async function getMessageType(data: { channelType: number }): Promise<R<Array<MessageItem>>> {
+export async function getMessageTypeByChannelType(data: { channelType: number }): Promise<Array<Message>> {
 	return await request({
 		url: '/template/getMessageTypeByChannelType',
 		method: 'post',
@@ -41,7 +33,7 @@ export async function getMessageType(data: { channelType: number }): Promise<R<A
  * @param data 1-电话、2-短信、3-邮件、4-钉钉、5-企业微信、6-飞书
  * @returns 返回消息类型
  */
-export async function getApp(data: { channelType: number }): Promise<R<Array<AppItem>>> {
+export async function getApp(data: { channelType: number }): Promise<never> {
 	return await request({
 		url: '/app/getAppByChannelType',
 		method: 'post',
@@ -54,9 +46,9 @@ export async function getApp(data: { channelType: number }): Promise<R<Array<App
  * @param data 新增模板数据
  * @returns
  */
-export async function addTemplatePages(data: AddTemp): Promise<R<null>> {
+export async function addMessageTemplate(data: MessageTemplate): Promise<never> {
 	return await request({
-		url: '/template/saveTemplate',
+		url: '/messageTemplate/save',
 		method: 'post',
 		data,
 	});
@@ -67,9 +59,9 @@ export async function addTemplatePages(data: AddTemp): Promise<R<null>> {
  * @param data
  * @returns
  */
-export async function updateStatus(data: TemplateItem): Promise<R<null>> {
+export async function updateMessageTemplateStatus(data: Pick<MessageTemplate, 'templateId' | 'templateStatus'>): Promise<never> {
 	return await request({
-		url: '/template/updateStatusById',
+		url: '/messageTemplate/updateStatus',
 		method: 'post',
 		data,
 	});
@@ -80,9 +72,9 @@ export async function updateStatus(data: TemplateItem): Promise<R<null>> {
  * @param data
  * @returns
  */
-export async function updatetemplate(data: AddTemp): Promise<R<null>> {
+export async function updateMessageTemplate(data: MessageTemplate): Promise<never> {
 	return await request({
-		url: '/template/updateById',
+		url: '/messageTemplate/update',
 		method: 'post',
 		data,
 	});
@@ -93,9 +85,9 @@ export async function updatetemplate(data: AddTemp): Promise<R<null>> {
  * @param data
  * @returns
  */
-export async function deleteTemplate(data: { ids: Array<number> }): Promise<R<null>> {
+export async function deleteMessageTemplate(data: { ids: Array<number> }): Promise<never> {
 	return await request({
-		url: '/template/deleteByIds',
+		url: '/messageTemplate/delete',
 		method: 'post',
 		data,
 	});
@@ -106,9 +98,9 @@ export async function deleteTemplate(data: { ids: Array<number> }): Promise<R<nu
  * @param data
  * @returns
  */
-export async function sendTestMes(data: SendTestMessage): Promise<R<null>> {
+export async function testSendMessage(data: TestSendMessage): Promise<never> {
 	return await request({
-		url: '/template/testSendMessage',
+		url: '/messageTemplate/testSendMessage',
 		method: 'post',
 		data,
 	});

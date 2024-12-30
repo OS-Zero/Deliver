@@ -20,7 +20,6 @@ service.interceptors.request.use(
 service.interceptors.response.use(
 	(res) => {
 		const _res = res.data;
-		console.log(_res);
 
 		if (_res.code === 600) {
 			message.error(_res.errorMessage);
