@@ -1,30 +1,33 @@
-import React, { Key, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { ProColumns, ProTable } from '@ant-design/pro-components';
 import { Button, Space, Input, Switch, Dropdown, MenuProps } from 'antd';
 import { FilterOutlined, SearchOutlined } from '@ant-design/icons';
 import { MessageTemplate } from './type';
-import { messageTableSchema } from './constant';
+import { messageTableSchema } from './constant.tsx';
 import useTemplateData from './useTemplateData';
 import styles from './index.module.scss';
 import DetailDrawer from './components/DetailDrawer';
 
 const Template: React.FC = () => {
-  const detailRef = useRef<{ getDetail: () => void }>();
-  const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
+  const detailRef = useRef<{ getDetail: (record: MessageTemplate) => void }>();
   const { fetchTemplateData, deleteTemplateData } = useTemplateData();
 
   const items: MenuProps['items'] = [
     {
       label: '测试发送',
-      key: 'test',
-      onClick: () => console.log('asdsad')
+      key: 'test'
     },
     {
       label: '查看详情',
-      key: 'detail',
-      onClick: () => detailRef?.current?.getDetail()
+      key: 'detail'
     }
   ];
+
+  const handleMenuClick = (e: any, record: MessageTemplate) => {
+    if (e?.key === 'detail') {
+      detailRef.current?.getDetail(record);
+    }
+  };
 
   // 这两列涉及到状态的改变，于是写在视图层
   const columns: ProColumns<MessageTemplate>[] = [
@@ -57,7 +60,11 @@ const Template: React.FC = () => {
         >
           删除
         </a>,
-        <Dropdown menu={{ items }} key="more" placement="bottom">
+        <Dropdown
+          menu={{ items, onClick: (e) => handleMenuClick(e, record) }}
+          key="more"
+          placement="bottom"
+        >
           <a className={styles['more-button']} onClick={(e) => e.preventDefault()}>
             · · ·
           </a>
@@ -73,7 +80,6 @@ const Template: React.FC = () => {
         rowSelection={{}}
         request={fetchTemplateData}
         tableAlertRender={({ selectedRowKeys, onCleanSelected }) => {
-          setSelectedRowKeys(selectedRowKeys);
           return (
             <Space size={24}>
               <span>
@@ -85,7 +91,7 @@ const Template: React.FC = () => {
             </Space>
           );
         }}
-        tableAlertOptionRender={() => {
+        tableAlertOptionRender={({ selectedRowKeys }) => {
           return (
             <Space size={16}>
               <a onClick={() => deleteTemplateData(selectedRowKeys as number[])}>批量删除</a>
@@ -111,10 +117,10 @@ const Template: React.FC = () => {
         }
         toolBarRender={() => [
           <>
-            <Button shape="circle" icon={<FilterOutlined />} style={{ marginRight: '10px' }} />
-            <Button key="add" type="primary">
-              新增模版
+            <Button key="add" type="primary" style={{ marginRight: '5px' }}>
+              新增
             </Button>
+            <Button shape="circle" icon={<FilterOutlined />} />
           </>
         ]}
       />
