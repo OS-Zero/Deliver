@@ -1,5 +1,5 @@
 import { FormItem } from '@/types/form';
-import { reactive, WatchEffect, watchEffect, WatchHandle } from 'vue';
+import { reactive, watchEffect, WatchHandle } from 'vue';
 
 export function omitProperty(obj: Object, key: string) {
 	return JSON.parse(
@@ -32,11 +32,11 @@ export function getDataFromSchema<T>(record: Record<keyof T, FormItem<keyof T>>)
 	return _obj as T;
 }
 
-export function dynamic<T extends object>(obj: T, effects: WatchEffect[]) {
+export function dynamic<T extends object>(obj: T, effects: Function[]) {
 	const dynamicData = reactive(obj);
 	const stopHandle: WatchHandle[] = [];
 	effects.forEach((effect) => {
-		stopHandle.push(watchEffect(effect));
+		stopHandle.push(watchEffect(effect.bind(null, dynamicData)));
 	});
 	const stop = () => {
 		stopHandle.forEach((handle) => handle());

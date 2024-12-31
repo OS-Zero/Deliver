@@ -4,6 +4,7 @@ import { getRequiredRule, getRangeRule } from './rules';
 import { SelectProps } from 'ant-design-vue';
 import { MessageTemplateForm, TestSendMessage } from '@/types/messageTemplate';
 import { getChannelType, getParam } from '@/api/system';
+import { getAppByChannel } from '@/api/channelApp';
 export const messageTemplateColumns: ColumnsType = [
 	{
 		title: '模板 ID',
@@ -53,16 +54,12 @@ const userTypes: SelectProps['options'] = JSON.parse(localStorage.getItem('start
 	}),
 );
 
-export const messageTemplateSchema: Record<string, FormItem<keyof MessageTemplateForm>> = {
+type MessageTemplateSchema = Record<FormItem<keyof MessageTemplateForm>>;
+export const messageTemplateSchema: MessageTemplateSchema = {
 	templateId: {
 		value: '',
 		type: 'none',
 		fieldName: 'templateId',
-	},
-	appId: {
-		value: '',
-		type: 'none',
-		fieldName: 'appId',
 	},
 	templateName: {
 		value: '',
@@ -76,7 +73,7 @@ export const messageTemplateSchema: Record<string, FormItem<keyof MessageTemplat
 		type: 'textarea',
 		fieldName: 'templateDescription',
 		label: '模板描述',
-		rules: [...getRangeRule(3, 20, '字符长度限制在3-20')],
+		rules: [getRequiredRule('请输入模板描述'), ...getRangeRule(3, 20, '字符长度限制在3-20')],
 	},
 	usersType: {
 		value: '',
@@ -110,35 +107,54 @@ export const messageTemplateSchema: Record<string, FormItem<keyof MessageTemplat
 		rules: [getRequiredRule('请选消息类型')],
 		options: [],
 	},
+	appId: {
+		value: '',
+		type: 'select',
+		fieldName: 'appId',
+		label: '应用 ID',
+		rules: [getRequiredRule('请选择应用 ID')],
+		options: [],
+	},
 };
 export const messageTemplateSchemaDeps = [
-	async () => {
-		console.log('watch usersType');
+	async (data: MessageTemplateSchema) => {
 		try {
-			messageTemplateSchema.channelType.options = (await getChannelType({ userType: messageTemplateSchema.usersType.value })).map((item) => ({
+			data.channelType.options = (await getChannelType({ userType: data.usersType.value })).map((item) => ({
 				value: item.channelType,
 				label: item.channelTypeName,
 			}));
 		} catch (error) {
-			messageTemplateSchema.channelType.options = [];
+			data.channelType.options = [];
 		}
 	},
-	async () => {
+	async (data: MessageTemplateSchema) => {
 		try {
-			console.log('watch two');
-			const { channelProviderTypeList, messageTypeList } = await getParam({ channelType: messageTemplateSchema.channelType.value });
-			messageTemplateSchema.channelProviderType.options = channelProviderTypeList.map((item) => ({
+			const { channelProviderTypeList, messageTypeList } = await getParam({ channelType: data.channelType.value });
+			data.channelProviderType.options = channelProviderTypeList.map((item) => ({
 				value: item.channelProviderType,
 				label: item.channelProviderTypeName,
 			}));
-			messageTemplateSchema.messageType.options = messageTypeList.map((item) => ({
+			data.messageType.options = messageTypeList.map((item) => ({
 				value: item.messageType,
 				label: item.messageTypeName,
 			}));
-			messageTemplateSchema.messageType.disabled = false;
 		} catch (error) {
-			messageTemplateSchema.channelProviderType.options = [];
-			messageTemplateSchema.messageType.options = [];
+			data.channelProviderType.options = [];
+			data.messageType.options = [];
+		}
+	},
+	async (data: MessageTemplateSchema) => {
+		try {
+			const appOptions = await getAppByChannel({
+				channelType: data.channelType.value,
+				channelProviderType: data.channelProviderType.value,
+			});
+			data.appId.options = appOptions.map((item) => ({
+				value: item.appId,
+				label: item.appName,
+			}));
+		} catch (error) {
+			data.appId.options = [];
 		}
 	},
 ];
