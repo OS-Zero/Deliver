@@ -258,7 +258,7 @@ onUnmounted(() => {
 	align-items: center;
 	margin-bottom: var(--spacing-xs);
 	padding: var(--spacing-xs);
-	border: 1px solid var(--gray-lighter);
+	border-bottom: 1px solid var(--gray-lighter);
 }
 
 .id--copy {
