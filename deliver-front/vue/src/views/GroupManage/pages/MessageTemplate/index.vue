@@ -151,13 +151,8 @@ onUnmounted(() => {
 				<SearchInput placeholder="模糊查询模板" @search=""></SearchInput>
 				<div class="operation">
 					<a-button class="btn--add" @click="handleActions('add')" type="primary">新增</a-button>
-					<a-tooltip placement="top">
-						<template #title>
-							<span>筛选</span>
-						</template>
-						<a-button :icon="h(FilterOutlined)" shape="circle" type="text"
-							@click="filterState.open = !filterState.open"></a-button>
-					</a-tooltip>
+					<a-button :icon="h(FilterOutlined)" shape="circle" type="text"
+						@click="filterState.open = !filterState.open"></a-button>
 				</div>
 			</div>
 			<a-table :dataSource="dataSource" :columns="messageTemplateColumns" :scroll="{ x: 800 }">
@@ -195,7 +190,7 @@ onUnmounted(() => {
 		<a-card size="small" class="filter-form" :class="{ open: filterState.open }" title="筛选">
 			<template #extra><a-button type="text" :icon="h(CloseOutlined)"
 					@click="filterState.open = false"></a-button></template>
-			<Form layout="vertical" :label-col="{ span: 4 }" ref="formRef" :form-schema="filterForm" />
+			<Form layout="vertical" ref="formRef" :form-schema="filterForm" />
 		</a-card>
 		<Drawer :placement="drawerState.placement" :open="drawerState.open" :title="drawerState.title" @ok="handleDrawer.ok"
 			@close="handleDrawer.cancel">
@@ -215,6 +210,7 @@ onUnmounted(() => {
 <style lang="scss" scoped>
 .container {
 	display: flex;
+	height: 100%;
 }
 
 .btn--add {
@@ -227,10 +223,11 @@ onUnmounted(() => {
 
 .ant-card {
 	border-radius: 0;
+	padding: 0;
 }
 
 .filter-form {
-	margin-left: var(--spacing-xs);
+	height: 100%;
 	overflow: hidden;
 	width: 0;
 	transition: width 120ms;
@@ -238,8 +235,7 @@ onUnmounted(() => {
 
 	&.open {
 		border: 1px solid var(--gray-lighter);
-		padding: var(--spacing-md);
-		width: 450px;
+		width: 300px;
 	}
 }
 
@@ -257,8 +253,7 @@ onUnmounted(() => {
 	justify-content: space-between;
 	align-items: center;
 	margin-bottom: var(--spacing-xs);
-	padding: var(--spacing-xs);
-	border-bottom: 1px solid var(--gray-lighter);
+	padding: 0 var(--spacing-xs);
 }
 
 .id--copy {

@@ -152,6 +152,10 @@ const changeOperation = (op: 'add' | 'edit' | 'delete' | 'top', data?: GroupCard
 </template>
 
 <style lang="scss" scoped>
+.groupManage {
+	height: 100%;
+}
+
 .top_cards,
 .bottom_cards {
 	display: flex;
