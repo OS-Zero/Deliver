@@ -7,9 +7,11 @@ import { messageTableSchema } from './constant.tsx';
 import useTemplateData from './useTemplateData';
 import styles from './index.module.scss';
 import DetailDrawer from './components/DetailDrawer';
+import AddTemplateModal from './components/AddTemplateModal.tsx';
 
 const Template: React.FC = () => {
   const detailRef = useRef<{ getDetail: (record: MessageTemplate) => void }>();
+  const addRef = useRef<{ addTemplate: () => void }>();
   const { fetchTemplateData, deleteTemplateData } = useTemplateData();
 
   const items: MenuProps['items'] = [
@@ -117,7 +119,7 @@ const Template: React.FC = () => {
         }
         toolBarRender={() => [
           <>
-            <Button key="add" type="primary" style={{ marginRight: '5px' }}>
+            <Button key="add" type="primary" style={{ marginRight: '5px' }} onClick={() => addRef?.current?.addTemplate()}>
               新增
             </Button>
             <Button shape="circle" icon={<FilterOutlined />} />
@@ -125,6 +127,7 @@ const Template: React.FC = () => {
         ]}
       />
       <DetailDrawer ref={detailRef} />
+      <AddTemplateModal ref={addRef}/>
     </div>
   );
 };
