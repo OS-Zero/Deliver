@@ -4,7 +4,7 @@ import { addMessageTemplate, deleteMessageTemplate, getMessageTemplates, testSen
 import { SearchParams } from '@/types/messageTemplate';
 import { messageTemplateColumns, messageTemplateSchema, messageTemplateSchemaDeps, filterSchema, testMessageSchema } from "@/config/messageTemplate"
 import { MessageTemplate } from './type';
-import { CopyOutlined, DownOutlined, ExclamationCircleOutlined, FilterOutlined, PlusOutlined, CloseOutlined } from '@ant-design/icons-vue';
+import { CopyOutlined, DownOutlined, ExclamationCircleOutlined, FilterOutlined, CloseOutlined } from '@ant-design/icons-vue';
 import { copyToClipboard, dynamic, getDataFromSchema } from '@/utils/utils';
 import { FormInstance, message, Modal } from 'ant-design-vue';
 import Drawer from '@/components/Drawer/index.vue'
@@ -150,12 +150,7 @@ onUnmounted(() => {
 			<div class="table-header">
 				<SearchInput placeholder="模糊查询模板" @search=""></SearchInput>
 				<div class="operation">
-					<a-tooltip placement="top">
-						<template #title>
-							<span>新增模板</span>
-						</template>
-						<a-button :icon="h(PlusOutlined)" @click="handleActions('add')" shape="circle" type="text"></a-button>
-					</a-tooltip>
+					<a-button class="btn--add" @click="handleActions('add')" type="primary">新增</a-button>
 					<a-tooltip placement="top">
 						<template #title>
 							<span>筛选</span>
@@ -220,6 +215,10 @@ onUnmounted(() => {
 <style lang="scss" scoped>
 .container {
 	display: flex;
+}
+
+.btn--add {
+	margin-right: var(--spacing-md);
 }
 
 .ant-table {

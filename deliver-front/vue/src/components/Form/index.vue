@@ -52,7 +52,8 @@ const listRemove = (list: string[], id: string) => {
 							@click="listRemove(formSchema[field.fieldName].value, item)" />
 					</div>
 					<a-form-item>
-						<a-button type="dashed" block @click="listAdd(formSchema[field.fieldName].value)">
+						<a-button :disabled="formSchema[field.fieldName].value.length >= field.max!" type="dashed" block
+							@click="listAdd(formSchema[field.fieldName].value)">
 							<PlusOutlined />
 						</a-button>
 					</a-form-item>

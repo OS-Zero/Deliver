@@ -166,6 +166,7 @@ export const testMessageSchema: Record<string, FormItem<keyof TestSendMessage>> 
 		label: '用户ID列表',
 		placeholder: '请输入用户ID',
 		rules: [getRequiredRule('请输入用户ID')],
+		max: 2,
 	},
 	paramMap: {
 		value: {},

@@ -14,4 +14,5 @@ export interface FormItem<T> {
 	options?: SelectProps['options'];
 	disabled?: boolean;
 	editorConfig?: Record<string, any>;
+	max?: number;
 }
