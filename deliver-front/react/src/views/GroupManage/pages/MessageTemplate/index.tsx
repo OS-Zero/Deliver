@@ -1,17 +1,19 @@
 import React, { useRef } from 'react';
 import { ProColumns, ProTable } from '@ant-design/pro-components';
 import { Button, Space, Input, Switch, Dropdown, MenuProps } from 'antd';
-import { FilterOutlined, SearchOutlined } from '@ant-design/icons';
+import { DownOutlined, FilterOutlined, SearchOutlined } from '@ant-design/icons';
 import { MessageTemplate } from './type';
 import { messageTableSchema } from './constant.tsx';
 import useTemplateData from './useTemplateData';
 import styles from './index.module.scss';
 import DetailDrawer from './components/DetailDrawer';
 import AddTemplateModal from './components/AddTemplateModal.tsx';
+import TestSendDrawer from '@/components/TestSendDrawer/index.tsx';
 
 const Template: React.FC = () => {
   const detailRef = useRef<{ getDetail: (record: MessageTemplate) => void }>();
   const addRef = useRef<{ addTemplate: () => void }>();
+  const testRef = useRef<{ getTestSendDrawer: () => void }>();
   const { fetchTemplateData, deleteTemplateData } = useTemplateData();
 
   const items: MenuProps['items'] = [
@@ -28,6 +30,8 @@ const Template: React.FC = () => {
   const handleMenuClick = (e: any, record: MessageTemplate) => {
     if (e?.key === 'detail') {
       detailRef.current?.getDetail(record);
+    } else {
+      testRef.current?.getTestSendDrawer();
     }
   };
 
@@ -67,8 +71,11 @@ const Template: React.FC = () => {
           key="more"
           placement="bottom"
         >
-          <a className={styles['more-button']} onClick={(e) => e.preventDefault()}>
-            · · ·
+          <a onClick={(e) => e.preventDefault()}>
+            <Space>
+              更多操作
+              <DownOutlined />
+            </Space>
           </a>
         </Dropdown>
       ]
@@ -119,7 +126,12 @@ const Template: React.FC = () => {
         }
         toolBarRender={() => [
           <>
-            <Button key="add" type="primary" style={{ marginRight: '5px' }} onClick={() => addRef?.current?.addTemplate()}>
+            <Button
+              key="add"
+              type="primary"
+              style={{ marginRight: '5px' }}
+              onClick={() => addRef?.current?.addTemplate()}
+            >
               新增
             </Button>
             <Button shape="circle" icon={<FilterOutlined />} />
@@ -127,7 +139,8 @@ const Template: React.FC = () => {
         ]}
       />
       <DetailDrawer ref={detailRef} />
-      <AddTemplateModal ref={addRef}/>
+      <AddTemplateModal ref={addRef} />
+      <TestSendDrawer ref={testRef} />
     </div>
   );
 };
