@@ -2,7 +2,7 @@ import { FormItem } from '@/types/form';
 import type { ColumnsType } from 'ant-design-vue/es/table/interface';
 import { getRequiredRule, getRangeRule } from './rules';
 import { SelectProps } from 'ant-design-vue';
-import { MessageTemplateForm, TestSendMessage } from '@/types/messageTemplate';
+import { MessageTemplateForm, SearchParams, TestSendMessage } from '@/types/messageTemplate';
 import { getChannelType, getParam } from '@/api/system';
 import { getAppByChannel } from '@/api/channelApp';
 export const messageTemplateColumns: ColumnsType = [
@@ -54,29 +54,25 @@ const userTypes: SelectProps['options'] = JSON.parse(localStorage.getItem('start
 	}),
 );
 
-type MessageTemplateSchema = Record<FormItem<keyof MessageTemplateForm>>;
+type MessageTemplateSchema = Record<keyof MessageTemplateForm, FormItem<keyof MessageTemplateForm>>;
 export const messageTemplateSchema: MessageTemplateSchema = {
 	templateId: {
-		value: '',
 		type: 'none',
 		fieldName: 'templateId',
 	},
 	templateName: {
-		value: '',
 		type: 'input',
 		fieldName: 'templateName',
 		label: '模板名',
 		rules: [getRequiredRule('请输入模板名'), ...getRangeRule(3, 20, '字符长度限制在3-20')],
 	},
 	templateDescription: {
-		value: '',
 		type: 'textarea',
 		fieldName: 'templateDescription',
 		label: '模板描述',
 		rules: [getRequiredRule('请输入模板描述'), ...getRangeRule(3, 20, '字符长度限制在3-20')],
 	},
 	usersType: {
-		value: '',
 		type: 'select',
 		fieldName: 'usersType',
 		label: '用户类型',
@@ -84,7 +80,6 @@ export const messageTemplateSchema: MessageTemplateSchema = {
 		options: userTypes,
 	},
 	channelType: {
-		value: '',
 		type: 'select',
 		fieldName: 'channelType',
 		label: '渠道类型',
@@ -92,7 +87,6 @@ export const messageTemplateSchema: MessageTemplateSchema = {
 		options: [],
 	},
 	channelProviderType: {
-		value: '',
 		type: 'select',
 		fieldName: 'channelProviderType',
 		label: '渠道供应商类型',
@@ -100,7 +94,6 @@ export const messageTemplateSchema: MessageTemplateSchema = {
 		options: [],
 	},
 	messageType: {
-		value: '',
 		type: 'select',
 		fieldName: 'messageType',
 		label: '消息类型',
@@ -108,7 +101,6 @@ export const messageTemplateSchema: MessageTemplateSchema = {
 		options: [],
 	},
 	appId: {
-		value: '',
 		type: 'select',
 		fieldName: 'appId',
 		label: '应用 ID',
@@ -158,22 +150,48 @@ export const messageTemplateSchemaDeps = [
 		}
 	},
 ];
-export const filterSchema: Record<string, FormItem<string>> = {
-	templateName: {
-		value: '',
-		type: 'input',
-		fieldName: 'templateName',
-		label: '模板名',
-	},
+export const filterSchema: Record<string, FormItem<keyof SearchParams>> = {
 	usersType: {
-		value: '',
 		type: 'select',
 		fieldName: 'usersType',
 		label: '用户类型',
 		options: userTypes,
 	},
+	channelType: {
+		type: 'select',
+		fieldName: 'channelType',
+		label: '渠道类型',
+		options: [],
+	},
+	channelProviderType: {
+		type: 'select',
+		fieldName: 'channelProviderType',
+		label: '渠道供应商类型',
+		options: [],
+	},
+	messageType: {
+		type: 'select',
+		fieldName: 'messageType',
+		label: '消息类型',
+		options: [],
+	},
+	templateStatus: {
+		type: 'select',
+		fieldName: 'templateStatus',
+		label: '模板状态',
+		options: [
+			{
+				value: 0,
+				label: '关闭',
+			},
+			{
+				value: 1,
+				label: '开启',
+			},
+		],
+	},
 };
-
+export const filterSchemaMaps = messageTemplateSchemaDeps.slice(0, 2);
 export const testMessageSchema: Record<string, FormItem<keyof TestSendMessage>> = {
 	users: {
 		value: [],

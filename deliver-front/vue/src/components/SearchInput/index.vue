@@ -1,15 +1,19 @@
 <script lang="ts" setup>
-import { h, ref } from "vue"
 import { SearchOutlined } from '@ant-design/icons-vue';
+import { ChangeEvent } from 'ant-design-vue/es/_util/EventInterface';
 defineProps<{
 	placeholder?: string
+	modelValue: string
 }>()
-const emit = defineEmits(['search'])
-const searchData = ref('')
+const emit = defineEmits(['search', 'update:modelValue'])
+const handleChange = (e: ChangeEvent) => {
+	emit('update:modelValue', e.target.value)
+	emit('search')
+}
 </script>
 
 <template>
-	<a-input class="input--search" v-model:value="searchData" :placeholder="placeholder" @click="emit('search')">
+	<a-input class="input--search" :value="modelValue" @change="handleChange" :placeholder="placeholder">
 		<template #prefix>
 			<SearchOutlined />
 		</template>

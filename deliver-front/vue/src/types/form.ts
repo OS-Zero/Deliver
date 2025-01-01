@@ -4,7 +4,7 @@ import { Rule } from 'ant-design-vue/es/form';
 type ItemType = 'none' | 'input' | 'textarea' | 'inputNumber' | 'timePicker' | 'select' | 'radio' | 'switch' | 'cascader' | 'jsonEditor' | 'list';
 
 export interface FormItem<T> {
-	value: any;
+	value?: any;
 	type: ItemType;
 	fieldName: T;
 	label?: string;

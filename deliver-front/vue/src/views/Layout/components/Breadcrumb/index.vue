@@ -19,7 +19,6 @@ watch(
 		route.matched.forEach((item) => {
 			routes.value.push({ path: item.path, breadcrumbName: item.name as string })
 		})
-		console.log(routes.value)
 	},
 	{
 		immediate: true,

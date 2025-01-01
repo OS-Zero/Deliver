@@ -1,14 +1,15 @@
 <script lang="ts" setup>
-import { ref, onBeforeMount, reactive, nextTick, h, onUnmounted } from 'vue'
+import { ref, onBeforeMount, reactive, nextTick, h, onUnmounted, watch } from 'vue'
 import { addMessageTemplate, deleteMessageTemplate, getMessageTemplates, testSendMessage, updateMessageTemplate, updateMessageTemplateStatus } from '@/api/messageTemplate'
 import { SearchParams } from '@/types/messageTemplate';
-import { messageTemplateColumns, messageTemplateSchema, messageTemplateSchemaDeps, filterSchema, testMessageSchema } from "@/config/messageTemplate"
+import { messageTemplateColumns, messageTemplateSchema, messageTemplateSchemaDeps, filterSchema, testMessageSchema, filterSchemaMaps } from "@/config/messageTemplate"
 import { MessageTemplate } from './type';
 import { CopyOutlined, DownOutlined, ExclamationCircleOutlined, FilterOutlined, CloseOutlined } from '@ant-design/icons-vue';
 import { copyToClipboard, dynamic, getDataFromSchema } from '@/utils/utils';
 import { FormInstance, message, Modal } from 'ant-design-vue';
 import Drawer from '@/components/Drawer/index.vue'
 import SearchInput from '@/components/SearchInput/index.vue'
+import { debounce } from 'lodash'
 const dataSource = reactive<MessageTemplate[]>([])
 
 const searchParams = reactive<SearchParams>(
@@ -19,14 +20,22 @@ const searchParams = reactive<SearchParams>(
 		channelProviderType: 0,
 		messageType: '',
 		templateStatus: 0,
-		startTime: "yyyy-MM-dd HH:mm:ss",
-		endTime: "yyyy-MM-dd HH:mm:ss",
+		startTime: "",
+		endTime: "",
 		currentPage: 1,
 		pageSize: 10
 	}
 )
+const handleSearch = async (params: SearchParams) => {
+	const { records } = await getMessageTemplates(params)
+	Object.assign(dataSource, records)
+}
+const debounceSearch = debounce(handleSearch, 200)
 const { dynamicData: messageTemplateForm, stop } = dynamic(messageTemplateSchema, messageTemplateSchemaDeps)
-const filterForm = reactive(filterSchema)
+const { dynamicData: filterForm, stop: stopFilterDynamic } = dynamic(filterSchema, filterSchemaMaps)
+watch(filterForm, (newValue) => {
+	debounceSearch(getDataFromSchema(newValue))
+})
 const testMessageForm = reactive(testMessageSchema)
 const moreInfo = reactive<Array<{ label: string; value: any }>>([])
 const copyId = async (text: string) => {
@@ -34,7 +43,6 @@ const copyId = async (text: string) => {
 		await copyToClipboard(text)
 		message.success('复制成功')
 	} catch (error) {
-		console.log(error);
 		message.error('复制失败')
 	}
 }
@@ -53,6 +61,7 @@ const filterState = reactive({
 	open: false
 })
 const searchValue = ref('')
+
 const formRef = ref<FormInstance>();
 const handleActions = async (action: 'add' | 'edit' | 'delete' | 'more' | 'testSend', record?: Record<string, any>) => {
 	drawerState.placement = 'right'
@@ -132,15 +141,15 @@ const handleDrawer = {
 	}
 }
 const changeStatus = (record: Record<string, any>) => {
-	updateMessageTemplateStatus({ templateId: record.templateId, templateStatus: record.templateStatus })
+	updateMessageTemplateStatus({ templateId: record.templateId, templateStatus: Number(record.templateStatus) })
 }
-onBeforeMount(async () => {
-	const { records } = await getMessageTemplates(searchParams)
-	Object.assign(dataSource, records)
+onBeforeMount(() => {
+	handleSearch(searchParams)
 })
 onUnmounted(() => {
 	//停止监听动态数据
 	stop()
+	stopFilterDynamic()
 })
 </script>
 
@@ -148,7 +157,8 @@ onUnmounted(() => {
 	<div class="container">
 		<div class="container-table">
 			<div class="table-header">
-				<SearchInput placeholder="模糊查询模板" @search=""></SearchInput>
+				<SearchInput placeholder="模糊查询模板" v-model="searchValue" @search="debounceSearch({ templateName: searchValue })">
+				</SearchInput>
 				<div class="operation">
 					<a-button class="btn--add" @click="handleActions('add')" type="primary">新增</a-button>
 					<a-button :icon="h(FilterOutlined)" shape="circle" type="text"
@@ -226,6 +236,11 @@ onUnmounted(() => {
 	padding: 0;
 }
 
+::v-deep .ant-card-head {
+	border: none;
+	font-size: large;
+}
+
 .filter-form {
 	height: 100%;
 	overflow: hidden;
@@ -234,7 +249,7 @@ onUnmounted(() => {
 	border: none;
 
 	&.open {
-		border: 1px solid var(--gray-lighter);
+		border-left: 1px solid var(--gray-lighter);
 		width: 300px;
 	}
 }
@@ -253,7 +268,7 @@ onUnmounted(() => {
 	justify-content: space-between;
 	align-items: center;
 	margin-bottom: var(--spacing-xs);
-	padding: 0 var(--spacing-xs);
+	padding: var(--spacing-xs);
 }
 
 .id--copy {

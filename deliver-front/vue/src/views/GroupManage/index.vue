@@ -17,8 +17,6 @@ const state = reactive({
 })
 const onOpen = () => {
 	state.open = true
-	console.log('hello');
-
 }
 const onClose = () => {
 	state.open = false
@@ -64,8 +62,6 @@ const formMeta: Record<string, {
 	edit: {
 		title: '编辑分组',
 		success: () => {
-			console.log('编辑分组');
-
 			onOk(async () => {
 				await updateGroup(groupFormData)
 				message.success('编辑成功')

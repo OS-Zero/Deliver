@@ -8,8 +8,8 @@ export interface R<T> {
 }
 
 export interface TableSearchParams {
-	currentPage: number;
-	pageSize: number;
+	currentPage?: number;
+	pageSize?: number;
 }
 
 export interface TableData<T> {

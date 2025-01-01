@@ -24,12 +24,12 @@ export async function copyToClipboard(text: string) {
 	await clipboard.writeText(text);
 }
 
-export function getDataFromSchema<T>(record: Record<keyof T, FormItem<keyof T>>): T {
+export function getDataFromSchema(record: Record<string, FormItem<string>>) {
 	const _obj: any = {};
 	for (const key in record) {
 		_obj[key] = record[key].value;
 	}
-	return _obj as T;
+	return _obj;
 }
 
 export function dynamic<T extends object>(obj: T, effects: Function[]) {
