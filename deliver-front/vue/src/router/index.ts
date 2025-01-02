@@ -42,7 +42,7 @@ const routes: RouteRecordRaw[] = [
 					{
 						path: 'app',
 						name: '应用配置',
-						component: () => import('@/views/GroupManage/pages/App/index.vue'),
+						component: () => import('@/views/GroupManage/pages/ChannelApp/index.vue'),
 						meta: {
 							title: '应用配置 - Deliver 企业消息推送平台',
 						},

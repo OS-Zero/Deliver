@@ -164,7 +164,7 @@ onUnmounted(() => {
 	<div class="container">
 		<div class="container-table">
 			<div class="table-header">
-				<SearchInput placeholder="模糊查询模板" v-model="searchValue" @search="debounceSearch()">
+				<SearchInput placeholder="请输入模板名" v-model="searchValue" @search="debounceSearch()">
 				</SearchInput>
 				<div class="operation">
 					<a-button class="btn--add" @click="handleActions('add')" type="primary">新增</a-button>
