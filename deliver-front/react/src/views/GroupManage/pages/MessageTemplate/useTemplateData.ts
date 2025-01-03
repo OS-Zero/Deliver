@@ -1,4 +1,9 @@
-import { addMessageTemplate, deleteMessageTemplate, getTemplatePages } from '@/api/messageTemplate';
+import {
+  addMessageTemplate,
+  deleteMessageTemplate,
+  getTemplatePages,
+  updateMessageTemplateStatus
+} from '@/api/messageTemplate';
 import deleteConfirmModal from '@/components/DeleteConfirmModal';
 import { useCallback } from 'react';
 import { MessageTemplate } from './type';
@@ -36,6 +41,14 @@ const useTemplateData = () => {
   };
 
   /**
+   * 更新模板状态
+   * @param data
+   */
+  const changeStatus = async (templateId: number, templateStatus: number) => {
+    await updateMessageTemplateStatus({ templateId, templateStatus });
+  };
+
+  /**
    * 删除数据
    * @param id
    */
@@ -52,6 +65,7 @@ const useTemplateData = () => {
     fetchTemplateData,
     deleteTemplateData,
     addTemplate,
+    changeStatus
   };
 };
 

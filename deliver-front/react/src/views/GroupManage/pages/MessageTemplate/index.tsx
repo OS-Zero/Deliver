@@ -10,11 +10,16 @@ import DetailDrawer from './components/DetailDrawer';
 import AddTemplateModal from './components/AddTemplateModal.tsx';
 import TestSendDrawer from '@/components/TestSendDrawer/index.tsx';
 
+interface AddRef {
+  addTemplateModal: () => void;
+  editTemplateModal: (record: MessageTemplate) => void;
+}
+
 const Template: React.FC = () => {
   const detailRef = useRef<{ getDetail: (record: MessageTemplate) => void }>();
-  const addRef = useRef<{ addTemplateModal: () => void, editTemplateModal: () => void }>();
+  const addRef = useRef<AddRef>();
   const testRef = useRef<{ getTestSendDrawer: () => void }>();
-  const { fetchTemplateData, deleteTemplateData, addTemplate } = useTemplateData();
+  const { fetchTemplateData, deleteTemplateData, addTemplate, changeStatus } = useTemplateData();
 
   const items: MenuProps['items'] = [
     {
@@ -47,6 +52,7 @@ const Template: React.FC = () => {
           checkedChildren="启用"
           unCheckedChildren="禁用"
           checked={Boolean(record?.templateStatus)}
+          onClick={() => changeStatus(record.templateId, record.templateStatus === 0 ? 1 : 0)}
         />
       )
     },
