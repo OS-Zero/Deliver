@@ -7,7 +7,7 @@ export default defineConfig({
   // 代理配置
   server: {
 	host: 'localhost',
-	port: 8080, // 端口
+	port: 9090, // 端口
 	proxy: {
 		'/backend': {
 			// 请求接口中要替换的标识

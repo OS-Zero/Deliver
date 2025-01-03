@@ -1,123 +1,175 @@
 import { forwardRef, useImperativeHandle, useState } from 'react';
-import { Modal, Form, Input, Button, Select, Switch, Radio, RadioChangeEvent } from 'antd';
+import { Form, Input, Button, Select, Drawer, Space, message } from 'antd';
+import { getChannelType, getParam } from '@/api/system';
 
 const { Option } = Select;
+const { TextArea } = Input;
 
 interface AddTemplateModalProps {
   onSubmit?: (values: any) => void;
 }
 
+interface FormState {
+  channelTypes: any[];
+  channelProviders: any[];
+  messageTypes: any[];
+  appIds: any[];
+  isChannelTypeDisabled: boolean;
+}
+
+const useFormState = () => {
+  const [formState, setFormState] = useState<FormState>({
+    channelTypes: [],
+    channelProviders: [],
+    messageTypes: [],
+    appIds: [],
+    isChannelTypeDisabled: true
+  });
+
+  const updateFormState = (newState: Partial<FormState>) => {
+    setFormState((prevState) => ({ ...prevState, ...newState }));
+  };
+
+  return { formState, updateFormState };
+};
+
 const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
   const { onSubmit } = props;
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
-  const [pushRange, setPushRange] = useState<number | undefined>(undefined);
-  const [usersType, setUsersType] = useState<number | undefined>(undefined);
-  const [channelType, setChannelType] = useState<number | undefined>(undefined);
-  const [appId, setAppId] = useState<number | undefined>(undefined);
+  const { formState, updateFormState } = useFormState();
 
-  const handlePushRangeChange = (e: RadioChangeEvent) => {
-    const value = e.target.value;
-    setPushRange(value);
-    setUsersType(undefined);
-    setChannelType(undefined);
-    setAppId(undefined);
-    form.resetFields(['usersType', 'channelType', 'appId', 'messageType']);
+  const handleUsersTypeChange = async (value: number) => {
+    form.resetFields(['channelType', 'channelProviderType', 'messageType', 'appId']);
+    updateFormState({
+      channelTypes: [],
+      channelProviders: [],
+      messageTypes: [],
+      appIds: [],
+      isChannelTypeDisabled: false
+    });
+    try {
+      const response = await getChannelType({ usersType: value });
+      updateFormState({ channelTypes: response });
+    } catch (error) {
+      console.error('获取渠道类型失败:', error);
+      message.error('获取渠道类型失败，请稍后重试');
+    }
   };
 
-  const handleUsersTypeChange = (e: RadioChangeEvent) => {
-    const value = e.target.value;
-    setUsersType(value);
-    setChannelType(undefined);
-    setAppId(undefined);
-    form.resetFields(['channelType', 'appId', 'messageType']);
+  const handleChannelTypeChange = async (value: number) => {
+    form.resetFields(['channelProviderType', 'messageType', 'appId']);
+    updateFormState({ channelProviders: [], messageTypes: [], appIds: [] });
+    try {
+      const response = await getParam({ channelType: value });
+      updateFormState({
+        channelProviders: response.channelProviderTypeList,
+        messageTypes: response.messageTypeList
+      });
+    } catch (error) {
+      console.error('获取渠道供应商和消息类型失败:', error);
+      message.error('获取渠道供应商和消息类型失败，请稍后重试');
+    }
   };
 
-  const handleChannelTypeChange = (value: number) => {
-    setChannelType(value);
-    setAppId(undefined);
-    form.resetFields(['appId', 'messageType']);
-  };
-
-  const handleAppIdChange = (value: number) => {
-    setAppId(value);
-    form.resetFields(['messageType']);
+  const handleChannelProviderChange = (value: number) => {
+    form.resetFields(['appId']);
+    updateFormState({ appIds: [] });
+    // 模拟获取应用 ID 列表
+    updateFormState({
+      appIds: [
+        { id: 0, name: '应用1' },
+        { id: 1, name: '应用2' }
+      ]
+    });
   };
 
   const handleSubmit = () => {
-    form.validateFields().then((values) => {
-      onSubmit(values);
-      form.resetFields();
-      setOpen(false);
-    });
+    form
+      .validateFields()
+      .then((values) => {
+        onSubmit?.(values);
+        form.resetFields();
+        setOpen(false);
+      })
+      .catch((info) => {
+        console.log('Validate Failed:', info);
+      });
   };
 
   const handleReset = () => {
     form.resetFields();
-    setPushRange(undefined);
-    setUsersType(undefined);
-    setChannelType(undefined);
-    setAppId(undefined);
+    updateFormState({
+      channelTypes: [],
+      channelProviders: [],
+      messageTypes: [],
+      appIds: [],
+      isChannelTypeDisabled: true
+    });
   };
 
   useImperativeHandle(ref, () => ({
-    addTemplate: () => {
+    addTemplateModal: () => {
       setOpen(true);
+    },
+    editTemplateModal: (values: any) => {
+      setOpen(true);
+      handleUsersTypeChange(values.usersType);
+      handleChannelTypeChange(values.channelType);
+      handleChannelProviderChange(values.channelProviderType);
+      form.setFieldsValue({
+        ...values,
+        usersType: values.usersTypeName,
+        channelType: values.channelTypeName,
+        channelProviderType: values.channelProviderTypeName,
+        messageType: values.messageTypeName,
+        appId: values.appName
+      });
     }
   }));
 
   return (
-    <Modal
-      title="新增模版"
+    <Drawer
+      title="新增模板"
       open={open}
-      onCancel={() => {
+      onClose={() => {
         setOpen(false);
         handleReset();
       }}
-      width={600}
-      footer={[
-        <Button key="reset" onClick={handleReset}>
-          重置
-        </Button>,
-        <Button key="submit" type="primary" onClick={handleSubmit}>
-          确认新增
-        </Button>
-      ]}
+      width={500}
+      extra={
+        <Space>
+          <Button onClick={handleReset}>重置</Button>
+          <Button type="primary" onClick={handleSubmit}>
+            确定
+          </Button>
+        </Space>
+      }
     >
-      <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
+      <Form form={form} labelCol={{ span: 7 }} wrapperCol={{ span: 16 }}>
         <Form.Item
-          label="模版名"
+          label="模板名"
           name="templateName"
-          rules={[{ required: true, message: '请输入模版名' }]}
+          rules={[{ required: true, message: '请输入模板名' }]}
         >
-          <Input placeholder="请输入模版名" maxLength={20} />
+          <Input placeholder="请输入模板名" />
         </Form.Item>
         <Form.Item
-          label="推送范围"
-          name="pushRange"
-          rules={[{ required: true, message: '请选择推送范围' }]}
+          label="模板描述"
+          name="templateDescription"
+          rules={[{ required: true, message: '请输入模板描述' }]}
         >
-          <Radio.Group value="middle" onChange={handlePushRangeChange}>
-            <Radio.Button value={0}>不限</Radio.Button>
-            <Radio.Button value={1}>企业内部</Radio.Button>
-            <Radio.Button value={2}>企业外部</Radio.Button>
-          </Radio.Group>
+          <TextArea placeholder="请输入模板描述" rows={4} />
         </Form.Item>
         <Form.Item
           label="用户类型"
           name="usersType"
           rules={[{ required: true, message: '请选择用户类型' }]}
         >
-          <Radio.Group
-            value="middle"
-            onChange={handleUsersTypeChange}
-            disabled={pushRange === undefined}
-          >
-            <Radio.Button value={0}>企业账号</Radio.Button>
-            <Radio.Button value={1}>电话</Radio.Button>
-            <Radio.Button value={2}>邮箱</Radio.Button>
-            <Radio.Button value={3}>平台 UserId</Radio.Button>
-          </Radio.Group>
+          <Select placeholder="请选择用户类型" onChange={handleUsersTypeChange}>
+            <Option value={0}>选项1</Option>
+            <Option value={1}>选项2</Option>
+          </Select>
         </Form.Item>
         <Form.Item
           label="渠道类型"
@@ -127,28 +179,30 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
           <Select
             placeholder="请选择渠道类型"
             onChange={handleChannelTypeChange}
-            disabled={usersType === undefined}
+            disabled={formState.isChannelTypeDisabled}
           >
-            <Option value={0}>电话</Option>
-            <Option value={1}>短信</Option>
-            <Option value={2}>邮件</Option>
-            <Option value={3}>钉钉</Option>
-            <Option value={4}>企业微信</Option>
-            <Option value={5}>飞书</Option>
+            {formState.channelTypes.map((channel) => (
+              <Option key={channel.channelType} value={channel.channelType}>
+                {channel.channelTypeName}
+              </Option>
+            ))}
           </Select>
         </Form.Item>
         <Form.Item
-          label="渠道 App"
-          name="appId"
-          rules={[{ required: true, message: '请选择渠道 App' }]}
+          label="渠道供应商类型"
+          name="channelProviderType"
+          rules={[{ required: true, message: '请选择渠道供应商类型' }]}
         >
           <Select
-            placeholder="请选择渠道 App"
-            onChange={handleAppIdChange}
-            disabled={channelType === undefined}
+            placeholder="请选择渠道供应商类型"
+            onChange={handleChannelProviderChange}
+            disabled={!form.getFieldValue('channelType')}
           >
-            <Option value={0}>App1</Option>
-            <Option value={1}>App2</Option>
+            {formState.channelProviders.map((provider) => (
+              <Option key={provider.channelProviderType} value={provider.channelProviderType}>
+                {provider.channelProviderTypeName}
+              </Option>
+            ))}
           </Select>
         </Form.Item>
         <Form.Item
@@ -156,22 +210,29 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
           name="messageType"
           rules={[{ required: true, message: '请选择消息类型' }]}
         >
-          <Select placeholder="请选择消息类型" disabled={appId === undefined}>
-            <Option value={0}>文本消息</Option>
-            <Option value={1}>图片消息</Option>
-            <Option value={2}>视频消息</Option>
+          <Select placeholder="请选择消息类型" disabled={!form.getFieldValue('channelType')}>
+            {formState.messageTypes.map((messageType) => (
+              <Option key={messageType.messageType} value={messageType.messageType}>
+                {messageType.messageTypeName}
+              </Option>
+            ))}
           </Select>
         </Form.Item>
         <Form.Item
-          label="模版状态"
-          name="templateStatus"
-          valuePropName="checked"
-          initialValue={false}
+          label="应用 ID"
+          name="appId"
+          rules={[{ required: true, message: '请选择应用 ID' }]}
         >
-          <Switch checkedChildren="启用" unCheckedChildren="禁用" />
+          <Select placeholder="请选择应用 ID" disabled={!form.getFieldValue('channelProviderType')}>
+            {formState.appIds.map((app) => (
+              <Option key={app.id} value={app.id}>
+                {app.name}
+              </Option>
+            ))}
+          </Select>
         </Form.Item>
       </Form>
-    </Modal>
+    </Drawer>
   );
 });
 

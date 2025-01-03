@@ -12,9 +12,9 @@ import TestSendDrawer from '@/components/TestSendDrawer/index.tsx';
 
 const Template: React.FC = () => {
   const detailRef = useRef<{ getDetail: (record: MessageTemplate) => void }>();
-  const addRef = useRef<{ addTemplate: () => void }>();
+  const addRef = useRef<{ addTemplateModal: () => void, editTemplateModal: () => void }>();
   const testRef = useRef<{ getTestSendDrawer: () => void }>();
-  const { fetchTemplateData, deleteTemplateData } = useTemplateData();
+  const { fetchTemplateData, deleteTemplateData, addTemplate } = useTemplateData();
 
   const items: MenuProps['items'] = [
     {
@@ -56,7 +56,11 @@ const Template: React.FC = () => {
       valueType: 'option',
       fixed: 'right',
       render: (_, record) => [
-        <a className={styles['link-button']} key="edit">
+        <a
+          className={styles['link-button']}
+          key="edit"
+          onClick={() => addRef?.current?.editTemplateModal(record)}
+        >
           编辑
         </a>,
         <a
@@ -119,10 +123,13 @@ const Template: React.FC = () => {
         }}
         rowKey="templateId"
         headerTitle={
-          <Input
-            placeholder="请输入模板名进行查询"
-            prefix={<SearchOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
-          />
+          <div style={{ width: '300px' }}>
+            <Input
+              placeholder="请输入模板名进行查询"
+              style={{ borderRadius: '50px' }}
+              prefix={<SearchOutlined />}
+            />
+          </div>
         }
         toolBarRender={() => [
           <>
@@ -130,7 +137,7 @@ const Template: React.FC = () => {
               key="add"
               type="primary"
               style={{ marginRight: '5px' }}
-              onClick={() => addRef?.current?.addTemplate()}
+              onClick={() => addRef?.current?.addTemplateModal()}
             >
               新增
             </Button>
@@ -139,7 +146,7 @@ const Template: React.FC = () => {
         ]}
       />
       <DetailDrawer ref={detailRef} />
-      <AddTemplateModal ref={addRef} />
+      <AddTemplateModal ref={addRef} onSubmit={addTemplate} />
       <TestSendDrawer ref={testRef} />
     </div>
   );

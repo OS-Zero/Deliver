@@ -1,6 +1,7 @@
-import { deleteTemplate, getTemplatePages } from "@/api/message";
-import deleteConfirmModal from "@/components/DeleteConfirmModal";
-import { useCallback } from "react";
+import { addMessageTemplate, deleteMessageTemplate, getTemplatePages } from '@/api/messageTemplate';
+import deleteConfirmModal from '@/components/DeleteConfirmModal';
+import { useCallback } from 'react';
+import { MessageTemplate } from './type';
 
 const useTemplateData = () => {
   /**
@@ -26,20 +27,32 @@ const useTemplateData = () => {
   };
 
   /**
+   * 新增模版
+   * @param data
+   */
+  const addTemplate = async (params: MessageTemplate) => {
+    console.log(params);
+    await addMessageTemplate(params);
+  };
+
+  /**
    * 删除数据
    * @param id
    */
   const deleteTemplateData = useCallback((ids: number[]) => {
-    deleteConfirmModal({ onConfirm: () => {
-      deleteTemplate({ids});
-      fetchTemplateData({});
-    }});
-  }, [])
+    deleteConfirmModal({
+      onConfirm: () => {
+        deleteMessageTemplate({ ids });
+        fetchTemplateData({});
+      }
+    });
+  }, []);
 
   return {
     fetchTemplateData,
-    deleteTemplateData
-  }
+    deleteTemplateData,
+    addTemplate,
+  };
 };
 
 export default useTemplateData;

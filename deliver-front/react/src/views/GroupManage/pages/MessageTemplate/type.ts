@@ -1,18 +1,3 @@
-export interface AppItem {
-  appId: number;
-  appName: string;
-}
-
-export interface MessageItem {
-  code: string;
-  name: string;
-}
-
-export interface TemplateItem {
-  templateId: number;
-  templateStatus: number;
-}
-
 export interface Pagination {
   currentPage: number; // 当前页面序号
   pageSize: number; // 页面大小
@@ -74,4 +59,25 @@ export interface SendTestMessage {
   users: string[]; // 用户列表
   paramMap: JSON; // 传递参数
   retry: number | undefined; // 重试次数
+}
+
+export interface SearchParams
+  extends Pagination,
+    Pick<
+      Partial<MessageTemplate>,
+      'usersType' | 'channelType' | 'channelProviderType' | 'messageType' | 'templateStatus'
+    > {
+  startTime?: string;
+  endTime?: string;
+}
+
+export interface Message {
+  messageType: string;
+  messageTypeName: string;
+}
+
+export interface TestSendMessage {
+	templateId: Pick<MessageTemplate, 'templateId'>;
+	users: string[];
+	paramMap: Record<string, any>;
 }
