@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { ProColumns, ProTable } from '@ant-design/pro-components';
 import { Button, Space, Input, Switch, Dropdown, MenuProps } from 'antd';
 import { DownOutlined, FilterOutlined, SearchOutlined } from '@ant-design/icons';
@@ -9,6 +9,7 @@ import styles from './index.module.scss';
 import DetailDrawer from './components/DetailDrawer';
 import AddTemplateModal from './components/AddTemplateModal.tsx';
 import TestSendDrawer from '@/components/TestSendDrawer/index.tsx';
+import FilterCard from './components/FilterCard.tsx';
 
 interface AddRef {
   addTemplateModal: () => void;
@@ -19,7 +20,14 @@ const Template: React.FC = () => {
   const detailRef = useRef<{ getDetail: (record: MessageTemplate) => void }>();
   const addRef = useRef<AddRef>();
   const testRef = useRef<{ getTestSendDrawer: () => void }>();
+  const [tableParams, setTableParams] = useState({});
+  const [filterOpen, setFilterOpen] = useState(false);
   const { fetchTemplateData, deleteTemplateData, addTemplate, changeStatus } = useTemplateData();
+
+  // 筛选处理函数
+  const handleFilter = (filters: any) => {
+    setTableParams(filters);
+  };
 
   const items: MenuProps['items'] = [
     {
@@ -95,6 +103,11 @@ const Template: React.FC = () => {
   return (
     <div className={styles['template-container']}>
       <ProTable<MessageTemplate>
+        style={{
+          width: filterOpen ? 'calc(100% - 300px)' : '100%',
+          transition: 'width 0.3s ease-in-out'
+        }}
+        params={tableParams}
         columns={columns}
         rowSelection={{}}
         request={fetchTemplateData}
@@ -147,13 +160,18 @@ const Template: React.FC = () => {
             >
               新增
             </Button>
-            <Button shape="circle" icon={<FilterOutlined />} />
+            <Button shape="circle" icon={<FilterOutlined />} onClick={() => setFilterOpen((pre) => !pre)} />
           </>
         ]}
       />
       <DetailDrawer ref={detailRef} />
       <AddTemplateModal ref={addRef} onSubmit={addTemplate} />
       <TestSendDrawer ref={testRef} />
+      {filterOpen && (
+        <div className={styles['filter-container']}>
+          <FilterCard onClose={() => setFilterOpen(false)} onFilter={handleFilter} />
+        </div>
+      )}
     </div>
   );
 };
