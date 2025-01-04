@@ -110,6 +110,7 @@ const Template: React.FC = () => {
         params={tableParams}
         columns={columns}
         rowSelection={{}}
+        // TODO: 这里到底传什么？入参为currentPage，反参是current？
         request={fetchTemplateData}
         tableAlertRender={({ selectedRowKeys, onCleanSelected }) => {
           return (
@@ -160,7 +161,11 @@ const Template: React.FC = () => {
             >
               新增
             </Button>
-            <Button shape="circle" icon={<FilterOutlined />} onClick={() => setFilterOpen((pre) => !pre)} />
+            <Button
+              shape="circle"
+              icon={<FilterOutlined />}
+              onClick={() => setFilterOpen((pre) => !pre)}
+            />
           </>
         ]}
       />

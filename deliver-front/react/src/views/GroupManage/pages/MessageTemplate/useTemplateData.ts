@@ -5,25 +5,19 @@ import {
   updateMessageTemplateStatus
 } from '@/api/messageTemplate';
 import deleteConfirmModal from '@/components/DeleteConfirmModal';
-import { useCallback } from 'react';
-import { MessageTemplate } from './type';
+import { useCallback, useState } from 'react';
+import { MessageTemplate, SearchMessage } from './type';
 
 const useTemplateData = () => {
+  const [currentParams,
+    setCurrentParams] = useState({ currentPage: 1, pageSize: 10 });
   /**
    * 搜索请求表单数据
    * @param data
    */
-  const fetchTemplateData = async (params: { pageSize?: number; current?: number }) => {
-    const { pageSize = 10, current = 1 } = params; // 提供默认值
-    const res = await getTemplatePages({
-      currentPage: current,
-      pageSize: pageSize,
-      templateName: 'String',
-      usersType: 0,
-      templateStatus: 0,
-      startTime: 'yyyy-MM-dd HH:mm:ss',
-      endTime: 'yyyy-MM-dd HH:mm:ss'
-    });
+  const fetchTemplateData = async (params: SearchMessage) => {
+    setCurrentParams(params);
+    const res = await getTemplatePages(params);
     return {
       data: res?.data?.records,
       success: true,
@@ -46,6 +40,7 @@ const useTemplateData = () => {
    */
   const changeStatus = async (templateId: number, templateStatus: number) => {
     await updateMessageTemplateStatus({ templateId, templateStatus });
+    await fetchTemplateData(currentParams);
   };
 
   /**
@@ -56,7 +51,7 @@ const useTemplateData = () => {
     deleteConfirmModal({
       onConfirm: () => {
         deleteMessageTemplate({ ids });
-        fetchTemplateData({});
+        fetchTemplateData(currentParams);
       }
     });
   }, []);
