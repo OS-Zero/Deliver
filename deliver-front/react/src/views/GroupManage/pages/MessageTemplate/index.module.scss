@@ -1,5 +1,6 @@
 :local {
   .template-container {
+    display: flex;
     :global {
       .ant-typography {
         margin-bottom: 0;
@@ -18,6 +19,22 @@
 
     .more-button {
       font-size: 16px;
+    }
+
+    .filter-container {
+      width: 0;
+	    transition: width 120ms;
+	    border: 0;
+      :global {
+        .ant-card-head {
+          padding: 0;
+          border: 0;
+          font-size: large;
+        }
+        .ant-card-body {
+          padding: 0;
+        }
+      }
     }
   }
 }

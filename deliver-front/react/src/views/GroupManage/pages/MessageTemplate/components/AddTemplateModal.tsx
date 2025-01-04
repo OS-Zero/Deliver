@@ -1,6 +1,7 @@
-import { forwardRef, useImperativeHandle, useState } from 'react';
-import { Form, Input, Button, Select, Drawer, Space, message } from 'antd';
+import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import { Form, Input, Button, Select, Drawer, Space, message, FormInstance } from 'antd';
 import { getChannelType, getParam } from '@/api/system';
+import useFormState from '../hooks/useFormState';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -9,38 +10,14 @@ interface AddTemplateModalProps {
   onSubmit?: (values: any) => void;
 }
 
-interface FormState {
-  channelTypes: any[];
-  channelProviders: any[];
-  messageTypes: any[];
-  appIds: any[];
-  isChannelTypeDisabled: boolean;
-}
-
-const useFormState = () => {
-  const [formState, setFormState] = useState<FormState>({
-    channelTypes: [],
-    channelProviders: [],
-    messageTypes: [],
-    appIds: [],
-    isChannelTypeDisabled: true
-  });
-
-  const updateFormState = (newState: Partial<FormState>) => {
-    setFormState((prevState) => ({ ...prevState, ...newState }));
-  };
-
-  return { formState, updateFormState };
-};
-
 const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
   const { onSubmit } = props;
   const [open, setOpen] = useState(false);
-  const [form] = Form.useForm();
+  const formRef = useRef<FormInstance>(null);
   const { formState, updateFormState } = useFormState();
 
   const handleUsersTypeChange = async (value: number) => {
-    form.resetFields(['channelType', 'channelProviderType', 'messageType', 'appId']);
+    formRef?.current?.resetFields(['channelType', 'channelProviderType', 'messageType', 'appId']);
     updateFormState({
       channelTypes: [],
       channelProviders: [],
@@ -58,7 +35,7 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
   };
 
   const handleChannelTypeChange = async (value: number) => {
-    form.resetFields(['channelProviderType', 'messageType', 'appId']);
+    formRef?.current?.resetFields(['channelProviderType', 'messageType', 'appId']);
     updateFormState({ channelProviders: [], messageTypes: [], appIds: [] });
     try {
       const response = await getParam({ channelType: value });
@@ -73,7 +50,7 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
   };
 
   const handleChannelProviderChange = (value: number) => {
-    form.resetFields(['appId']);
+    formRef?.current?.resetFields(['appId']);
     updateFormState({ appIds: [] });
     // 模拟获取应用 ID 列表
     updateFormState({
@@ -85,11 +62,10 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
   };
 
   const handleSubmit = () => {
-    form
-      .validateFields()
+    formRef?.current?.validateFields()
       .then((values) => {
         onSubmit?.(values);
-        form.resetFields();
+        formRef?.current?.resetFields();
         setOpen(false);
       })
       .catch((info) => {
@@ -98,7 +74,7 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
   };
 
   const handleReset = () => {
-    form.resetFields();
+    formRef?.current?.resetFields();
     updateFormState({
       channelTypes: [],
       channelProviders: [],
@@ -117,7 +93,7 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
       handleUsersTypeChange(values.usersType);
       handleChannelTypeChange(values.channelType);
       handleChannelProviderChange(values.channelProviderType);
-      form.setFieldsValue({
+      formRef?.current?.setFieldsValue({
         ...values,
         usersType: values.usersTypeName,
         channelType: values.channelTypeName,
@@ -146,7 +122,7 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
         </Space>
       }
     >
-      <Form form={form} labelCol={{ span: 7 }} wrapperCol={{ span: 16 }}>
+      <Form ref={formRef} labelCol={{ span: 7 }} wrapperCol={{ span: 16 }}>
         <Form.Item
           label="模板名"
           name="templateName"
@@ -196,7 +172,7 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
           <Select
             placeholder="请选择渠道供应商类型"
             onChange={handleChannelProviderChange}
-            disabled={!form.getFieldValue('channelType')}
+            disabled={!formRef?.current?.getFieldValue('channelType')}
           >
             {formState.channelProviders.map((provider) => (
               <Option key={provider.channelProviderType} value={provider.channelProviderType}>
@@ -210,7 +186,7 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
           name="messageType"
           rules={[{ required: true, message: '请选择消息类型' }]}
         >
-          <Select placeholder="请选择消息类型" disabled={!form.getFieldValue('channelType')}>
+          <Select placeholder="请选择消息类型" disabled={!formRef?.current?.getFieldValue('channelType')}>
             {formState.messageTypes.map((messageType) => (
               <Option key={messageType.messageType} value={messageType.messageType}>
                 {messageType.messageTypeName}
@@ -223,7 +199,7 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
           name="appId"
           rules={[{ required: true, message: '请选择应用 ID' }]}
         >
-          <Select placeholder="请选择应用 ID" disabled={!form.getFieldValue('channelProviderType')}>
+          <Select placeholder="请选择应用 ID" disabled={!formRef?.current?.getFieldValue('channelProviderType')}>
             {formState.appIds.map((app) => (
               <Option key={app.id} value={app.id}>
                 {app.name}
