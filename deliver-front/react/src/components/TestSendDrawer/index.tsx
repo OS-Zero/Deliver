@@ -1,13 +1,15 @@
-import { forwardRef, useImperativeHandle, useState } from 'react';
-import { Button, Drawer, Form, Input, Space } from 'antd';
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { Button, Drawer, Form, FormInstance, Input, Space } from 'antd';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { JsonEditor } from 'jsoneditor-react';
 import styles from './index.module.scss';
 
 const TestSendDrawer = forwardRef((_, ref) => {
   const [open, setOpen] = useState(false);
-  const [form] = Form.useForm();
+  const formRef = useRef<FormInstance>(null);
+  const jsonEditorRef = useRef<any>(null);
   const [paramMap, setParamMap] = useState({});
+  const [jsonEditorKey, setJsonEditorKey] = useState(0);
 
   const showDrawer = () => {
     setOpen(true);
@@ -25,7 +27,14 @@ const TestSendDrawer = forwardRef((_, ref) => {
 
   const onFinish = (values: any) => {
     console.log('Received values of form:', values);
+    console.log('Received values of form:', paramMap);
   };
+
+  useEffect(() => {
+    formRef?.current?.resetFields();
+    setParamMap({});
+    setJsonEditorKey(prev => prev + 1);
+  }, [open]);
 
   return (
     <Drawer
@@ -39,14 +48,13 @@ const TestSendDrawer = forwardRef((_, ref) => {
       extra={
         <Space>
           <Button onClick={onClose}>取消</Button>
-
-          <Button type="primary" onClick={() => form.submit()}>
+          <Button type="primary" onClick={() => formRef?.current?.submit()}>
             确认
           </Button>
         </Space>
       }
     >
-      <Form form={form} name="dynamic_user_ids" onFinish={onFinish}>
+      <Form ref={formRef} name="dynamic_user_ids" onFinish={onFinish}>
         <Form.List
           name="userIds"
           rules={[
@@ -86,7 +94,6 @@ const TestSendDrawer = forwardRef((_, ref) => {
                     >
                       <Input placeholder="请输入用户ID" className={styles['user-input']} />
                     </Form.Item>
-
                     <Button
                       icon={<DeleteOutlined />}
                       danger
@@ -106,14 +113,13 @@ const TestSendDrawer = forwardRef((_, ref) => {
                   icon={<PlusOutlined />}
                   disabled={fields.length >= 2}
                 />
-
                 <Form.ErrorList errors={errors} />
               </Form.Item>
             </>
           )}
         </Form.List>
         <Form.Item label="发送参数" labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
-          <JsonEditor value={paramMap} mode="code" onChange={(e: object) => setParamMap(e)} />
+          <JsonEditor key={jsonEditorKey} ref={jsonEditorRef} value={paramMap} mode="code" onChange={(e: object) => setParamMap(e)} />
         </Form.Item>
       </Form>
     </Drawer>
