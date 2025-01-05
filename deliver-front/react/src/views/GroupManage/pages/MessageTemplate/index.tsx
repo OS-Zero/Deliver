@@ -3,10 +3,10 @@ import { ProColumns, ProTable } from '@ant-design/pro-components';
 import { Button, Space, Input, Switch, Dropdown, MenuProps } from 'antd';
 import { DownOutlined, FilterOutlined, SearchOutlined } from '@ant-design/icons';
 import { MessageTemplate } from './type';
-import { messageTableSchema } from './constant.tsx';
+import { detailColumns, messageTableSchema } from './constant.tsx';
 import useTemplateData from './useTemplateData';
 import styles from './index.module.scss';
-import DetailDrawer from './components/DetailDrawer';
+import DetailDrawer from '@/components/DetailDrawer/index.tsx';
 import AddTemplateModal from './components/AddTemplateModal.tsx';
 import TestSendDrawer from '@/components/TestSendDrawer/index.tsx';
 import FilterCard from './components/FilterCard.tsx';
@@ -16,6 +16,17 @@ interface AddRef {
   editTemplateModal: (record: MessageTemplate) => void;
 }
 
+const items: MenuProps['items'] = [
+  {
+    label: '测试发送',
+    key: 'test'
+  },
+  {
+    label: '查看详情',
+    key: 'detail'
+  }
+];
+
 const Template: React.FC = () => {
   const detailRef = useRef<{ getDetail: (record: MessageTemplate) => void }>();
   const addRef = useRef<AddRef>();
@@ -23,22 +34,6 @@ const Template: React.FC = () => {
   const [tableParams, setTableParams] = useState({});
   const [filterOpen, setFilterOpen] = useState(false);
   const { fetchTemplateData, deleteTemplateData, addTemplate, changeStatus } = useTemplateData();
-
-  // 筛选处理函数
-  const handleFilter = (filters: any) => {
-    setTableParams(filters);
-  };
-
-  const items: MenuProps['items'] = [
-    {
-      label: '测试发送',
-      key: 'test'
-    },
-    {
-      label: '查看详情',
-      key: 'detail'
-    }
-  ];
 
   const handleMenuClick = (e: any, record: MessageTemplate) => {
     if (e?.key === 'detail') {
@@ -99,6 +94,11 @@ const Template: React.FC = () => {
       ]
     }
   ];
+
+  // 筛选处理函数
+  const handleFilter = (filters: any) => {
+    setTableParams(filters);
+  };
 
   return (
     <div className={styles['template-container']}>
@@ -169,7 +169,7 @@ const Template: React.FC = () => {
           </>
         ]}
       />
-      <DetailDrawer ref={detailRef} />
+      <DetailDrawer ref={detailRef} columns={detailColumns} />
       <AddTemplateModal ref={addRef} onSubmit={addTemplate} />
       <TestSendDrawer ref={testRef} />
       {filterOpen && (
