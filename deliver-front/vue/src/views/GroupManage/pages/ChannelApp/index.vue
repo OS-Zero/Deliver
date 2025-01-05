@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { ref, onBeforeMount, reactive, nextTick, h, onUnmounted, watch } from 'vue'
-import { addMessageTemplate, deleteMessageTemplate, getMessageTemplates, testSendMessage, updateMessageTemplate, updateMessageTemplateStatus } from '@/api/messageTemplate'
-import { messageTemplateColumns, messageTemplateSchema, messageTemplateSchemaDeps, filterSchema, testMessageSchema, filterSchemaMaps, messageTemplateLocale } from "@/config/messageTemplate"
+import { channelAppColumns, channelAppSchema, channelAppSchemaDeps, filterSchema, filterSchemaMaps, channelAppLocale } from "@/config/channelApp"
 import { CopyOutlined, DownOutlined, ExclamationCircleOutlined, FilterOutlined, CloseOutlined } from '@ant-design/icons-vue';
 import { copyToClipboard, dynamic, getDataFromSchema } from '@/utils/utils';
 import { FormInstance, message, Modal, TableProps } from 'ant-design-vue';
@@ -10,14 +9,16 @@ import SearchInput from '@/components/SearchInput/index.vue'
 import { debounce } from 'lodash'
 import { usePagination } from '@/hooks/table';
 import { Key } from 'ant-design-vue/lib/_util/type';
-import { MessageTemplate } from '@/types/messageTemplate';
-const dataSource = reactive<MessageTemplate[]>([])
+import { deleteChannelApp, getChannelApp, saveChannelApp, updateChannelApp } from '@/api/channelApp';
+import { ChannelApp } from '@/types/channelApp';
+import { updateAppStatus } from '@/api/app';
+const dataSource = reactive<ChannelApp[]>([])
 
 
-const { dynamicData: messageTemplateForm, stop } = dynamic(messageTemplateSchema, messageTemplateSchemaDeps)
+const { dynamicData: channelAppForm, stop } = dynamic(channelAppSchema, channelAppSchemaDeps)
 const { dynamicData: filterForm, stop: stopFilterDynamic } = dynamic(filterSchema, filterSchemaMaps)
 const handleSearch = async () => {
-	const { records, total } = await getMessageTemplates({ ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
+	const { records, total } = await getChannelApp({ ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
 	Object.assign(dataSource, records)
 	pagination.total = total
 }
@@ -26,7 +27,6 @@ const { pagination } = usePagination(handleSearch)
 watch(filterForm, () => {
 	debounceSearch()
 })
-const testMessageForm = reactive(testMessageSchema)
 const moreInfo = reactive<Array<{ label: string; value: any }>>([])
 const copyId = async (text: string) => {
 	try {
@@ -59,7 +59,7 @@ const rowSelection: TableProps['rowSelection'] = reactive({
 		rowSelection && (rowSelection.selectedRowKeys = selectedRowKeys)
 	},
 })
-const handleActions = async (action: 'add' | 'edit' | 'delete' | 'more' | 'testSend', record?: Record<string, any>) => {
+const handleActions = async (action: 'add' | 'edit' | 'delete' | 'more', record?: Record<string, any>) => {
 	drawerState.placement = 'right'
 	if (action === 'add') {
 		drawerState.title = '新增模板'
@@ -71,36 +71,32 @@ const handleActions = async (action: 'add' | 'edit' | 'delete' | 'more' | 'testS
 		drawerState.operation = 'edit'
 		//异步使重置数据为空
 		nextTick(() => {
-			for (const key in messageTemplateForm) {
-				messageTemplateForm[key].value = record && record[key]
+			for (const key in channelAppForm) {
+				channelAppForm[key].value = record && record[key]
 			}
 		})
 	} else if (action === 'delete') {
 		Modal.confirm({
-			title: '确认删除该分组?',
+			title: '确认删除该应用?',
 			icon: h(ExclamationCircleOutlined),
 			okText: '确认',
 			cancelText: '取消',
 			async onOk() {
-				await deleteMessageTemplate({ ids: record && record.templateId })
+				await deleteChannelApp({ ids: record && record.appId })
 				message.success('删除成功')
 			},
 		});
-	} else if (action === 'testSend') {
-		drawerState.title = '测试发送'
-		drawerState.open = true
-		drawerState.operation = 'testSend'
 	} else if (action === 'more') {
 		drawerState.title = '模板详情'
 		drawerState.open = true
 		drawerState.operation = 'showMore'
 		drawerState.placement = 'left'
-		const set = new Set(['usersType', 'channelType', 'channelProviderType', 'messageType'])
+		const set = new Set(['usersType', 'channelType', 'channelProviderType'])
 		const arr: Array<{ label: string; value: any }> = []
 		for (const key in record) {
 			if (!set.has(key)) {
 				arr.push({
-					label: messageTemplateLocale[key],
+					label: channelAppLocale[key],
 					value: record[key]
 				})
 			}
@@ -110,12 +106,12 @@ const handleActions = async (action: 'add' | 'edit' | 'delete' | 'more' | 'testS
 }
 const handleBatchDelete = () => {
 	Modal.confirm({
-		title: '确认批量删除分组?',
+		title: '确认批量删除应用?',
 		icon: h(ExclamationCircleOutlined),
 		okText: '确认',
 		cancelText: '取消',
 		async onOk() {
-			await deleteMessageTemplate({ ids: rowSelection.selectedRowKeys as number[] })
+			await deleteChannelApp({ ids: rowSelection.selectedRowKeys as number[] })
 			message.success('删除成功')
 		},
 	});
@@ -125,14 +121,11 @@ const handleDrawer = {
 		try {
 			await formRef.value?.validate()
 			if (drawerState.operation === 'add') {
-				await addMessageTemplate(getDataFromSchema(messageTemplateForm))
+				await saveChannelApp(getDataFromSchema(channelAppForm))
 				message.success('添加成功')
 			} else if (drawerState.operation == 'edit') {
-				await updateMessageTemplate(getDataFromSchema(messageTemplateForm))
+				await updateChannelApp(getDataFromSchema(channelAppForm))
 				message.success('编辑成功')
-			} else if (drawerState.operation === 'testSend') {
-				await testSendMessage(getDataFromSchema(testMessageForm))
-				message.success('发送成功')
 			} else if (drawerState.operation === 'more') {
 				drawerState.placement = 'right'
 			}
@@ -148,7 +141,7 @@ const handleDrawer = {
 	}
 }
 const changeStatus = (record: Record<string, any>) => {
-	updateMessageTemplateStatus({ templateId: record.templateId, templateStatus: Number(record.templateStatus) })
+	updateAppStatus({ appId: record.appId, appStatus: Number(record.appStatus) })
 }
 onBeforeMount(() => {
 	handleSearch()
@@ -164,7 +157,7 @@ onUnmounted(() => {
 	<div class="container">
 		<div class="container-table">
 			<div class="table-header">
-				<SearchInput placeholder="请输入模板名" v-model="searchValue" @search="debounceSearch()">
+				<SearchInput placeholder="请输入应用名" v-model="searchValue" @search="debounceSearch()">
 				</SearchInput>
 				<div class="operation">
 					<a-button class="btn--add" @click="handleActions('add')" type="primary">新增</a-button>
@@ -176,17 +169,17 @@ onUnmounted(() => {
 				<div>已选择 {{ rowSelection.selectedRowKeys?.length }} 项</div>
 				<a-button type="link" danger @click="handleBatchDelete">批量删除</a-button>
 			</div>
-			<a-table row-key="templateId" :dataSource="dataSource" :columns="messageTemplateColumns"
-				:row-selection="rowSelection" :pagination="pagination" :scroll="{ x: 1400, y: 680 }">
+			<a-table row-key="appId" :dataSource="dataSource" :columns="channelAppColumns" :row-selection="rowSelection"
+				:pagination="pagination" :scroll="{ x: 1400, y: 680 }">
 				<template #bodyCell="{ column, text, record }">
-					<template v-if="column.key === 'templateId'">
+					<template v-if="column.key === 'appId'">
 						{{ text }}
 						<CopyOutlined class="id--copy" @click="copyId(text)" />
 					</template>
-					<template v-if="column.key === 'templateStatus'">
+					<template v-else-if="column.key === 'appStatus'">
 						<a-switch v-model:checked="record[column.key]" @click="changeStatus(record)" />
 					</template>
-					<template v-if="column.key === 'actions'">
+					<template v-else-if="column.key === 'actions'">
 						<a-button type="link" @click="handleActions('edit', record)">编辑 </a-button>
 						<a-button type="link" danger @click="handleActions('delete', record)">删除</a-button>
 						<a-dropdown placement="bottom">
@@ -196,9 +189,6 @@ onUnmounted(() => {
 							</a-button>
 							<template #overlay>
 								<a-menu>
-									<a-menu-item>
-										<div @click="handleActions('testSend')">测试发送</div>
-									</a-menu-item>
 									<a-menu-item>
 										<div @click="handleActions('more', record)">查看更多</div>
 									</a-menu-item>
@@ -217,9 +207,7 @@ onUnmounted(() => {
 		<Drawer :placement="drawerState.placement" :open="drawerState.open" :title="drawerState.title" @ok="handleDrawer.ok"
 			@close="handleDrawer.cancel">
 			<Form v-if="drawerState.operation === 'add' || drawerState.operation === 'edit'" ref="formRef"
-				:label-col="{ span: 7 }" :form-schema="messageTemplateForm" />
-			<Form v-else-if="drawerState.operation === 'testSend'" ref="formRef" :label-col="{ span: 7 }"
-				:form-schema="testMessageForm" layout="vertical" />
+				:label-col="{ span: 7 }" :form-schema="channelAppForm" />
 			<div v-else-if="drawerState.operation === 'showMore'">
 				<a-descriptions :column="1">
 					<a-descriptions-item v-for="item in moreInfo" :label="item.label">{{ item.value }}</a-descriptions-item>

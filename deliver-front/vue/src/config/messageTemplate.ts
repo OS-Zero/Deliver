@@ -6,22 +6,20 @@ import { MessageTemplateForm, SearchParams, TestSendMessage } from '@/types/mess
 import { getChannelType, getParam } from '@/api/system';
 import { getAppByChannel } from '@/api/channelApp';
 export const messageTemplateLocale = {
-	templateId: '模板 Id',
-	templateName: '模板名',
-	templateDescription: '模板描述',
+	appId: '应用 Id',
+	appName: '应用名',
+	appDescription: '应用描述',
 	messageTypeName: '消息类型',
 	usersTypeName: '用户类型',
 	channelTypeName: '渠道类型',
 	channelProviderTypeName: '渠道供应商类型',
 	templateStatus: '模板状态',
-	appId: '应用 Id',
-	appName: '应用名',
 	createUser: '创建者',
 	createTime: '创建时间',
 };
 export const messageTemplateColumns: ColumnsType = [
 	{
-		title: '模板 ID',
+		title: '模板 Id',
 		dataIndex: 'templateId',
 		key: 'templateId',
 	},
@@ -127,7 +125,7 @@ export const messageTemplateSchema: MessageTemplateSchema = {
 export const messageTemplateSchemaDeps = [
 	async (data: MessageTemplateSchema) => {
 		try {
-			data.channelType.options = (await getChannelType({ userType: data.usersType.value })).map((item) => ({
+			data.channelType.options = (await getChannelType({ usersType: data.usersType.value })).map((item) => ({
 				value: item.channelType,
 				label: item.channelTypeName,
 			}));
