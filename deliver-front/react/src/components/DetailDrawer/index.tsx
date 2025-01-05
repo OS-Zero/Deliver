@@ -3,7 +3,8 @@ import { Drawer } from 'antd';
 import { ProDescriptions, ProDescriptionsItemProps } from '@ant-design/pro-components';
 import { MessageTemplate } from '@/views/GroupManage/pages/MessageTemplate/type';
 
-const DetailDrawer = forwardRef((props: {columns: ProDescriptionsItemProps<MessageTemplate>[]}, ref) => {
+// 因为需要复用所以要兼容其他属性，这里因为ProDescriptionsItemProps的限制不得不写成any
+const DetailDrawer = forwardRef((props: {columns: ProDescriptionsItemProps<any>[]}, ref) => {
   const {columns} = props;
   const [templateDetail, setTemplateDetail] = useState<MessageTemplate>();
   const [open, setOpen] = useState(false);

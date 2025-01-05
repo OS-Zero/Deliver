@@ -1,5 +1,5 @@
 import {
-  addMessageTemplate,
+  saveMessageTemplate,
   deleteMessageTemplate,
   getTemplatePages,
   updateMessageTemplateStatus
@@ -9,8 +9,7 @@ import { useCallback, useState } from 'react';
 import { MessageTemplate, SearchMessage } from './type';
 
 const useTemplateData = () => {
-  const [currentParams,
-    setCurrentParams] = useState({ currentPage: 1, pageSize: 10 });
+  const [currentParams, setCurrentParams] = useState({ currentPage: 1, pageSize: 10 });
   /**
    * 搜索请求表单数据
    * @param data
@@ -31,7 +30,7 @@ const useTemplateData = () => {
    */
   const addTemplate = async (params: MessageTemplate) => {
     console.log(params);
-    await addMessageTemplate(params);
+    await saveMessageTemplate(params);
   };
 
   /**
@@ -40,7 +39,7 @@ const useTemplateData = () => {
    */
   const changeStatus = async (templateId: number, templateStatus: number) => {
     await updateMessageTemplateStatus({ templateId, templateStatus });
-    await fetchTemplateData(currentParams);
+    // await fetchTemplateData(currentParams);
   };
 
   /**

@@ -7,7 +7,7 @@ const LoadingPage = lazy(() => import('../components/Loading'));
 const LoginPage = lazy(() => import('../views/Login'));
 const GroupManagePage = lazy(() => import('../views/GroupManage'));
 const TemplatePage = lazy(() => import('../views/GroupManage/pages/MessageTemplate'));
-const AppPage = lazy(() => import('../views/GroupManage/pages/AppConfig'));
+const AppPage = lazy(() => import('../views/GroupManage/pages/ChannelApp'));
 const PlatformFilePage = lazy(() => import('../views/GroupManage/pages/PlatformFile'));
 const FlowControlRulePage = lazy(() => import('../views/GroupManage/pages/FlowControlRule'));
 const SystemManagePage = lazy(() => import('../views/SystemManage'));

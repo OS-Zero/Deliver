@@ -22,3 +22,11 @@ export interface SearchData<T> {
   maxLimit: number | null;
   pages: number;
 }
+
+/**
+ * 分页通用接口
+ */
+export interface Pagination {
+  currentPage: number; // 当前页面序号
+  pageSize: number; // 页面大小
+}

@@ -2,40 +2,36 @@ import React, { useRef, useState } from 'react';
 import { ProColumns, ProTable } from '@ant-design/pro-components';
 import { Button, Space, Input, Switch, Dropdown, MenuProps } from 'antd';
 import { DownOutlined, FilterOutlined, SearchOutlined } from '@ant-design/icons';
-import { MessageTemplate } from './type';
-import { templateColumns, messageTableSchema } from './constant.tsx';
-import useTemplateData from './useTemplateData';
+import { ChannelApp } from './type.ts';
+import { appColumns, appTableSchema } from './constant.tsx';
+import useChannelData from './useChannelData.ts';
 import styles from './index.module.scss';
 import DetailDrawer from '@/components/DetailDrawer/index.tsx';
-import AddTemplateModal from './components/AddTemplateModal.tsx';
+// import AddTemplateModal from './components/AddTemplateModal.tsx';
 import TestSendDrawer from '@/components/TestSendDrawer/index.tsx';
-import FilterCard from './components/FilterCard.tsx';
+// import FilterCard from './components/FilterCard.tsx';
 
 interface AddRef {
   addTemplateModal: () => void;
-  editTemplateModal: (record: MessageTemplate) => void;
+  editTemplateModal: (record: ChannelApp) => void;
 }
 
 const items: MenuProps['items'] = [
-  {
-    label: '测试发送',
-    key: 'test'
-  },
   {
     label: '查看详情',
     key: 'detail'
   }
 ];
 
-const Template: React.FC = () => {
-  const detailRef = useRef<{ getDetail: (record: MessageTemplate) => void }>();
+const Channel: React.FC = () => {
+  const detailRef = useRef<{ getDetail: (record: ChannelApp) => void }>();
   const addRef = useRef<AddRef>();
   const testRef = useRef<{ getTestSendDrawer: () => void }>();
   const [tableParams, setTableParams] = useState({});
   const [filterOpen, setFilterOpen] = useState(false);
-  const { fetchTemplateData, deleteTemplateData, addTemplate, changeStatus } = useTemplateData();
+  const { fetchChannelData, deleteChannelData, saveChannelData, changeStatus } = useChannelData();
 
-  const handleMenuClick = (e: any, record: MessageTemplate) => {
+  const handleMenuClick = (e: any, record: ChannelApp) => {
     if (e?.key === 'detail') {
       detailRef.current?.getDetail(record);
     } else {
@@ -44,21 +40,20 @@ const Template: React.FC = () => {
   };
 
   // 这两列涉及到状态的改变，于是写在视图层
-  const columns: ProColumns<MessageTemplate>[] = [
-    ...messageTableSchema,
-    {
+  const columns: ProColumns<ChannelApp>[] = [
+    ...appTableSchema({
       title: '模板状态',
       width: 120,
-      dataIndex: 'templateStatus',
-      render: (_, record: MessageTemplate) => (
+      dataIndex: 'appStatus',
+      render: (_, record: ChannelApp) => (
         <Switch
           checkedChildren="启用"
           unCheckedChildren="禁用"
-          checked={Boolean(record?.templateStatus)}
-          onClick={() => changeStatus(record.templateId, record.templateStatus === 0 ? 1 : 0)}
+          checked={Boolean(record?.appStatus)}
+          onClick={() => changeStatus(record.appId, record.appStatus === 0 ? 1 : 0)}
         />
       )
-    },
+    }),
     {
       title: '操作',
       width: 160,
@@ -75,7 +70,7 @@ const Template: React.FC = () => {
         <a
           className={styles['link-button-delete']}
           key="delete"
-          onClick={() => deleteTemplateData([record?.templateId])}
+          onClick={() => deleteChannelData([record?.appId])}
         >
           删除
         </a>,
@@ -101,8 +96,8 @@ const Template: React.FC = () => {
   };
 
   return (
-    <div className={styles['template-container']}>
-      <ProTable<MessageTemplate>
+    <div className={styles['app-container']}>
+      <ProTable<ChannelApp>
         style={{
           width: filterOpen ? 'calc(100% - 300px)' : '100%',
           transition: 'width 0.3s ease-in-out'
@@ -111,7 +106,7 @@ const Template: React.FC = () => {
         columns={columns}
         rowSelection={{}}
         // TODO: 这里到底传什么？入参为currentPage，反参是current？
-        request={fetchTemplateData}
+        request={fetchChannelData}
         tableAlertRender={({ selectedRowKeys, onCleanSelected }) => {
           return (
             <Space size={24}>
@@ -127,7 +122,7 @@ const Template: React.FC = () => {
         tableAlertOptionRender={({ selectedRowKeys }) => {
           return (
             <Space size={16}>
-              <a onClick={() => deleteTemplateData(selectedRowKeys as number[])}>批量删除</a>
+              <a onClick={() => deleteChannelData(selectedRowKeys as number[])}>批量删除</a>
             </Space>
           );
         }}
@@ -141,11 +136,11 @@ const Template: React.FC = () => {
           showTotal: (_) => `共 ${_} 条`,
           size: 'default'
         }}
-        rowKey="templateId"
+        rowKey="appId"
         headerTitle={
           <div style={{ width: '300px' }}>
             <Input
-              placeholder="请输入模板名进行查询"
+              placeholder="请输入应用名进行查询"
               style={{ borderRadius: '50px' }}
               prefix={<SearchOutlined />}
             />
@@ -169,16 +164,15 @@ const Template: React.FC = () => {
           </>
         ]}
       />
-      <DetailDrawer ref={detailRef} columns={templateColumns} />
-      <AddTemplateModal ref={addRef} onSubmit={addTemplate} />
-      <TestSendDrawer ref={testRef} />
+      <DetailDrawer ref={detailRef} columns={appColumns} />
+      {/* <AddTemplateModal ref={addRef} onSubmit={addTemplate} />
       {filterOpen && (
         <div className={styles['filter-container']}>
           <FilterCard onClose={() => setFilterOpen(false)} onFilter={handleFilter} />
         </div>
-      )}
+      )} */}
     </div>
   );
 };
 
-export default Template;
+export default Channel;

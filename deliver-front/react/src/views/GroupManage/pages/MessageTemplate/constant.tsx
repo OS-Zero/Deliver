@@ -1,26 +1,9 @@
 import type { ProColumns, ProDescriptionsItemProps } from '@ant-design/pro-components';
 import { MessageTemplate } from './type';
 import { Tag, Typography } from 'antd';
+import { getColor, getImg } from '@/utils/getTagStyle';
 
 const { Paragraph } = Typography;
-
-const getColor = (num: number) => {
-  const colors = ['green', 'blue', 'purple', 'cyan', 'orange', 'pink', 'red'];
-  return colors[num];
-};
-
-const getImg = (num: number | string) => {
-  const imgPaths = [
-    { src: '', alt: '' },
-    { src: '/assets/电话.png', alt: '电话' },
-    { src: '/assets/短信.png', alt: '短信' },
-    { src: '/assets/邮件.png', alt: '邮件' },
-    { src: '/assets/钉钉.png', alt: '钉钉' },
-    { src: '/assets/企业微信.png', alt: '企业微信' },
-    { src: '/assets/飞书.png', alt: '飞书' }
-  ];
-  return imgPaths[Number(num)];
-};
 
 // 表格schema配置
 export const messageTableSchema: ProColumns<MessageTemplate>[] = [
@@ -67,7 +50,7 @@ export const messageTableSchema: ProColumns<MessageTemplate>[] = [
 ];
 
 // 详情schema配置
-export const detailColumns: ProDescriptionsItemProps<MessageTemplate>[] = [
+export const templateColumns: ProDescriptionsItemProps<MessageTemplate>[] = [
   {
     title: '模版 ID',
     key: 'text',
@@ -88,17 +71,17 @@ export const detailColumns: ProDescriptionsItemProps<MessageTemplate>[] = [
   {
     key: 'text',
     title: '推送范围',
-    dataIndex: 'channelProviderTypeName',
+    dataIndex: 'channelProviderTypeName'
   },
   {
     key: 'text',
     title: '用户类型',
-    dataIndex: 'usersTypeName',
+    dataIndex: 'usersTypeName'
   },
   {
     key: 'text',
     title: '渠道类型',
-    dataIndex: 'channelTypeName',
+    dataIndex: 'channelTypeName'
   },
   {
     title: '模版状态',
@@ -113,7 +96,7 @@ export const detailColumns: ProDescriptionsItemProps<MessageTemplate>[] = [
   {
     key: 'text',
     title: '创建人',
-    dataIndex: 'createUser',
+    dataIndex: 'createUser'
   },
   {
     title: '创建时间',
@@ -124,6 +107,6 @@ export const detailColumns: ProDescriptionsItemProps<MessageTemplate>[] = [
   {
     key: 'text',
     title: 'App 名称',
-    dataIndex: 'appName',
-  },
+    dataIndex: 'appName'
+  }
 ];

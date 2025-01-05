@@ -55,7 +55,7 @@ export async function getApp(data: { channelType: number }): Promise<never> {
  * @param data 新增模板数据
  * @returns
  */
-export async function addMessageTemplate(data: MessageTemplate): Promise<never> {
+export async function saveMessageTemplate(data: MessageTemplate): Promise<never> {
   return await request({
     url: '/messageTemplate/save',
     method: 'post',
