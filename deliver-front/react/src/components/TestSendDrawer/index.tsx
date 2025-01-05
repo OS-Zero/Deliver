@@ -33,7 +33,7 @@ const TestSendDrawer = forwardRef((_, ref) => {
   useEffect(() => {
     formRef?.current?.resetFields();
     setParamMap({});
-    setJsonEditorKey(prev => prev + 1);
+    setJsonEditorKey((prev) => prev + 1);
   }, [open]);
 
   return (
@@ -84,9 +84,7 @@ const TestSendDrawer = forwardRef((_, ref) => {
                       rules={[
                         {
                           required: true,
-
                           whitespace: true,
-
                           message: '请输入用户ID或删除此字段'
                         }
                       ]}
@@ -119,7 +117,13 @@ const TestSendDrawer = forwardRef((_, ref) => {
           )}
         </Form.List>
         <Form.Item label="发送参数" labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
-          <JsonEditor key={jsonEditorKey} ref={jsonEditorRef} value={paramMap} mode="code" onChange={(e: object) => setParamMap(e)} />
+          <JsonEditor
+            key={jsonEditorKey}
+            ref={jsonEditorRef}
+            value={paramMap}
+            mode="code"
+            onChange={(e: object) => setParamMap(e)}
+          />
         </Form.Item>
       </Form>
     </Drawer>

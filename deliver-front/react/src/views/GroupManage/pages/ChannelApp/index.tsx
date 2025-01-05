@@ -9,6 +9,7 @@ import styles from './index.module.scss';
 import DetailDrawer from '@/components/DetailDrawer/index.tsx';
 // import AddTemplateModal from './components/AddTemplateModal.tsx';
 import TestSendDrawer from '@/components/TestSendDrawer/index.tsx';
+import FilterCard from './components/FilterCard.tsx';
 // import FilterCard from './components/FilterCard.tsx';
 
 interface AddRef {
@@ -165,12 +166,12 @@ const Channel: React.FC = () => {
         ]}
       />
       <DetailDrawer ref={detailRef} columns={appColumns} />
-      {/* <AddTemplateModal ref={addRef} onSubmit={addTemplate} />
+      {/* <AddTemplateModal ref={addRef} onSubmit={addTemplate} /> */}
       {filterOpen && (
         <div className={styles['filter-container']}>
           <FilterCard onClose={() => setFilterOpen(false)} onFilter={handleFilter} />
         </div>
-      )} */}
+      )}
     </div>
   );
 };

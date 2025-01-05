@@ -106,7 +106,7 @@ export const templateColumns: ProDescriptionsItemProps<MessageTemplate>[] = [
   },
   {
     key: 'text',
-    title: 'App 名称',
+    title: '应用名',
     dataIndex: 'appName'
   }
 ];
