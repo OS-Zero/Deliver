@@ -62,6 +62,10 @@ const listRemove = (list: string[], id: string) => {
 					<JsonEditor v-model="formSchema[field.fieldName].value" v-bind="formSchema[field.fieldName].editorConfig">
 					</JsonEditor>
 				</template>
+				<template v-else-if="field.type === 'datePicker'">
+					<a-date-picker style="width: 100%;" v-model:value="formSchema[field.fieldName].value" show-time
+						format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD HH:mm:ss" />
+				</template>
 			</a-form-item>
 		</template>
 

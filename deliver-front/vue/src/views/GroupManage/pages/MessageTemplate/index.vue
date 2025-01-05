@@ -177,7 +177,7 @@ onUnmounted(() => {
 				<a-button type="link" danger @click="handleBatchDelete">批量删除</a-button>
 			</div>
 			<a-table row-key="templateId" :dataSource="dataSource" :columns="messageTemplateColumns"
-				:row-selection="rowSelection" :pagination="pagination">
+				:row-selection="rowSelection" :pagination="pagination" :scroll="{ x: 1400, y: 680 }">
 				<template #bodyCell="{ column, text, record }">
 					<template v-if="column.key === 'templateId'">
 						{{ text }}
@@ -239,8 +239,9 @@ onUnmounted(() => {
 	margin-right: var(--spacing-md);
 }
 
-.ant-table {
-	border: 1px solid var(--gray-lighter);
+.container-table {
+	width: calc(100% - 300px);
+	flex: 1 auto;
 }
 
 .ant-card {
@@ -257,19 +258,16 @@ onUnmounted(() => {
 .filter-form {
 	height: 100%;
 	overflow: hidden;
-	width: 0;
 	transition: width 120ms;
 	border: none;
+	width: 0;
 
 	&.open {
 		border-left: 1px solid var(--gray-lighter);
-		width: 300px;
+		width: 300px
 	}
 }
 
-.container-table {
-	flex: 1;
-}
 
 .input--search {
 	width: 300px;

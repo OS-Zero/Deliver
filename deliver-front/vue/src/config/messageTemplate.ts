@@ -59,6 +59,8 @@ export const messageTemplateColumns: ColumnsType = [
 		title: '操作',
 		dataIndex: 'actions',
 		key: 'actions',
+		fixed: 'right',
+		width: 270,
 	},
 ];
 const userTypes: SelectProps['options'] = JSON.parse(localStorage.getItem('startup') || '{}')?.usersTypeParamList.map(
@@ -203,6 +205,16 @@ export const filterSchema: Record<string, FormItem<keyof SearchParams>> = {
 				label: '开启',
 			},
 		],
+	},
+	startTime: {
+		type: 'datePicker',
+		fieldName: 'startTime',
+		label: '开始时间',
+	},
+	endTime: {
+		type: 'datePicker',
+		fieldName: 'endTime',
+		label: '结束时间',
 	},
 };
 export const filterSchemaMaps = messageTemplateSchemaDeps.slice(0, 2);

@@ -20,7 +20,7 @@ export interface MessageTemplate {
 }
 export interface SearchParams
 	extends TableSearchParams,
-		Pick<Partial<MessageTemplate>, 'usersType' | 'channelType' | 'channelProviderType' | 'messageType' | 'templateStatus'> {
+		Pick<Partial<MessageTemplate>, 'usersType' | 'channelType' | 'channelProviderType' | 'messageType' | 'templateStatus' | 'createTime'> {
 	startTime?: string;
 	endTime?: string;
 }

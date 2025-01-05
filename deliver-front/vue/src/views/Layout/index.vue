@@ -94,8 +94,4 @@ onUnmounted(() => {
 .ant-layout {
 	background-color: var(--white-color);
 }
-
-.layout-content {
-	overflow: auto;
-}
 </style>

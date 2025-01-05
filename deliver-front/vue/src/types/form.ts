@@ -1,7 +1,19 @@
 import { SelectProps } from 'ant-design-vue';
 import { Rule } from 'ant-design-vue/es/form';
 
-type ItemType = 'none' | 'input' | 'textarea' | 'inputNumber' | 'timePicker' | 'select' | 'radio' | 'switch' | 'cascader' | 'jsonEditor' | 'list';
+type ItemType =
+	| 'none'
+	| 'input'
+	| 'textarea'
+	| 'inputNumber'
+	| 'timePicker'
+	| 'select'
+	| 'radio'
+	| 'switch'
+	| 'cascader'
+	| 'jsonEditor'
+	| 'list'
+	| 'datePicker';
 
 export interface FormItem<T> {
 	value?: any;

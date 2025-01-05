@@ -11,7 +11,7 @@ export async function getMessageTemplates(data: SearchParams): Promise<TableData
 	return await request({
 		url: '/template/search',
 		method: 'post',
-		data,
+		data: data,
 	});
 }
 
