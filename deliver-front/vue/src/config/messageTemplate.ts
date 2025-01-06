@@ -6,9 +6,11 @@ import { MessageTemplateForm, SearchParams, TestSendMessage } from '@/types/mess
 import { getChannelType, getParam } from '@/api/system';
 import { getAppByChannel } from '@/api/channelApp';
 export const messageTemplateLocale = {
+	templateId: '模板 Id',
+	templateDescription: '模板描述',
 	appId: '应用 Id',
 	appName: '应用名',
-	appDescription: '应用描述',
+	templateName: '模板名',
 	messageTypeName: '消息类型',
 	usersTypeName: '用户类型',
 	channelTypeName: '渠道类型',

@@ -62,11 +62,11 @@ const rowSelection: TableProps['rowSelection'] = reactive({
 const handleActions = async (action: 'add' | 'edit' | 'delete' | 'more', record?: Record<string, any>) => {
 	drawerState.placement = 'right'
 	if (action === 'add') {
-		drawerState.title = '新增模板'
+		drawerState.title = '新增应用'
 		drawerState.open = true
 		drawerState.operation = 'add'
 	} else if (action === 'edit') {
-		drawerState.title = '编辑模板'
+		drawerState.title = '编辑应用'
 		drawerState.open = true
 		drawerState.operation = 'edit'
 		//异步使重置数据为空
@@ -87,11 +87,11 @@ const handleActions = async (action: 'add' | 'edit' | 'delete' | 'more', record?
 			},
 		});
 	} else if (action === 'more') {
-		drawerState.title = '模板详情'
+		drawerState.title = '应用详情'
 		drawerState.open = true
 		drawerState.operation = 'showMore'
 		drawerState.placement = 'left'
-		const set = new Set(['usersType', 'channelType', 'channelProviderType'])
+		const set = new Set(['usersType', 'channelType', 'channelProviderType', 'appId'])
 		const arr: Array<{ label: string; value: any }> = []
 		for (const key in record) {
 			if (!set.has(key)) {
@@ -139,6 +139,10 @@ const handleDrawer = {
 		drawerState.open = false
 		formRef.value?.resetFields()
 	}
+}
+const handleFilterClose = () => {
+	filterState.open = false
+	formRef.value?.resetFields()
 }
 const changeStatus = (record: Record<string, any>) => {
 	updateAppStatus({ appId: record.appId, appStatus: Number(record.appStatus) })
@@ -200,8 +204,7 @@ onUnmounted(() => {
 			</a-table>
 		</div>
 		<a-card size="small" class="filter-form" :class="{ open: filterState.open }" title="筛选">
-			<template #extra><a-button type="text" :icon="h(CloseOutlined)"
-					@click="filterState.open = false"></a-button></template>
+			<template #extra><a-button type="text" :icon="h(CloseOutlined)" @click="handleFilterClose"></a-button></template>
 			<Form layout="vertical" ref="formRef" :form-schema="filterForm" />
 		</a-card>
 		<Drawer :placement="drawerState.placement" :open="drawerState.open" :title="drawerState.title" @ok="handleDrawer.ok"
@@ -271,10 +274,7 @@ onUnmounted(() => {
 
 .id--copy {
 	cursor: pointer;
-
-	&:active {
-		color: var(--blue-darker);
-	}
+	color: var(--blue-darker);
 }
 
 .selections--delete {

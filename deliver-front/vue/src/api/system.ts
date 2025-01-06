@@ -19,6 +19,13 @@ export function getParam(data: { channelType: Channel['channelType'] }): Promise
 		data,
 	});
 }
+export function getMessageParam(data: { channelType: Channel['channelType']; messageType: Message['messageType'] }): Promise<string> {
+	return request({
+		url: '/systemParam/getMessageParam',
+		method: 'post',
+		data,
+	});
+}
 export function getAppConfig(data: { channelType: Channel['channelType']; channelProviderType: Channel['channelTypeName'] }): Promise<string> {
 	return request({
 		url: '/systemParam/getAppConfig',

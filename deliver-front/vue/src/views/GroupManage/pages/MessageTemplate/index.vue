@@ -11,6 +11,7 @@ import { debounce } from 'lodash'
 import { usePagination } from '@/hooks/table';
 import { Key } from 'ant-design-vue/lib/_util/type';
 import { MessageTemplate } from '@/types/messageTemplate';
+import { getMessageParam } from '@/api/system';
 const dataSource = reactive<MessageTemplate[]>([])
 
 
@@ -41,11 +42,13 @@ const drawerState = reactive<{
 	title: string
 	operation: string
 	placement: 'left' | 'right' | 'top' | 'bottom' | undefined
+	extra: boolean
 }>({
 	open: false,
 	title: '',
 	operation: '',
-	placement: "right"
+	placement: "right",
+	extra: true
 })
 const filterState = reactive({
 	open: false
@@ -90,12 +93,19 @@ const handleActions = async (action: 'add' | 'edit' | 'delete' | 'more' | 'testS
 		drawerState.title = '测试发送'
 		drawerState.open = true
 		drawerState.operation = 'testSend'
+		nextTick(() => {
+			testMessageForm.users.value = []
+		})
+		record && getMessageParam({ messageType: record.messageType, channelType: record.channelType }).then(res => {
+			testMessageForm.paramMap.value = JSON.parse(res)
+		})
 	} else if (action === 'more') {
 		drawerState.title = '模板详情'
 		drawerState.open = true
 		drawerState.operation = 'showMore'
 		drawerState.placement = 'left'
-		const set = new Set(['usersType', 'channelType', 'channelProviderType', 'messageType'])
+		drawerState.extra = false
+		const set = new Set(['usersType', 'channelType', 'channelProviderType', 'messageType', 'appId'])
 		const arr: Array<{ label: string; value: any }> = []
 		for (const key in record) {
 			if (!set.has(key)) {
@@ -136,19 +146,24 @@ const handleDrawer = {
 			} else if (drawerState.operation === 'more') {
 				drawerState.placement = 'right'
 			}
-			drawerState.open = false
 			formRef.value?.resetFields()
+			drawerState.open = false
 		} catch (error) {
 			console.log(error);
 		}
 	},
 	cancel: () => {
-		drawerState.open = false
 		formRef.value?.resetFields()
+		drawerState.open = false
+		drawerState.extra = true
 	}
 }
 const changeStatus = (record: Record<string, any>) => {
 	updateMessageTemplateStatus({ templateId: record.templateId, templateStatus: Number(record.templateStatus) })
+}
+const handleFilterClose = () => {
+	filterState.open = false
+	formRef.value?.resetFields()
 }
 onBeforeMount(() => {
 	handleSearch()
@@ -197,7 +212,7 @@ onUnmounted(() => {
 							<template #overlay>
 								<a-menu>
 									<a-menu-item>
-										<div @click="handleActions('testSend')">测试发送</div>
+										<div @click="handleActions('testSend', record)">测试发送</div>
 									</a-menu-item>
 									<a-menu-item>
 										<div @click="handleActions('more', record)">查看更多</div>
@@ -210,19 +225,20 @@ onUnmounted(() => {
 			</a-table>
 		</div>
 		<a-card size="small" class="filter-form" :class="{ open: filterState.open }" title="筛选">
-			<template #extra><a-button type="text" :icon="h(CloseOutlined)"
-					@click="filterState.open = false"></a-button></template>
+			<template #extra><a-button type="text" :icon="h(CloseOutlined)" @click="handleFilterClose"></a-button></template>
 			<Form layout="vertical" ref="formRef" :form-schema="filterForm" />
 		</a-card>
-		<Drawer :placement="drawerState.placement" :open="drawerState.open" :title="drawerState.title" @ok="handleDrawer.ok"
-			@close="handleDrawer.cancel">
+		<Drawer :placement="drawerState.placement" :open="drawerState.open" :title="drawerState.title"
+			:extra="drawerState.extra" @ok="handleDrawer.ok" @close="handleDrawer.cancel">
 			<Form v-if="drawerState.operation === 'add' || drawerState.operation === 'edit'" ref="formRef"
 				:label-col="{ span: 7 }" :form-schema="messageTemplateForm" />
 			<Form v-else-if="drawerState.operation === 'testSend'" ref="formRef" :label-col="{ span: 7 }"
 				:form-schema="testMessageForm" layout="vertical" />
 			<div v-else-if="drawerState.operation === 'showMore'">
 				<a-descriptions :column="1">
-					<a-descriptions-item v-for="item in moreInfo" :label="item.label">{{ item.value }}</a-descriptions-item>
+					<a-descriptions-item v-for="item in moreInfo" :label="item.label">{{ item.value }}
+						<CopyOutlined v-if="item.label === '模板 Id'" class="id--copy" @click="copyId(item.value)" />
+					</a-descriptions-item>
 				</a-descriptions>
 			</div>
 		</Drawer>
@@ -283,10 +299,7 @@ onUnmounted(() => {
 
 .id--copy {
 	cursor: pointer;
-
-	&:active {
-		color: var(--blue-darker);
-	}
+	color: var(--blue-darker);
 }
 
 .selections--delete {
@@ -298,5 +311,9 @@ onUnmounted(() => {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+}
+
+::v-deep .ant-descriptions-item-content {
+	align-items: center !important;
 }
 </style>

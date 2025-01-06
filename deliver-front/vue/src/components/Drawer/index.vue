@@ -3,9 +3,11 @@ withDefaults(defineProps<{
 	open: boolean
 	title: string
 	placement?: 'left' | 'right' | 'top' | 'bottom' | undefined
+	extra?: boolean
 }>(), {
 	open: false,
-	placement: 'right'
+	placement: 'right',
+	extra: true
 })
 
 const emit = defineEmits(['close', 'ok'])
@@ -13,7 +15,7 @@ const emit = defineEmits(['close', 'ok'])
 
 <template>
 	<a-drawer :width="500" :title="title" :placement="placement" :open="open" @close="emit('close')">
-		<template #extra>
+		<template v-if="extra" #extra>
 			<a-button style="margin-right: 8px" @click="emit('close')">取消</a-button>
 			<a-button type="primary" @click="emit('ok')">确定</a-button>
 		</template>

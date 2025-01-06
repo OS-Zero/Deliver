@@ -3,6 +3,7 @@ export interface GroupCard {
 	groupName: string;
 	groupDescription: string;
 	updateTime?: string;
+	topUp?: number;
 }
 export interface GroupCardList {
 	topUpGroupList: GroupCard[];
