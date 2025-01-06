@@ -126,7 +126,7 @@ const GroupManage: React.FC = () => {
         <h3>置顶分组</h3>
         <div className={styles['top-cards']}>
           {groupList.topUpGroupList.map((item) => (
-            <Card key={item.groupId} data={item} />
+            <Card key={item.groupId} data={item} isTop={true} />
           ))}
         </div>
       </div>
@@ -150,6 +150,7 @@ const GroupManage: React.FC = () => {
             <Card
               key={item.groupId}
               data={item}
+              isTop={false}
               showAction
               onTop={() => changeOperation('toTop', item)}
               onEdit={() => changeOperation('edit', item)}

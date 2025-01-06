@@ -13,6 +13,7 @@ import styles from './index.module.scss';
 interface CardProps {
   data?: GroupCard;
   isEmpty?: boolean;
+  isTop?: boolean;
   showAction?: boolean;
   onTop?: () => void;
   onEdit?: () => void;
@@ -23,7 +24,8 @@ interface CardProps {
 const GroupCardComponent: React.FC<CardProps> = ({
   data,
   isEmpty = false,
-  showAction = false,
+  isTop = false,
+  // showAction = false,
   onTop,
   onEdit,
   onDelete,
@@ -46,25 +48,19 @@ const GroupCardComponent: React.FC<CardProps> = ({
     });
   };
 
-  const handleOperation = (op: 'onTop' | 'onEdit' | 'onDelete') => {
+  const handleOperation = (op: 'onTop' | 'onEdit' | 'onDelete' | 'cancelTop') => {
     if (op === 'onTop' && onTop) onTop();
     if (op === 'onEdit' && onEdit) onEdit();
     if (op === 'onDelete') showConfirm();
   };
 
-  const menu = (
-    <Menu>
-      <Menu.Item key="top" onClick={() => handleOperation('onTop')}>
-        置顶
-      </Menu.Item>
-      <Menu.Item key="edit" onClick={() => handleOperation('onEdit')}>
-        编辑
-      </Menu.Item>
-      <Menu.Item key="delete" onClick={() => handleOperation('onDelete')}>
-        删除
-      </Menu.Item>
-    </Menu>
-  );
+  const items = isTop
+    ? [{ label: '取消置顶', key: 'cancelTop' }]
+    : [
+        { label: '置顶', key: 'onTop' },
+        { label: '编辑', key: 'onEdit' },
+        { label: '删除', key: 'onDelete' }
+      ];
 
   return isEmpty ? (
     <Card className={styles['empty_card']} onClick={onClick} style={{ width: 200 }}>
@@ -72,12 +68,14 @@ const GroupCardComponent: React.FC<CardProps> = ({
       <div className={styles['empty_desc']}>添加</div>
     </Card>
   ) : (
-    <Card
-      className={styles['card']}
-      hoverable
-      onClick={() => handleMore()}
-    >
-      <Dropdown overlay={menu} placement="bottom">
+    <Card className={styles['card']} hoverable onClick={() => handleMore()}>
+      <Dropdown
+        menu={{
+          items,
+          onClick: (e) => handleOperation(e.key as 'onTop' | 'onEdit' | 'onDelete' | 'cancelTop')
+        }}
+        placement="bottom"
+      >
         <EllipsisOutlined className={styles['card_more']} />
       </Dropdown>
       <div className={styles['card_content']}>
