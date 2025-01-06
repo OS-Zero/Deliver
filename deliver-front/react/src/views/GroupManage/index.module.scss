@@ -41,31 +41,14 @@
     padding: 0;
     color: #222;
     font-size: 16px;
-    // line-height: 40px;
+    line-height: 40px;
     width: 0;
     transition: 0.4s;
   }
 
   .search-btn {
-    border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    width: 300px;
     cursor: pointer;
-    transition: 0.4s;
-  }
-
-  .search-box:hover .search-txt {
-    width: 200px;
-    padding: 0 12px;
-  }
-
-  .search-box:hover .search-btn {
-    background-color: #fff;
-    animation: rotate 0.4s linear;
   }
 
   .search-txt:focus {

@@ -133,18 +133,14 @@ const GroupManage: React.FC = () => {
       <div className={styles['card-bottom']}>
         <div className={styles['bottom-section']}>
           <h3>全部分组</h3>
-          <div className={styles['search-box']}>
-            <Button
-              className={styles['search-btn']}
-              shape="circle"
-              icon={<SearchOutlined />}
-              onClick={() => fetchCardData}
-            />
+          <div className={styles['search-box']} style={{ width: '300px' }}>
             <Input
-              value={state.search}
-              type="text"
               className="search-txt"
+              value={state.search}
               placeholder="请输入分组名"
+              style={{ borderRadius: '50px' }}
+              prefix={<SearchOutlined />}
+              onBlur={() => fetchCardData(state.search)}
             />
           </div>
         </div>
