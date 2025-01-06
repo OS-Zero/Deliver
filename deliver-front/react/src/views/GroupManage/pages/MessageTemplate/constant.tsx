@@ -26,12 +26,6 @@ export const messageTableSchema: ProColumns<MessageTemplate>[] = [
     render: (_) => <a>{_}</a>
   },
   {
-    title: '推送范围',
-    width: 120,
-    dataIndex: 'channelProviderTypeName',
-    render: (_, record) => <Tag color={getColor(record?.channelProviderType)}>{_}</Tag>
-  },
-  {
     title: '用户类型',
     width: 120,
     dataIndex: 'usersTypeName',
@@ -46,7 +40,13 @@ export const messageTableSchema: ProColumns<MessageTemplate>[] = [
       const { src, alt } = getImg(record?.channelType);
       return <img src={src} alt={alt} style={{ width: 35, height: 35 }} />;
     }
-  }
+  },
+  {
+    title: '渠道供应商类型',
+    width: 120,
+    dataIndex: 'channelProviderTypeName',
+    render: (_, record) => <Tag color={getColor(record?.channelProviderType)}>{_}</Tag>
+  },
 ];
 
 // 详情schema配置
@@ -67,11 +67,6 @@ export const templateColumns: ProDescriptionsItemProps<MessageTemplate>[] = [
     title: '消息类型',
     dataIndex: 'messageTypeName',
     render: (_) => <a>{_}</a>
-  },
-  {
-    key: 'text',
-    title: '推送范围',
-    dataIndex: 'channelProviderTypeName'
   },
   {
     key: 'text',

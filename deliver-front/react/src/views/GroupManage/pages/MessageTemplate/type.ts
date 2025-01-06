@@ -6,7 +6,6 @@ export interface Pagination {
 // 搜索框接口
 export interface SearchModel {
   templateName?: string; // 模板名
-  pushRange?: number; // 推送范围
   usersType?: number; // 用户类型
   period?: string; // 日期
   startTime?: string; // 日期开始时间
@@ -23,7 +22,6 @@ export interface MessageTemplate {
   templateId: number; // 模板id
   templateName: string; // 模板名
   templateDescription: string; // 描述
-  pushRange: number; // 推送范围
   usersType: number; // 用户类型
   usersTypeName: string; // 用户类型描述
   pushWays?: string; // 推送方式
@@ -44,7 +42,6 @@ export interface MessageTemplate {
 // 新增接口
 export interface AddTemp {
   templateName: string; // 模板名
-  pushRange: number | undefined; // 推送范围
   usersType: number | undefined; // 用户类型
   pushWays: string; // 推送方式
   channelType?: string | undefined; // 渠道选择
