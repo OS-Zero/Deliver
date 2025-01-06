@@ -10,7 +10,7 @@ interface FilterDrawerProps {
   onClose: (open: boolean) => void;
 }
 
-const FilterDrawer = (props:FilterDrawerProps) => {
+const FilterDrawer = (props: FilterDrawerProps) => {
   const { onClose, onFilter } = props;
   const formRef = useRef<FormInstance>(null);
 
@@ -65,21 +65,24 @@ const FilterDrawer = (props:FilterDrawerProps) => {
   };
 
   return (
-    <Card title="筛选" extra={<Button type='text' icon={<CloseOutlined />} onClick={handleReset} />} style={{ width: 300, border: '0 solid transparent', borderLeft: '1px solid #f0f0f0', padding: '0 12px' }}>
+    <Card
+      title="筛选"
+      extra={<Button type="text" icon={<CloseOutlined />} onClick={handleReset} />}
+      style={{
+        width: 300,
+        border: '0 solid transparent',
+        borderLeft: '1px solid #f0f0f0',
+        padding: '0 12px'
+      }}
+    >
       <Form ref={formRef} layout="vertical" onValuesChange={handleFilter}>
-        <Form.Item
-          label="用户类型"
-          name="usersType"
-        >
+        <Form.Item label="用户类型" name="usersType">
           <Select placeholder="请选择用户类型" onChange={handleUsersTypeChange}>
             <Option value={0}>选项1</Option>
             <Option value={1}>选项2</Option>
           </Select>
         </Form.Item>
-        <Form.Item
-          label="渠道类型"
-          name="channelType"
-        >
+        <Form.Item label="渠道类型" name="channelType">
           <Select
             placeholder="请选择渠道类型"
             onChange={handleChannelTypeChange}
@@ -92,11 +95,11 @@ const FilterDrawer = (props:FilterDrawerProps) => {
             ))}
           </Select>
         </Form.Item>
-        <Form.Item
-          label="渠道供应商类型"
-          name="channelProviderType"
-        >
-          <Select placeholder="请选择渠道供应商类型" disabled={!formRef?.current?.getFieldValue('channelType')}>
+        <Form.Item label="渠道供应商类型" name="channelProviderType">
+          <Select
+            placeholder="请选择渠道供应商类型"
+            disabled={!formRef?.current?.getFieldValue('channelType')}
+          >
             {formState.channelProviders.map((provider) => (
               <Option key={provider.channelProviderType} value={provider.channelProviderType}>
                 {provider.channelProviderTypeName}
@@ -104,11 +107,11 @@ const FilterDrawer = (props:FilterDrawerProps) => {
             ))}
           </Select>
         </Form.Item>
-        <Form.Item
-          label="消息类型"
-          name="messageType"
-        >
-          <Select placeholder="请选择消息类型" disabled={!formRef?.current?.getFieldValue('channelType')}>
+        <Form.Item label="消息类型" name="messageType">
+          <Select
+            placeholder="请选择消息类型"
+            disabled={!formRef?.current?.getFieldValue('channelType')}
+          >
             {formState.messageTypes.map((messageType) => (
               <Option key={messageType.messageType} value={messageType.messageType}>
                 {messageType.messageTypeName}
@@ -117,7 +120,10 @@ const FilterDrawer = (props:FilterDrawerProps) => {
           </Select>
         </Form.Item>
         <Form.Item name="templateStatus" label="模板状态">
-          <Switch checkedChildren="启用" unCheckedChildren="禁用" />
+          <Select placeholder="请选择模板状态">
+            <Option value={0}>禁用</Option>
+            <Option value={1}>启用</Option>
+          </Select>
         </Form.Item>
       </Form>
     </Card>
