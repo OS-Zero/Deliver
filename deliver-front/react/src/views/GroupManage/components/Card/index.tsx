@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Dropdown, Menu, Modal } from 'antd';
+import { Card, Dropdown, Modal } from 'antd';
 import {
   EllipsisOutlined,
   PlusOutlined,

@@ -7,14 +7,12 @@ import { appColumns, appTableSchema } from './constant.tsx';
 import useChannelData from './useChannelData.ts';
 import styles from './index.module.scss';
 import DetailDrawer from '@/components/DetailDrawer/index.tsx';
-// import AddTemplateModal from './components/AddTemplateModal.tsx';
-import TestSendDrawer from '@/components/TestSendDrawer/index.tsx';
 import FilterCard from './components/FilterCard.tsx';
-// import FilterCard from './components/FilterCard.tsx';
+import AddChannelDrawer from './components/AddChannelDrawer.tsx';
 
 interface AddRef {
-  addTemplateModal: () => void;
-  editTemplateModal: (record: ChannelApp) => void;
+  addChannelDrawer: () => void;
+  editChannelModal: (record: ChannelApp) => void;
 }
 
 const items: MenuProps['items'] = [
@@ -64,7 +62,7 @@ const Channel: React.FC = () => {
         <a
           className={styles['link-button']}
           key="edit"
-          onClick={() => addRef?.current?.editTemplateModal(record)}
+          onClick={() => addRef?.current?.editChannelModal(record)}
         >
           编辑
         </a>,
@@ -153,7 +151,7 @@ const Channel: React.FC = () => {
               key="add"
               type="primary"
               style={{ marginRight: '5px' }}
-              onClick={() => addRef?.current?.addTemplateModal()}
+              onClick={() => addRef?.current?.addChannelDrawer()}
             >
               新增
             </Button>
@@ -166,7 +164,7 @@ const Channel: React.FC = () => {
         ]}
       />
       <DetailDrawer ref={detailRef} columns={appColumns} />
-      {/* <AddTemplateModal ref={addRef} onSubmit={addTemplate} /> */}
+      <AddChannelDrawer ref={addRef} onSubmit={saveChannelData} />
       {filterOpen && (
         <div className={styles['filter-container']}>
           <FilterCard onClose={() => setFilterOpen(false)} onFilter={handleFilter} />

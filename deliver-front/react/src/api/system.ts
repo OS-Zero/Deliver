@@ -30,3 +30,12 @@ export function getParam(data: { channelType: number }): Promise<{
     data
   });
 }
+
+// 根据渠道类型和渠道供应商获取参数配置
+export function getAppConfig(data: { channelType: number, channelProviderType: number }): Promise<string> {
+  return request({
+    url: '/systemParam/getAppConfig',
+    method: 'post',
+    data
+  });
+}

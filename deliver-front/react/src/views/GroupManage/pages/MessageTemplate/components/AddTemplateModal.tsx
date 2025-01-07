@@ -1,7 +1,7 @@
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { Form, Input, Button, Select, Drawer, Space, message, FormInstance } from 'antd';
 import { getChannelType, getParam } from '@/api/system';
-import useFormState from '../hooks/useFormState';
+import useFormState from '../../../../../hooks/useFormState';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -62,7 +62,8 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
   };
 
   const handleSubmit = () => {
-    formRef?.current?.validateFields()
+    formRef?.current
+      ?.validateFields()
       .then((values) => {
         onSubmit?.(values);
         formRef?.current?.resetFields();
@@ -186,7 +187,10 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
           name="messageType"
           rules={[{ required: true, message: '请选择消息类型' }]}
         >
-          <Select placeholder="请选择消息类型" disabled={!formRef?.current?.getFieldValue('channelType')}>
+          <Select
+            placeholder="请选择消息类型"
+            disabled={!formRef?.current?.getFieldValue('channelType')}
+          >
             {formState.messageTypes.map((messageType) => (
               <Option key={messageType.messageType} value={messageType.messageType}>
                 {messageType.messageTypeName}
@@ -199,7 +203,10 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
           name="appId"
           rules={[{ required: true, message: '请选择应用 ID' }]}
         >
-          <Select placeholder="请选择应用 ID" disabled={!formRef?.current?.getFieldValue('channelProviderType')}>
+          <Select
+            placeholder="请选择应用 ID"
+            disabled={!formRef?.current?.getFieldValue('channelProviderType')}
+          >
             {formState.appIds.map((app) => (
               <Option key={app.id} value={app.id}>
                 {app.name}

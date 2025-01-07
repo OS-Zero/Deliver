@@ -1,11 +1,10 @@
-import { Form, Select, Button, Card, FormInstance, DatePicker } from 'antd';
+import { Form, Select, Button, Card, FormInstance, DatePicker, message } from 'antd';
 // import { getChannelType, getParam } from '@/api/system';
 import { CloseOutlined } from '@ant-design/icons';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import local from 'antd/lib/date-picker/locale/zh_CN.js';
-
-
-const { Option } = Select;
+import { getChannelType, getParam } from '@/api/system';
+import { Channel, ChannelProvider } from '../type';
 
 interface FilterDrawerProps {
   onFilter: (filters: any) => void;
@@ -16,24 +15,27 @@ const FilterDrawer = (props: FilterDrawerProps) => {
   const { onClose, onFilter } = props;
   const formRef = useRef<FormInstance>(null);
 
-  // 使用 useFormState 管理表单状态
-  // const { formState, updateFormState } = useFormState();
+  const [options, setOptions] = useState<{
+    channelTypeOptions: Channel[];
+    channelProvidersOptions: ChannelProvider[];
+  }>({
+    channelTypeOptions: [],
+    channelProvidersOptions: []
+  });
 
   // // 渠道类型变更处理
-  // const handleChannelTypeChange = async (value: number) => {
-  //   formRef?.current?.resetFields(['channelProviderType', 'messageType']);
-  //   updateFormState({ channelProviders: [], messageTypes: [] });
-  //   try {
-  //     const response = await getParam({ channelType: value });
-  //     updateFormState({
-  //       channelProviders: response.channelProviderTypeList,
-  //       messageTypes: response.messageTypeList
-  //     });
-  //   } catch (error) {
-  //     console.error('获取渠道供应商和消息类型失败:', error);
-  //     message.error('获取渠道供应商和消息类型失败，请稍后重试');
-  //   }
-  // };
+  const handleChannelTypeChange = async (value: number) => {
+    formRef?.current?.resetFields(['channelProviderType']);
+    try {
+      const response = await getParam({ channelType: value });
+      setOptions((prev) => ({
+        ...prev,
+        channelProvidersOptions: response?.channelProviderTypeList || []
+      }));
+    } catch (error) {
+      console.error('获取渠道供应商失败:', error);
+    }
+  };
 
   // 确认筛选
   const handleFilter = () => {
@@ -46,6 +48,17 @@ const FilterDrawer = (props: FilterDrawerProps) => {
     formRef?.current?.resetFields();
     onClose(false);
   };
+
+  useEffect(() => {
+    if (!options?.channelTypeOptions?.length) {
+      getChannelType({ usersType: -1 }).then((res: Channel[]) => {
+        setOptions((prev) => ({
+          ...prev,
+          channelTypeOptions: res
+        }));
+      });
+    }
+  }, []);
 
   return (
     <Card
@@ -62,18 +75,23 @@ const FilterDrawer = (props: FilterDrawerProps) => {
         <Form.Item label="渠道类型" name="channelType">
           <Select
             placeholder="请选择渠道类型"
-            // onChange={handleChannelTypeChange}
-            // disabled={formState.isChannelTypeDisabled}
-          >
-            <Option value={0}>选项1</Option>
-            <Option value={1}>选项2</Option>
-          </Select>
+            onChange={handleChannelTypeChange}
+            options={(options.channelTypeOptions || []).map((d) => ({
+              value: d.channelType,
+              label: d.channelTypeName
+            }))}
+          />
         </Form.Item>
         <Form.Item label="渠道供应商类型" name="channelProviderType">
-          <Select placeholder="请选择渠道类型">
-            <Option value={0}>选项1</Option>
-            <Option value={1}>选项2</Option>
-          </Select>
+          <Select
+            placeholder="请选择渠道供应商类型"
+            disabled={!formRef?.current?.getFieldValue('channelType')}
+            // options={options.channelProvidersOptions}
+            options={(options.channelProvidersOptions || []).map((d) => ({
+              value: d.channelProviderType,
+              label: d.channelProviderTypeName
+            }))}
+          />
         </Form.Item>
         <Form.Item label="开始时间" name="startTime">
           <DatePicker
@@ -84,7 +102,12 @@ const FilterDrawer = (props: FilterDrawerProps) => {
           />
         </Form.Item>
         <Form.Item label="结束时间" name="endTime">
-          <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" placeholder="请选择结束时间" locale={local}/>
+          <DatePicker
+            showTime
+            format="YYYY-MM-DD HH:mm:ss"
+            placeholder="请选择结束时间"
+            locale={local}
+          />
         </Form.Item>
       </Form>
     </Card>
