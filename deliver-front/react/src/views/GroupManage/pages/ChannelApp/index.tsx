@@ -137,7 +137,7 @@ const Channel: React.FC = () => {
         }}
         rowKey="appId"
         headerTitle={
-          <div style={{ width: '300px' }}>
+          <div style={{ width: '200px' }}>
             <Input
               placeholder="请输入应用名进行查询"
               style={{ borderRadius: '50px' }}

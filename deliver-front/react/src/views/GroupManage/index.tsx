@@ -133,7 +133,7 @@ const GroupManage: React.FC = () => {
       <div className={styles['card-bottom']}>
         <div className={styles['bottom-section']}>
           <h3>全部分组</h3>
-          <div className={styles['search-box']} style={{ width: '300px' }}>
+          <div className={styles['search-box']} style={{ width: '200px' }}>
             <Input
               className="search-txt"
               value={state.search}

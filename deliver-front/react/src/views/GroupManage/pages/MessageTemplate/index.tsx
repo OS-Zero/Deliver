@@ -143,7 +143,7 @@ const Template: React.FC = () => {
         }}
         rowKey="templateId"
         headerTitle={
-          <div style={{ width: '300px' }}>
+          <div style={{ width: '200px' }}>
             <Input
               placeholder="请输入模板名进行查询"
               style={{ borderRadius: '50px' }}

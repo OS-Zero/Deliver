@@ -65,7 +65,6 @@ const PlatformFile: React.FC = () => {
         }}
         params={tableParams}
         columns={columns}
-        rowSelection={{}}
         // TODO: 这里到底传什么？入参为currentPage，反参是current？
         request={fetchPlatformData}
         scroll={{ x: 1300 }}
@@ -80,7 +79,7 @@ const PlatformFile: React.FC = () => {
         }}
         rowKey="appId"
         headerTitle={
-          <div style={{ width: '300px' }}>
+          <div style={{ width: '200px' }}>
             <Input
               placeholder="请输入文件名进行查询"
               style={{ borderRadius: '50px' }}
