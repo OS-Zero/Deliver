@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { useRouter } from 'vue-router';
-import { EllipsisOutlined, PlusOutlined, FieldTimeOutlined } from '@ant-design/icons-vue';
+import { EllipsisOutlined, PlusOutlined, FieldTimeOutlined, SoundFilled } from '@ant-design/icons-vue';
 import emitter from '@/utils/mitt'
 import { GroupCard } from '@/types/group';
 import { Modal } from 'ant-design-vue';
@@ -37,7 +37,7 @@ const showConfirm = () => {
 }
 const optionItems = [
 	{
-		name: '置顶',
+		name: !!props.data?.topUp ? '取消置顶' : '置顶',
 		op: () => handleOperation('onTop')
 	},
 	{
@@ -65,7 +65,8 @@ const optionItems = [
 				</template>
 			</a-dropdown>
 		</div>
-		<h3 class="card_title">{{ data?.groupName }}</h3>
+		<SoundFilled />
+		<h4 class="card_title">{{ data?.groupName }}</h4>
 		<div class="card_content">
 			{{ data?.groupDescription }}
 		</div>
@@ -76,7 +77,7 @@ const optionItems = [
 	</div>
 	<div class="card card--empty" v-else>
 		<PlusOutlined class="empty_icon" />
-		<div class="empty_desc">添加</div>
+		<div class="empty_desc">添加分组</div>
 	</div>
 </template>
 
@@ -85,18 +86,18 @@ const optionItems = [
 	position: relative;
 	width: 200px;
 	height: 200px;
-	border-radius: var(--border-radius-small);
+	border-radius: var(--border-radius-medium);
 	padding: var(--spacing-md);
 	border: 1px solid var(--gray-lightest);
 	box-shadow: var(--box-shadow-small);
-	background-image: url("../../../../public/folder.svg");
-	background-position: center center;
-	background-repeat: no-repeat;
-	background-size: cover;
 
 	&:hover {
 		box-shadow: var(--box-shadow-large);
 	}
+}
+
+.card_title {
+	margin: var(--spacing-xs) 0;
 }
 
 .card_time {
@@ -104,11 +105,14 @@ const optionItems = [
 	bottom: var(--spacing-md);
 	right: var(--spacing-md);
 	left: var(--spacing-md);
+	border-top: 1px solid var(--gray-light);
 	text-align: center;
-	box-shadow: var(--box-shadow-small);
 	padding: var(--spacing-xs) 0;
-	border-radius: var(--border-radius-large);
 	color: var(--gray-medium-dark);
+}
+
+.anticon-field-time {
+	margin-right: var(--spacing-xs);
 }
 
 .card_more {
@@ -145,5 +149,18 @@ const optionItems = [
 
 .empty_icon {
 	font-size: 32px;
+}
+
+.anticon-sound {
+	padding: var(--spacing-sm);
+	border-radius: var(--border-radius-medium);
+	font-size: x-large;
+	color: var(--yellow-dark);
+	background-color: var(--yellow-lighter)
+}
+
+.card_content {
+	color: var(--gray-medium-dark);
+	@include show_line(4)
 }
 </style>

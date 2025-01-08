@@ -1,5 +1,6 @@
 import { Channel, ChannelProvider } from '@/types/channelApp';
 import { Message, User } from '@/types/messageTemplate';
+import { PlatformFile } from '@/types/platformFile';
 import request from '@/utils/request.ts';
 
 export function getChannelType(data: { usersType: User['usersType'] }): Promise<Channel[]> {
@@ -29,6 +30,15 @@ export function getMessageParam(data: { channelType: Channel['channelType']; mes
 export function getAppConfig(data: { channelType: Channel['channelType']; channelProviderType: Channel['channelTypeName'] }): Promise<string> {
 	return request({
 		url: '/systemParam/getAppConfig',
+		method: 'post',
+		data,
+	});
+}
+export function getPlatformFileType(data: {
+	channelType: Channel['channelType'];
+}): Promise<Array<Pick<PlatformFile, 'platformFileType' | 'platformFileTypeName'>>> {
+	return request({
+		url: '/systemParam/getPlatformFileType',
 		method: 'post',
 		data,
 	});

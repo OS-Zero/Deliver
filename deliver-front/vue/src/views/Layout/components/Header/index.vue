@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { reactive, ref, onMounted } from 'vue'
-import { ExclamationCircleOutlined, QuestionCircleOutlined, GithubOutlined } from '@ant-design/icons-vue'
+import { watch, reactive, ref } from 'vue'
+import { AppstoreOutlined, ExclamationCircleOutlined, QuestionCircleOutlined, GithubOutlined, SettingOutlined } from '@ant-design/icons-vue'
 import { useRouter, useRoute } from 'vue-router';
 import { logout } from "@/api/user";
 const state = reactive({
@@ -12,7 +12,6 @@ const setShowAbout = (open: boolean) => {
 }
 const router = useRouter()
 const route = useRoute()
-const tabItemDoms = ref()
 const handleAction = async (opt: string) => {
 	switch (opt) {
 		case 'account':
@@ -31,24 +30,19 @@ const handleAction = async (opt: string) => {
 const emits = defineEmits<{
 	onTabChange: [tab: string]
 }>()
-const tabItems = [
-	{
-		name: '分组管理',
-		path: 'groupManage'
-	},
-	{
-		name: '系统管理',
-		path: 'systemManage'
-	}
-]
-const handleClickTabs = (path: string) => {
+const handleClickTabs = (path: any) => {
+	console.log(path);
+
 	emits("onTabChange", path)
 	router.push(`/${path}`)
 }
-onMounted(() => {
-
-	// console.dir(window.getComputedStyle(tabItemDoms.value[0]).width);
-
+const activeKey = ref('')
+watch(route, (newRoute) => {
+	activeKey.value = ''
+	newRoute.path.includes('groupManage') && (activeKey.value = 'groupManage')
+	newRoute.path.includes('systemManage') && (activeKey.value = 'systemManage')
+}, {
+	immediate: true
 })
 </script>
 <template>
@@ -62,17 +56,24 @@ onMounted(() => {
 					<h1>Deliver 企业消息推送平台</h1>
 				</a>
 			</div>
-			<div class="header-tabs">
-				<!-- <a-tabs v-model:activeKey="state.topTab">
-					<a-tab-pane key="groupManage" tab="分组管理" @click="handleClickTabs('groupManage')"></a-tab-pane>
-					<a-tab-pane key="systemManage" tab="系统管理" @click="handleClickTabs('systemManage')"> </a-tab-pane>
-				</a-tabs> -->
-				<a ref="tabItemDoms" v-for="item in tabItems" class="tab-item"
-					:class="{ active: route.path.includes(item.path) }" @click="handleClickTabs(item.path)">
-					{{ item.name }}
-				</a>
-				<div class="slider"></div>
-			</div>
+			<a-tabs v-model:activeKey="activeKey" @change="handleClickTabs" size="small">
+				<a-tab-pane key="groupManage">
+					<template #tab>
+						<span>
+							<AppstoreOutlined />
+							分组管理
+						</span>
+					</template>
+				</a-tab-pane>
+				<a-tab-pane key="systemManage">
+					<template #tab>
+						<span>
+							<SettingOutlined />
+							系统管理
+						</span>
+					</template>
+				</a-tab-pane>
+			</a-tabs>
 		</div>
 		<div div class=" extra">
 			<div>
@@ -109,7 +110,7 @@ onMounted(() => {
 			</div>
 			<a-dropdown placement="bottom">
 				<div class="avatar">
-					<a-avatar src="mayi.png"></a-avatar>
+					<a-avatar src="../../../../../public/mayi.png"></a-avatar>
 					<span class="name">Deliver</span>
 				</div>
 				<template #overlay>
@@ -142,20 +143,19 @@ onMounted(() => {
 		h1 {
 			color: var(--dark-color);
 			font-size: var(--font-size-large);
-			height: 60px;
-			line-height: 60px;
 		}
 
 		a {
+			display: flex;
+			align-items: center;
 			text-decoration: none;
+			height: 60px;
 		}
 	}
 
 	.organization-img {
 		height: 28px;
 		width: 33px;
-		margin-top: var(--spacing-md);
-		margin-right: var(--spacing-sm)
 	}
 
 	.extra {
@@ -207,34 +207,16 @@ onMounted(() => {
 	align-items: center;
 }
 
-.header-tabs {
-	position: relative;
-	display: flex;
-	height: 30px;
-	line-height: 30px;
+.ant-tabs {
 	margin-left: var(--spacing-md);
-	border-bottom: 1px solid var(--gray-lighter);
 }
 
-.tab-item {
-	color: var(--dark-color);
-	text-decoration: none;
-
-	&:not(:last-child) {
-		margin-right: var(--spacing-md);
-	}
-
-	&.active {
-		color: var(--blue-darker);
-		border-bottom: 2px solid var(--blue-darker);
-	}
+:deep(:where(.css-dev-only-do-not-override-1p3hq3p).ant-tabs .ant-tabs-tab+.ant-tabs-tab) {
+	margin: 0 0 0 var(--spacing-md)
 }
 
-.slider {
-	position: absolute;
-	background-color: red;
-	height: 2px;
-	bottom: 0;
+:deep(.ant-tabs-nav) {
+	margin: 0;
 }
 
 .modal-container {

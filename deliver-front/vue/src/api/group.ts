@@ -1,5 +1,5 @@
-import { GroupCardList, GroupCard } from '@/types/group';
 import request from '@/utils/request.ts';
+import { GroupCardList, GroupCard } from '@/types/group';
 
 export function getGroupData(data: Pick<GroupCard, 'groupName'>): Promise<GroupCardList> {
 	return request({
@@ -22,14 +22,14 @@ export function updateGroup(data: Omit<GroupCard, 'updateTime'>): Promise<never>
 		data,
 	});
 }
-export function deleteGroup(data: { ids: number[] }): Promise<never> {
+export function deleteGroup(data: { ids: GroupCard['groupId'][] }): Promise<never> {
 	return request({
 		url: '/group/delete',
 		method: 'post',
 		data,
 	});
 }
-export function toTopGroup(data: Pick<GroupCard, 'groupId'>): Promise<never> {
+export function toTopGroup(data: Pick<GroupCard, 'groupId' | 'topUp'>): Promise<never> {
 	return request({
 		url: '/group/topUp',
 		method: 'post',

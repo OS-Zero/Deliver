@@ -1,4 +1,4 @@
-import { SelectProps } from 'ant-design-vue';
+import { SelectProps, UploadProps } from 'ant-design-vue';
 import { Rule } from 'ant-design-vue/es/form';
 
 type ItemType =
@@ -13,7 +13,8 @@ type ItemType =
 	| 'cascader'
 	| 'jsonEditor'
 	| 'list'
-	| 'datePicker';
+	| 'datePicker'
+	| 'upload';
 
 export interface FormItem<T> {
 	value?: any;
@@ -26,5 +27,6 @@ export interface FormItem<T> {
 	options?: SelectProps['options'];
 	disabled?: boolean;
 	editorConfig?: Record<string, any>;
+	uploadConifg?: UploadProps;
 	max?: number;
 }

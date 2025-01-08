@@ -63,6 +63,22 @@ const routes: RouteRecordRaw[] = [
 							name: '规则配置 - Deliver 企业消息推送平台',
 						},
 					},
+					{
+						path: 'task',
+						name: '群发任务配置',
+						component: () => import('@/views/GroupManage/pages/TaskManage/index.vue'),
+						meta: {
+							name: '群发任务配置 - Deliver 企业消息推送平台',
+						},
+					},
+					{
+						path: 'people',
+						name: '人群配置',
+						component: () => import('@/views/GroupManage/pages/TaskManage/People.vue'),
+						meta: {
+							name: '人群配置 - Deliver 企业消息推送平台',
+						},
+					},
 				],
 			},
 			{

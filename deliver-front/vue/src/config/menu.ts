@@ -1,7 +1,7 @@
-import { h } from 'vue'
-import { MessageOutlined, FileTextOutlined, AppstoreOutlined, UserOutlined } from '@ant-design/icons-vue'
-import { ItemType } from 'ant-design-vue'
-import ItemLink from '@/views/Layout/components/ItemLink/index.vue'
+import { h } from 'vue';
+import { MessageOutlined, FileTextOutlined, AppstoreOutlined, UserOutlined, SoundOutlined } from '@ant-design/icons-vue';
+import { ItemType } from 'ant-design-vue';
+import ItemLink from '@/views/Layout/components/ItemLink/index.vue';
 export const menuConfig: Record<string, ItemType[]> = {
 	groupManage: [
 		{
@@ -37,6 +37,21 @@ export const menuConfig: Record<string, ItemType[]> = {
 				},
 			],
 		},
+		{
+			key: 'MST',
+			icon: h(SoundOutlined),
+			label: '群发任务',
+			children: [
+				{
+					key: '/groupManage/task',
+					label: h(ItemLink, { label: '群发任务配置', to: '/groupManage/task' }),
+				},
+				{
+					key: '/groupManage/people',
+					label: h(ItemLink, { label: '人群配置', to: '/groupManage/people' }),
+				},
+			],
+		},
 	],
 	systemManage: [
 		{
@@ -45,4 +60,4 @@ export const menuConfig: Record<string, ItemType[]> = {
 			label: h(ItemLink, { label: '我的账户', to: '/systemManage/myAccount' }),
 		},
 	],
-}
+};

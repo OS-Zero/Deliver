@@ -41,11 +41,13 @@ const drawerState = reactive<{
 	title: string
 	operation: string
 	placement: 'left' | 'right' | 'top' | 'bottom' | undefined
+	extra: boolean
 }>({
 	open: false,
 	title: '',
 	operation: '',
-	placement: "right"
+	placement: "right",
+	extra: true
 })
 const filterState = reactive({
 	open: false
@@ -88,9 +90,10 @@ const handleActions = async (action: 'add' | 'edit' | 'delete' | 'more', record?
 		});
 	} else if (action === 'more') {
 		drawerState.title = '应用详情'
-		drawerState.open = true
 		drawerState.operation = 'showMore'
 		drawerState.placement = 'left'
+		drawerState.extra = false
+		drawerState.open = true
 		const set = new Set(['usersType', 'channelType', 'channelProviderType', 'appId'])
 		const arr: Array<{ label: string; value: any }> = []
 		for (const key in record) {
@@ -137,6 +140,7 @@ const handleDrawer = {
 	},
 	cancel: () => {
 		drawerState.open = false
+		drawerState.extra = true
 		formRef.value?.resetFields()
 	}
 }
@@ -181,7 +185,8 @@ onUnmounted(() => {
 						<CopyOutlined class="id--copy" @click="copyId(text)" />
 					</template>
 					<template v-else-if="column.key === 'appStatus'">
-						<a-switch v-model:checked="record[column.key]" @click="changeStatus(record)" />
+						<a-switch v-model:checked="record[column.key]" checked-children="开启" un-checked-children="关闭"
+							@click="changeStatus(record)" />
 					</template>
 					<template v-else-if="column.key === 'actions'">
 						<a-button type="link" @click="handleActions('edit', record)">编辑 </a-button>
@@ -207,8 +212,8 @@ onUnmounted(() => {
 			<template #extra><a-button type="text" :icon="h(CloseOutlined)" @click="handleFilterClose"></a-button></template>
 			<Form layout="vertical" ref="formRef" :form-schema="filterForm" />
 		</a-card>
-		<Drawer :placement="drawerState.placement" :open="drawerState.open" :title="drawerState.title" @ok="handleDrawer.ok"
-			@close="handleDrawer.cancel">
+		<Drawer :placement="drawerState.placement" :open="drawerState.open" :title="drawerState.title"
+			:extra="drawerState.extra" @ok="handleDrawer.ok" @close="handleDrawer.cancel">
 			<Form v-if="drawerState.operation === 'add' || drawerState.operation === 'edit'" ref="formRef"
 				:label-col="{ span: 7 }" :form-schema="channelAppForm" />
 			<div v-else-if="drawerState.operation === 'showMore'">
@@ -241,7 +246,7 @@ onUnmounted(() => {
 	margin-left: var(--spacing-md);
 }
 
-::v-deep .ant-card-head {
+:deep(.ant-card-head) {
 	border: none;
 	font-size: large;
 }

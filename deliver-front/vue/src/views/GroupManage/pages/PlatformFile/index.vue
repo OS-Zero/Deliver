@@ -1,378 +1,242 @@
 <script lang="ts" setup>
-import type { UnwrapRef } from 'vue'
-import { h, onMounted, reactive, ref } from 'vue'
-import type { TableColumnsType } from 'ant-design-vue'
-import { ReloadOutlined } from '@ant-design/icons-vue'
-import { message } from 'ant-design-vue'
-import { platformFile, searchPlatformFile } from './type'
-import { getPagePlatformFile } from '@/api/platformFile.ts'
-import searchForm from './components/searchForm.vue'
-import uploadFile from './components/uploadFile.vue'
-import { UpCircleTwoTone, DownCircleTwoTone, CopyTwoTone, SettingOutlined } from '@ant-design/icons-vue'
+import { ref, onBeforeMount, reactive, h, onUnmounted, watch } from 'vue'
+import { CopyOutlined, DownOutlined, FilterOutlined, CloseOutlined } from '@ant-design/icons-vue';
+import { copyToClipboard, dynamic, getDataFromSchema } from '@/utils/utils';
+import { FormInstance, message } from 'ant-design-vue';
+import Drawer from '@/components/Drawer/index.vue'
+import SearchInput from '@/components/SearchInput/index.vue'
+import { debounce } from 'lodash'
+import { usePagination } from '@/hooks/table';
+import { getPlatformFile, uploadPlatformFile } from '@/api/platformFile';
+import { PlatformFile } from '@/types/platformFile';
+import { platformFileSchema, platformFileSchemaDeps, filterSchema, filterSchemaMaps, platformFileLocale, platformFileColumns } from '@/config/platformFile';
+const dataSource = reactive<PlatformFile[]>([])
 
-/**
- * 表格初始化
- */
-const platformFileTable: UnwrapRef<platformFile[]> = reactive([])
-// 表格数据
-const columns: TableColumnsType = [
-	{
-		title: '文件 ID',
-		dataIndex: 'id',
-		key: 'id',
-	},
-	{
-		title: '文件名',
-		dataIndex: 'fileName',
-		key: 'fileName',
-	},
-	{
-		title: 'APP 类型',
-		dataIndex: 'appType',
-		key: 'appType',
-	},
-	{
-		title: '文件类型',
-		dataIndex: 'fileType',
-		key: 'fileType',
-	},
-	{
-		title: '文件状态',
-		dataIndex: 'fileStatus',
-		key: 'fileStatus',
-	},
-	{
-		title: '创建用户',
-		dataIndex: 'createUser',
-		key: 'createUser',
-	},
-	{
-		title: '创建时间',
-		dataIndex: 'createTime',
-		key: 'createTime',
-	},
-	{
-		title: '操作',
-		key: 'operation',
-		fixed: 'right',
-		width: 120,
-	},
-]
 
-// 表格加载中标志
-const tableLoadFlag = ref<boolean>(true)
-
-/**
- * 渲染 data
- */
-
-const innerPlatformFileData: UnwrapRef<platformFile[]> = reactive([])
-
-const expandedRowKeys: number[] = reactive([])
-
-const getInnerData = (expanded, record): void => {
-	// 判断是否点开
-	expandedRowKeys.length = 0
-	if (expanded === true) {
-		const b = record.key
-		expandedRowKeys.push(b)
-		innerPlatformFileData.length = 0
-		innerPlatformFileData.push(record)
-	} else {
-		expandedRowKeys.length = 0
-		innerPlatformFileData.length = 0
-	}
+const { dynamicData: platformFileForm, stop } = dynamic(platformFileSchema, platformFileSchemaDeps)
+const { dynamicData: filterForm, stop: stopFilterDynamic } = dynamic(filterSchema, filterSchemaMaps)
+const handleSearch = async () => {
+	const { records, total } = await getPlatformFile({ ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
+	Object.assign(dataSource, records)
+	pagination.total = total
 }
-
-const judgeInclude = (record): boolean => {
-	return innerPlatformFileData.includes(record)
-}
-
-/**
- * 相关操作: 增删改查
- */
-interface SearchOptions {
-	page?: number
-	pageSize?: number
-	opt?: number // 操作标识符，识别操作，保证message消息提示不重复
-}
-
-const searchform = ref()
-
-/// 查询操作
-const searchItem: searchPlatformFile = reactive({
-	fileName: undefined,
-	appType: undefined,
-	fileType: undefined,
-	fileKey: undefined,
-	appId: undefined,
-	currentPage: 1,
-	pageSize: 10,
-	startTime: undefined,
-	endTime: undefined,
+const debounceSearch = debounce(handleSearch, 200)
+const { pagination } = usePagination(handleSearch)
+watch(filterForm, () => {
+	debounceSearch()
 })
-
-const total = ref()
-
-const current = ref(1)
-const pageSize = ref(10)
-
-const change = (page: number, pageSize: number): void => {
-	getPagesPlatformFile({ page, pageSize, opt: 1 })
-}
-
-const locale = {
-	items_per_page: '条/页', // 每页显示条数的文字描述
-	jump_to: '跳至', // 跳转到某页的文字描述
-	page: '页', // 页的文字描述
-	prev_page: '上一页', // 上一页按钮文字描述
-	next_page: '下一页', // 下一页按钮文字描述
-}
-
-// 条件查询
-const getPagesPlatformFile = ({ page, pageSize, opt }: SearchOptions = {}): void => {
-	tableLoadFlag.value = true
-	// 对象解构
-	// eslint-disable-next-line
-		const { perid, ...rest } = searchform.value.searchPage
-	const searchNeedMes = { ...rest }
-	console.warn(searchNeedMes)
-	searchNeedMes.currentPage = page
-	searchNeedMes.pageSize = pageSize
-	getPagePlatformFile(searchNeedMes)
-		.then((res) => {
-			platformFileTable.length = 0
-			total.value = res.data.total
-			current.value = page
-			tableLoadFlag.value = false
-			if (res.data.records.length > 0) {
-				res.data.records.forEach((item: any) => {
-					item.key = item.id
-					platformFileTable.push(item)
-				})
-				if (opt === 1) {
-					void message.success('查询成功~ (*^▽^*)')
-				}
-			} else {
-				if (opt === 1) {
-					void message.success('未查询到任何数据   ≧ ﹏ ≦')
-				}
-			}
-			searchform.value.iconLoading = false
-		})
-		.catch((err) => {
-			searchform.value.iconLoading = false
-			void message.error('查询失败，请检查网络' + err + '~ (＞︿＜)')
-		})
-}
-
-// copy 文件 Key
-const copyFileKey = (fileKey: string): void => {
-	navigator.clipboard.writeText(fileKey)
-	message.success('复制成功')
-}
-// 获取应用图片地址
-const getImageAddress = (appType: number): string => {
-	if (appType === 1) {
-		return '/assets/钉钉.png'
-	} else if (appType == 2) {
-		return '/assets/企业微信.png'
-	} else if (appType == 3) {
-		return '/assets/飞书.png'
+const moreInfo = reactive<Array<{ label: string; value: any }>>([])
+const copyId = async (text: string) => {
+	try {
+		await copyToClipboard(text)
+		message.success('复制成功')
+	} catch (error) {
+		message.error('复制失败')
 	}
-	return ''
 }
+const drawerState = reactive<{
+	open: boolean
+	title: string
+	operation: string
+	placement: 'left' | 'right' | 'top' | 'bottom' | undefined
+	extra: boolean
+}>({
+	open: false,
+	title: '',
+	operation: '',
+	placement: "right",
+	extra: true
+})
+const filterState = reactive({
+	open: false
+})
+const searchValue = ref('')
 
-onMounted(() => {
-	tableLoadFlag.value = true
-	getPagePlatformFile(searchItem)
-		.then((res) => {
-			tableLoadFlag.value = false
-			total.value = res.data.total
-			if (res.data.records.length > 0) {
-				res.data.records.forEach((item: any) => {
-					item.key = item.id
-					platformFileTable.push(item)
+const formRef = ref<FormInstance>();
+const handleActions = async (action: 'upload' | 'more', record?: Record<string, any>) => {
+	drawerState.placement = 'right'
+	if (action === 'upload') {
+		drawerState.title = '上传文件'
+		drawerState.open = true
+		drawerState.operation = 'upload'
+	} else if (action === 'more') {
+		drawerState.title = '文件详情'
+		drawerState.operation = 'showMore'
+		drawerState.placement = 'left'
+		drawerState.extra = false
+		drawerState.open = true
+		const set = new Set(['channelType', 'appId', 'platformFileType'])
+		const arr: Array<{ label: string; value: any }> = []
+		for (const key in record) {
+			if (!set.has(key)) {
+				arr.push({
+					label: platformFileLocale[key],
+					value: record[key]
 				})
 			}
-		})
-		.catch((err) => {
-			message.error('查询平台文件失败，' + err)
-		})
+		}
+		Object.assign(moreInfo, arr)
+	}
+}
+const handleDrawer = {
+	ok: async () => {
+		try {
+			await formRef.value?.validate()
+			if (drawerState.operation === 'upload') {
+				await uploadPlatformFile(getDataFromSchema(platformFileForm))
+				message.success('上传成功')
+			} else if (drawerState.operation === 'more') {
+				drawerState.placement = 'right'
+			}
+			drawerState.open = false
+			formRef.value?.resetFields()
+		} catch (error) {
+			console.log(error);
+		}
+	},
+	cancel: () => {
+		drawerState.open = false
+		drawerState.extra = true
+		formRef.value?.resetFields()
+	}
+}
+const handleFilterClose = () => {
+	filterState.open = false
+	formRef.value?.resetFields()
+}
+onBeforeMount(() => {
+	handleSearch()
+})
+onUnmounted(() => {
+	//停止监听动态数据
+	stop()
+	stopFilterDynamic()
 })
 </script>
 
 <template>
-	<!-- 搜索部分 -->
-	<searchForm ref="searchform" @mes="getPagesPlatformFile({ page: 1, pageSize, opt: 1 })" />
-	<!-- 表格部分 -->
-	<div id="message-container">
-		<div class="message-section">
-			<div class="splitter">
-				<a-tooltip title="刷新">
-					<a-button
-						shape="circle"
-						:icon="h(ReloadOutlined)"
-						@click="getPagesPlatformFile({ page: current, pageSize, opt: 1 })"
-					/>
-				</a-tooltip>
-				<uploadFile @mes="getPagesPlatformFile({ page: 1, pageSize, opt: 1 })" />
+	<div class="container">
+		<div class="container-table">
+			<div class="table-header">
+				<SearchInput placeholder="请输入文件名" v-model="searchValue" @search="debounceSearch()">
+				</SearchInput>
+				<div class="operation">
+					<a-button class="btn--add" @click="handleActions('upload')" type="primary">上传</a-button>
+					<a-button :icon="h(FilterOutlined)" shape="circle" type="text"
+						@click="filterState.open = !filterState.open"></a-button>
+				</div>
 			</div>
-			<!-- 表格部分 -->
-			<a-table
-				:columns="columns"
-				:data-source="platformFileTable"
-				:scroll="{ x: 1200, y: undefined, scrollToFirstRowOnChange: true }"
-				class="components-table-demo-nested"
-				@expand="getInnerData"
-				:expandIconColumnIndex="-1"
-				:expandIconAsCell="false"
-				:pagination="false"
-				:loading="tableLoadFlag"
-				:expandedRowKeys="expandedRowKeys"
-			>
-				<template #headerCell="{ column }">
-					<template v-if="column.key === 'operation'">
-						<span>
-							<SettingOutlined />
-							操作
-						</span>
+			<a-table row-key="platformFileId" :dataSource="dataSource" :columns="platformFileColumns" :pagination="pagination"
+				:scroll="{ x: 1400, y: 680 }">
+				<template #bodyCell="{ column, text, record }">
+					<template v-if="column.key === 'platformFileId'">
+						{{ text }}
+						<CopyOutlined class="id--copy" @click="copyId(text)" />
 					</template>
-				</template>
-				<template #bodyCell="{ column, record }">
-					<!-- 表格数据渲染 -->
-					<template v-if="column.key === 'appType'">
-						<span>
-							<!-- 根据 appType 的值显示不同的图片 -->
-							<img style="height: 30px; width: 30px" :src="getImageAddress(record.appType)" alt="图片" />
-							<!-- 添加更多条件根据需要显示不同的图片 -->
-						</span>
+					<template v-if="column.key === 'platformFileStatus'">
+						<a-tag v-if="record[column.key]" color="success">生效中</a-tag>
+						<a-tag v-else="record[column.key]" color="error">已过期</a-tag>
 					</template>
-					<template v-if="column.key === 'fileType'">
-						<span style="color: #1677ff">
-							{{ record.fileType }}
-						</span>
-					</template>
-					<template v-if="column.key === 'fileStatus'">
-						<span>
-							<a-tag v-if="record.fileStatus === 1" color="success">生效中</a-tag>
-							<a-tag v-if="record.fileStatus === 0" color="error">已过期</a-tag>
-						</span>
-					</template>
-					<template v-if="column.key === 'operation'">
-						<a-button
-							type="link"
-							size="small"
-							style="font-size: 14px"
-							@click="getInnerData(false, record)"
-							v-if="judgeInclude(record)"
-						>
-							<UpCircleTwoTone style="font-size: 18px" />
-						</a-button>
-						<a-tooltip v-if="!judgeInclude(record)">
-							<template #title>查看平台文件更多信息</template>
-							<a-button
-								type="link"
-								size="small"
-								style="font-size: 14px"
-								@click="getInnerData(true, record)"
-								v-if="!judgeInclude(record)"
-							>
-								<DownCircleTwoTone style="font-size: 18px" />
+					<template v-else-if="column.key === 'actions'">
+						<a-dropdown placement="bottom">
+							<a-button type="link">
+								更多操作
+								<DownOutlined />
 							</a-button>
-						</a-tooltip>
+							<template #overlay>
+								<a-menu>
+									<a-menu-item>
+										<div @click="handleActions('more', record)">查看更多</div>
+									</a-menu-item>
+								</a-menu>
+							</template>
+						</a-dropdown>
 					</template>
-				</template>
-				<template #expandedRowRender="{ record }">
-					<a-row :gutter="[16, 16]">
-						<a-col :span="24">
-							FileKey：
-							<span style="color: #1677ff">
-								{{ record.fileKey }}
-								<a-tooltip title="复制 fileKey, 发送你的多媒体消息吧~">
-									<CopyTwoTone @click="copyFileKey(record.fileKey)" />
-								</a-tooltip>
-							</span>
-						</a-col>
-						<a-col :span="6">
-							关联 AppId：
-							<strong>{{ record.appId }}</strong>
-						</a-col>
-					</a-row>
 				</template>
 			</a-table>
-			<a-pagination
-				v-model:current="current"
-				v-model:pageSize="pageSize"
-				class="pagination"
-				show-quick-jumper
-				:total="total"
-				@change="change"
-				showSizeChanger
-				:locale="locale"
-				:show-total="(total) => `共 ${total} 条数据`"
-			/>
 		</div>
+		<a-card size="small" class="filter-form" :class="{ open: filterState.open }" title="筛选">
+			<template #extra><a-button type="text" :icon="h(CloseOutlined)" @click="handleFilterClose"></a-button></template>
+			<Form layout="vertical" ref="formRef" :form-schema="filterForm" />
+		</a-card>
+		<Drawer :placement="drawerState.placement" :open="drawerState.open" :title="drawerState.title"
+			:extra="drawerState.extra" @ok="handleDrawer.ok" @close="handleDrawer.cancel">
+			<Form v-if="drawerState.operation === 'upload'" ref="formRef" :label-col="{ span: 7 }"
+				:form-schema="platformFileForm" />
+			<div v-else-if="drawerState.operation === 'showMore'">
+				<a-descriptions :column="1">
+					<a-descriptions-item v-for="item in moreInfo" :label="item.label">{{ item.value }}</a-descriptions-item>
+				</a-descriptions>
+			</div>
+		</Drawer>
 	</div>
 </template>
 
 <style lang="scss" scoped>
-#message-container {
-	position: relative;
-	width: 100%;
-	overflow: auto;
+.container {
+	display: flex;
+	height: 100%;
+}
 
-	.splitter {
-		display: flex;
-		align-items: center;
-		justify-content: right;
-		width: 100%;
-		height: 60px;
-		margin-bottom: 6px;
-	}
+.btn--add {
+	margin-right: var(--spacing-md);
+}
 
-	.message-section {
-		padding: 12px;
-		margin-top: 12px;
-		background: #fff;
-		border-radius: 6px;
+.container-table {
+	width: calc(100% - 300px);
+	flex: 1 auto;
+}
 
-		.btn-manager {
-			margin-right: 10px;
-		}
+.ant-card {
+	border-radius: 0;
+	padding: 0;
+	margin-left: var(--spacing-md);
+}
 
-		.pagination {
-			display: flex;
-			justify-content: right;
-			margin-top: 20px;
-		}
+::v-deep .ant-card-head {
+	border: none;
+	font-size: large;
+}
 
-		.describe {
-			width: 100%;
-			height: 40px;
-			margin-bottom: 20px;
-			line-height: 40px;
-			background-color: rgb(248 248 248);
-			border-radius: 10px;
+.filter-form {
+	height: 100%;
+	overflow: hidden;
+	transition: width 120ms;
+	border: none;
+	width: 0;
 
-			.count {
-				margin-left: 30px;
-				color: gray;
-			}
-
-			.cancel {
-				position: absolute;
-				right: 50px;
-				padding-top: 7px;
-			}
-		}
+	&.open {
+		border-left: 1px solid var(--gray-lighter);
+		width: 300px
 	}
 }
 
-.between {
+
+.input--search {
+	width: 300px;
+}
+
+.table-header {
 	display: flex;
 	justify-content: space-between;
-	padding: 0;
-	margin: 0;
+	align-items: center;
+	margin-bottom: var(--spacing-xs);
+	padding: var(--spacing-xs) 0;
+}
+
+.id--copy {
+	cursor: pointer;
+	color: var(--blue-darker);
+}
+
+.selections--delete {
+	border-radius: var(--border-radius-small);
+	padding: var(--spacing-sm);
+	background-color: var(--gray-lightest);
+	margin-bottom: var(--spacing-md);
+	color: var(--gray-dark);
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 }
 </style>

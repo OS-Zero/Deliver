@@ -62,6 +62,7 @@ declare module 'vue' {
     ATooltip: typeof import('ant-design-vue/es')['Tooltip']
     AUploadDragger: typeof import('ant-design-vue/es')['UploadDragger']
     Banner: typeof import('./src/components/Banner/index.vue')['default']
+    Descriptions: typeof import('./src/components/Descriptions/index.vue')['default']
     Drawer: typeof import('./src/components/Drawer/index.vue')['default']
     Drawers: typeof import('./src/components/Drawers/index.vue')['default']
     Echarts: typeof import('./src/components/Echarts/index.vue')['default']
@@ -74,5 +75,6 @@ declare module 'vue' {
     SearchInput: typeof import('./src/components/SearchInput/index.vue')['default']
     Table: typeof import('./src/components/Table/index.vue')['default']
     TableHeader: typeof import('./src/components/Table/components/TableHeader/index.vue')['default']
+    Upload: typeof import('./src/components/Upload/index.vue')['default']
   }
 }

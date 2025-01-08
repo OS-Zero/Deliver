@@ -199,7 +199,8 @@ onUnmounted(() => {
 						<CopyOutlined class="id--copy" @click="copyId(text)" />
 					</template>
 					<template v-if="column.key === 'templateStatus'">
-						<a-switch v-model:checked="record[column.key]" @click="changeStatus(record)" />
+						<a-switch v-model:checked="record[column.key]" checked-children="开启" un-checked-children="关闭"
+							@click="changeStatus(record)" />
 					</template>
 					<template v-if="column.key === 'actions'">
 						<a-button type="link" @click="handleActions('edit', record)">编辑 </a-button>
@@ -235,11 +236,17 @@ onUnmounted(() => {
 			<Form v-else-if="drawerState.operation === 'testSend'" ref="formRef" :label-col="{ span: 7 }"
 				:form-schema="testMessageForm" layout="vertical" />
 			<div v-else-if="drawerState.operation === 'showMore'">
-				<a-descriptions :column="1">
-					<a-descriptions-item v-for="item in moreInfo" :label="item.label">{{ item.value }}
-						<CopyOutlined v-if="item.label === '模板 Id'" class="id--copy" @click="copyId(item.value)" />
-					</a-descriptions-item>
-				</a-descriptions>
+				<Descriptions :data="moreInfo" :config="{ column: 1 }">
+					<template #content="{ item }">
+						<template v-if="item.label === '模板 Id'">
+							{{ item.value }}
+							<CopyOutlined v-if="item.label === '模板 Id'" class="id--copy" @click="copyId(item.value)" />
+						</template>
+						<template v-if="item.label === '模板状态'">
+							{{ !!item.value ? '开启' : '关闭' }}
+						</template>
+					</template>
+				</Descriptions>
 			</div>
 		</Drawer>
 	</div>
@@ -266,7 +273,7 @@ onUnmounted(() => {
 	margin-left: var(--spacing-md);
 }
 
-::v-deep .ant-card-head {
+:deep(.ant-card-head) {
 	border: none;
 	font-size: large;
 }
@@ -313,7 +320,7 @@ onUnmounted(() => {
 	justify-content: space-between;
 }
 
-::v-deep .ant-descriptions-item-content {
+:deep(.ant-descriptions-item-content) {
 	align-items: center !important;
 }
 </style>
