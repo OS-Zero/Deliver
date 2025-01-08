@@ -89,11 +89,11 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
     addTemplateModal: () => {
       setOpen(true);
     },
-    editTemplateModal: (values: any) => {
+    editTemplateModal: async (values: any) => {
       setOpen(true);
-      handleUsersTypeChange(values.usersType);
-      handleChannelTypeChange(values.channelType);
-      handleChannelProviderChange(values.channelProviderType);
+      await handleUsersTypeChange(values.usersType);
+      await handleChannelTypeChange(values.channelType);
+      await handleChannelProviderChange(values.channelProviderType);
       formRef?.current?.setFieldsValue({
         ...values,
         usersType: values.usersTypeName,

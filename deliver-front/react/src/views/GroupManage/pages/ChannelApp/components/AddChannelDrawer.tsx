@@ -13,6 +13,8 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
   const { onSubmit } = props;
   const [open, setOpen] = useState(false);
   const formRef = useRef<FormInstance>(null);
+  const [jsonEditorKey, setJsonEditorKey] = useState(0);
+  const [defaultValue, setDefaultValue] = useState();
 
   const [options, setOptions] = useState<{
     channelTypeOptions: Channel[];
@@ -54,8 +56,8 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
     if (channelType && value) {
       try {
         const response = await getAppConfig({ channelType, channelProviderType: value });
-        console.log(response);
-        formRef?.current?.setFieldsValue({ paramMap: response });
+        formRef?.current?.setFieldsValue({ paramMap: JSON.parse(response) });
+        setJsonEditorKey((prev) => prev + 1); // 渲染视图，处理变更
       } catch (error) {
         console.error('获取应用配置失败:', error);
       }
@@ -63,7 +65,6 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
   };
 
   const handleSubmit = () => {
-    console.log(formRef?.current?.getFieldsValue());
     formRef?.current
       ?.validateFields()
       .then((values) => {
@@ -87,9 +88,9 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
       formRef?.current?.setFieldsValue({ paramMap: {} }); // 打开弹窗时设置默认值为 {}
       setOpen(true);
     },
-    editChannelModal: (values: any) => {
+    editChannelModal: async (values: any) => {
       setOpen(true);
-      handleChannelTypeChange(values.channelType);
+      await handleChannelTypeChange(values.channelType);
       formRef?.current?.setFieldsValue({
         ...values,
         channelType: values.channelTypeName,
@@ -159,7 +160,7 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
       renderFormItem: () => {
         return (
           <JsonEditor
-            // ref={jsonEditorRef}
+            key={jsonEditorKey}
             mode="code"
             onChange={(e: object) => formRef.current?.setFieldsValue({ paramMap: e })}
           />
@@ -170,7 +171,7 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
 
   return (
     <Drawer
-      title="新增模板"
+      title="新增应用"
       open={open}
       onClose={() => {
         setOpen(false);
@@ -187,6 +188,7 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
       }
     >
       <BetaSchemaForm
+        // initialValues={defaultValue}
         shouldUpdate={true}
         layout="horizontal"
         labelCol={{ span: 7 }}
