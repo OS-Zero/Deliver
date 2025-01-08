@@ -4,6 +4,7 @@ import { getChannelType, getParam, getAppConfig } from '@/api/system';
 import { JsonEditor } from 'jsoneditor-react';
 import { BetaSchemaForm, ProFormColumnsType } from '@ant-design/pro-components';
 import { Channel, ChannelProvider } from '../type';
+import { handleFieldValue } from '@/utils/handleFieldValue';
 
 interface AddChannelDrawerProps {
   onSubmit?: (values: any) => void;
@@ -14,7 +15,6 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
   const [open, setOpen] = useState(false);
   const formRef = useRef<FormInstance>(null);
   const [jsonEditorKey, setJsonEditorKey] = useState(0);
-  const [defaultValue, setDefaultValue] = useState();
 
   const [options, setOptions] = useState<{
     channelTypeOptions: Channel[];
@@ -23,18 +23,6 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
     channelTypeOptions: [],
     channelProvidersOptions: []
   });
-
-  // 获取渠道类型数据
-  useEffect(() => {
-    if (!options.channelTypeOptions.length) {
-      getChannelType({ usersType: -1 }).then((res: Channel[]) => {
-        setOptions((prev) => ({
-          ...prev,
-          channelTypeOptions: res
-        }));
-      });
-    }
-  }, []);
 
   // 渠道类型变更处理
   const handleChannelTypeChange = async (value: number) => {
@@ -64,18 +52,32 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
     }
   };
 
-  const handleSubmit = () => {
-    formRef?.current
-      ?.validateFields()
-      .then((values) => {
-        console.log(values);
-        onSubmit?.(values);
-        formRef?.current?.resetFields();
-        setOpen(false);
-      })
-      .catch((info) => {
-        console.log('Validate Failed:', info);
-      });
+  const handleSubmit = async () => {
+    try {
+      const values = await formRef?.current?.validateFields();
+
+      values.channelType = handleFieldValue(
+        values.channelType,
+        options.channelTypeOptions,
+        'channelTypeName',
+        'channelType'
+      );
+
+      // 处理 channelProviderType
+      values.channelProviderType = handleFieldValue(
+        values.channelProviderType,
+        options.channelProvidersOptions,
+        'channelProviderTypeName',
+        'channelProviderType'
+      );
+
+      onSubmit?.(values);
+      formRef?.current?.resetFields();
+    } catch (error) {
+      console.error('保存失败:', error);
+    } finally {
+      setOpen(false);
+    }
   };
 
   const handleReset = () => {
@@ -169,6 +171,18 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
     }
   ];
 
+  // 获取渠道类型数据
+  useEffect(() => {
+    if (!options.channelTypeOptions.length) {
+      getChannelType({ usersType: -1 }).then((res: Channel[]) => {
+        setOptions((prev) => ({
+          ...prev,
+          channelTypeOptions: res
+        }));
+      });
+    }
+  }, []);
+
   return (
     <Drawer
       title="新增应用"
@@ -188,7 +202,6 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
       }
     >
       <BetaSchemaForm
-        // initialValues={defaultValue}
         shouldUpdate={true}
         layout="horizontal"
         labelCol={{ span: 7 }}

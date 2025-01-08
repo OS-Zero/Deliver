@@ -30,7 +30,7 @@ const items: MenuProps['items'] = [
 const Template: React.FC = () => {
   const detailRef = useRef<{ getDetail: (record: MessageTemplate) => void }>();
   const addRef = useRef<AddRef>();
-  const testRef = useRef<{ getTestSendDrawer: () => void }>();
+  const testRef = useRef<{ getTestSendDrawer: (record: MessageTemplate) => void }>();
   const [tableParams, setTableParams] = useState({});
   const [filterOpen, setFilterOpen] = useState(false);
   const { fetchTemplateData, deleteTemplateData, addTemplate, changeStatus } = useTemplateData();
@@ -39,7 +39,7 @@ const Template: React.FC = () => {
     if (e?.key === 'detail') {
       detailRef.current?.getDetail(record);
     } else {
-      testRef.current?.getTestSendDrawer();
+      testRef.current?.getTestSendDrawer(record);
     }
   };
 

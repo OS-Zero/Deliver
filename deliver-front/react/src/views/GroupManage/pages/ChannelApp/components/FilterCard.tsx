@@ -1,5 +1,4 @@
-import { Form, Select, Button, Card, FormInstance, DatePicker, message } from 'antd';
-// import { getChannelType, getParam } from '@/api/system';
+import { Form, Select, Button, Card, FormInstance, DatePicker } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 import { useEffect, useRef, useState } from 'react';
 import local from 'antd/lib/date-picker/locale/zh_CN.js';

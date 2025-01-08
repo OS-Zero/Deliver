@@ -3,6 +3,7 @@ import { Button, Drawer, Form, FormInstance, Input, Space } from 'antd';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { JsonEditor } from 'jsoneditor-react';
 import styles from './index.module.scss';
+import { getAppConfig } from '@/api/system';
 
 const TestSendDrawer = forwardRef((_, ref) => {
   const [open, setOpen] = useState(false);
@@ -19,9 +20,24 @@ const TestSendDrawer = forwardRef((_, ref) => {
     setOpen(false);
   };
 
+  // 渠道供应商类型变更处理
+  const handleChannelProviderTypeChange = async (values: any) => {
+    const { channelType, channelProviderType } = values;
+    if (channelType && channelProviderType) {
+      try {
+        const response = await getAppConfig({ channelType, channelProviderType });
+        setParamMap(JSON.parse(response));
+        setJsonEditorKey((prev) => prev + 1); // 渲染视图，处理变更
+      } catch (error) {
+        console.error('获取应用配置失败:', error);
+      }
+    }
+  };
+
   useImperativeHandle(ref, () => ({
-    getTestSendDrawer: () => {
-      return showDrawer();
+    getTestSendDrawer: async (values: any) => {
+      showDrawer();
+      await handleChannelProviderTypeChange(values);
     }
   }));
 
