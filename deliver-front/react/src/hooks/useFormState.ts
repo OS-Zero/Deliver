@@ -8,7 +8,7 @@ interface FormState {
   isChannelTypeDisabled: boolean;
 }
 
-const useFormState = () => {
+export const useFormState = () => {
   const [formState, setFormState] = useState<FormState>({
     channelTypes: [],
     channelProviders: [],
@@ -23,5 +23,3 @@ const useFormState = () => {
 
   return { formState, updateFormState };
 };
-
-export default useFormState;

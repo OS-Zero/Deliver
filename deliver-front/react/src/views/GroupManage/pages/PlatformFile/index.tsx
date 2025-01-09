@@ -7,9 +7,11 @@ import { platformColumns, platformTableSchema } from './constant.tsx';
 import styles from './index.module.scss';
 import DetailDrawer from '@/components/DetailDrawer/index.tsx';
 import useFileData from './useFileData.ts';
+import AddFileDrawer from './components/AddFileDrawer.tsx';
+import FilterCard from './components/FilterCard.tsx';
 
 interface AddRef {
-  addChannelDrawer: () => void;
+  addFileDrawer: () => void;
 }
 
 const PlatformFile: React.FC = () => {
@@ -57,7 +59,7 @@ const PlatformFile: React.FC = () => {
   };
 
   return (
-    <div className={styles['app-container']}>
+    <div className={styles['file-container']}>
       <ProTable<PlatformFileDetail>
         style={{
           width: filterOpen ? 'calc(100% - 300px)' : '100%',
@@ -93,9 +95,9 @@ const PlatformFile: React.FC = () => {
               key="add"
               type="primary"
               style={{ marginRight: '5px' }}
-              onClick={() => addRef?.current?.addChannelDrawer()}
+              onClick={() => addRef?.current?.addFileDrawer()}
             >
-              新增
+              上传
             </Button>
             <Button
               shape="circle"
@@ -105,12 +107,13 @@ const PlatformFile: React.FC = () => {
           </>
         ]}
       />
+      <AddFileDrawer ref={addRef} onSubmit={fetchPlatformData} />
       <DetailDrawer ref={detailRef} columns={platformColumns} />
-      {/* {filterOpen && (
+      {filterOpen && (
         <div className={styles['filter-container']}>
           <FilterCard onClose={() => setFilterOpen(false)} onFilter={handleFilter} />
         </div>
-      )} */}
+      )}
     </div>
   );
 };

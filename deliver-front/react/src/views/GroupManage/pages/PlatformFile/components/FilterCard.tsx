@@ -1,9 +1,9 @@
-import { Form, Select, Button, Card, FormInstance, DatePicker } from 'antd';
+import { Button, Card, FormInstance, DatePicker, Form, Select, Input } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
-import { useEffect, useRef, useState } from 'react';
+import { memo, useRef } from 'react';
 import local from 'antd/lib/date-picker/locale/zh_CN.js';
-import { getChannelType, getParam } from '@/api/system';
-import { Channel, ChannelProvider } from '../type';
+import { BetaSchemaForm, ProFormColumnsType } from '@ant-design/pro-components';
+import { useFormOptions } from '@/hooks/useFormOptions';
 
 interface FilterDrawerProps {
   onFilter: (filters: any) => void;
@@ -14,27 +14,10 @@ const FilterDrawer = (props: FilterDrawerProps) => {
   const { onClose, onFilter } = props;
   const formRef = useRef<FormInstance>(null);
 
-  const [options, setOptions] = useState<{
-    channelTypeOptions: Channel[];
-    channelProvidersOptions: ChannelProvider[];
-  }>({
-    channelTypeOptions: [],
-    channelProvidersOptions: []
+  const { options, handleChannelTypeChange, handleChannelProviderTypeChange } = useFormOptions({
+    myRef: formRef,
+    key: 'file'
   });
-
-  // // 渠道类型变更处理
-  const handleChannelTypeChange = async (value: number) => {
-    formRef?.current?.resetFields(['channelProviderType']);
-    try {
-      const response = await getParam({ channelType: value });
-      setOptions((prev) => ({
-        ...prev,
-        channelProvidersOptions: response?.channelProviderTypeList || []
-      }));
-    } catch (error) {
-      console.error('获取渠道供应商失败:', error);
-    }
-  };
 
   // 确认筛选
   const handleFilter = () => {
@@ -48,16 +31,18 @@ const FilterDrawer = (props: FilterDrawerProps) => {
     onClose(false);
   };
 
-  useEffect(() => {
-    if (!options?.channelTypeOptions?.length) {
-      getChannelType({ usersType: -1 }).then((res: Channel[]) => {
-        setOptions((prev) => ({
-          ...prev,
-          channelTypeOptions: res
-        }));
-      });
-    }
-  }, []);
+  const rule = (title: string) => {
+    return {
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: `${title}不可为空`
+          }
+        ]
+      }
+    };
+  };
 
   return (
     <Card
@@ -71,6 +56,9 @@ const FilterDrawer = (props: FilterDrawerProps) => {
       }}
     >
       <Form ref={formRef} layout="vertical" onValuesChange={handleFilter}>
+        <Form.Item label="文件 Key" name="platformFileKey">
+          <Input placeholder="请输入文件 Key" />
+        </Form.Item>
         <Form.Item label="渠道类型" name="channelType">
           <Select
             placeholder="请选择渠道类型"
@@ -90,6 +78,19 @@ const FilterDrawer = (props: FilterDrawerProps) => {
               label: d.channelProviderTypeName
             }))}
           />
+        </Form.Item>
+        <Form.Item label="文件类型" name="fileType">
+          <Select
+            placeholder="请选择文件类型"
+            disabled={!formRef?.current?.getFieldValue('channelType')}
+            options={(options.fileTypeOptions || []).map((d) => ({
+              value: d.platformFileType,
+              label: d.platformFileTypeName
+            }))}
+          />
+        </Form.Item>
+        <Form.Item label="应用 ID" name="appId">
+          <Input placeholder="请输入应用 ID" />
         </Form.Item>
         <Form.Item label="开始时间" name="startTime">
           <DatePicker
@@ -114,4 +115,4 @@ const FilterDrawer = (props: FilterDrawerProps) => {
 
 FilterDrawer.displayName = 'FilterDrawer';
 
-export default FilterDrawer;
+export default memo(FilterDrawer);

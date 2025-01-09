@@ -1,7 +1,7 @@
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { Form, Input, Button, Select, Drawer, Space, message, FormInstance } from 'antd';
 import { getChannelType, getParam } from '@/api/system';
-import useFormState from '../../../../../hooks/useFormState';
+import { useFormState } from '../../../../../hooks/useFormState';
 
 const { Option } = Select;
 const { TextArea } = Input;

@@ -30,3 +30,18 @@ export interface Pagination {
   currentPage: number; // 当前页面序号
   pageSize: number; // 页面大小
 }
+
+export interface Channel {
+  channelType: number;
+  channelTypeName: string;
+}
+
+export interface ChannelProvider {
+  channelProviderType: number;
+  channelProviderTypeName: string;
+}
+
+export interface PlatFormFile {
+  platformFileType: number;
+  platformFileTypeName: string;
+}

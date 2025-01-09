@@ -1,10 +1,9 @@
-import { forwardRef, useImperativeHandle, useRef, useState, useEffect } from 'react';
+import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { Button, Drawer, Space, FormInstance } from 'antd';
-import { getChannelType, getParam, getAppConfig } from '@/api/system';
 import { JsonEditor } from 'jsoneditor-react';
 import { BetaSchemaForm, ProFormColumnsType } from '@ant-design/pro-components';
-import { Channel, ChannelProvider } from '../type';
 import { handleFieldValue } from '@/utils/handleFieldValue';
+import { useFormOptions } from '@/hooks/useFormOptions';
 
 interface AddChannelDrawerProps {
   onSubmit?: (values: any) => void;
@@ -16,41 +15,11 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
   const formRef = useRef<FormInstance>(null);
   const [jsonEditorKey, setJsonEditorKey] = useState(0);
 
-  const [options, setOptions] = useState<{
-    channelTypeOptions: Channel[];
-    channelProvidersOptions: ChannelProvider[];
-  }>({
-    channelTypeOptions: [],
-    channelProvidersOptions: []
+  const { options, handleChannelTypeChange, handleChannelProviderTypeChange } = useFormOptions({
+    myRef: formRef,
+    setJsonEditorKey,
+    key: 'channel',
   });
-
-  // 渠道类型变更处理
-  const handleChannelTypeChange = async (value: number) => {
-    formRef?.current?.resetFields(['channelProviderType', 'paramMap']);
-    try {
-      const response = await getParam({ channelType: value });
-      setOptions((prev) => ({
-        ...prev,
-        channelProvidersOptions: response?.channelProviderTypeList || []
-      }));
-    } catch (error) {
-      console.error('获取渠道供应商失败:', error);
-    }
-  };
-
-  // 渠道供应商类型变更处理
-  const handleChannelProviderTypeChange = async (value: number) => {
-    const channelType = formRef?.current?.getFieldValue('channelType');
-    if (channelType && value) {
-      try {
-        const response = await getAppConfig({ channelType, channelProviderType: value });
-        formRef?.current?.setFieldsValue({ paramMap: JSON.parse(response) });
-        setJsonEditorKey((prev) => prev + 1); // 渲染视图，处理变更
-      } catch (error) {
-        console.error('获取应用配置失败:', error);
-      }
-    }
-  };
 
   const handleSubmit = async () => {
     try {
@@ -170,18 +139,6 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
       }
     }
   ];
-
-  // 获取渠道类型数据
-  useEffect(() => {
-    if (!options.channelTypeOptions.length) {
-      getChannelType({ usersType: -1 }).then((res: Channel[]) => {
-        setOptions((prev) => ({
-          ...prev,
-          channelTypeOptions: res
-        }));
-      });
-    }
-  }, []);
 
   return (
     <Drawer

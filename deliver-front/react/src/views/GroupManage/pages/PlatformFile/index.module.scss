@@ -1,5 +1,5 @@
 :local {
-  .app-container {
+  .file-container {
     display: flex;
     :global {
       .ant-typography {
@@ -23,8 +23,8 @@
 
     .filter-container {
       width: 0;
-	    transition: width 120ms;
-	    border: 0;
+      transition: width 120ms;
+      border: 0;
       :global {
         .ant-card-head {
           padding: 0;
