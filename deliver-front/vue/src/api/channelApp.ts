@@ -1,5 +1,5 @@
 import { TableData } from '@/types';
-import { App, Channel, ChannelApp, ChannelProvider, SaveChannelApp, SearchParams, UpdateChannelApp } from '@/types/channelApp';
+import { App, Channel, ChannelApp, ChannelProvider, ChannelAppForm, SearchParams } from '@/types/channelApp';
 import request from '@/utils/request.ts';
 
 export function getChannelApp(data: SearchParams): Promise<TableData<ChannelApp>> {
@@ -10,14 +10,14 @@ export function getChannelApp(data: SearchParams): Promise<TableData<ChannelApp>
 	});
 }
 
-export function saveChannelApp(data: SaveChannelApp): Promise<never> {
+export function saveChannelApp(data: ChannelAppForm): Promise<never> {
 	return request({
 		url: '/channelApp/save',
 		method: 'post',
 		data,
 	});
 }
-export function updateChannelApp(data: UpdateChannelApp): Promise<never> {
+export function updateChannelApp(data: ChannelAppForm): Promise<never> {
 	return request({
 		url: '/channelApp/update',
 		method: 'post',

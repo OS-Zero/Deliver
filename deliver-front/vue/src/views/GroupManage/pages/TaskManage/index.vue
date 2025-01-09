@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { ref, onBeforeMount, reactive, nextTick, h, onUnmounted, watch } from 'vue'
-import { addMessageTemplate, deleteMessageTemplate, getMessageTemplates, testSendMessage, updateMessageTemplate, updateMessageTemplateStatus } from '@/api/messageTemplate'
-import { messageTemplateColumns, messageTemplateSchema, messageTemplateSchemaDeps, filterSchema, testMessageSchema, filterSchemaMaps, messageTemplateLocale } from "@/config/messageTemplate"
+import { ref, onBeforeMount, reactive, nextTick, h, watch } from 'vue'
+import { saveTask, deleteTask, updateTaskStatus, getTask, updateTask, sendRealTimeMessage } from '@/api/task'
+import { taskColumns, taskSchema, filterSchema, taskLocale } from "@/config/task"
 import { CopyOutlined, DownOutlined, ExclamationCircleOutlined, FilterOutlined, CloseOutlined } from '@ant-design/icons-vue';
 import { copyToClipboard, dynamic, getDataFromSchema } from '@/utils/utils';
 import { FormInstance, message, Modal, TableProps } from 'ant-design-vue';
@@ -10,15 +10,14 @@ import SearchInput from '@/components/SearchInput/index.vue'
 import { debounce } from 'lodash'
 import { usePagination } from '@/hooks/table';
 import { Key } from 'ant-design-vue/lib/_util/type';
-import { MessageTemplate } from '@/types/messageTemplate';
-import { getMessageParam } from '@/api/system';
-const dataSource = reactive<MessageTemplate[]>([])
+import { Task } from '@/types/task';
+const dataSource = reactive<Task[]>([])
 
 
-const { dynamicData: TaskForm, stop } = dynamic(messageTemplateSchema, messageTemplateSchemaDeps)
-const { dynamicData: filterForm, stop: stopFilterDynamic } = dynamic(filterSchema, filterSchemaMaps)
+const { dynamicData: TaskForm } = dynamic(taskSchema)
+const { dynamicData: filterForm } = dynamic(filterSchema)
 const handleSearch = async () => {
-	const { records, total } = await getMessageTemplates({ ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
+	const { records, total } = await getTask({ ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
 	Object.assign(dataSource, records)
 	pagination.total = total
 }
@@ -27,7 +26,7 @@ const { pagination } = usePagination(handleSearch)
 watch(filterForm, () => {
 	debounceSearch()
 })
-const testMessageForm = reactive(testMessageSchema)
+const testMessageForm = reactive(taskSchema)
 const moreInfo = reactive<Array<{ label: string; value: any }>>([])
 const copyId = async (text: string) => {
 	try {
@@ -62,55 +61,49 @@ const rowSelection: TableProps['rowSelection'] = reactive({
 		rowSelection && (rowSelection.selectedRowKeys = selectedRowKeys)
 	},
 })
-const handleActions = async (action: 'add' | 'edit' | 'delete' | 'more' | 'testSend', record?: Record<string, any>) => {
+const handleActions = async (action: 'add' | 'edit' | 'delete' | 'more' | 'sendTask', record?: Record<string, any>) => {
 	drawerState.placement = 'right'
 	if (action === 'add') {
-		drawerState.title = '新增模板'
+		drawerState.title = '新增任务'
 		drawerState.open = true
 		drawerState.operation = 'add'
 	} else if (action === 'edit') {
-		drawerState.title = '编辑模板'
+		drawerState.title = '编辑任务'
 		drawerState.open = true
 		drawerState.operation = 'edit'
 		//异步使重置数据为空
 		nextTick(() => {
 			for (const key in TaskForm) {
-				TaskForm[key].value = record && record[key]
+				if (key === 'taskParam') TaskForm[key].value = record && JSON.parse(record[key] || '{}')
+				else TaskForm[key].value = record && record[key]
 			}
 		})
 	} else if (action === 'delete') {
 		Modal.confirm({
-			title: '确认删除该模板?',
+			title: '确认删除该任务?',
 			icon: h(ExclamationCircleOutlined),
 			okText: '确认',
 			cancelText: '取消',
 			async onOk() {
-				await deleteMessageTemplate({ ids: record && record.templateId })
+				await deleteTask({ ids: record && record.taskId })
 				message.success('删除成功')
 			},
 		});
-	} else if (action === 'testSend') {
-		drawerState.title = '测试发送'
-		drawerState.open = true
-		drawerState.operation = 'testSend'
-		nextTick(() => {
-			testMessageForm.users.value = []
-		})
-		record && getMessageParam({ messageType: record.messageType, channelType: record.channelType }).then(res => {
-			testMessageForm.paramMap.value = JSON.parse(res)
-		})
+	} else if (action === 'sendTask') {
+		await sendRealTimeMessage({ taskId: record && record.taskId })
+		message.success('发送成功')
 	} else if (action === 'more') {
-		drawerState.title = '模板详情'
+		drawerState.title = '任务详情'
 		drawerState.open = true
 		drawerState.operation = 'showMore'
 		drawerState.placement = 'left'
 		drawerState.extra = false
-		const set = new Set(['usersType', 'channelType', 'channelProviderType', 'messageType', 'appId'])
+		const set = new Set(['taskId', 'peopleGroupId'])
 		const arr: Array<{ label: string; value: any }> = []
 		for (const key in record) {
 			if (!set.has(key)) {
 				arr.push({
-					label: messageTemplateLocale[key],
+					label: taskLocale[key],
 					value: record[key]
 				})
 			}
@@ -120,12 +113,12 @@ const handleActions = async (action: 'add' | 'edit' | 'delete' | 'more' | 'testS
 }
 const handleBatchDelete = () => {
 	Modal.confirm({
-		title: '确认批量删除模板?',
+		title: '确认批量删除任务?',
 		icon: h(ExclamationCircleOutlined),
 		okText: '确认',
 		cancelText: '取消',
 		async onOk() {
-			await deleteMessageTemplate({ ids: rowSelection.selectedRowKeys as number[] })
+			await deleteTask({ ids: rowSelection.selectedRowKeys as number[] })
 			message.success('删除成功')
 		},
 	});
@@ -135,14 +128,11 @@ const handleDrawer = {
 		try {
 			await formRef.value?.validate()
 			if (drawerState.operation === 'add') {
-				await addMessageTemplate(getDataFromSchema(TaskForm))
+				await saveTask(getDataFromSchema(TaskForm))
 				message.success('添加成功')
 			} else if (drawerState.operation == 'edit') {
-				await updateMessageTemplate(getDataFromSchema(TaskForm))
+				await updateTask(getDataFromSchema(TaskForm))
 				message.success('编辑成功')
-			} else if (drawerState.operation === 'testSend') {
-				await testSendMessage(getDataFromSchema(testMessageForm))
-				message.success('发送成功')
 			} else if (drawerState.operation === 'more') {
 				drawerState.placement = 'right'
 			}
@@ -159,7 +149,7 @@ const handleDrawer = {
 	}
 }
 const changeStatus = (record: Record<string, any>) => {
-	updateMessageTemplateStatus({ templateId: record.templateId, templateStatus: Number(record.templateStatus) })
+	updateTaskStatus({ taskId: record.taskId, taskStatus: Number(record.taskStatus) })
 }
 const handleFilterClose = () => {
 	filterState.open = false
@@ -168,18 +158,13 @@ const handleFilterClose = () => {
 onBeforeMount(() => {
 	handleSearch()
 })
-onUnmounted(() => {
-	//停止监听动态数据
-	stop()
-	stopFilterDynamic()
-})
 </script>
 
 <template>
 	<div class="container">
 		<div class="container-table">
 			<div class="table-header">
-				<SearchInput class="search_input" placeholder="请输入模板名" v-model="searchValue" @search="debounceSearch()">
+				<SearchInput class="search_input" placeholder="请输入任务名" v-model="searchValue" @search="debounceSearch()">
 				</SearchInput>
 				<div class="operation">
 					<a-button class="btn--add" @click="handleActions('add')" type="primary">新增</a-button>
@@ -191,16 +176,20 @@ onUnmounted(() => {
 				<div>已选择 {{ rowSelection.selectedRowKeys?.length }} 项</div>
 				<a-button type="link" danger @click="handleBatchDelete">批量删除</a-button>
 			</div>
-			<a-table row-key="templateId" :dataSource="dataSource" :columns="messageTemplateColumns"
-				:row-selection="rowSelection" :pagination="pagination" :scroll="{ x: 1400, y: 680 }">
+			<a-table row-key="taskId" :dataSource="dataSource" :columns="taskColumns" :row-selection="rowSelection"
+				:pagination="pagination" :scroll="{ x: 1400, y: 680 }">
 				<template #bodyCell="{ column, text, record }">
-					<template v-if="column.key === 'templateId'">
+					<template v-if="column.key === 'taskId'">
 						{{ text }}
 						<CopyOutlined class="id--copy" @click="copyId(text)" />
 					</template>
-					<template v-if="column.key === 'templateStatus'">
+					<template v-if="column.key === 'taskStatus'">
 						<a-switch v-model:checked="record[column.key]" checked-children="开启" un-checked-children="关闭"
 							@click="changeStatus(record)" />
+					</template>
+					<template v-if="column.key === 'taskType'">
+						<a-tag v-if="record[column.key] === 1" color="success">实时</a-tag>
+						<a-tag v-else="record[column.key] === 2" color="error">定时</a-tag>
 					</template>
 					<template v-if="column.key === 'actions'">
 						<a-button type="link" @click="handleActions('edit', record)">编辑 </a-button>
@@ -212,8 +201,8 @@ onUnmounted(() => {
 							</a-button>
 							<template #overlay>
 								<a-menu>
-									<a-menu-item>
-										<div @click="handleActions('testSend', record)">测试发送</div>
+									<a-menu-item v-if="record.taskType === 1">
+										<div @click="handleActions('sendTask', record)">发送实时任务</div>
 									</a-menu-item>
 									<a-menu-item>
 										<div @click="handleActions('more', record)">查看更多</div>
@@ -232,17 +221,16 @@ onUnmounted(() => {
 		<Drawer :placement="drawerState.placement" :open="drawerState.open" :title="drawerState.title"
 			:extra="drawerState.extra" @ok="handleDrawer.ok" @close="handleDrawer.cancel">
 			<Form v-if="drawerState.operation === 'add' || drawerState.operation === 'edit'" ref="formRef"
-				:label-col="{ span: 7 }" :form-schema="TaskForm" />
+				:label-col="{ span: 4 }" :form-schema="TaskForm" />
 			<Form v-else-if="drawerState.operation === 'testSend'" ref="formRef" :label-col="{ span: 7 }"
 				:form-schema="testMessageForm" />
 			<div v-else-if="drawerState.operation === 'showMore'">
 				<Descriptions :data="moreInfo" :config="{ column: 1 }">
 					<template #content="{ item }">
-						<template v-if="item.label === '模板 Id'">
-							{{ item.value }}
-							<CopyOutlined v-if="item.label === '模板 Id'" class="id--copy" @click="copyId(item.value)" />
+						<template v-if="item.label === '任务类型'">
+							{{ item.value === 1 ? '实时' : '定时' }}
 						</template>
-						<template v-if="item.label === '模板状态'">
+						<template v-else-if="item.label === '任务状态'">
 							{{ !!item.value ? '开启' : '关闭' }}
 						</template>
 					</template>
@@ -290,7 +278,6 @@ onUnmounted(() => {
 		width: 300px
 	}
 }
-
 
 .search_input {
 	width: 200px;

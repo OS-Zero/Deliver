@@ -1,8 +1,9 @@
 import { FormItem } from '@/types/form';
 import type { ColumnsType } from 'ant-design-vue/es/table/interface';
 import { getRequiredRule, getRangeRule } from './rules';
-import { SaveChannelApp, SearchParams } from '@/types/channelApp';
+import { ChannelAppForm, SearchParams } from '@/types/channelApp';
 import { getAppConfig, getChannelType, getParam } from '@/api/system';
+import { notUndefined } from '@/utils/utils';
 export const channelAppLocale = {
 	appId: '应用 Id',
 	appName: '应用名',
@@ -59,7 +60,11 @@ export const channelAppColumns: ColumnsType = [
 	},
 ];
 type Schema<T> = Record<string, FormItem<keyof T>>;
-export const channelAppSchema: Schema<SaveChannelApp> = {
+export const channelAppSchema: Schema<ChannelAppForm> = {
+	appId: {
+		type: 'none',
+		fieldName: 'appId',
+	},
 	appName: {
 		type: 'input',
 		fieldName: 'appName',
@@ -93,7 +98,7 @@ export const channelAppSchema: Schema<SaveChannelApp> = {
 	},
 };
 export const channelAppSchemaDeps = [
-	async (data: Schema<SaveChannelApp>) => {
+	async (data: Schema<ChannelAppForm>) => {
 		try {
 			data.channelType.options = (await getChannelType({ usersType: -1 })).map((item) => ({
 				value: item.channelType,
@@ -103,26 +108,34 @@ export const channelAppSchemaDeps = [
 			data.channelType.options = [];
 		}
 	},
-	async (data: Schema<SaveChannelApp>) => {
+	async (data: Schema<ChannelAppForm>) => {
 		try {
-			const { channelProviderTypeList } = await getParam({ channelType: data.channelType.value });
-			data.channelProviderType.options = channelProviderTypeList.map((item) => ({
-				value: item.channelProviderType,
-				label: item.channelProviderTypeName,
-			}));
+			if (notUndefined(data.channelType.value)) {
+				const { channelProviderTypeList } = await getParam({ channelType: data.channelType.value });
+				data.channelProviderType.options = channelProviderTypeList.map((item) => ({
+					value: item.channelProviderType,
+					label: item.channelProviderTypeName,
+				}));
+			} else {
+				data.channelProviderType.options = [];
+			}
 		} catch (error) {
 			data.channelProviderType.options = [];
 		}
 	},
-	async (data: Schema<SaveChannelApp>) => {
+	async (data: Schema<ChannelAppForm>) => {
 		try {
-			const appConfig = await getAppConfig({
-				channelType: data.channelType.value,
-				channelProviderType: data.channelProviderType.value,
-			});
-			data.appConfig.value = JSON.parse(appConfig);
+			if (notUndefined(data.channelType.value) && notUndefined(data.channelProviderType.value)) {
+				const appConfig = await getAppConfig({
+					channelType: data.channelType.value,
+					channelProviderType: data.channelProviderType.value,
+				});
+				data.appConfig.value = JSON.parse(appConfig || '{}');
+			} else {
+				data.appConfig.value = {};
+			}
 		} catch (error) {
-			data.appConfig.value = '';
+			data.appConfig.value = {};
 		}
 	},
 ];

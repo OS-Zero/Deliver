@@ -9,9 +9,8 @@ import SearchInput from '@/components/SearchInput/index.vue'
 import { debounce } from 'lodash'
 import { usePagination } from '@/hooks/table';
 import { Key } from 'ant-design-vue/lib/_util/type';
-import { deleteChannelApp, getChannelApp, saveChannelApp, updateChannelApp } from '@/api/channelApp';
+import { deleteChannelApp, getChannelApp, saveChannelApp, updateChannelApp, updateChannelAppStatus } from '@/api/channelApp';
 import { ChannelApp } from '@/types/channelApp';
-import { updateAppStatus } from '@/api/app';
 const dataSource = reactive<ChannelApp[]>([])
 
 
@@ -149,7 +148,7 @@ const handleFilterClose = () => {
 	formRef.value?.resetFields()
 }
 const changeStatus = (record: Record<string, any>) => {
-	updateAppStatus({ appId: record.appId, appStatus: Number(record.appStatus) })
+	updateChannelAppStatus({ appId: record.appId, appStatus: Number(record.appStatus) })
 }
 onBeforeMount(() => {
 	handleSearch()
@@ -165,7 +164,7 @@ onUnmounted(() => {
 	<div class="container">
 		<div class="container-table">
 			<div class="table-header">
-				<SearchInput placeholder="请输入应用名" v-model="searchValue" @search="debounceSearch()">
+				<SearchInput class="search_input" placeholder="请输入应用名" v-model="searchValue" @search="debounceSearch()">
 				</SearchInput>
 				<div class="operation">
 					<a-button class="btn--add" @click="handleActions('add')" type="primary">新增</a-button>
@@ -210,7 +209,7 @@ onUnmounted(() => {
 		</div>
 		<a-card size="small" class="filter-form" :class="{ open: filterState.open }" title="筛选">
 			<template #extra><a-button type="text" :icon="h(CloseOutlined)" @click="handleFilterClose"></a-button></template>
-			<Form layout="vertical" ref="formRef" :form-schema="filterForm" />
+			<Form ref="formRef" :form-schema="filterForm" />
 		</a-card>
 		<Drawer :placement="drawerState.placement" :open="drawerState.open" :title="drawerState.title"
 			:extra="drawerState.extra" @ok="handleDrawer.ok" @close="handleDrawer.cancel">
@@ -265,8 +264,8 @@ onUnmounted(() => {
 }
 
 
-.input--search {
-	width: 300px;
+.search_input {
+	width: 200px;
 }
 
 .table-header {

@@ -11,7 +11,8 @@ withDefaults(defineProps<{
 	labelCol?: { span: number };
 	layout?: 'horizontal' | 'vertical' | 'inline'
 }>(), {
-	name: (field: FormItem<string>) => [field.fieldName, 'value']
+	name: (field: FormItem<string>) => [field.fieldName, 'value'],
+	layout: 'vertical'
 })
 const formRef = ref<FormInstance>()
 const validate = async () => { await formRef.value?.validate() }
@@ -70,8 +71,10 @@ const listRemove = (list: string[], id: string) => {
 					<Upload v-model="formSchema[field.fieldName].value" :config="field.uploadConifg"></Upload>
 				</template>
 			</a-form-item>
+			<a-form-item v-else :name="name(field)" v-show="false">
+				<a-input v-model:value="formSchema[field.fieldName].value" />
+			</a-form-item>
 		</template>
-
 	</a-form>
 </template>
 

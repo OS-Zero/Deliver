@@ -102,7 +102,7 @@ const optionItems = [
 
 .card_time {
 	position: absolute;
-	bottom: var(--spacing-md);
+	bottom: var(--spacing-sm);
 	right: var(--spacing-md);
 	left: var(--spacing-md);
 	border-top: 1px solid var(--gray-light);

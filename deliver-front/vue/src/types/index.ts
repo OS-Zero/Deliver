@@ -1,3 +1,5 @@
+import { FormItem } from './form';
+
 /**
  * 返回数据通用接口
  */
@@ -19,3 +21,5 @@ export interface TableData<T> {
 	current: number;
 	pages: number;
 }
+
+export type Schema<T> = Record<string, FormItem<keyof T>>;

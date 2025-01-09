@@ -19,9 +19,9 @@ export interface ChannelApp extends App, Channel, ChannelProvider {
 	createUser: string;
 	createTime: string;
 }
-export type SaveChannelApp = Pick<ChannelApp, 'appName' | 'appDescription' | 'channelType' | 'channelProviderType' | 'appConfig'>;
-export type UpdateChannelApp = SaveChannelApp & ChannelApp['appId'];
 export interface SearchParams extends TableSearchParams, Pick<Partial<ChannelApp>, 'appName' | 'channelType' | 'channelProviderType'> {
 	startTime?: string;
 	endTime?: string;
 }
+
+export type ChannelAppForm = Pick<ChannelApp, 'appName' | 'appDescription' | 'channelType' | 'channelProviderType' | 'appConfig' | 'appId'>;

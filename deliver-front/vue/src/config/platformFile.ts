@@ -4,6 +4,7 @@ import { getRequiredRule, getRangeRule } from './rules';
 import { SearchParams, UploadPlatformFile } from '@/types/platformFile';
 import { getChannelType, getParam, getPlatformFileType } from '@/api/system';
 import { getAppByChannel } from '@/api/channelApp';
+import { notUndefined } from '@/utils/utils';
 export const platformFileLocale = {
 	platformFileId: '文件 Id',
 	platformFileName: '文件名',
@@ -36,6 +37,16 @@ export const platformFileColumns: ColumnsType = [
 		title: '文件状态',
 		dataIndex: 'platformFileStatus',
 		key: 'platformFileStatus',
+	},
+	{
+		title: '创建者',
+		dataIndex: 'createUser',
+		key: 'createUser',
+	},
+	{
+		title: '创建时间',
+		dataIndex: 'createTime',
+		key: 'createTime',
 	},
 	{
 		title: '操作',
@@ -110,35 +121,47 @@ export const platformFileSchemaDeps = [
 	},
 	async (data: Schema<UploadPlatformFile>) => {
 		try {
-			const { channelProviderTypeList } = await getParam({ channelType: data.channelType.value });
-			data.channelProviderType.options = channelProviderTypeList.map((item) => ({
-				value: item.channelProviderType,
-				label: item.channelProviderTypeName,
-			}));
+			if (notUndefined(data.channelType.value)) {
+				const { channelProviderTypeList } = await getParam({ channelType: data.channelType.value });
+				data.channelProviderType.options = channelProviderTypeList.map((item) => ({
+					value: item.channelProviderType,
+					label: item.channelProviderTypeName,
+				}));
+			} else {
+				data.channelProviderType.options = [];
+			}
 		} catch (error) {
 			data.channelProviderType.options = [];
 		}
 	},
 	async (data: Schema<UploadPlatformFile>) => {
 		try {
-			data.platformFileType.options = (await getPlatformFileType({ channelType: data.channelType.value })).map((item) => ({
-				value: item.platformFileType,
-				label: item.platformFileTypeName,
-			}));
+			if (notUndefined(data.channelType.value)) {
+				data.platformFileType.options = (await getPlatformFileType({ channelType: data.channelType.value })).map((item) => ({
+					value: item.platformFileType,
+					label: item.platformFileTypeName,
+				}));
+			} else {
+				data.platformFileType.options = [];
+			}
 		} catch (error) {
 			data.platformFileType.options = [];
 		}
 	},
 	async (data: Schema<UploadPlatformFile>) => {
 		try {
-			const appOptions = await getAppByChannel({
-				channelType: data.channelType.value,
-				channelProviderType: data.channelProviderType.value,
-			});
-			data.appId.options = appOptions.map((item) => ({
-				value: item.appId,
-				label: item.appName,
-			}));
+			if (notUndefined(data.channelType.value) && notUndefined(data.channelProviderType.value)) {
+				const appOptions = await getAppByChannel({
+					channelType: data.channelType.value,
+					channelProviderType: data.channelProviderType.value,
+				});
+				data.appId.options = appOptions.map((item) => ({
+					value: item.appId,
+					label: item.appName,
+				}));
+			} else {
+				data.appId.options = [];
+			}
 		} catch (error) {
 			data.appId.options = [];
 		}

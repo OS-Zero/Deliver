@@ -72,9 +72,9 @@ const routes: RouteRecordRaw[] = [
 						},
 					},
 					{
-						path: 'people',
+						path: 'peopleGroup',
 						name: '人群配置',
-						component: () => import('@/views/GroupManage/pages/TaskManage/People.vue'),
+						component: () => import('@/views/GroupManage/pages/TaskManage/PeopleGroup/index.vue'),
 						meta: {
 							name: '人群配置 - Deliver 企业消息推送平台',
 						},

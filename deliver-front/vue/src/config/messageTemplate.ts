@@ -5,6 +5,7 @@ import { SelectProps } from 'ant-design-vue';
 import { MessageTemplateForm, SearchParams, TestSendMessage } from '@/types/messageTemplate';
 import { getChannelType, getParam } from '@/api/system';
 import { getAppByChannel } from '@/api/channelApp';
+import { notUndefined } from '@/utils/utils';
 export const messageTemplateLocale = {
 	templateId: '模板 Id',
 	templateDescription: '模板描述',
@@ -54,6 +55,16 @@ export const messageTemplateColumns: ColumnsType = [
 		title: '模板状态',
 		dataIndex: 'templateStatus',
 		key: 'templateStatus',
+	},
+	{
+		title: '创建者',
+		dataIndex: 'createUser',
+		key: 'createUser',
+	},
+	{
+		title: '创建时间',
+		dataIndex: 'createTime',
+		key: 'createTime',
 	},
 	{
 		title: '操作',
@@ -124,28 +135,38 @@ export const messageTemplateSchema: MessageTemplateSchema = {
 		options: [],
 	},
 };
+
 export const messageTemplateSchemaDeps = [
 	async (data: MessageTemplateSchema) => {
 		try {
-			data.channelType.options = (await getChannelType({ usersType: data.usersType.value })).map((item) => ({
-				value: item.channelType,
-				label: item.channelTypeName,
-			}));
+			if (notUndefined(data.usersType.value)) {
+				data.channelType.options = (await getChannelType({ usersType: data.usersType.value })).map((item) => ({
+					value: item.channelType,
+					label: item.channelTypeName,
+				}));
+			} else {
+				data.channelType.options = [];
+			}
 		} catch (error) {
 			data.channelType.options = [];
 		}
 	},
 	async (data: MessageTemplateSchema) => {
 		try {
-			const { channelProviderTypeList, messageTypeList } = await getParam({ channelType: data.channelType.value });
-			data.channelProviderType.options = channelProviderTypeList.map((item) => ({
-				value: item.channelProviderType,
-				label: item.channelProviderTypeName,
-			}));
-			data.messageType.options = messageTypeList.map((item) => ({
-				value: item.messageType,
-				label: item.messageTypeName,
-			}));
+			if (notUndefined(data.channelType.value)) {
+				const { channelProviderTypeList, messageTypeList } = await getParam({ channelType: data.channelType.value });
+				data.channelProviderType.options = channelProviderTypeList.map((item) => ({
+					value: item.channelProviderType,
+					label: item.channelProviderTypeName,
+				}));
+				data.messageType.options = messageTypeList.map((item) => ({
+					value: item.messageType,
+					label: item.messageTypeName,
+				}));
+			} else {
+				data.channelProviderType.options = [];
+				data.messageType.options = [];
+			}
 		} catch (error) {
 			data.channelProviderType.options = [];
 			data.messageType.options = [];
@@ -153,14 +174,18 @@ export const messageTemplateSchemaDeps = [
 	},
 	async (data: MessageTemplateSchema) => {
 		try {
-			const appOptions = await getAppByChannel({
-				channelType: data.channelType.value,
-				channelProviderType: data.channelProviderType.value,
-			});
-			data.appId.options = appOptions.map((item) => ({
-				value: item.appId,
-				label: item.appName,
-			}));
+			if (notUndefined(data.channelType.value) && notUndefined(data.channelProviderType.value)) {
+				const appOptions = await getAppByChannel({
+					channelType: data.channelType.value,
+					channelProviderType: data.channelProviderType.value,
+				});
+				data.appId.options = appOptions.map((item) => ({
+					value: item.appId,
+					label: item.appName,
+				}));
+			} else {
+				data.appId.options = [];
+			}
 		} catch (error) {
 			data.appId.options = [];
 		}

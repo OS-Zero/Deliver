@@ -8,7 +8,7 @@ const service = axios.create({
 service.interceptors.request.use(
 	(config) => {
 		config.headers['FrontPlatform'] = 'vue';
-		config.headers['Authorization'] = 'Bearer ' + localStorage.getItem('access_token');
+		config.headers['Authorization'] = localStorage.getItem('access_token');
 		return config;
 	},
 	(err) => {
@@ -27,6 +27,13 @@ service.interceptors.response.use(
 		if (_res.code === 200) return _res.data;
 		message.error('请求错误');
 		return Promise.reject('请求错误');
+		// if (_res.code === 0) return _res.data;
+		// if (_res.code === 1) {
+		// 	message.error(_res.errorMessage);
+		// 	return Promise.reject(_res.errorMessage);
+		// }
+		// message.error('服务端错误');
+		// return Promise.reject('服务端错误');
 	},
 	(err) => {
 		message.error(err);

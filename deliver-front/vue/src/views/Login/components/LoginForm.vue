@@ -19,7 +19,7 @@ const handleLogin = function () {
 		.validate()
 		.then(async () => {
 			const res = await login(loginData)
-			localStorage.setItem('access_token', res.token)
+			localStorage.setItem('access_token', res)
 			message.success('登录成功')
 			router.push('/')
 			const _res = await startup()

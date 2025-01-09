@@ -31,13 +31,16 @@ export function getDataFromSchema(record: Record<string, FormItem<string>>) {
 	}
 	return _obj;
 }
-
-export function dynamic<T extends object>(obj: T, effects: Function[]) {
+export function notUndefined(data: any) {
+	return typeof data !== 'undefined';
+}
+export function dynamic<T extends object>(obj: T, effects?: Function[]) {
 	const dynamicData = reactive(obj);
 	const stopHandle: WatchHandle[] = [];
-	effects.forEach((effect) => {
-		stopHandle.push(watchEffect(effect.bind(null, dynamicData)));
-	});
+	effects &&
+		effects.forEach((effect) => {
+			stopHandle.push(watchEffect(effect.bind(null, dynamicData)));
+		});
 	const stop = () => {
 		stopHandle.forEach((handle) => handle());
 	};

@@ -1,10 +1,7 @@
 <script lang="ts" setup>
-withDefaults(defineProps<{
-	open: boolean
-	title: string
-	placement?: 'left' | 'right' | 'top' | 'bottom' | undefined
-	extra?: boolean
-}>(), {
+import { DrawerProps } from '@/types/components';
+
+withDefaults(defineProps<DrawerProps>(), {
 	open: false,
 	placement: 'right',
 	extra: true

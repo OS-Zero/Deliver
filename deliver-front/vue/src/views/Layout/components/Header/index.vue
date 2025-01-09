@@ -15,7 +15,7 @@ const route = useRoute()
 const handleAction = async (opt: string) => {
 	switch (opt) {
 		case 'account':
-			router.push('/systemSettings')
+			router.push('/systemManage')
 			break;
 		case 'logout':
 			await logout()

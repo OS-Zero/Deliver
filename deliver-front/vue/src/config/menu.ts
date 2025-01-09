@@ -47,8 +47,8 @@ export const menuConfig: Record<string, ItemType[]> = {
 					label: h(ItemLink, { label: '群发任务配置', to: '/groupManage/task' }),
 				},
 				{
-					key: '/groupManage/people',
-					label: h(ItemLink, { label: '人群配置', to: '/groupManage/people' }),
+					key: '/groupManage/peopleGroup',
+					label: h(ItemLink, { label: '人群配置', to: '/groupManage/peopleGroup' }),
 				},
 			],
 		},

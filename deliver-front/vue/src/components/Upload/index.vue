@@ -24,7 +24,7 @@ const beforeUpload: UploadProps['beforeUpload'] = file => {
 		<p class="ant-upload-drag-icon">
 			<InboxOutlined />
 		</p>
-		<p class="ant-upload-text">点击或拖拽上传</p>
+		<p class="ant-upload-text">{{ config?.name ? config.name : '点击或拖拽上传' }}</p>
 	</a-upload-dragger>
 </template>
 

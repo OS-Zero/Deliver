@@ -118,7 +118,7 @@ onUnmounted(() => {
 	<div class="container">
 		<div class="container-table">
 			<div class="table-header">
-				<SearchInput placeholder="请输入文件名" v-model="searchValue" @search="debounceSearch()">
+				<SearchInput class="search_input" placeholder="请输入文件名" v-model="searchValue" @search="debounceSearch()">
 				</SearchInput>
 				<div class="operation">
 					<a-button class="btn--add" @click="handleActions('upload')" type="primary">上传</a-button>
@@ -157,7 +157,7 @@ onUnmounted(() => {
 		</div>
 		<a-card size="small" class="filter-form" :class="{ open: filterState.open }" title="筛选">
 			<template #extra><a-button type="text" :icon="h(CloseOutlined)" @click="handleFilterClose"></a-button></template>
-			<Form layout="vertical" ref="formRef" :form-schema="filterForm" />
+			<Form ref="formRef" :form-schema="filterForm" />
 		</a-card>
 		<Drawer :placement="drawerState.placement" :open="drawerState.open" :title="drawerState.title"
 			:extra="drawerState.extra" @ok="handleDrawer.ok" @close="handleDrawer.cancel">
@@ -212,8 +212,8 @@ onUnmounted(() => {
 }
 
 
-.input--search {
-	width: 300px;
+.search_input {
+	width: 200px;
 }
 
 .table-header {
