@@ -69,12 +69,12 @@ watch(props, () => {
 	<div class="echart-card">
 		<div class="echart-header">
 			<span class="card-name">{{ cardName }}</span>
-			<a-radio-group :name="name" v-model:value="selectValue" button-style="solid" style="height: 25px" @change="selectChange">
+			<a-radio-groupInfo :name="name" v-model:value="selectValue" button-style="solid" style="height: 25px" @change="selectChange">
 				<a-radio-button :value="1">今日</a-radio-button>
 				<a-radio-button :value="2">本周</a-radio-button>
 				<a-radio-button :value="3">本月</a-radio-button>
 				<a-radio-button :value="4">本年</a-radio-button>
-			</a-radio-group>
+			</a-radio-groupInfo>
 		</div>
 		<div class="echart" :ref="name"></div>
 	</div>

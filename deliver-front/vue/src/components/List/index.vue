@@ -70,11 +70,11 @@ const onBlur = () => {
 					<PlusSquareOutlined style="font-size: 40px; color: #c4c3c3" @click="show = !show" v-show="!show" />
 				</a-tooltip>
 			</div>
-			<a-input-group compact v-show="show">
+			<a-input-groupInfo compact v-show="show">
 				<a-input v-model:value="input" :maxlength="100" :placeholder="options.placeholder" style="width: 320px; text-align: left" @blur="onBlur" />
 				<a-button @click="show = !show">取消</a-button>
 				<a-button type="primary" @click="addItem">确认</a-button>
-			</a-input-group>
+			</a-input-groupInfo>
 			<p style="height: 32px"></p>
 		</template>
 	</a-list>

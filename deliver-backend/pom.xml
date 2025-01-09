@@ -16,9 +16,10 @@
     <version>1.0-SNAPSHOT</version>
 
     <modules>
-        <module>deliver-backend-server</module>
-        <module>deliver-backend-admin</module>
-        <module>deliver-backend-all</module>
+        <module>deliver-application</module>
+        <module>deliver-web</module>
+        <module>deliver-business</module>
+        <module>deliver-platform-client</module>
     </modules>
 
     <properties>
@@ -42,7 +43,7 @@
         <aliyun-sms-sdk-version>2.0.24</aliyun-sms-sdk-version>
         <aliyun-call-sdk-version>1.0.0</aliyun-call-sdk-version>
         <tencentcloud.sdk.version>3.1.915</tencentcloud.sdk.version>
-
+        <easyexcel.version>4.0.3</easyexcel.version>
         <spotless-maven-plugin.version>2.22.1</spotless-maven-plugin.version>
     </properties>
 
@@ -78,6 +79,11 @@
                 <artifactId>rocketmq-spring-boot-starter</artifactId>
                 <version>${rocketmq.client.java.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>easyexcel</artifactId>
+                <version>${easyexcel.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -94,11 +100,6 @@
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
@@ -106,35 +107,32 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.6.1</version>
+                <version>3.8.1</version>
                 <configuration>
                     <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>com.diffplug.spotless</groupId>
-                <artifactId>spotless-maven-plugin</artifactId>
-                <version>${spotless-maven-plugin.version}</version>
-                <configuration>
-                    <java>
-                        <!--<eclipse>-->
-                        <!--    <file>../format/eclipse_code_formatter_config.xml</file>-->
-                        <!--</eclipse>-->
-                        <licenseHeader>
-                            <file>../format/license-header</file>
-                        </licenseHeader>
-                    </java>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>apply</goal>
-                        </goals>
-                        <phase>compile</phase>
-                    </execution>
-                </executions>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>com.diffplug.spotless</groupId>-->
+<!--                <artifactId>spotless-maven-plugin</artifactId>-->
+<!--                <version>${spotless-maven-plugin.version}</version>-->
+<!--                <configuration>-->
+<!--                    <java>-->
+<!--                        <licenseHeader>-->
+<!--                            <file>../format/license-header</file>-->
+<!--                        </licenseHeader>-->
+<!--                    </java>-->
+<!--                </configuration>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <goals>-->
+<!--                            <goal>apply</goal>-->
+<!--                        </goals>-->
+<!--                        <phase>compile</phase>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
         </plugins>
     </build>
 </project>

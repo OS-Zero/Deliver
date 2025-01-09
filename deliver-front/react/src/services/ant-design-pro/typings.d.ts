@@ -9,7 +9,7 @@ declare namespace API {
     email?: string;
     signature?: string;
     title?: string;
-    group?: string;
+    groupInfo?: string;
     tags?: { key?: string; label?: string }[];
     notifyCount?: number;
     unreadCount?: number;

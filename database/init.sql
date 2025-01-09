@@ -2,105 +2,122 @@ drop database if exists deliver;
 create database if not exists deliver;
 
 use deliver;
+-- 用户表
+drop table if exists deliver.user_info;
+create table if not exists deliver.user_info
+(
+    user_id        bigint auto_increment comment '用户id' primary key,
+    user_email     varchar(20)                           not null comment '用户邮箱',
+    user_password  varchar(50)                           not null comment '用户密码加密',
+    user_real_name varchar(10)                           not null comment '用户真实姓名',
+    user_role      varchar(10) default 'ordinary'        not null comment '用户角色（管理员admin、普通用户ordinary）',
+    create_user    varchar(10)                           null comment '创建者',
+    update_user    varchar(10)                           null comment '更新者',
+    create_time    datetime    default CURRENT_TIMESTAMP not null comment '创建时间',
+    update_time    datetime    default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+    deleted        tinyint     default 0                 not null comment '是否删除（0-不删除、1-删除）'
+) comment '用户表';
+
 -- 分组表
-drop table if exists deliver.group;
-create table if not exists deliver.group
+drop table if exists deliver.group_info;
+create table if not exists deliver.group_info
 (
     group_id          bigint auto_increment comment '分组id' primary key,
-    group_name        varchar(20)                        not null comment '分组名称',
-    group_description varchar(100)                       not null comment '分组描述',
-    create_user       varchar(50)                        null comment '创建者',
-    update_user       varchar(50)                        null comment '更新者',
+    group_name        varchar(10)                        not null comment '分组名称',
+    group_description varchar(50)                        not null comment '分组描述',
+    create_user       varchar(10)                        not null comment '创建者',
+    update_user       varchar(10)                        not null comment '更新者',
     create_time       datetime default CURRENT_TIMESTAMP not null comment '创建时间',
     update_time       datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
-    deleted           tinyint  default 0                 not null comment '是否删除：0-不删除 1-删除'
+    deleted           tinyint  default 0                 not null comment '是否删除（0-不删除、1-删除）'
 ) comment '分组表';
--- 消息模板表
-drop table if exists deliver.template;
-create table if not exists deliver.template
+
+-- 用户与分组关联表
+drop table if exists deliver.user_group;
+create table if not exists deliver.user_group
 (
-    template_id     bigint auto_increment comment '模板id' primary key,
-    template_name   varchar(20)                        not null comment '模板名称',
-    push_range      tinyint                            not null comment '推送范围（0-不限 1-企业内部 2-外部）',
-    users_type      tinyint                            not null comment '用户类型（1-企业账号 2-电话 3-邮箱 4-平台userId）',
-    push_ways       varchar(200)                       not null comment '推送方式
-{
-"channelType":（1-打电话 2-发短信 3-邮件 4-企业微信 5-钉钉 6-飞书）
-"messageType": 参考 MessageTypeEnum 的 code
-}',
-    use_count       int      default 0                 not null comment '模板使用数',
-    template_status tinyint  default 1                 not null comment '应用状态（1-启用 0-禁用）',
-    group_id        bigint                             not null comment '分组id',
-    create_user     varchar(50)                        null comment '创建者',
-    update_user     varchar(50)                        null comment '更新者',
-    create_time     datetime default CURRENT_TIMESTAMP not null comment '创建时间',
-    update_time     datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
-    deleted         tinyint  default 0                 not null comment '是否删除：0-不删除 1-删除'
-) comment '消息模板';
+    id          bigint auto_increment comment '主键' primary key,
+    user_id     bigint                             not null comment '用户id',
+    group_id    bigint                             not null comment '分组id',
+    top_up      tinyint  default 0                 not null comment '是否置顶（0-不置顶、1-置顶）',
+    create_user varchar(10)                        not null comment '创建者',
+    update_user varchar(10)                        not null comment '更新者',
+    create_time datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+    update_time datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+    deleted     tinyint  default 0                 not null comment '是否删除（0-不删除、1-删除）'
+) comment '用户与分组关联表';
+
+-- 消息模板表
+drop table if exists deliver.message_template;
+create table if not exists deliver.message_template
+(
+    template_id           bigint auto_increment comment '模板id' primary key,
+    template_name         varchar(10)                        not null comment '模板名称',
+    template_description  varchar(50)                        not null comment '模板描述',
+    users_type            tinyint                            not null comment '用户类型（参考用户类型枚举）',
+    channel_type          tinyint                            not null comment '渠道类型（参考渠道类型枚举）',
+    channel_provider_type tinyint                            not null comment '渠道供应商类型（参考渠道供应商类型枚举）',
+    message_type          varchar(5)                         not null comment '消息类型（参考消息类型枚举）',
+    template_status       tinyint  default 0                 not null comment '模板状态（1-启用、0-禁用）',
+    group_id              bigint                             not null comment '关联分组id',
+    create_user           varchar(10)                        not null comment '创建者',
+    update_user           varchar(10)                        not null comment '更新者',
+    create_time           datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+    update_time           datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+    deleted               tinyint  default 0                 not null comment '是否删除（0-不删除、1-删除）'
+) comment '消息模板表';
 
 -- 渠道应用信息表（宽表）
-drop table if exists deliver.app;
-create table if not exists deliver.app
+drop table if exists deliver.channel_app;
+create table if not exists deliver.channel_app
 (
-    app_id       bigint auto_increment comment 'appId' primary key,
-    app_name     varchar(20)                        not null comment '应用名称',
-    channel_type tinyint                            not null comment '消息发送渠道类型 （1-打电话 2-发短信 3-邮件 4-企业微信 5-钉钉 6-飞书）',
-    app_config   text                               not null comment '应用信息配置 json',
-    use_count    int      default 0                 not null comment 'APP 使用数',
-    app_status   tinyint  default 1                 not null comment '应用状态（1-启用 0-禁用）',
-    group_id     bigint                             not null comment '分组id',
-    create_user  varchar(50)                        null comment '创建者',
-    update_user  varchar(50)                        null comment '更新者',
-    create_time  datetime default CURRENT_TIMESTAMP not null comment '创建时间',
-    update_time  datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
-    deleted      tinyint  default 0                 not null comment '是否删除：0-不删除 1-删除'
-) comment '渠道应用信息';
+    app_id                bigint auto_increment comment '应用id' primary key,
+    app_name              varchar(10)                        not null comment '应用名称',
+    app_description       varchar(50)                        not null comment '应用描述',
+    channel_type          tinyint                            not null comment '渠道类型（参考渠道类型枚举）',
+    channel_provider_type tinyint                            not null comment '渠道供应商类型（参考渠道供应商类型枚举）',
+    app_config            text                               not null comment '应用信息JSON配置',
+    app_status            tinyint  default 0                 not null comment '应用状态（1-启用、0-禁用）',
+    group_id              bigint                             not null comment '关联分组id',
+    create_user           varchar(10)                        not null comment '创建者',
+    update_user           varchar(10)                        not null comment '更新者',
+    create_time           datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+    update_time           datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+    deleted               tinyint  default 0                 not null comment '是否删除（0-不删除、1-删除）'
+) comment '渠道应用信息表';
 
 -- 模板与应用关联表
 drop table if exists deliver.template_app;
 create table if not exists deliver.template_app
 (
-    id          bigint auto_increment comment '主键'
-        primary key,
+    id          bigint auto_increment comment '主键' primary key,
     template_id bigint                             not null comment '模板id',
     app_id      bigint                             not null comment '应用id',
+    create_user varchar(10)                        not null comment '创建者',
+    update_user varchar(10)                        not null comment '更新者',
     create_time datetime default CURRENT_TIMESTAMP not null comment '创建时间',
     update_time datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
-    deleted     tinyint  default 0                 not null comment '是否删除：0-不删除 1-删除'
+    deleted     tinyint  default 0                 not null comment '是否删除（0-不删除、1-删除）'
 ) comment '模板与应用关联表';
-
--- 消息记录表（待移除，后续接入埋点日志采集做数据分析）
-# drop table if exists deliver.message_record;
-# create table if not exists deliver.message_record
-# (
-#     trace_id       varchar(100)                       not null comment '消息链路 id',
-#     template_id    bigint                             not null comment '模板 id',
-#     app_id         bigint                             null comment 'appId',
-#     message_status tinyint  default 1                 null comment '消息状态（1-发送成功0-发送失败）',
-#     user_type      tinyint                            null comment '用户类型（1-企业账号2-手机3-邮箱4-平台userId）',
-#     push_user      varchar(100)                       null comment '消息推送人',
-#     channel_type   tinyint                            null comment '发送渠道类型',
-#     message_type   varchar(10)                        null comment '消息类型（见 MessageTypeEnum）',
-#     push_range     tinyint                            null comment '推送范围（0-不限1-企业内部2-外部）',
-#     retried        tinyint                            null comment '是否重试消息（1-是 0-首次发送）',
-#     create_time    datetime default CURRENT_TIMESTAMP not null
-# ) comment '消息记录';
 
 -- 平台文件表
 drop table if exists deliver.platform_file;
 create table if not exists deliver.platform_file
 (
-    id          bigint auto_increment comment '主键'
-        primary key,
-    file_name   varchar(50)                        not null comment '文件名',
-    app_type    tinyint                            not null comment 'APP 类型（1-钉钉2-企业微信3-飞书）',
-    file_type   varchar(20)                        not null comment '文件类型',
-    file_key    varchar(100)                       not null comment '文件平台 Key',
-    file_status tinyint  default 1                 null comment '平台文件状态(1-生效0-失效)',
-    app_id      bigint                             not null comment '关联 APPID',
-    group_id    bigint                             not null comment '分组id',
-    create_user varchar(100)                       null comment '创建者',
-    create_time datetime default CURRENT_TIMESTAMP null
+    platform_file_id          bigint auto_increment comment '平台文件id' primary key,
+    platform_file_name        varchar(10)                        not null comment '平台文件名',
+    platform_file_description varchar(50)                        not null comment '平台文件描述',
+    platform_file_type        varchar(5)                        not null comment '平台文件类型（参考平台文件类型枚举）',
+    platform_file_key         varchar(100)                       not null comment '平台文件Key',
+    channel_type              tinyint                            not null comment '渠道类型（参考渠道类型枚举）',
+    platform_file_status      tinyint  default 1                 null comment '平台文件状态（1-生效、0-失效）',
+    app_id                    bigint                             not null comment '关联应用id',
+    group_id                  bigint                             not null comment '关联分组id',
+    create_user               varchar(10)                        not null comment '创建者',
+    update_user               varchar(10)                        not null comment '更新者',
+    create_time               datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+    update_time               datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+    deleted                   tinyint  default 0                 not null comment '是否删除（0-不删除、1-删除）'
 ) comment '平台文件表';
 
 -- 群发任务表
@@ -108,17 +125,18 @@ drop table if exists deliver.send_task;
 create table if not exists deliver.send_task
 (
     task_id          bigint auto_increment comment '任务id' primary key,
-    task_name        varchar(20)                        not null comment '任务名称',
-    task_description varchar(100)                       not null comment '任务描述',
-    task_param       text                               not null comment '任务参数',
-    task_type        tinyint                            not null comment '任务类型（1-实时2-定时）',
-    task_status      tinyint                            not null comment '任务状态（1-生效0-失效）',
-    group_id         bigint                             not null comment '分组id',
-    create_user      varchar(50)                        null comment '创建者',
-    update_user      varchar(50)                        null comment '更新者',
+    task_name        varchar(10)                        not null comment '任务名称',
+    task_description varchar(50)                        not null comment '任务描述',
+    task_param       text                               not null comment '任务参数JSON',
+    task_type        tinyint                            not null comment '任务类型（1-实时、2-定时）',
+    task_status      tinyint  default 0                 not null comment '任务状态（1-生效、0-失效）',
+    people_group_id  bigint                             not null comment '关联人群id',
+    group_id         bigint                             not null comment '关联分组id',
+    create_user      varchar(10)                        not null comment '创建者',
+    update_user      varchar(10)                        not null comment '更新者',
     create_time      datetime default CURRENT_TIMESTAMP not null comment '创建时间',
     update_time      datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
-    deleted          tinyint  default 0                 not null comment '是否删除：0-不删除 1-删除'
+    deleted          tinyint  default 0                 not null comment '是否删除（0-不删除、1-删除）'
 ) comment '群发任务表';
 
 -- 人群表
@@ -126,13 +144,18 @@ drop table if exists deliver.people_group;
 create table if not exists deliver.people_group
 (
     people_group_id          bigint auto_increment comment '人群id' primary key,
-    people_group_name        varchar(20)                        not null comment '人群名称',
-    people_group_description varchar(100)                       not null comment '人群描述',
-    people_group_list       text                               not null comment '人群列表',
-    group_id         bigint                             not null comment '分组id',
-    create_user      varchar(50)                        null comment '创建者',
-    update_user      varchar(50)                        null comment '更新者',
-    create_time      datetime default CURRENT_TIMESTAMP not null comment '创建时间',
-    update_time      datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
-    deleted          tinyint  default 0                 not null comment '是否删除：0-不删除 1-删除'
+    people_group_name        varchar(10)                        not null comment '人群名称',
+    people_group_description varchar(50)                        not null comment '人群描述',
+    people_group_list        text                               not null comment '人群列表（英文逗号分割）',
+    users_type               tinyint                            not null comment '用户类型（参考用户类型枚举）',
+    group_id                 bigint                             not null comment '关联分组id',
+    create_user              varchar(10)                        not null comment '创建者',
+    update_user              varchar(10)                        not null comment '更新者',
+    create_time              datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+    update_time              datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+    deleted                  tinyint  default 0                 not null comment '是否删除（0-不删除、1-删除）'
 ) comment '人群表';
+
+-- 初始化创建一个管理员用户
+insert into deliver.user_info(user_email, user_password, user_real_name, user_role, create_user, update_user)
+    value ('oszero@qq.com', 'e10adc3949ba59abbe56e057f20f883e', 'deliver', 'admin', 'oszero', 'oszero')
