@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { message } from 'ant-design-vue';
+const authorizationBlackList = ['/user/login', '/user/register', '/user/forgetPassword'];
 const service = axios.create({
 	baseURL: '/backend',
 	timeout: 20000,
@@ -8,7 +9,9 @@ const service = axios.create({
 service.interceptors.request.use(
 	(config) => {
 		config.headers['FrontPlatform'] = 'vue';
-		config.headers['Authorization'] = localStorage.getItem('access_token');
+		config.headers['Language'] = 'zh_CN';
+		config.headers['GroupId'] = localStorage.getItem('group_id') || -1;
+		!authorizationBlackList.includes(config.url || '') && (config.headers['Authorization'] = localStorage.getItem('access_token'));
 		return config;
 	},
 	(err) => {
@@ -19,24 +22,22 @@ service.interceptors.request.use(
 
 service.interceptors.response.use(
 	(res) => {
-		const _res = res.data;
-		if (_res.code === 600) {
-			message.error(_res.errorMessage);
-			return Promise.reject(_res.errorMessage);
+		if (res.status === 200) {
+			const _res = res.data;
+			if (_res.code === 0) return _res.data;
+			if (_res.code === 1) {
+				message.error(_res.errorMessage);
+				return Promise.reject(_res.errorMessage);
+			}
+			message.error('服务端错误');
+			return Promise.reject('服务端错误');
+		} else if (res.status === 302) {
+			return (window.location.href = res.headers['location']);
 		}
-		if (_res.code === 200) return _res.data;
-		message.error('请求错误');
-		return Promise.reject('请求错误');
-		// if (_res.code === 0) return _res.data;
-		// if (_res.code === 1) {
-		// 	message.error(_res.errorMessage);
-		// 	return Promise.reject(_res.errorMessage);
-		// }
-		// message.error('服务端错误');
-		// return Promise.reject('服务端错误');
+		message.error('服务端错误');
+		return Promise.reject('服务端错误');
 	},
 	(err) => {
-		message.error(err);
 		return Promise.reject(err);
 	},
 );
