@@ -147,8 +147,9 @@ const handleFilterClose = () => {
 	filterState.open = false
 	formRef.value?.resetFields()
 }
-const changeStatus = (record: Record<string, any>) => {
-	updateChannelAppStatus({ appId: record.appId, appStatus: Number(record.appStatus) })
+const changeStatus = async (record: Record<string, any>) => {
+	record.appStatus = !record.appStatus
+	await updateChannelAppStatus({ appId: record.appId, appStatus: Number(record.appStatus) })
 }
 onBeforeMount(() => {
 	handleSearch()
@@ -184,8 +185,8 @@ onUnmounted(() => {
 						<CopyOutlined class="id--copy" @click="copyId(text)" />
 					</template>
 					<template v-else-if="column.key === 'appStatus'">
-						<a-switch v-model:checked="record[column.key]" checked-children="开启" un-checked-children="关闭"
-							@click="changeStatus(record)" />
+						<a-switch :checked="Boolean(record[column.key])" @change="changeStatus(record)" checked-children="开启"
+							un-checked-children="关闭" />
 					</template>
 					<template v-else-if="column.key === 'actions'">
 						<a-button type="link" @click="handleActions('edit', record)">编辑 </a-button>

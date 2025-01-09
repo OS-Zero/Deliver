@@ -159,6 +159,7 @@ const handleDrawer = {
 	}
 }
 const changeStatus = (record: Record<string, any>) => {
+	record.templateStatus = !record.templateStatus
 	updateMessageTemplateStatus({ templateId: record.templateId, templateStatus: Number(record.templateStatus) })
 }
 const handleFilterClose = () => {
@@ -199,8 +200,8 @@ onUnmounted(() => {
 						<CopyOutlined class="id--copy" @click="copyId(text)" />
 					</template>
 					<template v-if="column.key === 'templateStatus'">
-						<a-switch v-model:checked="record[column.key]" checked-children="开启" un-checked-children="关闭"
-							@click="changeStatus(record)" />
+						<a-switch :checked="Boolean(record[column.key])" checked-children="开启" un-checked-children="关闭"
+							@change="changeStatus(record)" />
 					</template>
 					<template v-if="column.key === 'actions'">
 						<a-button type="link" @click="handleActions('edit', record)">编辑 </a-button>

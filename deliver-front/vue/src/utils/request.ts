@@ -24,6 +24,7 @@ service.interceptors.response.use(
 	(res) => {
 		if (res.status === 200) {
 			const _res = res.data;
+			return _res.data;
 			if (_res.code === 0) return _res.data;
 			if (_res.code === 1) {
 				message.error(_res.errorMessage);
