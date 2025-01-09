@@ -39,6 +39,9 @@ export function getExcelTemplateFile(): Promise<never> {
 }
 export function analysisExcelTemplateFile(data: { file: File }): Promise<string> {
 	return request({
+		headers: {
+			'Content-Type': 'multipart/form-data',
+		},
 		url: '/peopleGroup/analysisExcelTemplateFile',
 		method: 'post',
 		data,
