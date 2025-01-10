@@ -11,6 +11,7 @@ export function getChannelApp(data: SearchParams): Promise<TableData<ChannelApp>
 }
 
 export function saveChannelApp(data: ChannelAppForm): Promise<never> {
+	data.appConfig = JSON.stringify(data.appConfig || {});
 	return request({
 		url: '/channelApp/save',
 		method: 'post',
@@ -18,6 +19,7 @@ export function saveChannelApp(data: ChannelAppForm): Promise<never> {
 	});
 }
 export function updateChannelApp(data: ChannelAppForm): Promise<never> {
+	data.appConfig = JSON.stringify(data.appConfig || {});
 	return request({
 		url: '/channelApp/update',
 		method: 'post',

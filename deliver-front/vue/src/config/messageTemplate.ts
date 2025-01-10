@@ -141,8 +141,6 @@ export const messageTemplateSchemaDeps = [
 		try {
 			if (notUndefined(data.usersType.value)) {
 				data.channelType.value = undefined;
-				console.log('hello');
-
 				data.channelType.options = (await getChannelType({ usersType: data.usersType.value })).map((item) => ({
 					value: item.channelType,
 					label: item.channelTypeName,

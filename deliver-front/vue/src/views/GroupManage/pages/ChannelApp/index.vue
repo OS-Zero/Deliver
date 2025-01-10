@@ -11,6 +11,7 @@ import { Key } from 'ant-design-vue/lib/_util/type';
 import { deleteChannelApp, getChannelApp, updateChannelAppStatus } from '@/api/channelApp';
 import { ChannelApp } from '@/types/channelApp';
 import ChannelAppDrawer from './components/ChannelAppDrawer.vue';
+import { getColor } from '@/utils/table';
 type Operation = 'add' | 'edit' | 'delete' | 'more'
 const dataSource = reactive<ChannelApp[]>([])
 const { dynamicData: filterForm, stop } = dynamic(filterSchema, filterSchemaMaps)
@@ -124,7 +125,7 @@ onUnmounted(() => {
 			</div>
 			<a-table row-key="appId" :dataSource="dataSource" :columns="channelAppColumns" :row-selection="rowSelection"
 				:pagination="pagination" :scroll="{ x: 1400, y: 680 }">
-				<template #bodyCell="{ column, text, record }">
+				<template #bodyCell="{ column, text, record, index }">
 					<template v-if="column.key === 'appId'">
 						{{ text }}
 						<CopyOutlined class="id--copy" @click="copyId(text)" />
@@ -132,6 +133,9 @@ onUnmounted(() => {
 					<template v-else-if="column.key === 'appStatus'">
 						<a-switch :checked="Boolean(record[column.key])" @change="changeStatus(record)" checked-children="开启"
 							un-checked-children="关闭" />
+					</template>
+					<template v-if="['channelProviderTypeName', 'channelTypeName'].includes(column.key)">
+						<a-tag :color="getColor(index)">{{ text }}</a-tag>
 					</template>
 					<template v-else-if="column.key === 'actions'">
 						<a-button type="link" @click="handleActions('edit', record)">编辑 </a-button>

@@ -15,6 +15,7 @@ const dataSource = reactive<PlatformFile[]>([])
 
 const { dynamicData: platformFileForm, stop } = dynamic(platformFileSchema, platformFileSchemaDeps)
 const { dynamicData: filterForm, stop: stopFilterDynamic } = dynamic(filterSchema, filterSchemaMaps)
+
 const handleSearch = async () => {
 	const { records, total } = await getPlatformFile({ ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
 	Object.assign(dataSource, records)
@@ -50,7 +51,7 @@ const drawerState = reactive<{
 const filterState = reactive({
 	open: false
 })
-const searchValue = ref('')
+
 
 const formRef = ref<FormInstance>();
 const handleActions = async (action: 'upload' | 'more', record?: Record<string, any>) => {
