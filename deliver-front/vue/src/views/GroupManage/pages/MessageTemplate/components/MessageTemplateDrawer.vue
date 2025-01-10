@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { savePeopleGroup, updatePeopleGroup } from '@/api/peopleGroup';
 import { messageTemplateLocale, messageTemplateSchema, messageTemplateSchemaDeps, testMessageSchema } from '@/config/messageTemplate';
 import { DrawerProps } from '@/types/components';
 import { copyToClipboard, dynamic, getDataFromSchema } from '@/utils/utils';
@@ -7,7 +6,7 @@ import { message } from 'ant-design-vue';
 import { ref, reactive, onUnmounted, watch, nextTick } from 'vue';
 import { CopyOutlined } from '@ant-design/icons-vue';
 import { getMessageParam } from '@/api/system';
-import { testSendMessage } from '@/api/messageTemplate';
+import { addMessageTemplate, testSendMessage, updateMessageTemplate } from '@/api/messageTemplate';
 type Operation = 'add' | 'edit' | 'more' | 'testSend'
 const props = defineProps<{
 	open: boolean
@@ -84,11 +83,11 @@ const initMoreDate = () => {
 const moreInfo = reactive<Array<{ label: string; value: any }>>([])
 const operationDispatch = {
 	add: async () => {
-		await savePeopleGroup(getDataFromSchema(messageTemplateForm))
+		await addMessageTemplate(getDataFromSchema(messageTemplateForm))
 		message.success('新增成功')
 	},
 	edit: async () => {
-		await updatePeopleGroup(getDataFromSchema(messageTemplateForm))
+		await updateMessageTemplate(getDataFromSchema(messageTemplateForm))
 		message.success('编辑成功')
 	},
 	testSend: async () => {
