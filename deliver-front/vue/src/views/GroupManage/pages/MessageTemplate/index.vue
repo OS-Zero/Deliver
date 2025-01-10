@@ -12,14 +12,14 @@ import { Key } from 'ant-design-vue/lib/_util/type';
 import { MessageTemplate } from '@/types/messageTemplate';
 import MessageTemplateDrawer from './components/MessageTemplateDrawer.vue';
 import { getColor } from '@/utils/table';
-const dataSource = reactive<MessageTemplate[]>([])
+const dataSource = ref<MessageTemplate[]>([])
 
 type Operation = 'add' | 'edit' | 'delete' | 'more' | 'testSend'
 const searchValue = ref('')
 const { dynamicData: filterForm, stop: stopFilterDynamic } = dynamic(filterSchema, filterSchemaMaps)
 const handleSearch = async () => {
 	const { records, total } = await getMessageTemplates({ templateName: searchValue.value, ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
-	Object.assign(dataSource, records)
+	dataSource.value = records
 	pagination.total = total
 }
 const debounceSearch = debounce(handleSearch, 200)
