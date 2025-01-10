@@ -11,13 +11,14 @@ import { usePagination } from '@/hooks/table';
 import { Key } from 'ant-design-vue/lib/_util/type';
 import { MessageTemplate } from '@/types/messageTemplate';
 import MessageTemplateDrawer from './components/MessageTemplateDrawer.vue';
+import { getColor } from '@/utils/table';
 const dataSource = reactive<MessageTemplate[]>([])
 
 type Operation = 'add' | 'edit' | 'delete' | 'more' | 'testSend'
-
+const searchValue = ref('')
 const { dynamicData: filterForm, stop: stopFilterDynamic } = dynamic(filterSchema, filterSchemaMaps)
 const handleSearch = async () => {
-	const { records, total } = await getMessageTemplates({ ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
+	const { records, total } = await getMessageTemplates({ templateName: searchValue.value, ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
 	Object.assign(dataSource, records)
 	pagination.total = total
 }
@@ -39,7 +40,7 @@ const drawerState = reactive<{
 const filterState = reactive({
 	open: false
 })
-const searchValue = ref('')
+
 
 const formRef = ref<FormInstance>();
 const rowSelection: TableProps['rowSelection'] = reactive({
@@ -125,7 +126,7 @@ onUnmounted(() => {
 			</div>
 			<a-table row-key="templateId" :dataSource="dataSource" :columns="messageTemplateColumns"
 				:row-selection="rowSelection" :pagination="pagination" :scroll="{ x: 1400, y: 680 }">
-				<template #bodyCell="{ column, text, record }">
+				<template #bodyCell="{ column, text, record, index }">
 					<template v-if="column.key === 'templateId'">
 						{{ text }}
 						<CopyOutlined class="id--copy" @click="copyId(text)" />
@@ -133,6 +134,10 @@ onUnmounted(() => {
 					<template v-if="column.key === 'templateStatus'">
 						<a-switch :checked="Boolean(record[column.key])" checked-children="开启" un-checked-children="关闭"
 							@change="changeStatus(record)" />
+					</template>
+					<template
+						v-if="['usersTypeName', 'channelProviderTypeName', 'messageTypeName', 'channelTypeName'].includes(column.key)">
+						<a-tag :color="getColor(index)">{{ text }}</a-tag>
 					</template>
 					<template v-if="column.key === 'actions'">
 						<a-button type="link" @click="handleActions('edit', record)">编辑 </a-button>

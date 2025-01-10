@@ -32,11 +32,6 @@ export const messageTemplateColumns: ColumnsType = [
 		key: 'templateName',
 	},
 	{
-		title: '消息类型',
-		dataIndex: 'messageTypeName',
-		key: 'messageType',
-	},
-	{
 		title: '用户类型',
 		dataIndex: 'usersTypeName',
 		key: 'usersTypeName',
@@ -50,6 +45,11 @@ export const messageTemplateColumns: ColumnsType = [
 		title: '渠道供应商类型',
 		dataIndex: 'channelProviderTypeName',
 		key: 'channelProviderTypeName',
+	},
+	{
+		title: '消息类型',
+		dataIndex: 'messageTypeName',
+		key: 'messageTypeName',
 	},
 	{
 		title: '模板状态',
@@ -257,10 +257,10 @@ export const testMessageSchema: Record<string, FormItem<keyof TestSendMessage>> 
 		rules: [getRequiredRule('请输入用户ID')],
 		max: 2,
 	},
-	paramMap: {
+	messageParam: {
 		value: {},
 		type: 'jsonEditor',
-		fieldName: 'paramMap',
+		fieldName: 'messageParam',
 		label: '发送参数',
 		editorConfig: {
 			modeList: ['code'],

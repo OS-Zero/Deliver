@@ -36,6 +36,7 @@ const drawerState = reactive<DrawerProps>({
 	title: titleList[props.operation],
 	placement: props.operation === 'more' ? 'left' : 'right',
 	extra: props.operation === 'more' ? false : true,
+	okText: props.operation === 'testSend' ? '发送' : '确认',
 })
 watch(props, (newProps) => {
 	Object.assign(drawerState, {
@@ -43,6 +44,7 @@ watch(props, (newProps) => {
 		title: titleList[newProps.operation],
 		placement: newProps.operation === 'more' ? 'left' : 'right',
 		extra: props.operation === 'more' ? false : true,
+		okText: props.operation === 'testSend' ? '发送' : '确认',
 	});
 	newProps.operation === 'edit' && newProps.open === true && initFormDate();
 	newProps.operation === 'more' && initMoreDate();
@@ -63,7 +65,7 @@ const initTestMessageFormDate = () => {
 		testMessageForm.users.value = []
 	})
 	getMessageParam({ messageType: props.record.messageType, channelType: props.record.channelType }).then(res => {
-		testMessageForm.paramMap.value = JSON.parse(res || '{}')
+		testMessageForm.messageParam.value = JSON.parse(res || '{}')
 	})
 }
 const initMoreDate = () => {

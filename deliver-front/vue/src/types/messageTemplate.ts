@@ -21,7 +21,7 @@ export interface MessageTemplate extends Template, User, Channel, ChannelProvide
 }
 export interface SearchParams
 	extends TableSearchParams,
-		Pick<Partial<MessageTemplate>, 'usersType' | 'channelType' | 'channelProviderType' | 'messageType' | 'templateStatus'> {
+		Pick<Partial<MessageTemplate>, 'usersType' | 'channelType' | 'channelProviderType' | 'messageType' | 'templateStatus' | 'templateName'> {
 	startTime?: string;
 	endTime?: string;
 }
@@ -39,5 +39,5 @@ export type MessageTemplateForm = Pick<
 export interface TestSendMessage {
 	templateId: Template['templateId'];
 	users: string[];
-	paramMap: Record<string, any>;
+	messageParam: Record<string, any>;
 }

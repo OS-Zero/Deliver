@@ -4,7 +4,9 @@ import { DrawerProps } from '@/types/components';
 withDefaults(defineProps<DrawerProps>(), {
 	open: false,
 	placement: 'right',
-	extra: true
+	extra: true,
+	okText: '确认',
+	cancelText: '取消',
 })
 
 const emit = defineEmits(['close', 'ok'])
@@ -13,8 +15,8 @@ const emit = defineEmits(['close', 'ok'])
 <template>
 	<a-drawer :width="500" :title="title" :placement="placement" :open="open" @close="emit('close')">
 		<template v-if="extra" #extra>
-			<a-button style="margin-right: 8px" @click="emit('close')">取消</a-button>
-			<a-button type="primary" @click="emit('ok')">确定</a-button>
+			<a-button style="margin-right: 8px" @click="emit('close')">{{ cancelText }}</a-button>
+			<a-button type="primary" @click="emit('ok')">{{ okText }}</a-button>
 		</template>
 		<slot></slot>
 	</a-drawer>

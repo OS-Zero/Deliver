@@ -3,4 +3,6 @@ export interface DrawerProps {
 	title: string;
 	placement?: 'left' | 'right' | 'top' | 'bottom' | undefined;
 	extra?: boolean;
+	okText?: string;
+	cancelText?: string;
 }
