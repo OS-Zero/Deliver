@@ -13,13 +13,12 @@ import { PeopleGroup } from '@/types/peopleGroup';
 import PeopleGroupDrawer from './components/PeopleGroupDrawer.vue';
 
 type Operation = 'add' | 'edit' | 'delete' | 'more' | 'download'
-const dataSource = reactive<PeopleGroup[]>([])
-
-
+const dataSource = ref<PeopleGroup[]>([])
 const filterForm = reactive(filterSchema)
+const searchValue = ref('')
 const handleSearch = async () => {
-	const { records, total } = await getPeopleGroup({ ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
-	Object.assign(dataSource, records)
+	const { records, total } = await getPeopleGroup({ peopleGroupName: searchValue.value, ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
+	dataSource.value = records
 	pagination.total = total
 }
 const debounceSearch = debounce(handleSearch, 200)
@@ -47,7 +46,7 @@ const drawerState = reactive<{
 const filterState = reactive({
 	open: false
 })
-const searchValue = ref('')
+
 
 const formRef = ref<FormInstance>();
 const rowSelection: TableProps['rowSelection'] = reactive({

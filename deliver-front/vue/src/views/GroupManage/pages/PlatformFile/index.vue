@@ -10,15 +10,13 @@ import { usePagination } from '@/hooks/table';
 import { getPlatformFile, uploadPlatformFile } from '@/api/platformFile';
 import { PlatformFile } from '@/types/platformFile';
 import { platformFileSchema, platformFileSchemaDeps, filterSchema, filterSchemaMaps, platformFileLocale, platformFileColumns } from '@/config/platformFile';
-const dataSource = reactive<PlatformFile[]>([])
-
-
+const dataSource = ref<PlatformFile[]>([])
 const { dynamicData: platformFileForm, stop } = dynamic(platformFileSchema, platformFileSchemaDeps)
 const { dynamicData: filterForm, stop: stopFilterDynamic } = dynamic(filterSchema, filterSchemaMaps)
-
+const searchValue = ref('')
 const handleSearch = async () => {
-	const { records, total } = await getPlatformFile({ ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
-	Object.assign(dataSource, records)
+	const { records, total } = await getPlatformFile({ platformFileName: searchValue.value, ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
+	dataSource.value = records
 	pagination.total = total
 }
 const debounceSearch = debounce(handleSearch, 200)

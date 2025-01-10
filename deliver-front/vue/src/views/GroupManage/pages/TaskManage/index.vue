@@ -13,11 +13,12 @@ import { Task } from '@/types/task';
 import TaskGroupDrawer from './components/TaskGroupDrawer.vue';
 
 type Operation = 'add' | 'edit' | 'delete' | 'more' | 'sendTask'
-const dataSource = reactive<Task[]>([])
+const dataSource = ref<Task[]>([])
 const filterForm = reactive(filterSchema)
+const searchValue = ref('')
 const handleSearch = async () => {
-	const { records, total } = await getTask({ ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
-	Object.assign(dataSource, records)
+	const { records, total } = await getTask({ taskName: searchValue.value, ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
+	dataSource.value = records
 	pagination.total = total
 }
 const debounceSearch = debounce(handleSearch, 200)
@@ -45,7 +46,7 @@ const drawerState = reactive<{
 const filterState = reactive({
 	open: false
 })
-const searchValue = ref('')
+
 const formRef = ref<FormInstance>();
 const rowSelection: TableProps['rowSelection'] = reactive({
 	selectedRowKeys: [],

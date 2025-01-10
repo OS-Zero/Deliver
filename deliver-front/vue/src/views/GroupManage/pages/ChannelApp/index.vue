@@ -13,11 +13,12 @@ import { ChannelApp } from '@/types/channelApp';
 import ChannelAppDrawer from './components/ChannelAppDrawer.vue';
 import { getColor } from '@/utils/table';
 type Operation = 'add' | 'edit' | 'delete' | 'more'
-const dataSource = reactive<ChannelApp[]>([])
+const dataSource = ref<ChannelApp[]>([])
 const { dynamicData: filterForm, stop } = dynamic(filterSchema, filterSchemaMaps)
+const searchValue = ref('')
 const handleSearch = async () => {
-	const { records, total } = await getChannelApp({ ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
-	Object.assign(dataSource, records)
+	const { records, total } = await getChannelApp({ appName: searchValue.value, ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
+	dataSource.value = records
 	pagination.total = total
 }
 const debounceSearch = debounce(handleSearch, 200)
@@ -45,7 +46,7 @@ const drawerState = reactive<{
 const filterState = reactive({
 	open: false
 })
-const searchValue = ref('')
+
 
 const formRef = ref<FormInstance>();
 const rowSelection: TableProps['rowSelection'] = reactive({

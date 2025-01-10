@@ -1,6 +1,5 @@
 import { TableData } from '@/types';
-import { SearchParams } from '@/types/channelApp';
-import { PlatformFile, UploadPlatformFile } from '@/types/platformFile';
+import { PlatformFile, SearchParams, UploadPlatformFile } from '@/types/platformFile';
 import request from '@/utils/request.ts';
 
 export async function getPlatformFile(data: SearchParams): Promise<TableData<PlatformFile>> {

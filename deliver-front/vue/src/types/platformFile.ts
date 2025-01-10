@@ -20,7 +20,7 @@ export interface UploadPlatformFile
 }
 export interface SearchParams
 	extends TableSearchParams,
-		Pick<Partial<PlatformFile>, 'platformFileType' | 'platformFileKey' | 'channelType' | 'appId'> {
+		Pick<Partial<PlatformFile>, 'platformFileType' | 'platformFileKey' | 'channelType' | 'appId' | 'platformFileName'> {
 	channelProviderType?: ChannelProvider['channelProviderType'];
 	startTime?: string;
 	endTime?: string;
