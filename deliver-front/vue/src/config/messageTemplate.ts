@@ -9,7 +9,7 @@ import { getRangeRule, getRequiredRule } from '@/utils/validate';
 export const messageTemplateLocale = {
 	templateId: '模板 Id',
 	templateDescription: '模板描述',
-	appId: '应用 Id',
+	appId: '关联应用',
 	appName: '应用名',
 	templateName: '模板名',
 	messageTypeName: '消息类型',
@@ -130,8 +130,8 @@ export const messageTemplateSchema: MessageTemplateSchema = {
 	appId: {
 		type: 'select',
 		fieldName: 'appId',
-		label: '应用 ID',
-		rules: [getRequiredRule('请选择应用 ID')],
+		label: '关联应用',
+		rules: [getRequiredRule('请选择关联应用')],
 		options: [],
 	},
 };

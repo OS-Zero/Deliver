@@ -5,7 +5,7 @@ import { getAppConfig, getChannelType, getParam } from '@/api/system';
 import { notUndefined } from '@/utils/utils';
 import { getRangeRule, getRequiredRule } from '@/utils/validate';
 export const channelAppLocale = {
-	appId: '应用 Id',
+	appId: '关联应用',
 	appName: '应用名',
 	appDescription: '应用描述',
 	channelTypeName: '渠道类型',
@@ -17,7 +17,7 @@ export const channelAppLocale = {
 };
 export const channelAppColumns: ColumnsType = [
 	{
-		title: '应用 Id',
+		title: '关联应用',
 		dataIndex: 'appId',
 		key: 'appId',
 	},

@@ -103,8 +103,8 @@ export const platformFileSchema: Schema<UploadPlatformFile> = {
 	appId: {
 		type: 'select',
 		fieldName: 'appId',
-		label: '应用 Id',
-		rules: [getRequiredRule('请选择应用 Id')],
+		label: '关联应用',
+		rules: [getRequiredRule('请选择关联应用')],
 		options: [],
 	},
 };
@@ -198,7 +198,7 @@ export const filterSchema: Schema<SearchParams> = {
 	appId: {
 		type: 'select',
 		fieldName: 'appId',
-		label: '应用 Id',
+		label: '关联应用',
 		options: [],
 	},
 	startTime: {
