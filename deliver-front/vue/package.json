@@ -12,6 +12,8 @@
     "lint:stylelint": "stylelint \"**/*.{css,scss,vue,html}\" --fix"
   },
   "dependencies": {
+    "@ant-design/icons-vue": "^7.0.1",
+    "@originjs/vite-plugin-commonjs": "^1.0.3",
     "ant-design-vue": "^4.0.6",
     "axios": "^1.5.1",
     "dayjs": "^1.11.13",

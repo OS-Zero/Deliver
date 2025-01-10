@@ -12,7 +12,7 @@ dist
 dist-ssr
 *.local
 
-vite.config.ts
+# vite.config.ts
 
 
 # Editor directories and files

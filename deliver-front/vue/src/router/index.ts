@@ -56,14 +56,6 @@ const routes: RouteRecordRaw[] = [
 						},
 					},
 					{
-						path: 'flowControlRule',
-						name: '规则配置',
-						component: () => import('@/views/GroupManage/pages/FlowControlRule/index.vue'),
-						meta: {
-							name: '规则配置 - Deliver 企业消息推送平台',
-						},
-					},
-					{
 						path: 'task',
 						name: '群发任务配置',
 						component: () => import('@/views/GroupManage/pages/TaskManage/index.vue'),
