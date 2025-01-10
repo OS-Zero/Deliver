@@ -65,7 +65,7 @@ const operationDispatch = {
 			okText: '确认',
 			cancelText: '取消',
 			async onOk() {
-				await deletePeopleGroup({ ids: record && record.taskId })
+				await deletePeopleGroup({ ids: record.taskId })
 				message.success('删除成功')
 			},
 		});

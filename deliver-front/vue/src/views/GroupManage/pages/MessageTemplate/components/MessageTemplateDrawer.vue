@@ -1,12 +1,14 @@
 <script lang="ts" setup>
 import { savePeopleGroup, updatePeopleGroup } from '@/api/peopleGroup';
-import { taskLocale, taskSchema } from '@/config/task';
+import { messageTemplateLocale, messageTemplateSchema, messageTemplateSchemaDeps, testMessageSchema } from '@/config/messageTemplate';
 import { DrawerProps } from '@/types/components';
-import { getDataFromSchema } from '@/utils/utils';
+import { copyToClipboard, dynamic, getDataFromSchema } from '@/utils/utils';
 import { message } from 'ant-design-vue';
 import { ref, reactive, onUnmounted, watch, nextTick } from 'vue';
-
-type Operation = 'add' | 'edit' | 'more'
+import { CopyOutlined } from '@ant-design/icons-vue';
+import { getMessageParam } from '@/api/system';
+import { testSendMessage } from '@/api/messageTemplate';
+type Operation = 'add' | 'edit' | 'more' | 'testSend'
 const props = defineProps<{
 	open: boolean
 	operation: Operation
@@ -16,11 +18,19 @@ const emit = defineEmits(['close'])
 const formRef = ref()
 
 const titleList: Record<Operation, string> = {
-	add: '新增任务',
-	edit: '编辑任务',
-	more: '任务详情',
+	add: '新增模板',
+	edit: '编辑模板',
+	more: '模板详情',
+	testSend: '测试发送'
 }
-
+const copyId = async (text: string) => {
+	try {
+		await copyToClipboard(text)
+		message.success('复制成功')
+	} catch (error) {
+		message.error('复制失败')
+	}
+}
 const drawerState = reactive<DrawerProps>({
 	open: props.open,
 	title: titleList[props.operation],
@@ -36,23 +46,33 @@ watch(props, (newProps) => {
 	});
 	newProps.operation === 'edit' && newProps.open === true && initFormDate();
 	newProps.operation === 'more' && initMoreDate();
+	newProps.operation === 'testSend' && initTestMessageFormDate();
 })
 
-const taskForm = reactive(taskSchema)
+const { dynamicData: messageTemplateForm, stop } = dynamic(messageTemplateSchema, messageTemplateSchemaDeps)
+const testMessageForm = reactive(testMessageSchema)
 const initFormDate = () => {
 	nextTick(() => {
-		for (const key in taskForm) {
-			taskForm[key].value = props.record[key]
+		for (const key in messageTemplateForm) {
+			messageTemplateForm[key].value = props.record[key]
 		}
 	})
 }
+const initTestMessageFormDate = () => {
+	nextTick(() => {
+		testMessageForm.users.value = []
+	})
+	getMessageParam({ messageType: props.record.messageType, channelType: props.record.channelType }).then(res => {
+		testMessageForm.paramMap.value = JSON.parse(res || '{}')
+	})
+}
 const initMoreDate = () => {
-	const set = new Set(['taskId', 'taskType'])
+	const set = new Set(['usersType', 'channelType', 'channelProviderType', 'messageType', 'appId'])
 	const arr: Array<{ label: string; value: any }> = []
 	for (const key in props.record) {
 		if (!set.has(key)) {
 			arr.push({
-				label: taskLocale[key],
+				label: messageTemplateLocale[key],
 				value: props.record[key]
 			})
 		}
@@ -62,12 +82,15 @@ const initMoreDate = () => {
 const moreInfo = reactive<Array<{ label: string; value: any }>>([])
 const operationDispatch = {
 	add: async () => {
-		await savePeopleGroup(getDataFromSchema(taskForm))
+		await savePeopleGroup(getDataFromSchema(messageTemplateForm))
 		message.success('新增成功')
 	},
 	edit: async () => {
-		await updatePeopleGroup(getDataFromSchema(taskForm))
+		await updatePeopleGroup(getDataFromSchema(messageTemplateForm))
 		message.success('编辑成功')
+	},
+	testSend: async () => {
+		await testSendMessage(getDataFromSchema(testMessageForm))
 	}
 }
 
@@ -84,14 +107,16 @@ onUnmounted(() => {
 
 <template>
 	<Drawer v-bind="drawerState" @ok="operationDispatch[operation]" @close="handleCancel">
-		<Form ref="formRef" v-if="operation === 'add' || operation === 'edit'" :form-schema="taskForm" />
+		<Form ref="formRef" v-if="operation === 'add' || operation === 'edit'" :form-schema="messageTemplateForm" />
+		<Form ref="formRef" v-else-if="operation === 'testSend'" :form-schema="testMessageForm" />
 		<div v-else-if="operation === 'more'">
 			<Descriptions :data="moreInfo" :config="{ column: 1 }">
 				<template #content="{ item }">
-					<template v-if="item.label === '任务类型'">
-						{{ item.value === 1 ? '实时' : '定时' }}
+					<template v-if="item.label === '模板 Id'">
+						{{ item.value }}
+						<CopyOutlined v-if="item.label === '模板 Id'" class="id--copy" @click="copyId(item.value)" />
 					</template>
-					<template v-else-if="item.label === '任务状态'">
+					<template v-if="item.label === '模板状态'">
 						{{ !!item.value ? '开启' : '关闭' }}
 					</template>
 				</template>

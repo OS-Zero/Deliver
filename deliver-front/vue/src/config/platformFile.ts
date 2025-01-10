@@ -122,8 +122,8 @@ export const platformFileSchemaDeps = [
 	},
 	async (data: Schema<UploadPlatformFile>) => {
 		try {
-			data.channelProviderType.value = undefined;
 			if (notUndefined(data.channelType.value)) {
+				data.channelProviderType.value = undefined;
 				const { channelProviderTypeList } = await getParam({ channelType: data.channelType.value });
 				data.channelProviderType.options = channelProviderTypeList.map((item) => ({
 					value: item.channelProviderType,
@@ -138,8 +138,8 @@ export const platformFileSchemaDeps = [
 	},
 	async (data: Schema<UploadPlatformFile>) => {
 		try {
-			data.platformFileType.value = undefined;
 			if (notUndefined(data.channelType.value)) {
+				data.platformFileType.value = undefined;
 				data.platformFileType.options = (await getPlatformFileType({ channelType: data.channelType.value })).map((item) => ({
 					value: item.platformFileType,
 					label: item.platformFileTypeName,
@@ -153,8 +153,8 @@ export const platformFileSchemaDeps = [
 	},
 	async (data: Schema<UploadPlatformFile>) => {
 		try {
-			data.appId.value = undefined;
 			if (notUndefined(data.channelType.value) && notUndefined(data.channelProviderType.value)) {
+				data.appId.value = undefined;
 				const appOptions = await getAppByChannel({
 					channelType: data.channelType.value,
 					channelProviderType: data.channelProviderType.value,

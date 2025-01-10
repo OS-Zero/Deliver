@@ -99,8 +99,8 @@ export const channelAppSchema: Schema<ChannelAppForm> = {
 };
 export const channelAppSchemaDeps = [
 	async (data: Schema<ChannelAppForm>) => {
-		data.channelType.value = undefined;
 		try {
+			data.channelType.value = undefined;
 			data.channelType.options = (await getChannelType({ usersType: -1 })).map((item) => ({
 				value: item.channelType,
 				label: item.channelTypeName,
@@ -111,8 +111,8 @@ export const channelAppSchemaDeps = [
 	},
 	async (data: Schema<ChannelAppForm>) => {
 		try {
-			data.channelProviderType.value = undefined;
 			if (notUndefined(data.channelType.value)) {
+				data.channelProviderType.value = undefined;
 				const { channelProviderTypeList } = await getParam({ channelType: data.channelType.value });
 				data.channelProviderType.options = channelProviderTypeList.map((item) => ({
 					value: item.channelProviderType,
@@ -127,8 +127,8 @@ export const channelAppSchemaDeps = [
 	},
 	async (data: Schema<ChannelAppForm>) => {
 		try {
-			data.appConfig.value = undefined;
 			if (notUndefined(data.channelType.value) && notUndefined(data.channelProviderType.value)) {
+				data.appConfig.value = undefined;
 				const appConfig = await getAppConfig({
 					channelType: data.channelType.value,
 					channelProviderType: data.channelProviderType.value,

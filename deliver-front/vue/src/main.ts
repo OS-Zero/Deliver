@@ -4,7 +4,6 @@ import App from './App.vue';
 import router from './router';
 import { createPinia } from 'pinia';
 import './permisson.ts';
-import 'jsoneditor';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';
 dayjs.locale('zh-cn');

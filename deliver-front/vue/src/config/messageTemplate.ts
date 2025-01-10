@@ -139,8 +139,8 @@ export const messageTemplateSchema: MessageTemplateSchema = {
 export const messageTemplateSchemaDeps = [
 	async (data: MessageTemplateSchema) => {
 		try {
-			data.channelType.value = undefined;
 			if (notUndefined(data.usersType.value)) {
+				data.channelType.value = undefined;
 				data.channelType.options = (await getChannelType({ usersType: data.usersType.value })).map((item) => ({
 					value: item.channelType,
 					label: item.channelTypeName,
@@ -154,9 +154,9 @@ export const messageTemplateSchemaDeps = [
 	},
 	async (data: MessageTemplateSchema) => {
 		try {
-			data.channelProviderType.value = undefined;
-			data.messageType.value = undefined;
 			if (notUndefined(data.channelType.value)) {
+				data.channelProviderType.value = undefined;
+				data.messageType.value = undefined;
 				const { channelProviderTypeList, messageTypeList } = await getParam({ channelType: data.channelType.value });
 				data.channelProviderType.options = channelProviderTypeList.map((item) => ({
 					value: item.channelProviderType,
@@ -177,8 +177,8 @@ export const messageTemplateSchemaDeps = [
 	},
 	async (data: MessageTemplateSchema) => {
 		try {
-			data.appId.value = undefined;
 			if (notUndefined(data.channelType.value) && notUndefined(data.channelProviderType.value)) {
+				data.appId.value = undefined;
 				const appOptions = await getAppByChannel({
 					channelType: data.channelType.value,
 					channelProviderType: data.channelProviderType.value,

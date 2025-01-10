@@ -101,8 +101,8 @@ export const peopleGroupSchema: Schema<PeopleGroupForm> = {
 };
 export const peopleGroupSchemaDeps = [
 	async (data: Schema<PeopleGroupForm>) => {
-		data.peopleGroupList.value = undefined;
 		if (notUndefined(data.excelTemplateFile.value)) {
+			data.peopleGroupList.value = undefined;
 			data.peopleGroupList.value = await analysisExcelTemplateFile({ file: data.excelTemplateFile.value });
 		}
 	},
