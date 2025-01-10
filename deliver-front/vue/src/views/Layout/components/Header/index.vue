@@ -31,8 +31,6 @@ const emits = defineEmits<{
 	onTabChange: [tab: string]
 }>()
 const handleClickTabs = (path: any) => {
-	console.log(path);
-
 	emits("onTabChange", path)
 	router.push(`/${path}`)
 }
@@ -44,6 +42,8 @@ watch(route, (newRoute) => {
 }, {
 	immediate: true
 })
+const userName = ref(JSON.parse(localStorage.getItem("user_info") || '{}').userRealName)
+
 </script>
 <template>
 	<a-layout-header class="header">
@@ -111,7 +111,7 @@ watch(route, (newRoute) => {
 			<a-dropdown placement="bottom">
 				<div class="avatar">
 					<a-avatar src="../../../../../public/mayi.png"></a-avatar>
-					<span class="name">Deliver</span>
+					<span class="name">{{ userName }}</span>
 				</div>
 				<template #overlay>
 					<a-menu class="dropdown">

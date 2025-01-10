@@ -1,11 +1,11 @@
 import { FormItem } from '@/types/form';
 import type { ColumnsType } from 'ant-design-vue/es/table/interface';
-import { getRequiredRule, getRangeRule } from './rules';
 import { SelectProps } from 'ant-design-vue';
 import { MessageTemplateForm, SearchParams, TestSendMessage } from '@/types/messageTemplate';
 import { getChannelType, getParam } from '@/api/system';
 import { getAppByChannel } from '@/api/channelApp';
 import { notUndefined } from '@/utils/utils';
+import { getRangeRule, getRequiredRule } from '@/utils/validate';
 export const messageTemplateLocale = {
 	templateId: '模板 Id',
 	templateDescription: '模板描述',
@@ -139,6 +139,7 @@ export const messageTemplateSchema: MessageTemplateSchema = {
 export const messageTemplateSchemaDeps = [
 	async (data: MessageTemplateSchema) => {
 		try {
+			data.channelType.value = undefined;
 			if (notUndefined(data.usersType.value)) {
 				data.channelType.options = (await getChannelType({ usersType: data.usersType.value })).map((item) => ({
 					value: item.channelType,
@@ -153,6 +154,8 @@ export const messageTemplateSchemaDeps = [
 	},
 	async (data: MessageTemplateSchema) => {
 		try {
+			data.channelProviderType.value = undefined;
+			data.messageType.value = undefined;
 			if (notUndefined(data.channelType.value)) {
 				const { channelProviderTypeList, messageTypeList } = await getParam({ channelType: data.channelType.value });
 				data.channelProviderType.options = channelProviderTypeList.map((item) => ({
@@ -174,6 +177,7 @@ export const messageTemplateSchemaDeps = [
 	},
 	async (data: MessageTemplateSchema) => {
 		try {
+			data.appId.value = undefined;
 			if (notUndefined(data.channelType.value) && notUndefined(data.channelProviderType.value)) {
 				const appOptions = await getAppByChannel({
 					channelType: data.channelType.value,

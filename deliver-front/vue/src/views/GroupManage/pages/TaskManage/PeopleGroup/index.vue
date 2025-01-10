@@ -3,7 +3,7 @@ import { ref, onBeforeMount, reactive, h, watch, onUnmounted } from 'vue'
 import { deletePeopleGroup, getExcelTemplateFile, getPeopleGroup } from '@/api/peopleGroup'
 import { filterSchema, peopleGroupColumns } from "@/config/peopleGroup"
 import { CopyOutlined, DownOutlined, ExclamationCircleOutlined, FilterOutlined, CloseOutlined } from '@ant-design/icons-vue';
-import { copyToClipboard, dynamic, getDataFromSchema } from '@/utils/utils';
+import { copyToClipboard, getDataFromSchema } from '@/utils/utils';
 import { FormInstance, message, Modal, TableProps } from 'ant-design-vue';
 import SearchInput from '@/components/SearchInput/index.vue'
 import { debounce } from 'lodash'
@@ -16,7 +16,7 @@ type Operation = 'add' | 'edit' | 'delete' | 'more' | 'download'
 const dataSource = reactive<PeopleGroup[]>([])
 
 
-const { dynamicData: filterForm } = dynamic(filterSchema)
+const filterForm = reactive(filterSchema)
 const handleSearch = async () => {
 	const { records, total } = await getPeopleGroup({ ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
 	Object.assign(dataSource, records)
@@ -56,20 +56,29 @@ const rowSelection: TableProps['rowSelection'] = reactive({
 		rowSelection && (rowSelection.selectedRowKeys = selectedRowKeys)
 	},
 })
+
+const operationDispatch = {
+	delete: async (record: Record<string, any> = {}) => {
+		Modal.confirm({
+			title: '确认删除该人群?',
+			icon: h(ExclamationCircleOutlined),
+			okText: '确认',
+			cancelText: '取消',
+			async onOk() {
+				await deletePeopleGroup({ ids: record && record.taskId })
+				message.success('删除成功')
+			},
+		});
+	},
+	download: () => {
+		getExcelTemplateFile()
+	}
+}
 const handleActions = async (operation: Operation, record: Record<string, any> = {}) => {
 	(operation === 'add' || operation === 'edit' || operation === 'more') && (drawerState.operation = operation, drawerState.open = true);
 	(operation === 'edit' || operation === 'more') && (drawerState.record = record);
-	(operation === 'delete') && Modal.confirm({
-		title: '确认删除该人群?',
-		icon: h(ExclamationCircleOutlined),
-		okText: '确认',
-		cancelText: '取消',
-		async onOk() {
-			await deletePeopleGroup({ ids: record && record.taskId })
-			message.success('删除成功')
-		},
-	});
-	(operation === 'download') && (await getExcelTemplateFile());
+	(operation === 'delete') && operationDispatch[operation](record);
+	(operation === 'download') && operationDispatch[operation]();
 }
 const handleBatchDelete = () => {
 	Modal.confirm({
@@ -102,7 +111,7 @@ onUnmounted(() => {
 	<div class="container">
 		<div class="container-table">
 			<div class="table-header">
-				<SearchInput placeholder="请输入人群名" v-model="searchValue" @search="debounceSearch()">
+				<SearchInput class="search_input" placeholder="请输入人群名" v-model="searchValue" @search="debounceSearch()">
 				</SearchInput>
 				<div class="operation">
 					<a-button class="btn--add" @click="handleActions('download')">下载人群模板文件</a-button>
@@ -146,8 +155,7 @@ onUnmounted(() => {
 			<template #extra><a-button type="text" :icon="h(CloseOutlined)" @click="handleFilterClose"></a-button></template>
 			<Form ref="formRef" :form-schema="filterForm" />
 		</a-card>
-		<PeopleGroupDrawer :operation="drawerState.operation" :open="drawerState.open" :record="drawerState.record"
-			@close="handleDrawerClose">
+		<PeopleGroupDrawer v-bind="drawerState" @close="handleDrawerClose">
 		</PeopleGroupDrawer>
 	</div>
 </template>
@@ -192,8 +200,8 @@ onUnmounted(() => {
 }
 
 
-.input--search {
-	width: 300px;
+.search_input {
+	width: 200px;
 }
 
 .table-header {

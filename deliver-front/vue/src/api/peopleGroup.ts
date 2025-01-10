@@ -33,6 +33,7 @@ export function deletePeopleGroup(data: { ids: Array<PeopleGroup['peopleGroupId'
 }
 export function getExcelTemplateFile(): Promise<never> {
 	return request({
+		responseType: 'blob',
 		url: '/peopleGroup/getExcelTemplateFile',
 		method: 'post',
 	});

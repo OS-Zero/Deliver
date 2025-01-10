@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { savePeopleGroup, updatePeopleGroup } from '@/api/peopleGroup';
-import { peopleGroupLocale, peopleGroupSchema, peopleGroupSchemaDeps } from '@/config/peopleGroup';
+import { taskLocale, taskSchema } from '@/config/task';
 import { DrawerProps } from '@/types/components';
-import { dynamic, getDataFromSchema } from '@/utils/utils';
+import { getDataFromSchema } from '@/utils/utils';
 import { message } from 'ant-design-vue';
 import { ref, reactive, onUnmounted, watch, nextTick } from 'vue';
 
@@ -16,9 +16,9 @@ const emit = defineEmits(['close'])
 const formRef = ref()
 
 const titleList: Record<Operation, string> = {
-	add: '新增人群',
-	edit: '编辑人群',
-	more: '人群详情',
+	add: '新增任务',
+	edit: '编辑任务',
+	more: '任务详情',
 }
 
 const drawerState = reactive<DrawerProps>({
@@ -38,11 +38,11 @@ watch(props, (newProps) => {
 	newProps.operation === 'more' && initMoreDate();
 })
 
-const { dynamicData: peopleGroupForm, stop } = dynamic(peopleGroupSchema, peopleGroupSchemaDeps)
+const taskForm = reactive(taskSchema)
 const initFormDate = () => {
 	nextTick(() => {
-		for (const key in peopleGroupForm) {
-			peopleGroupForm[key].value = props.record[key]
+		for (const key in taskForm) {
+			taskForm[key].value = props.record[key]
 		}
 	})
 }
@@ -52,7 +52,7 @@ const initMoreDate = () => {
 	for (const key in props.record) {
 		if (!set.has(key)) {
 			arr.push({
-				label: peopleGroupLocale[key],
+				label: taskLocale[key],
 				value: props.record[key]
 			})
 		}
@@ -62,11 +62,11 @@ const initMoreDate = () => {
 const moreInfo = reactive<Array<{ label: string; value: any }>>([])
 const operationDispatch = {
 	add: async () => {
-		await savePeopleGroup(getDataFromSchema(peopleGroupForm))
+		await savePeopleGroup(getDataFromSchema(taskForm))
 		message.success('新增成功')
 	},
 	edit: async () => {
-		await updatePeopleGroup(getDataFromSchema(peopleGroupForm))
+		await updatePeopleGroup(getDataFromSchema(taskForm))
 		message.success('编辑成功')
 	}
 }
@@ -85,14 +85,14 @@ onUnmounted(() => {
 <template>
 	<Drawer v-bind="drawerState" @ok="operationDispatch[operation]" @close="handleCancel">
 		<Form ref="formRef" v-if="operation === 'add' || operation === 'edit'" :label-col="{ span: 4 }"
-			:form-schema="peopleGroupForm" />
+			:form-schema="taskForm" />
 		<div v-else-if="operation === 'more'">
 			<Descriptions :data="moreInfo" :config="{ column: 1 }">
 				<template #content="{ item }">
-					<template v-if="item.label === '人群类型'">
+					<template v-if="item.label === '任务类型'">
 						{{ item.value === 1 ? '实时' : '定时' }}
 					</template>
-					<template v-else-if="item.label === '人群状态'">
+					<template v-else-if="item.label === '任务状态'">
 						{{ !!item.value ? '开启' : '关闭' }}
 					</template>
 				</template>

@@ -80,7 +80,7 @@ const handleActions = async (action: 'add' | 'edit' | 'delete' | 'more' | 'testS
 		})
 	} else if (action === 'delete') {
 		Modal.confirm({
-			title: '确认删除该模板?',
+			title: ' ?',
 			icon: h(ExclamationCircleOutlined),
 			okText: '确认',
 			cancelText: '取消',

@@ -1,21 +1,20 @@
 <script lang="ts" setup>
-import { ref, onBeforeMount, reactive, nextTick, h, watch } from 'vue'
-import { saveTask, deleteTask, updateTaskStatus, getTask, updateTask, sendRealTimeMessage } from '@/api/task'
-import { taskColumns, taskSchema, filterSchema, taskLocale } from "@/config/task"
+import { ref, onBeforeMount, reactive, h, watch } from 'vue'
+import { deleteTask, updateTaskStatus, getTask, sendRealTimeMessage } from '@/api/task'
+import { taskColumns, filterSchema } from "@/config/task"
 import { CopyOutlined, DownOutlined, ExclamationCircleOutlined, FilterOutlined, CloseOutlined } from '@ant-design/icons-vue';
-import { copyToClipboard, dynamic, getDataFromSchema } from '@/utils/utils';
+import { copyToClipboard, getDataFromSchema } from '@/utils/utils';
 import { FormInstance, message, Modal, TableProps } from 'ant-design-vue';
-import Drawer from '@/components/Drawer/index.vue'
 import SearchInput from '@/components/SearchInput/index.vue'
 import { debounce } from 'lodash'
 import { usePagination } from '@/hooks/table';
 import { Key } from 'ant-design-vue/lib/_util/type';
 import { Task } from '@/types/task';
+import TaskGroupDrawer from './components/TaskGroupDrawer.vue';
+
+type Operation = 'add' | 'edit' | 'delete' | 'more' | 'sendTask'
 const dataSource = reactive<Task[]>([])
-
-
-const { dynamicData: TaskForm } = dynamic(taskSchema)
-const { dynamicData: filterForm } = dynamic(filterSchema)
+const filterForm = reactive(filterSchema)
 const handleSearch = async () => {
 	const { records, total } = await getTask({ ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
 	Object.assign(dataSource, records)
@@ -26,8 +25,6 @@ const { pagination } = usePagination(handleSearch)
 watch(filterForm, () => {
 	debounceSearch()
 })
-const testMessageForm = reactive(taskSchema)
-const moreInfo = reactive<Array<{ label: string; value: any }>>([])
 const copyId = async (text: string) => {
 	try {
 		await copyToClipboard(text)
@@ -38,22 +35,17 @@ const copyId = async (text: string) => {
 }
 const drawerState = reactive<{
 	open: boolean
-	title: string
-	operation: string
-	placement: 'left' | 'right' | 'top' | 'bottom' | undefined
-	extra: boolean
+	operation: 'add' | 'edit' | 'more'
+	record: Record<string, any>
 }>({
 	open: false,
-	title: '',
-	operation: '',
-	placement: "right",
-	extra: true
+	operation: 'add',
+	record: {}
 })
 const filterState = reactive({
 	open: false
 })
 const searchValue = ref('')
-
 const formRef = ref<FormInstance>();
 const rowSelection: TableProps['rowSelection'] = reactive({
 	selectedRowKeys: [],
@@ -61,56 +53,30 @@ const rowSelection: TableProps['rowSelection'] = reactive({
 		rowSelection && (rowSelection.selectedRowKeys = selectedRowKeys)
 	},
 })
-const handleActions = async (action: 'add' | 'edit' | 'delete' | 'more' | 'sendTask', record?: Record<string, any>) => {
-	drawerState.placement = 'right'
-	if (action === 'add') {
-		drawerState.title = '新增任务'
-		drawerState.open = true
-		drawerState.operation = 'add'
-	} else if (action === 'edit') {
-		drawerState.title = '编辑任务'
-		drawerState.open = true
-		drawerState.operation = 'edit'
-		//异步使重置数据为空
-		nextTick(() => {
-			for (const key in TaskForm) {
-				if (key === 'taskParam') TaskForm[key].value = record && JSON.parse(record[key] || '{}')
-				else TaskForm[key].value = record && record[key]
-			}
-		})
-	} else if (action === 'delete') {
+const operationDispatch = {
+	delete: async (record: Record<string, any> = {}) => {
 		Modal.confirm({
 			title: '确认删除该任务?',
 			icon: h(ExclamationCircleOutlined),
 			okText: '确认',
 			cancelText: '取消',
 			async onOk() {
-				await deleteTask({ ids: record && record.taskId })
+				await deleteTask({ ids: record.taskId })
 				message.success('删除成功')
 			},
 		});
-	} else if (action === 'sendTask') {
-		await sendRealTimeMessage({ taskId: record && record.taskId })
+	},
+	sendTask: async (record: Record<string, any> = {}) => {
+		await sendRealTimeMessage({ taskId: record.taskId })
 		message.success('发送成功')
-	} else if (action === 'more') {
-		drawerState.title = '任务详情'
-		drawerState.open = true
-		drawerState.operation = 'showMore'
-		drawerState.placement = 'left'
-		drawerState.extra = false
-		const set = new Set(['taskId', 'peopleGroupId'])
-		const arr: Array<{ label: string; value: any }> = []
-		for (const key in record) {
-			if (!set.has(key)) {
-				arr.push({
-					label: taskLocale[key],
-					value: record[key]
-				})
-			}
-		}
-		Object.assign(moreInfo, arr)
 	}
 }
+const handleActions = async (operation: Operation, record: Record<string, any> = {}) => {
+	(operation === 'add' || operation === 'edit' || operation === 'more') && (drawerState.operation = operation, drawerState.open = true);
+	(operation === 'edit' || operation === 'more') && (drawerState.record = record);
+	(operation === 'delete' || operation === 'sendTask') && operationDispatch[operation](record);
+}
+
 const handleBatchDelete = () => {
 	Modal.confirm({
 		title: '确认批量删除任务?',
@@ -123,37 +89,15 @@ const handleBatchDelete = () => {
 		},
 	});
 }
-const handleDrawer = {
-	ok: async () => {
-		try {
-			await formRef.value?.validate()
-			if (drawerState.operation === 'add') {
-				await saveTask(getDataFromSchema(TaskForm))
-				message.success('添加成功')
-			} else if (drawerState.operation == 'edit') {
-				await updateTask(getDataFromSchema(TaskForm))
-				message.success('编辑成功')
-			} else if (drawerState.operation === 'more') {
-				drawerState.placement = 'right'
-			}
-			formRef.value?.resetFields()
-			drawerState.open = false
-		} catch (error) {
-			console.log(error);
-		}
-	},
-	cancel: () => {
-		formRef.value?.resetFields()
-		drawerState.open = false
-		drawerState.extra = true
-	}
-}
 const changeStatus = (record: Record<string, any>) => {
 	updateTaskStatus({ taskId: record.taskId, taskStatus: Number(record.taskStatus) })
 }
 const handleFilterClose = () => {
 	filterState.open = false
 	formRef.value?.resetFields()
+}
+const handleDrawerClose = () => {
+	drawerState.open = false
 }
 onBeforeMount(() => {
 	handleSearch()
@@ -218,25 +162,7 @@ onBeforeMount(() => {
 			<template #extra><a-button type="text" :icon="h(CloseOutlined)" @click="handleFilterClose"></a-button></template>
 			<Form ref="formRef" :form-schema="filterForm" />
 		</a-card>
-		<Drawer :placement="drawerState.placement" :open="drawerState.open" :title="drawerState.title"
-			:extra="drawerState.extra" @ok="handleDrawer.ok" @close="handleDrawer.cancel">
-			<Form v-if="drawerState.operation === 'add' || drawerState.operation === 'edit'" ref="formRef"
-				:label-col="{ span: 4 }" :form-schema="TaskForm" />
-			<Form v-else-if="drawerState.operation === 'testSend'" ref="formRef" :label-col="{ span: 7 }"
-				:form-schema="testMessageForm" />
-			<div v-else-if="drawerState.operation === 'showMore'">
-				<Descriptions :data="moreInfo" :config="{ column: 1 }">
-					<template #content="{ item }">
-						<template v-if="item.label === '任务类型'">
-							{{ item.value === 1 ? '实时' : '定时' }}
-						</template>
-						<template v-else-if="item.label === '任务状态'">
-							{{ !!item.value ? '开启' : '关闭' }}
-						</template>
-					</template>
-				</Descriptions>
-			</div>
-		</Drawer>
+		<TaskGroupDrawer v-bind="drawerState" @close="handleDrawerClose"></TaskGroupDrawer>
 	</div>
 </template>
 

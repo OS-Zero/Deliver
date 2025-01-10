@@ -1,9 +1,10 @@
 import { FormItem } from '@/types/form';
 import type { ColumnsType } from 'ant-design-vue/es/table/interface';
-import { getRequiredRule, getRangeRule } from './rules';
 import { SearchParams, PeopleGroupForm } from '@/types/peopleGroup';
 import { SelectProps } from 'ant-design-vue';
 import { analysisExcelTemplateFile } from '@/api/peopleGroup';
+import { getRangeRule, getRequiredRule } from '@/utils/validate';
+import { notUndefined } from '@/utils/utils';
 export const peopleGroupLocale = {
 	peopleGroupId: '人群 Id',
 	peopleGroupDescription: '人群描述',
@@ -100,7 +101,10 @@ export const peopleGroupSchema: Schema<PeopleGroupForm> = {
 };
 export const peopleGroupSchemaDeps = [
 	async (data: Schema<PeopleGroupForm>) => {
-		data.excelTemplateFile.value && (data.peopleGroupList.value = await analysisExcelTemplateFile({ file: data.excelTemplateFile.value }));
+		data.peopleGroupList.value = undefined;
+		if (notUndefined(data.excelTemplateFile.value)) {
+			data.peopleGroupList.value = await analysisExcelTemplateFile({ file: data.excelTemplateFile.value });
+		}
 	},
 ];
 const userTypes: SelectProps['options'] = JSON.parse(localStorage.getItem('startup') || '{}')?.usersTypeParamList.map(

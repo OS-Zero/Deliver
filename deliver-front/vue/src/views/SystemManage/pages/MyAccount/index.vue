@@ -1,22 +1,49 @@
 <script lang="ts" setup>
 import { ref, reactive, onBeforeMount } from 'vue';
-import type { Rule } from 'ant-design-vue/es/form';
-import { getCurrentLoginUserInfo, updatePwd } from '@/api/user';
-import { omitProperty } from '@/utils/utils';
+import { getVerificationCode, updatePwd } from '@/api/user';
+import { getDataFromSchema, omitProperty } from '@/utils/utils';
 import { message } from 'ant-design-vue';
-import { getRules } from '@/config/rules';
-import { useVerify } from '@/hooks/verify';
 import { UserInfo } from '@/types/user';
-
+import { Schema } from '@/types';
+import { getRangeRule, getRequiredRule } from '@/utils/validate';
+interface EditorForm {
+	userPassword: string,
+	confirmPwd: string,
+	verificationCode: string
+}
 const userInfo = reactive<UserInfo>({
 	userEmail: '',
 	userRealName: '',
-	userPassword: ''
+	userRole: ''
 })
-const editorData = reactive({
-	userPassword: '',
-	confirmPwd: '',
-	verificationCode: ''
+const validatePwd = () => {
+	if (editorForm.confirmPwd.value === '') return Promise.reject("请确认密码")
+	return editorForm.confirmPwd.value === editorForm.userPassword.value ? Promise.resolve() : Promise.reject("两次输入密码不相同")
+}
+const editorForm = reactive<Schema<EditorForm>>({
+	userPassword: {
+		type: 'input',
+		fieldName: 'userPassword',
+		placeholder: '请输入用户密码',
+		rules: [getRequiredRule('请输入用户密码'), ...getRangeRule(6, 16, '密码长度范围为6-16位')],
+	},
+	confirmPwd: {
+		type: 'input',
+		fieldName: 'confirmPwd',
+		placeholder: '请确认用户密码',
+		rules: [getRequiredRule('请确认用户密码'), { validator: validatePwd }],
+	},
+	verificationCode: {
+		type: 'verificationCode',
+		fieldName: 'verificationCode',
+		placeholder: '请输入验证码',
+		rules: [getRequiredRule('请输入验证码'), ...getRangeRule(6, 6, '验证码长度为6位')],
+		buttonConfig: {
+			onClick: () => {
+				getVerificationCode({ userEmail: userInfo.userEmail })
+			}
+		}
+	},
 })
 const open = ref<boolean>(false);
 const formRef = ref()
@@ -24,33 +51,18 @@ const showDrawer = () => {
 	open.value = true;
 };
 const onClose = () => {
+	formRef.value.resetFields()
 	open.value = false;
 };
-const onSubmit = () => {
-	formRef.value
-		.validate()
-		.then(async () => {
-			await updatePwd(omitProperty(editorData, "confirmPwd"))
-			message.success("修改密码成功")
-			onClose()
-		})
-		.catch(error => {
-			console.log('error', error);
-		});
+const onSubmit = async () => {
+	await formRef.value.validate()
+	await updatePwd(omitProperty(getDataFromSchema(editorForm), "confirmPwd"))
+	message.success("修改密码成功")
+	onClose()
 };
 
-const validatePwd = () => {
-	return editorData.confirmPwd === editorData.userPassword ? Promise.resolve() : Promise.reject("两次输入密码不相同")
-}
-const rules: Record<string, Rule[]> = {
-	confirmPwd: [{ required: true, message: '请确认密码!', trigger: 'blur' }, { validator: validatePwd, trigger: 'blur' }],
-	...getRules(['userPassword', 'verificationCode'])
-};
-const { state, handleVarify } = useVerify()
-state.verifyDisabled = false
 onBeforeMount(async () => {
-	const res = await getCurrentLoginUserInfo()
-	Object.assign(userInfo, res)
+	Object.assign(userInfo, JSON.parse(localStorage.getItem('user_info') || '{}'))
 })
 </script>
 
@@ -63,22 +75,7 @@ onBeforeMount(async () => {
 			<a-button @click="showDrawer">修改密码</a-button>
 		</div>
 		<a-drawer title="修改密码" :open="open" placement="right" @close="onClose">
-			<a-form ref="formRef" :model="editorData" :rules="rules">
-				<a-form-item name="userPassword">
-					<a-input-password v-model:value.trim="editorData.userPassword" placeholder="请输入密码" />
-				</a-form-item>
-				<a-form-item name="confirmPwd">
-					<a-input-password v-model:value.trim="editorData.confirmPwd" placeholder="请确认密码" />
-				</a-form-item>
-				<a-form-item name="verificationCode">
-					<div class="verify">
-						<a-input v-model:value.trim="editorData.verificationCode" placeholder="请输入验证码" />
-						<a-button class="verify_btn" :disabled="state.verifyDisabled" @click="handleVarify(userInfo.userEmail)">{{
-							state.verifyContent
-						}}</a-button>
-					</div>
-				</a-form-item>
-			</a-form>
+			<Form ref="formRef" :form-schema="editorForm"></Form>
 			<template #extra>
 				<a-button style="margin-right: 8px" @click="onClose">取消</a-button>
 				<a-button type="primary" @click="onSubmit">确认</a-button>

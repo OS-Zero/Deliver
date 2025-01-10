@@ -1,90 +1,87 @@
 <script lang="ts" setup>
-import { ref, reactive, watch } from 'vue';
+import { ref, reactive } from 'vue';
 import { RegisterInfo } from '../../../types/user';
-import type { Rule } from 'ant-design-vue/es/form';
-import { validateEmail } from '@/utils/validate';
-import { register } from '@/api/user';
+import { getRangeRule, getRequiredRule } from '@/utils/validate';
+import { getVerificationCode, register } from '@/api/user';
 import { message } from 'ant-design-vue'
-import { omitProperty } from "@/utils/utils"
-import { getRules } from '@/config/rules';
-import { useVerify } from '@/hooks/verify';
+import { getDataFromSchema, omitProperty } from "@/utils/utils"
+import { Schema } from '@/types';
 
-const emits = defineEmits<{
-	onOk: []
-}>()
-const registerData = reactive<RegisterInfo>({
-	userEmail: '3233891353@qq.com',
-	userPassword: 'xxxxxx',
-	userRealName: 'xxxxxx',
-	confirmPwd: 'xxxxxx',
-	verificationCode: 'xxxxxx'
-})
-const validatePwd = () => {
-	if (registerData.confirmPwd === '') return Promise.reject("请确认密码")
-	return registerData.confirmPwd === registerData.userPassword ? Promise.resolve() : Promise.reject("两次输入密码不相同")
+interface RegisterForm extends RegisterInfo {
+	$register: string
 }
-const rules: Record<string, Rule[]> = {
-	confirmPwd: [{ validator: validatePwd, trigger: 'blur' }],
-	...getRules(['userEmail', 'userPassword', 'userRealName', 'verificationCode'])
-};
 
+const emit = defineEmits(['ok'])
 const formRef = ref()
-
-const handleRegister = () => {
-	formRef.value
-		.validate()
-		.then(async () => {
-			await register(omitProperty(registerData, 'confirmPwd'))
-			message.success('注册成功')
-			emits("onOk")
-		})
-		.catch(error => {
-			console.log('error', error);
-		});
-}
-const { state, handleVarify, onFinished } = useVerify()
-const _validateEmail = async () => {
-	try {
-		await validateEmail(null, registerData.userEmail)
-		!state.loading && (state.verifyDisabled = false)
-	} catch (error) {
-		state.verifyDisabled = true
+const verificationBtnDisabled = ref(true)
+const validateEmail = () => {
+	const regExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+	if (!registerForm.userEmail.value) {
+		verificationBtnDisabled.value = true
+		return Promise.reject('请输入邮箱');
+	} else if (regExp.test(registerForm.userEmail.value)) {
+		verificationBtnDisabled.value = false
+		return Promise.resolve()
 	}
+	verificationBtnDisabled.value = true
+	return Promise.reject('邮箱格式错误')
 }
-onFinished(() => {
-	_validateEmail()
-})
-watch(registerData, _validateEmail, {
-	immediate: true
+
+const validatePwd = () => {
+	if (!registerForm.confirmPwd.value) return Promise.reject("请确认密码")
+	return registerForm.confirmPwd.value === registerForm.userPassword.value ? Promise.resolve() : Promise.reject("两次输入密码不相同")
+}
+const registerForm = reactive<Schema<RegisterForm>>({
+	userEmail: {
+		type: 'input',
+		fieldName: 'userEmail',
+		placeholder: '请输入邮箱',
+		rules: [{ validator: validateEmail, trigger: 'change' }]
+	},
+	userPassword: {
+		type: 'input',
+		fieldName: 'userPassword',
+		placeholder: '请输入用户密码',
+		rules: [getRequiredRule('请输入用户密码'), ...getRangeRule(6, 16, '密码长度范围为6-16位')],
+	},
+	confirmPwd: {
+		type: 'input',
+		fieldName: 'confirmPwd',
+		placeholder: '请确认用户密码',
+		rules: [{ validator: validatePwd }],
+	},
+	verificationCode: {
+		type: 'verificationCode',
+		fieldName: 'verificationCode',
+		placeholder: '请输入验证码',
+		rules: [getRequiredRule('请输入验证码'), ...getRangeRule(6, 6, '验证码长度为6位')],
+		buttonConfig: {
+			disabled: verificationBtnDisabled,
+			onClick: () => {
+				getVerificationCode({ userEmail: registerForm.userEmail.value })
+			}
+		}
+	},
+	$register: {
+		type: 'button',
+		fieldName: '$register',
+		buttonConfig: {
+			type: 'primary',
+			name: '注册',
+			style: { width: '100%' },
+			onClick: async () => {
+				await formRef.value.validate()
+				await register(omitProperty(getDataFromSchema(registerForm), 'confirmPwd'))
+				message.success('注册成功')
+				emit("ok")
+			}
+		}
+	},
 })
 </script>
 
 <template>
-	<a-form ref="formRef" :model="registerData" :rules="rules">
-		<a-form-item name="userEmail">
-			<a-input v-model:value.trim="registerData.userEmail" placeholder="请输入邮箱" />
-		</a-form-item>
-		<a-form-item name="userPassword">
-			<a-input-password v-model:value.trim="registerData.userPassword" placeholder="请输入密码" />
-		</a-form-item>
-		<a-form-item name="confirmPwd">
-			<a-input-password v-model:value.trim="registerData.confirmPwd" placeholder="请确认密码" />
-		</a-form-item>
-		<a-form-item name="userRealName">
-			<a-input v-model:value.trim="registerData.userRealName" placeholder="请输入真实姓名" />
-		</a-form-item>
-		<a-form-item name="verificationCode">
-			<div class="verify">
-				<a-input v-model:value.trim="registerData.verificationCode" placeholder="请输入验证码" />
-				<a-button class="verify_btn" :disabled="state.verifyDisabled" @click="handleVarify(registerData.userEmail)">{{
-					state.verifyContent
-				}}</a-button>
-			</div>
-		</a-form-item>
-		<a-form-item>
-			<a-button class="submit_btn" type="primary" html-type="submit" @click="handleRegister">注册</a-button>
-		</a-form-item>
-	</a-form>
+	<Form ref="formRef" :form-schema="registerForm"></Form>
 </template>
 
 <style lang="scss" scoped>

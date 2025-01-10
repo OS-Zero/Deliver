@@ -1,6 +1,6 @@
 import { FormItem } from '@/types/form';
 import type { ColumnsType } from 'ant-design-vue/es/table/interface';
-import { getRequiredRule, getRangeRule } from './rules';
+import { getRangeRule, getRequiredRule } from '@/utils/validate';
 import { SearchParams, TaskForm } from '@/types/task';
 export const taskLocale = {
 	taskId: '任务 Id',

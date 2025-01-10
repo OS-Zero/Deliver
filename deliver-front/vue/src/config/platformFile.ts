@@ -1,6 +1,6 @@
 import { FormItem } from '@/types/form';
 import type { ColumnsType } from 'ant-design-vue/es/table/interface';
-import { getRequiredRule, getRangeRule } from './rules';
+import { getRangeRule, getRequiredRule } from '@/utils/validate';
 import { SearchParams, UploadPlatformFile } from '@/types/platformFile';
 import { getChannelType, getParam, getPlatformFileType } from '@/api/system';
 import { getAppByChannel } from '@/api/channelApp';
@@ -110,6 +110,7 @@ export const platformFileSchema: Schema<UploadPlatformFile> = {
 };
 export const platformFileSchemaDeps = [
 	async (data: Schema<UploadPlatformFile>) => {
+		data.channelType.value = undefined;
 		try {
 			data.channelType.options = (await getChannelType({ usersType: -1 })).map((item) => ({
 				value: item.channelType,
@@ -121,6 +122,7 @@ export const platformFileSchemaDeps = [
 	},
 	async (data: Schema<UploadPlatformFile>) => {
 		try {
+			data.channelProviderType.value = undefined;
 			if (notUndefined(data.channelType.value)) {
 				const { channelProviderTypeList } = await getParam({ channelType: data.channelType.value });
 				data.channelProviderType.options = channelProviderTypeList.map((item) => ({
@@ -136,6 +138,7 @@ export const platformFileSchemaDeps = [
 	},
 	async (data: Schema<UploadPlatformFile>) => {
 		try {
+			data.platformFileType.value = undefined;
 			if (notUndefined(data.channelType.value)) {
 				data.platformFileType.options = (await getPlatformFileType({ channelType: data.channelType.value })).map((item) => ({
 					value: item.platformFileType,
@@ -150,6 +153,7 @@ export const platformFileSchemaDeps = [
 	},
 	async (data: Schema<UploadPlatformFile>) => {
 		try {
+			data.appId.value = undefined;
 			if (notUndefined(data.channelType.value) && notUndefined(data.channelProviderType.value)) {
 				const appOptions = await getAppByChannel({
 					channelType: data.channelType.value,

@@ -4,6 +4,7 @@ import { FormItem } from '@/types/form';
 import { FormInstance } from 'ant-design-vue/es/form';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons-vue';
 import JsonEditor from "json-editor-vue3"
+import { useVerify } from '@/hooks/verify';
 
 withDefaults(defineProps<{
 	formSchema: Record<string, FormItem<string>>;
@@ -17,10 +18,6 @@ withDefaults(defineProps<{
 const formRef = ref<FormInstance>()
 const validate = async () => { await formRef.value?.validate() }
 const resetFields = () => { formRef.value?.resetFields() }
-defineExpose({
-	validate,
-	resetFields
-})
 const listAdd = (list: string[]) => {
 	list.push('')
 }
@@ -28,14 +25,29 @@ const listRemove = (list: string[], id: string) => {
 	const index = list.indexOf(id)
 	index !== -1 && list.splice(index, 1)
 }
+const { state, handleVarify } = useVerify()
+defineExpose({
+	validate,
+	resetFields
+})
 </script>
 
 <template>
 	<a-form ref="formRef" :label-col="labelCol" :model="formSchema" :layout="layout">
 		<template v-for="field in formSchema">
+			<a-form-item v-if="field.type === 'none'" :name="name(field)" v-show="false">
+				<a-input v-model:value="formSchema[field.fieldName].value" />
+			</a-form-item>
+			<a-form-item v-else-if="field.type === 'button'">
+				<a-button v-bind="field.buttonConfig" @click="field.buttonConfig?.onClick">{{ field.buttonConfig?.name
+					}}</a-button>
+			</a-form-item>
 			<a-form-item v-if="field.type !== 'none'" :label="field.label" :name="name(field)" :rules="field.rules">
 				<template v-if="field.type === 'input'">
-					<a-input v-model:value="formSchema[field.fieldName].value" />
+					<a-input v-model:value="formSchema[field.fieldName!].value" :placeholder="field.placeholder" />
+				</template>
+				<template v-if="field.type === 'inputPassword'">
+					<a-input-password v-model:value.trim="formSchema[field.fieldName!].value" :placeholder="field.placeholder" />
 				</template>
 				<template v-else-if="field.type === 'select'">
 					<a-select v-model:value="formSchema[field.fieldName].value" :options="field.options"
@@ -70,9 +82,16 @@ const listRemove = (list: string[], id: string) => {
 				<template v-else-if="field.type === 'upload'">
 					<Upload v-model="formSchema[field.fieldName].value" :config="field.uploadConifg"></Upload>
 				</template>
-			</a-form-item>
-			<a-form-item v-else :name="name(field)" v-show="false">
-				<a-input v-model:value="formSchema[field.fieldName].value" />
+				<template v-else-if="field.type === 'verificationCode'">
+					<div class="verify">
+						<a-input v-model:value.trim="formSchema[field.fieldName].value"
+							:placeholder="(field.placeholder || '请输入验证码')" />
+						<a-button class="verify_btn" :disabled="state.loading || field.buttonConfig?.disabled"
+							@click="handleVarify(field.buttonConfig?.onClick)">
+							{{ state.verifyContent }}
+						</a-button>
+					</div>
+				</template>
 			</a-form-item>
 		</template>
 	</a-form>
@@ -89,5 +108,17 @@ const listRemove = (list: string[], id: string) => {
 		margin: 0;
 		margin-right: var(--spacing-xs);
 	}
+}
+
+.verify {
+	display: flex;
+
+	.verify_btn {
+		margin-left: var(--spacing-sm)
+	}
+}
+
+.submit_btn {
+	width: 100%
 }
 </style>

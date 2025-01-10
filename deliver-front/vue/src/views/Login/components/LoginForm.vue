@@ -1,48 +1,66 @@
 <script lang="ts" setup>
 import { ref, reactive } from 'vue';
 import { UserInfo } from '../../../types/user';
-import type { Rule } from 'ant-design-vue/es/form';
-import { login, } from "@/api/user";
+import { getCurrentLoginUserInfo, login, } from "@/api/user";
 import { useRouter } from 'vue-router';
 import { message } from 'ant-design-vue'
-import { getRules } from '@/config/rules';
 import { startup } from '@/api/startup';
+import { Schema } from '@/types';
+import { getDataFromSchema } from '@/utils/utils';
+import { getRangeRule, getRequiredRule } from '@/utils/validate';
 const router = useRouter()
-const loginData = reactive<UserInfo>({
-	userEmail: '',
-	userPassword: ''
-})
-const rules: Record<string, Rule[]> = getRules(['userEmail', 'userPassword'])
 const formRef = ref()
-const handleLogin = function () {
-	formRef.value
-		.validate()
-		.then(async () => {
-			const res = await login(loginData)
-			localStorage.setItem('access_token', res)
-			message.success('登录成功')
-			router.push('/')
-			const _res = await startup()
-			localStorage.setItem('startup', JSON.stringify(_res))
-		})
-		.catch(error => {
-			console.log('error', error);
-		});
+interface LoginForm extends UserInfo {
+	$login: string
 }
+const validateEmail = () => {
+	const regExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+	if (!loginForm.userEmail.value) {
+		return Promise.reject('请输入邮箱');
+	} else if (regExp.test(loginForm.userEmail.value)) {
+		return Promise.resolve()
+	}
+	return Promise.reject('邮箱格式错误')
+}
+const loginForm = reactive<Schema<LoginForm>>({
+	userEmail: {
+		type: 'input',
+		fieldName: 'userEmail',
+		placeholder: '请输入邮箱',
+		rules: [{ validator: validateEmail, trigger: 'blur' }]
+	},
+	userPassword: {
+		type: 'input',
+		fieldName: 'userPassword',
+		placeholder: '请输入用户密码',
+		rules: [getRequiredRule('请输入用户密码'), ...getRangeRule(6, 16, '密码长度范围为6-16位')],
+	},
+	$login: {
+		type: 'button',
+		fieldName: '$login',
+		buttonConfig: {
+			type: 'primary',
+			name: '登录',
+			style: { width: '100%' },
+			onClick: async () => {
+				await formRef.value.validate()
+				let res: any = await login(getDataFromSchema(loginForm))
+				localStorage.setItem('access_token', res)
+				message.success('登录成功')
+				router.push('/')
+				res = await startup()
+				localStorage.setItem('startup', JSON.stringify(res))
+				res = await getCurrentLoginUserInfo()
+				localStorage.setItem('user_info', JSON.stringify(res))
+			}
+		}
+	},
+})
+
 </script>
 
 <template>
-	<a-form ref="formRef" :model="loginData" :rules="rules">
-		<a-form-item name="userEmail">
-			<a-input v-model:value.trim="loginData.userEmail" placeholder="请输入邮箱" />
-		</a-form-item>
-		<a-form-item name="userPassword">
-			<a-input-password v-model:value.trim="loginData.userPassword" placeholder="请输入密码" />
-		</a-form-item>
-		<a-form-item>
-			<a-button class="submit_btn" type="primary" html-type="submit" @click="handleLogin">登录</a-button>
-		</a-form-item>
-	</a-form>
+	<Form ref="formRef" :form-schema="loginForm"></Form>
 </template>
 
 <style lang="scss" scoped>

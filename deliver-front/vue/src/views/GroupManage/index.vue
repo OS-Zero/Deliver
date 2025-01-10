@@ -1,107 +1,75 @@
 <script lang="ts" setup>
-import { ref, reactive, watch } from 'vue';
+import { reactive, watch, h } from 'vue';
 import { useRouter } from 'vue-router';
 import Card from './components/Card.vue';
-import { addGroup, getGroupData, updateGroup, deleteGroup, toTopGroup } from '@/api/group';
-import { GroupCard, GroupCardList } from '@/types/group';
-import { getRules } from '@/config/rules';
-import { message } from 'ant-design-vue';
-import Drawer from "@/components/Drawer/index.vue"
+import { getGroupData, deleteGroup, toTopGroup } from '@/api/group';
+import { GroupCardList } from '@/types/group';
+import { message, Modal } from 'ant-design-vue';
+import GroupForm from './components/GroupForm.vue';
+import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
+import { debounce } from 'lodash';
+
+type Operation = 'add' | 'edit' | 'delete' | 'top'
 const router = useRouter()
 const state = reactive({
 	mainPage: true,
-	open: false,
-	operation: 'add',
 	search: '',
 })
-const onOpen = () => {
-	state.open = true
+const drawerState = reactive<{
+	open: boolean
+	operation: 'add' | 'edit'
+	record: Record<string, any>
+}>({
+	open: false,
+	operation: 'add',
+	record: {}
+})
+const handleSearch = async (groupName: string = state.search) => {
+	const res = await getGroupData({ groupName: groupName })
+	Object.assign(groupList, res)
 }
-const onClose = () => {
-	formRef.value.resetFields()
-	state.open = false
+const debounceSearch = debounce(handleSearch, 200)
+const handleClose = () => {
+	drawerState.open = false
+	debounceSearch()
 }
 const groupList = reactive<GroupCardList>({
 	topUpGroupList: [],
 	defaultGroupList: []
 })
-const groupFormData = reactive<GroupCard>({
-	groupId: -1,
-	groupName: '',
-	groupDescription: '',
-})
-const flashData = async (groupName: string = state.search) => {
-	const res = await getGroupData({ groupName: groupName })
-	Object.assign(groupList, res)
-}
-const onOk = (cb: () => void) => {
-	formRef.value
-		.validate()
-		.then(async () => {
-			cb()
-			onClose()
-			flashData()
-		})
-		.catch(error => {
-			console.log('error', error);
+
+const operationDispatch = {
+	delete: async (record: Record<string, any> = {}) => {
+		Modal.confirm({
+			title: '确认删除该分组?',
+			icon: h(ExclamationCircleOutlined),
+			okText: '确认',
+			cancelText: '取消',
+			async onOk() {
+				await deleteGroup({ ids: record.groupId })
+				message.success('删除成功')
+				debounceSearch()
+			},
 		});
-}
-const formMeta: Record<string, {
-	title: string,
-	success: () => void
-}> = {
-	add: {
-		title: '添加分组',
-		success: () => {
-			onOk(async () => {
-				await addGroup(groupFormData)
-				message.success('添加成功')
-			})
-		}
 	},
-	edit: {
-		title: '编辑分组',
-		success: () => {
-			onOk(async () => {
-				await updateGroup(groupFormData)
-				message.success('编辑成功')
-			})
-		}
-	},
-	delete: {
-		title: '删除分组',
-		success: async () => {
-			await deleteGroup({ ids: [groupFormData.groupId] })
-			message.success('删除成功')
-			flashData()
-		}
-	},
-	toTop: {
-		title: '置顶分组',
-		success: async () => {
-			await toTopGroup({ groupId: groupFormData.groupId, topUp: Number(!groupFormData.topUp) })
-			flashData()
-		}
+	top: async (record: Record<string, any> = {}) => {
+		await toTopGroup({ groupId: record.groupId, topUp: Number(!record.topUp) })
+		debounceSearch()
 	}
 }
-const groupRules = getRules(['groupName', 'groupDescription'])
-const formRef = ref()
+const handleActions = (operation: Operation, record: Record<string, any> = {}) => {
+	(operation === 'add' || operation === 'edit') && (drawerState.operation = operation, drawerState.open = true);
+	(operation === 'edit') && (drawerState.record = record);
+	(operation === 'delete' || operation === 'top') && operationDispatch[operation](record);
+}
+
 watch(() => router.currentRoute.value.path, async (to: string) => {
 	if (!!!localStorage.getItem('group_id') && to === '/groupManage') {
 		state.mainPage = true
-		return flashData()
+		return debounceSearch()
 	}
 	state.mainPage = false
 }, { immediate: true })
-
-const changeOperation = (op: 'add' | 'edit' | 'delete' | 'top', data?: GroupCard) => {
-	state.operation = op
-	data && Object.assign(groupFormData, data);
-	(op === 'add' || op === 'edit') && onOpen()
-	op === 'delete' && formMeta.delete.success()
-	op === 'top' && formMeta.toTop.success()
-}
-
 </script>
 
 <template>
@@ -110,34 +78,28 @@ const changeOperation = (op: 'add' | 'edit' | 'delete' | 'top', data?: GroupCard
 			<div class="card-top">
 				<h3>置顶分组</h3>
 				<div class="top_cards">
-					<Card v-for="item in groupList.topUpGroupList" :data="item" @on-top="changeOperation('top', item)"
-						@on-edit="changeOperation('edit', item)" @on-delete="changeOperation('delete', item)"></Card>
+					<Card is-empty v-if="groupList.topUpGroupList.length === 0">
+						当前置顶分组为空，你可以选择置顶分组方便后续查找分组
+					</Card>
+					<Card v-for="item in groupList.topUpGroupList" :data="item" @on-top="handleActions('top', item)"
+						@on-edit="handleActions('edit', item)" @on-delete="handleActions('delete', item)" :key="item.groupId">
+					</Card>
 				</div>
 			</div>
 			<div class="card-bottom">
 				<div class="bottom-section">
 					<h3>全部分组</h3>
-					<SearchInput class="search_input" v-model="state.search" placeholder="请输入分组名" @search="flashData">
+					<SearchInput class="search_input" v-model="state.search" placeholder="请输入分组名" @search="debounceSearch">
 					</SearchInput>
 				</div>
 				<div class="bottom_cards">
-					<Card is-empty @click="changeOperation('add')"></Card>
-					<Card showAction v-for="item in groupList.defaultGroupList" :data="item"
-						@on-top="changeOperation('top', item)" @on-edit="changeOperation('edit', item)"
-						@on-delete="changeOperation('delete', item)"></Card>
+					<Card is-empty @click="handleActions('add')"></Card>
+					<Card showAction v-for="item in groupList.defaultGroupList" :data="item" @on-top="handleActions('top', item)"
+						@on-edit="handleActions('edit', item)" @on-delete="handleActions('delete', item)" :key="item.groupId">
+					</Card>
 				</div>
 			</div>
-			<Drawer :open="state.open" :title="formMeta[state.operation].title" @ok="formMeta[state.operation].success"
-				@close="onClose">
-				<a-form ref="formRef" :model="groupFormData" name="basic" :rules="groupRules" :label-col="{ span: 4 }">
-					<a-form-item label="分组名" name="groupName">
-						<a-input v-model:value="groupFormData.groupName" />
-					</a-form-item>
-					<a-form-item label="分组描述" name="groupDescription">
-						<a-textarea v-model:value="groupFormData.groupDescription" />
-					</a-form-item>
-				</a-form>
-			</Drawer>
+			<GroupForm v-bind="drawerState" @close="handleClose"></GroupForm>
 		</template>
 		<template v-else>
 			<RouterView />

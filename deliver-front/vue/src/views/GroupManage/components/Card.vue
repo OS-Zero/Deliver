@@ -1,65 +1,39 @@
 <script lang="ts" setup>
 import { useRouter } from 'vue-router';
 import { EllipsisOutlined, PlusOutlined, FieldTimeOutlined, SoundFilled } from '@ant-design/icons-vue';
-import emitter from '@/utils/mitt'
 import { GroupCard } from '@/types/group';
-import { Modal } from 'ant-design-vue';
-import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
-import { createVNode } from 'vue'
 type Op = 'onTop' | 'onEdit' | 'onDelete'
 
 const props = defineProps<{
 	data?: GroupCard
 	isEmpty?: boolean
-	showAction?: boolean
 }>()
 const emit = defineEmits(['onTop', 'onEdit', 'onDelete'])
 const router = useRouter()
-const handleMore = () => {
+const jumpLink = () => {
 	router.push('groupManage/template')
 	localStorage.setItem("group_id", props.data?.groupId + '')
-	emitter.emit("card", props.data?.groupId + '')
 }
 const handleOperation = (op: Op) => {
-	(op === 'onTop' || op === 'onEdit') && emit(op)
-	op === 'onDelete' && showConfirm()
+	emit(op, props.data)
 }
-const showConfirm = () => {
-	Modal.confirm({
-		title: '确认删除该分组?',
-		icon: createVNode(ExclamationCircleOutlined),
-		okText: '确认',
-		cancelText: '取消',
-		onOk() {
-			emit('onDelete')
-		},
-	});
-}
-const optionItems = [
-	{
-		name: !!props.data?.topUp ? '取消置顶' : '置顶',
-		op: () => handleOperation('onTop')
-	},
-	{
-		name: '编辑',
-		op: () => handleOperation('onEdit')
-	},
-	{
-		name: '删除',
-		op: () => handleOperation('onDelete')
-	},
-]
 </script>
 
 <template>
-	<div class="card" v-if="!isEmpty" @click="handleMore">
+	<div class="card" v-if="!isEmpty" @dblclick="jumpLink">
 		<div class="card_more">
 			<a-dropdown placement="bottom">
-				<EllipsisOutlined @click.stop />
+				<EllipsisOutlined />
 				<template #overlay>
 					<a-menu>
-						<a-menu-item v-for="item in optionItems" :key="item.name">
-							<div @click.stop="item.op">{{ item.name }}</div>
+						<a-menu-item>
+							<div @click="handleOperation('onTop')">{{ props.data?.topUp ? '取消置顶' : '置顶' }}</div>
+						</a-menu-item>
+						<a-menu-item>
+							<div @click="handleOperation('onEdit')">编辑</div>
+						</a-menu-item>
+						<a-menu-item>
+							<div @click="handleOperation('onDelete')">删除</div>
 						</a-menu-item>
 					</a-menu>
 				</template>
@@ -76,8 +50,10 @@ const optionItems = [
 		</div>
 	</div>
 	<div class="card card--empty" v-else>
-		<PlusOutlined class="empty_icon" />
-		<div class="empty_desc">添加分组</div>
+		<slot>
+			<PlusOutlined class="empty_icon" />
+			<div class="empty_desc">添加分组</div>
+		</slot>
 	</div>
 </template>
 
@@ -128,14 +104,14 @@ const optionItems = [
 	align-items: center;
 	background-image: none;
 	font-size: small;
+	color: var(--gray-medium-dark);
 
 	&:hover {
 		cursor: pointer;
-		background-color: var(--blue-medium);
 
 		.empty_icon,
 		.empty_desc {
-			color: var(--white-color);
+			color: var(--blue-medium);
 			transform: scale(1.2);
 		}
 

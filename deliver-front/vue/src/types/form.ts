@@ -4,6 +4,7 @@ import { Rule } from 'ant-design-vue/es/form';
 type ItemType =
 	| 'none'
 	| 'input'
+	| 'inputPassword'
 	| 'textarea'
 	| 'inputNumber'
 	| 'timePicker'
@@ -14,7 +15,9 @@ type ItemType =
 	| 'jsonEditor'
 	| 'list'
 	| 'datePicker'
-	| 'upload';
+	| 'upload'
+	| 'button'
+	| 'verificationCode';
 
 export interface FormItem<T> {
 	value?: any;
@@ -28,5 +31,6 @@ export interface FormItem<T> {
 	disabled?: boolean;
 	editorConfig?: Record<string, any>;
 	uploadConifg?: UploadProps;
+	buttonConfig?: Record<string, any>;
 	max?: number;
 }

@@ -37,7 +37,7 @@ const forgotOk = () => {
 							<LoginForm />
 						</a-tab-pane>
 						<a-tab-pane key="register" tab="用户注册">
-							<RegisterForm @onOk="registerOk" />
+							<RegisterForm @ok="registerOk" />
 						</a-tab-pane>
 					</a-tabs>
 					<div class="login--auto">
@@ -54,7 +54,7 @@ const forgotOk = () => {
 					<h1 class="forgot_title">
 						重置密码
 					</h1>
-					<ForgotForm @onOk="forgotOk"></ForgotForm>
+					<ForgotForm @ok="forgotOk"></ForgotForm>
 				</div>
 			</template>
 		</div>

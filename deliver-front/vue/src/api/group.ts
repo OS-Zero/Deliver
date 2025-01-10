@@ -8,7 +8,7 @@ export function getGroupData(data: Pick<GroupCard, 'groupName'>): Promise<GroupC
 		data,
 	});
 }
-export function addGroup(data: Pick<GroupCard, 'groupName' | 'groupDescription'>): Promise<never> {
+export function saveGroup(data: Pick<GroupCard, 'groupName' | 'groupDescription'>): Promise<never> {
 	return request({
 		url: '/group/save',
 		method: 'post',

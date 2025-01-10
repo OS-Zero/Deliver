@@ -1,9 +1,9 @@
 import { FormItem } from '@/types/form';
 import type { ColumnsType } from 'ant-design-vue/es/table/interface';
-import { getRequiredRule, getRangeRule } from './rules';
 import { ChannelAppForm, SearchParams } from '@/types/channelApp';
 import { getAppConfig, getChannelType, getParam } from '@/api/system';
 import { notUndefined } from '@/utils/utils';
+import { getRangeRule, getRequiredRule } from '@/utils/validate';
 export const channelAppLocale = {
 	appId: '应用 Id',
 	appName: '应用名',
@@ -99,6 +99,7 @@ export const channelAppSchema: Schema<ChannelAppForm> = {
 };
 export const channelAppSchemaDeps = [
 	async (data: Schema<ChannelAppForm>) => {
+		data.channelType.value = undefined;
 		try {
 			data.channelType.options = (await getChannelType({ usersType: -1 })).map((item) => ({
 				value: item.channelType,
@@ -110,6 +111,7 @@ export const channelAppSchemaDeps = [
 	},
 	async (data: Schema<ChannelAppForm>) => {
 		try {
+			data.channelProviderType.value = undefined;
 			if (notUndefined(data.channelType.value)) {
 				const { channelProviderTypeList } = await getParam({ channelType: data.channelType.value });
 				data.channelProviderType.options = channelProviderTypeList.map((item) => ({
@@ -125,6 +127,7 @@ export const channelAppSchemaDeps = [
 	},
 	async (data: Schema<ChannelAppForm>) => {
 		try {
+			data.appConfig.value = undefined;
 			if (notUndefined(data.channelType.value) && notUndefined(data.channelProviderType.value)) {
 				const appConfig = await getAppConfig({
 					channelType: data.channelType.value,
