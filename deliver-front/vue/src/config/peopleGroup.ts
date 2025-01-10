@@ -115,11 +115,6 @@ const userTypes: SelectProps['options'] = JSON.parse(localStorage.getItem('start
 );
 
 export const filterSchema: Record<string, FormItem<keyof SearchParams>> = {
-	peopleGroupName: {
-		type: 'input',
-		fieldName: 'peopleGroupName',
-		label: '人群名',
-	},
 	usersType: {
 		type: 'select',
 		fieldName: 'usersType',
