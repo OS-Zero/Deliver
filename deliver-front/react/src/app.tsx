@@ -1,8 +1,9 @@
 import { useRoutes } from 'react-router-dom';
 import routes from './router';
+import { GlobalProvider } from '@/context/GlobalContext.tsx';
 
 const App = () => {
-  return useRoutes(routes);
-}
+  return <GlobalProvider>{useRoutes(routes)}</GlobalProvider>;
+};
 
 export default App;

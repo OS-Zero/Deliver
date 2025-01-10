@@ -56,7 +56,7 @@ const routes = [
             children: [
               {
                 index: true,
-                element: <Navigate to="template" replace />
+                element: <Navigate to="/groupManage" replace />
               },
               {
                 path: 'template',

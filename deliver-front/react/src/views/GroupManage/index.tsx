@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Drawer, Form, Input, Button, message } from 'antd';
-import { Outlet, useLocation } from 'react-router-dom';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Drawer, Form, Input, Button, message, FormInstance } from 'antd';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Card from './components/Card';
 import { addGroup, getGroupData, updateGroup, deleteGroup, toTopGroup } from '@/api/group';
 import { GroupCard, GroupCardList } from './type';
@@ -8,127 +8,115 @@ import styles from './index.module.scss';
 import { groupDescriptionRule, groupNameRule } from './constant';
 import { SearchOutlined } from '@ant-design/icons';
 
+// 操作类型
+type Operation = 'add' | 'edit' | 'delete' | 'toTop' | 'cancelTop';
+
 const GroupManage: React.FC = () => {
   const location = useLocation();
-  const [form] = Form.useForm();
-
+  const navigate = useNavigate();
+  const cardRef = useRef<FormInstance>(null);
   const [state, setState] = useState({
     mainPage: true,
     open: false,
-    operation: 'add' as 'add' | 'edit' | 'delete' | 'toTop',
+    operation: 'add' as Operation,
     search: ''
   });
-
   const [groupList, setGroupList] = useState<GroupCardList>({
     topUpGroupList: [],
     defaultGroupList: []
   });
+  const [groupId, setGroupId] = useState<number>();
 
-  const [groupFormData, setGroupFormData] = useState<GroupCard>({
-    groupId: 0,
-    groupName: '',
-    groupDescription: ''
-  });
-
-  const fetchCardData = async (groupName: string = '') => {
-    const res = await getGroupData({ groupName });
-    setGroupList(res);
-  };
-
-  const handleSuccess = async (operation: 'add' | 'edit' | 'delete' | 'toTop') => {
+  // 获取分组数据
+  const fetchCardData = useCallback(async (groupName = '') => {
     try {
-      await form.validateFields();
-      const operations = {
-        add: async () => {
-          const res = await addGroup(groupFormData);
-          if (res) message.success('新增成功');
-        },
-        edit: async () => {
-          const res = await updateGroup(groupFormData);
-          if (res) message.success('编辑成功');
-        },
-        delete: async () => {
-          const res = await deleteGroup(groupFormData.groupId);
-          if (res) message.success('删除成功');
-        },
-        toTop: async () => {
-          const res = await toTopGroup({ ids: [groupFormData.groupId] });
-          if (res) message.success('置顶成功');
-        }
-      };
-      await operations[operation]();
-      onClose();
-      fetchCardData();
+      const res = await getGroupData({ groupName });
+      setGroupList(res);
     } catch (error) {
-      console.error(error);
+      console.error('获取分组数据失败', error);
+      message.error('获取分组数据失败');
     }
-  };
-
-  const onOpen = () => setState((prev) => ({ ...prev, open: true }));
-  const onClose = () => {
-    setState((prev) => ({ ...prev, open: false }));
-    // 重置表单数据为初始状态
-    setGroupFormData({
-      groupId: 0,
-      groupName: '',
-      groupDescription: ''
-    });
-    // 重置表单验证状态
-    form.resetFields();
-  };
-
-  useEffect(() => {
-    const checkMainPage = async () => {
-      if (!localStorage.getItem('group_id') && location.pathname === '/groupManage') {
-        setState((prev) => ({ ...prev, mainPage: true }));
-        await fetchCardData();
-      } else {
-        setState((prev) => ({ ...prev, mainPage: false }));
-      }
-    };
-
-    checkMainPage();
-  }, [location.pathname]);
-
-  useEffect(() => {
-    fetchCardData();
   }, []);
 
-  const changeOperation = async (op: 'add' | 'edit' | 'delete' | 'toTop', data?: GroupCard) => {
-    setState((prev) => ({ ...prev, operation: op }));
-    console.log(data);
+  // 操作成功处理
+  const handleOperation = useCallback(
+    async (operation: Operation, data?: GroupCard) => {
+      try {
+        if (operation === 'add' || operation === 'edit') {
+          await cardRef?.current?.validateFields();
+        }
+        const cardRefValue = cardRef.current?.getFieldsValue();
+        const operationMap = {
+          add: () => addGroup(cardRefValue),
+          edit: () => updateGroup({ groupId, ...cardRefValue }),
+          delete: () => deleteGroup({ ids: [Number(data?.groupId)] }),
+          toTop: () => toTopGroup({ groupId: Number(data?.groupId), topUp: 1 }),
+          cancelTop: () => toTopGroup({ groupId: Number(data?.groupId), topUp: 0 })
+        };
+        const successMessages = {
+          add: '新增成功',
+          edit: '编辑成功',
+          delete: '删除成功',
+          toTop: '置顶成功',
+          cancelTop: '取消置顶成功'
+        };
+        const res = await operationMap[operation]();
+        if (res) {
+          message.success(successMessages[operation]);
+          if (operation === 'add' || operation === 'edit') {
+            setState((prev) => ({ ...prev, open: false }));
+            cardRef.current?.resetFields();
+          }
+          fetchCardData();
+        }
+      } catch (error) {
+        console.error('操作失败', error);
+        message.error('操作失败');
+      }
+    },
+    [cardRef, groupId, fetchCardData]
+  );
 
-    // 对于编辑操作，更新表单数据
-    if (op === 'edit' && data) {
-      setGroupFormData(data);
-      // 重置表单并设置初始值
-      form.resetFields();
-      form.setFieldsValue(data);
-    }
+  // 渲染分组卡片
+  const renderGroupCards = (groupList: GroupCard[], isTopGroup = false) => (
+    <div className={styles[isTopGroup ? 'top-cards' : 'bottom-cards']}>
+      {groupList.map((item) => (
+        <Card
+          key={item.groupId}
+          data={item}
+          isTop={isTopGroup}
+          onTop={() => handleOperation(isTopGroup ? 'cancelTop' : 'toTop', item)}
+          onEdit={() => {
+            setState((prev) => ({ ...prev, operation: 'edit', open: true }));
+            setGroupId(item.groupId);
+            cardRef.current?.setFieldsValue(item);
+          }}
+          onDelete={() => handleOperation('delete', item)}
+        />
+      ))}
+    </div>
+  );
 
-    // 对于新增操作，重置表单
-    if (op === 'add') {
-      setGroupFormData({
-        groupId: 0,
-        groupName: '',
-        groupDescription: ''
-      });
-      form.resetFields();
-    }
+  // 检查主页状态
+  useEffect(() => {
+    const checkMainPage = async () => {
+      const groupId = localStorage.getItem('group_id');
+      if (groupId) {
+        setState((prev) => ({ ...prev, mainPage: true }));
+        navigate('/groupManage/template');
+      } else {
+        setState((prev) => ({ ...prev, mainPage: false }));
+        await fetchCardData();
+      }
+    };
+    checkMainPage();
+  }, [location.pathname, navigate, fetchCardData]);
 
-    if (op === 'add' || op === 'edit') onOpen();
-    else handleSuccess(op);
-  };
-
-  return state.mainPage ? (
+  return !state.mainPage ? (
     <div>
       <div className={styles['card-top']}>
         <h3>置顶分组</h3>
-        <div className={styles['top-cards']}>
-          {groupList.topUpGroupList.map((item) => (
-            <Card key={item.groupId} data={item} isTop={true} />
-          ))}
-        </div>
+        {renderGroupCards(groupList.topUpGroupList, true)}
       </div>
       <div className={styles['card-bottom']}>
         <div className={styles['bottom-section']}>
@@ -140,23 +128,18 @@ const GroupManage: React.FC = () => {
               placeholder="请输入分组名"
               style={{ borderRadius: '50px' }}
               prefix={<SearchOutlined />}
+              onChange={(e) => setState({ ...state, search: e.target.value })}
               onBlur={() => fetchCardData(state.search)}
             />
           </div>
         </div>
         <div className={styles['bottom-cards']}>
-          <Card isEmpty onClick={() => changeOperation('add')} />
-          {groupList.defaultGroupList.map((item) => (
-            <Card
-              key={item.groupId}
-              data={item}
-              isTop={false}
-              showAction
-              onTop={() => changeOperation('toTop', item)}
-              onEdit={() => changeOperation('edit', item)}
-              onDelete={() => changeOperation('delete', item)}
-            />
-          ))}
+          <Card
+            isEmpty
+            setOpen={() => setState((prev) => ({ ...prev, operation: 'add', open: true }))}
+            onTop={() => setState((prev) => ({ ...prev, operation: 'add', open: true }))}
+          />
+          {renderGroupCards(groupList.defaultGroupList)}
         </div>
       </div>
       <Drawer
@@ -164,29 +147,30 @@ const GroupManage: React.FC = () => {
         title={state.operation === 'add' ? '新增分组' : '编辑分组'}
         placement="right"
         open={state.open}
-        onClose={onClose}
+        onClose={() => {
+          setState((prev) => ({ ...prev, open: false }));
+          cardRef.current?.resetFields();
+        }}
         extra={
           <>
-            <Button style={{ marginRight: 8 }} onClick={onClose}>
+            <Button
+              onClick={() => {
+                setState((prev) => ({ ...prev, open: false }));
+                cardRef.current?.resetFields();
+              }}
+              style={{ marginRight: '8px' }}
+            >
               取消
             </Button>
-            <Button type="primary" onClick={() => handleSuccess(state.operation)}>
+            <Button type="primary" onClick={() => handleOperation(state.operation)}>
               确定
             </Button>
           </>
         }
       >
-        <Form
-          form={form}
-          initialValues={groupFormData}
-          onValuesChange={(changedValues) =>
-            setGroupFormData((prev) => ({ ...prev, ...changedValues }))
-          }
-          name="basic"
-          labelCol={{ span: 5 }}
-        >
+        <Form ref={cardRef} layout="vertical" name="basic">
           <Form.Item label="分组名" name="groupName" required rules={[groupNameRule]}>
-            <Input placeholder="请输入分组名" maxLength={10} />
+            <Input placeholder="请输入分组名" maxLength={10} showCount />
           </Form.Item>
           <Form.Item
             label="分组描述"
@@ -194,7 +178,7 @@ const GroupManage: React.FC = () => {
             required
             rules={[groupDescriptionRule]}
           >
-            <Input.TextArea placeholder="请输入分组描述" maxLength={50} />
+            <Input.TextArea placeholder="请输入分组描述" maxLength={50} showCount />
           </Form.Item>
         </Form>
       </Drawer>

@@ -33,7 +33,7 @@ export function deleteGroup(data: { ids: number[] }): Promise<never> {
   });
 }
 
-export function toTopGroup(data: Pick<GroupCard, 'groupId'>): Promise<never> {
+export function toTopGroup(data: { groupId: number; topUp: number }): Promise<never> {
   return request({
     url: '/group/topUp',
     method: 'post',

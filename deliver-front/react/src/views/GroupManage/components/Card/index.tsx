@@ -1,93 +1,97 @@
 import React from 'react';
-import { Card, Dropdown, Modal } from 'antd';
-import {
-  EllipsisOutlined,
-  PlusOutlined,
-  FieldTimeOutlined,
-  ExclamationCircleOutlined
-} from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import { GroupCard } from '@/views/GroupManage/type';
+import { EllipsisOutlined, PlusOutlined, FieldTimeOutlined, SoundFilled } from '@ant-design/icons';
+import { Dropdown, MenuProps } from 'antd';
 import styles from './index.module.scss';
 
 interface CardProps {
-  data?: GroupCard;
+  data?: any;
   isEmpty?: boolean;
   isTop?: boolean;
-  showAction?: boolean;
-  onTop?: () => void;
-  onEdit?: () => void;
-  onDelete?: () => void;
-  onClick?: () => void;
+  onTop?: (data?: any) => void;
+  onEdit?: (data?: any) => void;
+  onDelete?: (data?: any) => void;
+  setOpen?: () => void;
 }
 
-const GroupCardComponent: React.FC<CardProps> = ({
+const Card: React.FC<CardProps> = ({
   data,
   isEmpty = false,
-  isTop = false,
-  // showAction = false,
+  isTop,
   onTop,
   onEdit,
   onDelete,
-  onClick
+  setOpen
 }) => {
   const navigate = useNavigate();
 
-  const handleMore = () => {
-    navigate('/groupManage/template');
-    localStorage.setItem('group_id', data?.groupId + '' || '');
+  const handleJumpLink = () => {
+    if (data?.groupId) {
+      localStorage.setItem('group_id', data.groupId.toString());
+      navigate('groupManage/template');
+    }
   };
 
-  const showConfirm = () => {
-    Modal.confirm({
-      title: '确认删除该分组?',
-      icon: <ExclamationCircleOutlined />,
-      okText: '确认',
-      cancelText: '取消',
-      onOk: onDelete
-    });
+  const handleOperation = (key: string) => {
+    console.log(data);
+    switch (key) {
+      case 'top':
+        onTop?.(data);
+        break;
+      case 'edit':
+        onEdit?.(data);
+        break;
+      case 'delete':
+        onDelete?.(data);
+        break;
+    }
   };
 
-  const handleOperation = (op: 'onTop' | 'onEdit' | 'onDelete' | 'cancelTop') => {
-    if (op === 'onTop' && onTop) onTop();
-    if (op === 'onEdit' && onEdit) onEdit();
-    if (op === 'onDelete') showConfirm();
+  const items: MenuProps['items'] = [
+    {
+      key: 'top',
+      label: isTop ? '取消置顶' : '置顶'
+    },
+    {
+      key: 'edit',
+      label: '编辑'
+    },
+    {
+      key: 'delete',
+      label: '删除'
+    }
+  ];
+
+  const menuProps: MenuProps = {
+    items,
+    onClick: ({ key }) => handleOperation(key)
   };
 
-  const items = isTop
-    ? [{ label: '取消置顶', key: 'cancelTop' }]
-    : [
-        { label: '置顶', key: 'onTop' },
-        { label: '编辑', key: 'onEdit' },
-        { label: '删除', key: 'onDelete' }
-      ];
-
-  return isEmpty ? (
-    <Card className={styles['empty_card']} onClick={onClick} style={{ width: 200 }}>
-      <PlusOutlined className={styles['empty_icon']} />
-      <div className={styles['empty_desc']}>添加</div>
-    </Card>
-  ) : (
-    <Card className={styles['card']} hoverable onClick={() => handleMore()}>
-      <Dropdown
-        menu={{
-          items,
-          onClick: (e) => handleOperation(e.key as 'onTop' | 'onEdit' | 'onDelete' | 'cancelTop')
-        }}
-        placement="bottom"
-      >
-        <EllipsisOutlined className={styles['card_more']} />
-      </Dropdown>
-      <div className={styles['card_content']}>
-        <h3 className={styles['card_title']}>{data?.groupName}</h3>
-        <div>{data?.groupDescription}</div>
+  if (isEmpty) {
+    return (
+      <div className={`${styles['card']} ${styles['card-empty']}`} onClick={setOpen}>
+        <PlusOutlined className={styles['empty-icon']} />
+        <div className={styles['empty-desc']}>添加分组</div>
       </div>
-      <div className={styles['card_time']}>
+    );
+  }
+
+  return (
+    <div className={styles['card']} onDoubleClick={handleJumpLink}>
+      <div className={styles['card-more']}>
+        <Dropdown menu={menuProps} placement="bottom">
+          <EllipsisOutlined />
+        </Dropdown>
+      </div>
+      <SoundFilled className={styles['sound-icon']} />
+      <h4 className={styles['card-title']}>{data?.groupName}</h4>
+      <div className={styles['card-content']}>{data?.groupDescription}</div>
+      <div className={styles['card-time']}>
         <FieldTimeOutlined />
         {data?.updateTime}
       </div>
-    </Card>
+    </div>
   );
 };
 
-export default GroupCardComponent;
+export default Card;

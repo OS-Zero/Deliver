@@ -1,76 +1,82 @@
 :local {
-  .card, .empty_card {
+  .card {
     position: relative;
     width: 200px;
     height: 200px;
-    border-radius: var(--border-radius-small);
+    border-radius: var(--border-radius-medium);
     padding: var(--spacing-md);
     border: 1px solid var(--gray-lightest);
     box-shadow: var(--box-shadow-small);
-    background-image: url('/folder.svg');
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: cover;
 
     &:hover {
       box-shadow: var(--box-shadow-large);
     }
-
-    .card_content {
-      position: absolute;
-      top: 15px;
-      left: 15px;
-
-      .card_title {
-        margin-bottom: 0;
-      }
-    }
   }
 
-  .card_time {
+  .card-title {
+    margin: var(--spacing-xs) 0;
+  }
+
+  .card-time {
     position: absolute;
-    bottom: var(--spacing-md);
+    bottom: var(--spacing-sm);
     right: var(--spacing-md);
     left: var(--spacing-md);
+    border-top: 1px solid var(--gray-light);
     text-align: center;
-    box-shadow: var(--box-shadow-small);
     padding: var(--spacing-xs) 0;
-    border-radius: var(--border-radius-large);
     color: var(--gray-medium-dark);
   }
 
-  .card_more {
+  .card-more {
     position: absolute;
     top: var(--spacing-sm);
     right: var(--spacing-sm);
   }
 
-  .empty_card {
+  .card-empty {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     background-image: none;
     font-size: small;
+    color: var(--gray-medium-dark);
 
     &:hover {
       cursor: pointer;
-      background-color: var(--blue-medium);
 
-      .empty_icon,
-      .empty_desc {
-        color: var(--white-color);
+      .empty-icon,
+      .empty-desc {
+        color: var(--blue-medium);
         transform: scale(1.2);
       }
     }
   }
 
-  .empty_icon,
-  .empty_desc {
+  .empty-icon,
+  .empty-desc {
     transition: 0.5s all;
   }
 
-  .empty_icon {
+  .empty-icon {
     font-size: 32px;
+  }
+
+  .sound-icon {
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius-medium);
+    font-size: x-large;
+    color: var(--yellow-dark);
+    background-color: var(--yellow-lighter);
+  }
+
+  .card-content {
+    color: var(--gray-medium-dark);
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
