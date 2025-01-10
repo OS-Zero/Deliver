@@ -248,6 +248,10 @@ export const filterSchema: Record<string, FormItem<keyof SearchParams>> = {
 };
 export const filterSchemaMaps = messageTemplateSchemaDeps.slice(0, 2);
 export const testMessageSchema: Record<string, FormItem<keyof TestSendMessage>> = {
+	templateId: {
+		type: 'none',
+		fieldName: 'templateId',
+	},
 	users: {
 		value: [],
 		type: 'list',

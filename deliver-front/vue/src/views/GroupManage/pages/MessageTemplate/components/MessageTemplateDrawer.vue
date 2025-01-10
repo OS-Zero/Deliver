@@ -62,6 +62,7 @@ const initFormDate = () => {
 const initTestMessageFormDate = () => {
 	nextTick(() => {
 		testMessageForm.users.value = []
+		testMessageForm.templateId.value = props.record.templateId
 	})
 	getMessageParam({ messageType: props.record.messageType, channelType: props.record.channelType }).then(res => {
 		testMessageForm.messageParam.value = JSON.parse(res || '{}')
