@@ -1,21 +1,19 @@
 <script lang="ts" setup>
-import { ref, onBeforeMount, reactive, nextTick, h, onUnmounted, watch } from 'vue'
-import { channelAppColumns, channelAppSchema, channelAppSchemaDeps, filterSchema, filterSchemaMaps, channelAppLocale } from "@/config/channelApp"
+import { ref, onBeforeMount, reactive, h, onUnmounted, watch } from 'vue'
+import { channelAppColumns, filterSchema, filterSchemaMaps } from "@/config/channelApp"
 import { CopyOutlined, DownOutlined, ExclamationCircleOutlined, FilterOutlined, CloseOutlined } from '@ant-design/icons-vue';
 import { copyToClipboard, dynamic, getDataFromSchema } from '@/utils/utils';
 import { FormInstance, message, Modal, TableProps } from 'ant-design-vue';
-import Drawer from '@/components/Drawer/index.vue'
 import SearchInput from '@/components/SearchInput/index.vue'
 import { debounce } from 'lodash'
 import { usePagination } from '@/hooks/table';
 import { Key } from 'ant-design-vue/lib/_util/type';
-import { deleteChannelApp, getChannelApp, saveChannelApp, updateChannelApp, updateChannelAppStatus } from '@/api/channelApp';
+import { deleteChannelApp, getChannelApp, updateChannelAppStatus } from '@/api/channelApp';
 import { ChannelApp } from '@/types/channelApp';
+import ChannelAppDrawer from './components/ChannelAppDrawer.vue';
+type Operation = 'add' | 'edit' | 'delete' | 'more'
 const dataSource = reactive<ChannelApp[]>([])
-
-
-const { dynamicData: channelAppForm, stop } = dynamic(channelAppSchema, channelAppSchemaDeps)
-const { dynamicData: filterForm, stop: stopFilterDynamic } = dynamic(filterSchema, filterSchemaMaps)
+const { dynamicData: filterForm, stop } = dynamic(filterSchema, filterSchemaMaps)
 const handleSearch = async () => {
 	const { records, total } = await getChannelApp({ ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
 	Object.assign(dataSource, records)
@@ -26,7 +24,6 @@ const { pagination } = usePagination(handleSearch)
 watch(filterForm, () => {
 	debounceSearch()
 })
-const moreInfo = reactive<Array<{ label: string; value: any }>>([])
 const copyId = async (text: string) => {
 	try {
 		await copyToClipboard(text)
@@ -37,16 +34,12 @@ const copyId = async (text: string) => {
 }
 const drawerState = reactive<{
 	open: boolean
-	title: string
-	operation: string
-	placement: 'left' | 'right' | 'top' | 'bottom' | undefined
-	extra: boolean
+	operation: 'add' | 'edit' | 'more' | 'testSend'
+	record: Record<string, any>
 }>({
 	open: false,
-	title: '',
-	operation: '',
-	placement: "right",
-	extra: true
+	operation: 'add',
+	record: {}
 })
 const filterState = reactive({
 	open: false
@@ -60,23 +53,8 @@ const rowSelection: TableProps['rowSelection'] = reactive({
 		rowSelection && (rowSelection.selectedRowKeys = selectedRowKeys)
 	},
 })
-const handleActions = async (action: 'add' | 'edit' | 'delete' | 'more', record?: Record<string, any>) => {
-	drawerState.placement = 'right'
-	if (action === 'add') {
-		drawerState.title = '新增应用'
-		drawerState.open = true
-		drawerState.operation = 'add'
-	} else if (action === 'edit') {
-		drawerState.title = '编辑应用'
-		drawerState.open = true
-		drawerState.operation = 'edit'
-		//异步使重置数据为空
-		nextTick(() => {
-			for (const key in channelAppForm) {
-				channelAppForm[key].value = record && record[key]
-			}
-		})
-	} else if (action === 'delete') {
+const operationDispatch = {
+	delete: async (record: Record<string, any> = {}) => {
 		Modal.confirm({
 			title: '确认删除该应用?',
 			icon: h(ExclamationCircleOutlined),
@@ -87,25 +65,14 @@ const handleActions = async (action: 'add' | 'edit' | 'delete' | 'more', record?
 				message.success('删除成功')
 			},
 		});
-	} else if (action === 'more') {
-		drawerState.title = '应用详情'
-		drawerState.operation = 'showMore'
-		drawerState.placement = 'left'
-		drawerState.extra = false
-		drawerState.open = true
-		const set = new Set(['usersType', 'channelType', 'channelProviderType', 'appId'])
-		const arr: Array<{ label: string; value: any }> = []
-		for (const key in record) {
-			if (!set.has(key)) {
-				arr.push({
-					label: channelAppLocale[key],
-					value: record[key]
-				})
-			}
-		}
-		Object.assign(moreInfo, arr)
 	}
 }
+const handleActions = async (operation: Operation, record: Record<string, any> = {}) => {
+	(operation === 'add' || operation === 'edit' || operation === 'more') && (drawerState.operation = operation, drawerState.open = true);
+	(operation === 'edit' || operation === 'more') && (drawerState.record = record);
+	(operation === 'delete') && operationDispatch[operation](record);
+}
+
 const handleBatchDelete = () => {
 	Modal.confirm({
 		title: '确认批量删除应用?',
@@ -118,34 +85,13 @@ const handleBatchDelete = () => {
 		},
 	});
 }
-const handleDrawer = {
-	ok: async () => {
-		try {
-			await formRef.value?.validate()
-			if (drawerState.operation === 'add') {
-				await saveChannelApp(getDataFromSchema(channelAppForm))
-				message.success('添加成功')
-			} else if (drawerState.operation == 'edit') {
-				await updateChannelApp(getDataFromSchema(channelAppForm))
-				message.success('编辑成功')
-			} else if (drawerState.operation === 'more') {
-				drawerState.placement = 'right'
-			}
-			drawerState.open = false
-			formRef.value?.resetFields()
-		} catch (error) {
-			console.log(error);
-		}
-	},
-	cancel: () => {
-		drawerState.open = false
-		drawerState.extra = true
-		formRef.value?.resetFields()
-	}
-}
+
 const handleFilterClose = () => {
 	filterState.open = false
 	formRef.value?.resetFields()
+}
+const handleDrawerClose = () => {
+	drawerState.open = false
 }
 const changeStatus = async (record: Record<string, any>) => {
 	record.appStatus = !record.appStatus
@@ -157,7 +103,6 @@ onBeforeMount(() => {
 onUnmounted(() => {
 	//停止监听动态数据
 	stop()
-	stopFilterDynamic()
 })
 </script>
 
@@ -212,16 +157,8 @@ onUnmounted(() => {
 			<template #extra><a-button type="text" :icon="h(CloseOutlined)" @click="handleFilterClose"></a-button></template>
 			<Form ref="formRef" :form-schema="filterForm" />
 		</a-card>
-		<Drawer :placement="drawerState.placement" :open="drawerState.open" :title="drawerState.title"
-			:extra="drawerState.extra" @ok="handleDrawer.ok" @close="handleDrawer.cancel">
-			<Form v-if="drawerState.operation === 'add' || drawerState.operation === 'edit'" ref="formRef"
-				:label-col="{ span: 7 }" :form-schema="channelAppForm" />
-			<div v-else-if="drawerState.operation === 'showMore'">
-				<a-descriptions :column="1">
-					<a-descriptions-item v-for="item in moreInfo" :label="item.label">{{ item.value }}</a-descriptions-item>
-				</a-descriptions>
-			</div>
-		</Drawer>
+		<ChannelAppDrawer v-bind="drawerState" @close="handleDrawerClose">
+		</ChannelAppDrawer>
 	</div>
 </template>
 

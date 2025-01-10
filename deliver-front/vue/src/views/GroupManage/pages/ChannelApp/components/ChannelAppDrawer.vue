@@ -1,14 +1,11 @@
 <script lang="ts" setup>
-import { savePeopleGroup, updatePeopleGroup } from '@/api/peopleGroup';
-import { messageTemplateLocale, messageTemplateSchema, messageTemplateSchemaDeps, testMessageSchema } from '@/config/messageTemplate';
 import { DrawerProps } from '@/types/components';
-import { copyToClipboard, dynamic, getDataFromSchema } from '@/utils/utils';
+import { dynamic, getDataFromSchema } from '@/utils/utils';
 import { message } from 'ant-design-vue';
 import { ref, reactive, onUnmounted, watch, nextTick } from 'vue';
-import { CopyOutlined } from '@ant-design/icons-vue';
-import { getMessageParam } from '@/api/system';
-import { testSendMessage } from '@/api/messageTemplate';
-type Operation = 'add' | 'edit' | 'more' | 'testSend'
+import { channelAppLocale, channelAppSchema, channelAppSchemaDeps } from '@/config/channelApp';
+import { saveChannelApp, updateChannelApp } from '@/api/channelApp';
+type Operation = 'add' | 'edit' | 'more'
 const props = defineProps<{
 	open: boolean
 	operation: Operation
@@ -21,16 +18,8 @@ const titleList: Record<Operation, string> = {
 	add: '新增应用',
 	edit: '编辑应用',
 	more: '应用详情',
-	testSend: '测试发送'
 }
-const copyId = async (text: string) => {
-	try {
-		await copyToClipboard(text)
-		message.success('复制成功')
-	} catch (error) {
-		message.error('复制失败')
-	}
-}
+
 const drawerState = reactive<DrawerProps>({
 	open: props.open,
 	title: titleList[props.operation],
@@ -46,33 +35,23 @@ watch(props, (newProps) => {
 	});
 	newProps.operation === 'edit' && newProps.open === true && initFormDate();
 	newProps.operation === 'more' && initMoreDate();
-	newProps.operation === 'testSend' && initTestMessageFormDate();
 })
 
-const { dynamicData: messageTemplateForm, stop } = dynamic(messageTemplateSchema, messageTemplateSchemaDeps)
-const testMessageForm = reactive(testMessageSchema)
+const { dynamicData: channelAppForm, stop } = dynamic(channelAppSchema, channelAppSchemaDeps)
 const initFormDate = () => {
 	nextTick(() => {
-		for (const key in messageTemplateForm) {
-			messageTemplateForm[key].value = props.record[key]
+		for (const key in channelAppForm) {
+			channelAppForm[key].value = props.record[key]
 		}
 	})
 }
-const initTestMessageFormDate = () => {
-	nextTick(() => {
-		testMessageForm.users.value = []
-	})
-	getMessageParam({ messageType: props.record.messageType, channelType: props.record.channelType }).then(res => {
-		testMessageForm.paramMap.value = JSON.parse(res || '{}')
-	})
-}
 const initMoreDate = () => {
-	const set = new Set(['usersType', 'channelType', 'channelProviderType', 'messageType', 'appId'])
+	const set = new Set(['usersType', 'channelType', 'channelProviderType', 'appId'])
 	const arr: Array<{ label: string; value: any }> = []
 	for (const key in props.record) {
 		if (!set.has(key)) {
 			arr.push({
-				label: messageTemplateLocale[key],
+				label: channelAppLocale[key],
 				value: props.record[key]
 			})
 		}
@@ -82,16 +61,13 @@ const initMoreDate = () => {
 const moreInfo = reactive<Array<{ label: string; value: any }>>([])
 const operationDispatch = {
 	add: async () => {
-		await savePeopleGroup(getDataFromSchema(messageTemplateForm))
+		await saveChannelApp(getDataFromSchema(channelAppForm))
 		message.success('新增成功')
 	},
 	edit: async () => {
-		await updatePeopleGroup(getDataFromSchema(messageTemplateForm))
+		await updateChannelApp(getDataFromSchema(channelAppForm))
 		message.success('编辑成功')
 	},
-	testSend: async () => {
-		await testSendMessage(getDataFromSchema(testMessageForm))
-	}
 }
 
 const handleCancel = () => {
@@ -107,19 +83,9 @@ onUnmounted(() => {
 
 <template>
 	<Drawer v-bind="drawerState" @ok="operationDispatch[operation]" @close="handleCancel">
-		<Form ref="formRef" v-if="operation === 'add' || operation === 'edit'" :form-schema="messageTemplateForm" />
-		<Form ref="formRef" v-else-if="operation === 'testSend'" :form-schema="testMessageForm" />
+		<Form ref="formRef" v-if="operation === 'add' || operation === 'edit'" :form-schema="channelAppForm" />
 		<div v-else-if="operation === 'more'">
 			<Descriptions :data="moreInfo" :config="{ column: 1 }">
-				<template #content="{ item }">
-					<template v-if="item.label === '应用 Id'">
-						{{ item.value }}
-						<CopyOutlined v-if="item.label === '应用 Id'" class="id--copy" @click="copyId(item.value)" />
-					</template>
-					<template v-if="item.label === '应用状态'">
-						{{ !!item.value ? '开启' : '关闭' }}
-					</template>
-				</template>
 			</Descriptions>
 		</div>
 	</Drawer>
