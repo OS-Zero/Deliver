@@ -244,4 +244,8 @@ const userName = ref(JSON.parse(localStorage.getItem("user_info") || '{}').userR
 		text-decoration: none
 	}
 }
+
+:where(.css-dev-only-do-not-override-1p3hq3p).ant-tabs .ant-tabs-tab .anticon {
+	margin-right: var(--spacing-xs);
+}
 </style>
