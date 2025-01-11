@@ -25,14 +25,14 @@ export const taskColumns: ColumnsType = [
 		key: 'taskName',
 	},
 	{
-		title: '任务状态',
-		dataIndex: 'taskStatus',
-		key: 'taskStatus',
-	},
-	{
 		title: '任务类型',
 		dataIndex: 'taskType',
 		key: 'taskType',
+	},
+	{
+		title: '任务状态',
+		dataIndex: 'taskStatus',
+		key: 'taskStatus',
 	},
 	{
 		title: '关联人群',
