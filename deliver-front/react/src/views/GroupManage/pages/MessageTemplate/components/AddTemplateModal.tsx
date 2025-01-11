@@ -151,7 +151,7 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
 
   return (
     <Drawer
-      title="新增模板"
+      title={formRef?.current?.getFieldValue('templateId') ? '编辑模板' : '新增模板'}
       open={open}
       onClose={() => {
         setOpen(false);
