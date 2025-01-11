@@ -34,11 +34,6 @@ export const platformFileColumns: ColumnsType = [
 		key: 'platformFileTypeName',
 	},
 	{
-		title: '文件状态',
-		dataIndex: 'platformFileStatus',
-		key: 'platformFileStatus',
-	},
-	{
 		title: '渠道类型',
 		dataIndex: 'channelTypeName',
 		key: 'channelTypeName',
@@ -47,6 +42,11 @@ export const platformFileColumns: ColumnsType = [
 		title: '关联应用',
 		dataIndex: 'appName',
 		key: 'appName',
+	},
+	{
+		title: '文件状态',
+		dataIndex: 'platformFileStatus',
+		key: 'platformFileStatus',
 	},
 	{
 		title: '创建者',
