@@ -6,9 +6,9 @@ import { analysisExcelTemplateFile } from '@/api/peopleGroup';
 import { getRangeRule, getRequiredRule } from '@/utils/validate';
 import { notUndefined } from '@/utils/utils';
 export const peopleGroupLocale = {
-	peopleGroupId: '人群 Id',
+	peopleGroupId: '关联人群 Id',
 	peopleGroupDescription: '人群描述',
-	peopleGroupName: '人群名',
+	peopleGroupName: '关联人群',
 	peopleGroupList: '人群列表',
 	usersTypeName: '用户类型名',
 	createUser: '创建者',
@@ -16,12 +16,12 @@ export const peopleGroupLocale = {
 };
 export const peopleGroupColumns: ColumnsType = [
 	{
-		title: '人群 Id',
+		title: '关联人群 Id',
 		dataIndex: 'peopleGroupId',
 		key: 'peopleGroupId',
 	},
 	{
-		title: '人群名',
+		title: '关联人群',
 		dataIndex: 'peopleGroupName',
 		key: 'peopleGroupName',
 	},
@@ -58,8 +58,8 @@ export const peopleGroupSchema: Schema<PeopleGroupForm> = {
 	peopleGroupName: {
 		type: 'input',
 		fieldName: 'peopleGroupName',
-		label: '人群名',
-		rules: [getRequiredRule('请输入人群名'), ...getRangeRule(3, 20, '字符长度限制在3-20')],
+		label: '关联人群',
+		rules: [getRequiredRule('请输入关联人群'), ...getRangeRule(3, 20, '字符长度限制在3-20')],
 	},
 	peopleGroupDescription: {
 		type: 'textarea',

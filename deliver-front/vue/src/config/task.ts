@@ -9,7 +9,7 @@ export const taskLocale = {
 	taskStatus: '任务状态',
 	taskParam: '任务参数',
 	taskType: '任务类型',
-	peopleGroupName: '人群名',
+	peopleGroupName: '关联人群',
 	createUser: '创建者',
 	createTime: '创建时间',
 };
@@ -35,7 +35,7 @@ export const taskColumns: ColumnsType = [
 		key: 'taskType',
 	},
 	{
-		title: '人群名',
+		title: '关联人群',
 		dataIndex: 'peopleGroupName',
 		key: 'peopleGroupName',
 	},
@@ -101,8 +101,8 @@ export const taskSchema: Schema<TaskForm> = {
 	peopleGroupId: {
 		type: 'input',
 		fieldName: 'peopleGroupId',
-		label: '人群 Id',
-		rules: [getRequiredRule('请输入人群 Id')],
+		label: '关联人群 Id',
+		rules: [getRequiredRule('请输入关联人群 Id')],
 	},
 };
 export const filterSchema: Record<string, FormItem<keyof SearchParams>> = {
