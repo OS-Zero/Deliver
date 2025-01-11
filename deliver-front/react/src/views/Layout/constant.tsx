@@ -2,7 +2,8 @@ import {
   MessageOutlined,
   FileTextOutlined,
   AppstoreOutlined,
-  UserOutlined
+  UserOutlined,
+  SoundOutlined
 } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 
@@ -40,7 +41,22 @@ export const menuConfig = {
           label: <Link to="/groupManage/file">平台文件管理</Link>
         }
       ]
-    }
+    },
+    {
+      key: 'TM',
+      icon: <SoundOutlined />,
+      label: '群发任务',
+      children: [
+        {
+          key: '/groupManage/task',
+          label: <Link to="/groupManage/task">群发任务配置</Link>
+        },
+        {
+          key: '/groupManage/peopleGroup',
+          label: <Link to="/groupManage/peopleGroup">人群配置</Link>
+        },
+      ]
+    },
   ],
   systemManage: [
     {

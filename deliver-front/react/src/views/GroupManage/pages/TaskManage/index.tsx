@@ -2,18 +2,19 @@ import React, { useRef, useState } from 'react';
 import { ProColumns, ProTable } from '@ant-design/pro-components';
 import { Button, Space, Switch, Dropdown, MenuProps } from 'antd';
 import { DownOutlined, FilterOutlined } from '@ant-design/icons';
-import { ChannelApp } from './type.ts';
-import { appColumns, appTableSchema } from './constant.tsx';
-import useChannelData from './useChannelData.ts';
+import { TaskDetail } from './type.ts';
+import { taskColumns, taskTableSchema } from './constant.tsx';
+import useChannelData from './useTaskData.ts';
 import styles from './index.module.scss';
 import DetailDrawer from '@/components/DetailDrawer/index.tsx';
-import FilterCard from './components/FilterCard.tsx';
-import AddChannelDrawer from './components/AddChannelDrawer.tsx';
+// import FilterCard from './components/FilterCard.tsx';
+import AddTaskDrawer from './components/AddTaskDrawer.tsx';
 import { proTableConfig } from '@/config/index.tsx';
+import FilterCard from './components/FilterCard.tsx';
 
 interface AddRef {
-  addChannelDrawer: () => void;
-  editChannelModal: (record: ChannelApp) => void;
+  addTaskDrawer: () => void;
+  editTaskModal: (record: TaskDetail) => void;
 }
 
 const items: MenuProps['items'] = [
@@ -23,34 +24,33 @@ const items: MenuProps['items'] = [
   }
 ];
 
-const Channel: React.FC = () => {
-  const detailRef = useRef<{ getDetail: (record: ChannelApp) => void }>();
+const TaskManage: React.FC = () => {
+  const detailRef = useRef<{ getDetail: (record: TaskDetail) => void }>();
   const addRef = useRef<AddRef>();
-  const testRef = useRef<{ getTestSendDrawer: () => void }>();
   const [tableParams, setTableParams] = useState({});
   const [filterOpen, setFilterOpen] = useState(false);
-  const { fetchChannelData, deleteChannelData, saveChannelData, changeStatus } = useChannelData();
+  const { fetchTaskData, deleteTaskData, saveTaskData, changeStatus } = useChannelData();
 
-  const handleMenuClick = (e: any, record: ChannelApp) => {
+  const handleMenuClick = (e: any, record: TaskDetail) => {
     if (e?.key === 'detail') {
       detailRef.current?.getDetail(record);
     } else {
-      testRef.current?.getTestSendDrawer();
+      // testRef.current?.getTestSendDrawer();
     }
   };
 
   // 这两列涉及到状态的改变，于是写在视图层
-  const columns: ProColumns<ChannelApp>[] = [
-    ...appTableSchema({
+  const columns: ProColumns<TaskDetail>[] = [
+    ...taskTableSchema({
       title: '模板状态',
       width: 120,
-      dataIndex: 'appStatus',
-      render: (_, record: ChannelApp) => (
+      dataIndex: 'taskStatus',
+      render: (_, record: TaskDetail) => (
         <Switch
           checkedChildren="启用"
           unCheckedChildren="禁用"
-          checked={Boolean(record?.appStatus)}
-          onClick={() => changeStatus(record.appId, record.appStatus === 0 ? 1 : 0)}
+          checked={Boolean(record?.taskStatus)}
+          onClick={() => changeStatus(record.taskId, record.taskStatus === 0 ? 1 : 0)}
         />
       )
     }),
@@ -63,14 +63,14 @@ const Channel: React.FC = () => {
         <a
           className={styles['link-button']}
           key="edit"
-          onClick={() => addRef?.current?.editChannelModal(record)}
+          onClick={() => addRef?.current?.editTaskModal(record)}
         >
           编辑
         </a>,
         <a
           className={styles['link-button-delete']}
           key="delete"
-          onClick={() => deleteChannelData([record?.appId])}
+          onClick={() => deleteTaskData([record?.taskId])}
         >
           删除
         </a>,
@@ -96,21 +96,21 @@ const Channel: React.FC = () => {
   };
 
   return (
-    <div className={styles['app-container']}>
+    <div className={styles['task-container']}>
       <ProTable
         params={tableParams}
         columns={columns}
         rowSelection={{}}
         // TODO: 这里到底传什么？入参为currentPage，反参是current？
-        request={fetchChannelData}
-        rowKey="appId"
+        request={fetchTaskData}
+        rowKey="taskId"
         toolBarRender={() => [
           <>
             <Button
               key="add"
               type="primary"
               style={{ marginRight: '5px' }}
-              onClick={() => addRef?.current?.addChannelDrawer()}
+              onClick={() => addRef?.current?.addTaskDrawer()}
             >
               新增
             </Button>
@@ -123,12 +123,12 @@ const Channel: React.FC = () => {
         ]}
         {...proTableConfig({
           filterOpen,
-          deleteData: deleteChannelData,
-          name: '应用名'
+          deleteData: deleteTaskData,
+          name: '任务名'
         })}
       />
-      <DetailDrawer ref={detailRef} columns={appColumns} />
-      <AddChannelDrawer ref={addRef} onSubmit={saveChannelData} />
+      <DetailDrawer ref={detailRef} columns={taskColumns} />
+      <AddTaskDrawer ref={addRef} onSubmit={saveTaskData} />
       {filterOpen && (
         <div className={styles['filter-container']}>
           <FilterCard onClose={() => setFilterOpen(false)} onFilter={handleFilter} />
@@ -138,4 +138,4 @@ const Channel: React.FC = () => {
   );
 };
 
-export default Channel;
+export default TaskManage;

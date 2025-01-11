@@ -20,17 +20,13 @@ const SideBar: React.FC<SideBarProps> = ({ items }) => {
   };
 
   const handleMenuClick: MenuProps['onClick'] = (info) => {
+    debugger;
     navigate(info.key);
   };
 
   return (
     <Layout.Sider collapsed={collapsed} theme="light" className={styles['siderContainer']}>
-      <Menu
-        mode="inline"
-        items={items}
-        selectedKeys={selectedKeys}
-        onClick={handleMenuClick}
-      />
+      <Menu mode="inline" items={items} selectedKeys={selectedKeys} onClick={handleMenuClick} />
       <footer className={styles['siderFooter']}>
         <Button type="text" className={styles['footerButton']} onClick={toggleCollapsed}>
           {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}

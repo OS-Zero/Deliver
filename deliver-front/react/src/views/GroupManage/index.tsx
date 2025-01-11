@@ -103,7 +103,7 @@ const GroupManage: React.FC = () => {
       const groupId = localStorage.getItem('group_id');
       if (groupId) {
         setState((prev) => ({ ...prev, mainPage: true }));
-        navigate('/groupManage/template');
+        // navigate('/groupManage/template');
       } else {
         setState((prev) => ({ ...prev, mainPage: false }));
         await fetchCardData();

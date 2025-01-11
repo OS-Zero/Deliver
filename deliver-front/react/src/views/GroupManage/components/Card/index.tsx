@@ -28,7 +28,7 @@ const Card: React.FC<CardProps> = ({
   const handleJumpLink = () => {
     if (data?.groupId) {
       localStorage.setItem('group_id', data.groupId.toString());
-      navigate('groupManage/template');
+      navigate('/groupManage/template');
     }
   };
 

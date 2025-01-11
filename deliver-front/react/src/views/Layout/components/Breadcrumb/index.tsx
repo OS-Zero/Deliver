@@ -34,7 +34,6 @@ const Breadcrumb: React.FC = () => {
       localStorage.removeItem('group_name');
     }
 
-    debugger;
     navigate(route.path);
   };
 

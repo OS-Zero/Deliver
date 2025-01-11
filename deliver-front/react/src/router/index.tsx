@@ -9,7 +9,8 @@ const GroupManagePage = lazy(() => import('../views/GroupManage'));
 const TemplatePage = lazy(() => import('../views/GroupManage/pages/MessageTemplate'));
 const AppPage = lazy(() => import('../views/GroupManage/pages/ChannelApp'));
 const PlatformFilePage = lazy(() => import('../views/GroupManage/pages/PlatformFile'));
-const FlowControlRulePage = lazy(() => import('../views/GroupManage/pages/FlowControlRule'));
+const TaskManagePage = lazy(() => import('../views/GroupManage/pages/TaskManage'));
+const PeopleGroupPage = lazy(() => import('../views/GroupManage/pages/PeopleGroup'));
 const SystemManagePage = lazy(() => import('../views/SystemManage'));
 const MyAccountPage = lazy(() => import('../views/SystemManage/pages/MyAccount'));
 const WelcomePage = lazy(() => import('../views/Welcome'));
@@ -86,14 +87,23 @@ const routes = [
                 name: '文件管理'
               },
               {
-                path: 'flowControlRule',
+                path: 'task',
                 element: (
                   <Suspense fallback={<LoadingPage />}>
-                    <FlowControlRulePage />
+                    <TaskManagePage />
                   </Suspense>
                 ),
-                name: '规则配置'
-              }
+                name: '群发任务配置'
+              },
+              {
+                path: 'peopleGroup',
+                element: (
+                  <Suspense fallback={<LoadingPage />}>
+                    <PeopleGroupPage />
+                  </Suspense>
+                ),
+                name: '人群配置'
+              },
             ]
           },
           {
