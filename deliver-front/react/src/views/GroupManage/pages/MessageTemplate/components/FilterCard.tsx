@@ -4,6 +4,7 @@ import { useFormState } from '../../../../../hooks/useFormState';
 import { CloseOutlined } from '@ant-design/icons';
 import { useRef } from 'react';
 import { useDebounce } from '@/hooks/useDebounce';
+import { useGlobalContext } from '@/context/GlobalContext';
 
 const { Option } = Select;
 interface FilterDrawerProps {
@@ -17,6 +18,7 @@ const FilterDrawer = (props: FilterDrawerProps) => {
 
   // 使用 useFormState 管理表单状态
   const { formState, updateFormState } = useFormState();
+  const { userTypeParams } = useGlobalContext();
 
   // 用户类型变更处理
   const handleUsersTypeChange = async (value: number) => {
@@ -33,7 +35,6 @@ const FilterDrawer = (props: FilterDrawerProps) => {
       updateFormState({ channelTypes: response });
     } catch (error) {
       console.error('获取渠道类型失败:', error);
-      message.error('获取渠道类型失败，请稍后重试');
     }
   };
 
@@ -49,7 +50,6 @@ const FilterDrawer = (props: FilterDrawerProps) => {
       });
     } catch (error) {
       console.error('获取渠道供应商和消息类型失败:', error);
-      message.error('获取渠道供应商和消息类型失败，请稍后重试');
     }
   };
 
@@ -81,8 +81,11 @@ const FilterDrawer = (props: FilterDrawerProps) => {
       <Form ref={formRef} layout="vertical" onValuesChange={handleFilter}>
         <Form.Item label="用户类型" name="usersType">
           <Select placeholder="请选择用户类型" onChange={handleUsersTypeChange}>
-            <Option value={0}>选项1</Option>
-            <Option value={1}>选项2</Option>
+            {userTypeParams.map((item) => (
+              <Option key={item.usersType} value={item.usersType}>
+                {item.usersTypeName}
+              </Option>
+            ))}
           </Select>
         </Form.Item>
         <Form.Item label="渠道类型" name="channelType">

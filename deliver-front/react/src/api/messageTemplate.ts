@@ -42,9 +42,12 @@ export async function getMessageTypeByChannelType(data: {
  * @param data 1-电话、2-短信、3-邮件、4-钉钉、5-企业微信、6-飞书
  * @returns 返回消息类型
  */
-export async function getApp(data: { channelType: number }): Promise<never> {
+export async function getApp(data: {
+  channelType: number;
+  channelProviderType: number;
+}): Promise<never> {
   return await request({
-    url: '/app/getAppByChannelType',
+    url: '/channelApp/getAppByChannel',
     method: 'post',
     data
   });

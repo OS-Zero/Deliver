@@ -12,16 +12,19 @@ import { Dropdown, Avatar, Modal, Menu, MenuProps, Tooltip } from 'antd';
 import { logout } from '@/api/user';
 import styles from './index.module.scss';
 import { usePathMatch } from '../../../../hooks/usePathMatch';
+import { useGlobalContext } from '@/context/GlobalContext';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
   const { current } = usePathMatch();
   const [showAbout, setShowAbout] = useState(false);
 
+  const { userInfo } = useGlobalContext();
+
   const items = [
     {
       label: '分组管理',
-      key: 'groupManage',
+      key: 'groupManage/template',
       icon: <AppstoreOutlined />
     },
     {
@@ -116,7 +119,7 @@ const Header: React.FC = () => {
           <Dropdown menu={{ items: userItems }} placement="bottom">
             <div className={styles['avatar']}>
               <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
-              <span className={styles['name']}>Deliver</span>
+              <span className={styles['name']}>{userInfo?.userRealName}</span>
             </div>
           </Dropdown>
         </div>

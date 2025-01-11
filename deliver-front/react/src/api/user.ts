@@ -56,3 +56,10 @@ export function getVerificationCode(data: { userEmail: string }): Promise<never>
     data
   });
 }
+
+export function startUp(): Promise<never> {
+  return request({
+    url: '/startup',
+    method: 'post'
+  });
+}

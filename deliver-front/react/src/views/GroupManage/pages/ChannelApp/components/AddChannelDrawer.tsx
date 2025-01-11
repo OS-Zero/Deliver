@@ -18,7 +18,7 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
   const { options, handleChannelTypeChange, handleChannelProviderTypeChange } = useFormOptions({
     myRef: formRef,
     setJsonEditorKey,
-    key: 'channel',
+    key: 'channel'
   });
 
   const handleSubmit = async () => {
@@ -160,9 +160,8 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
     >
       <BetaSchemaForm
         shouldUpdate={true}
-        layout="horizontal"
-        labelCol={{ span: 7 }}
-        wrapperCol={{ span: 16 }}
+        layout="vertical"
+        wrapperCol={{ span: 24 }}
         submitter={false}
         formRef={formRef}
         onFinish={async (values) => {

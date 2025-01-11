@@ -1,20 +1,26 @@
-import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { useGlobalContext } from '@/context/GlobalContext';
 
-// 路由守卫
 const PrivateRoute = () => {
+  useGlobalContext();
+
   const location = useLocation();
+
   const isAuthenticated = !!localStorage.getItem('access_token');
   const hasGroupId = !!localStorage.getItem('groupId');
-
-  const navigate = useNavigate();
 
   // 如果没有 token，重定向到登录
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
-  // if (!hasGroupId && location.pathname.includes('groupManage')) {
-  //   navigate('/groupManage', { replace: true });
+  // // 如果没有群组ID，重定向到群组管理
+  // if (!hasGroupId) {
+  //   const allowedPathsWithoutGroupId = ['/welcome', '/groupManage', '/login'];
+
+  //   if (!allowedPathsWithoutGroupId.some((path) => location.pathname.startsWith(path))) {
+  //     return <Navigate to="/groupManage" replace />;
+  //   }
   // }
 
   // 都满足条件，正常渲染子路由

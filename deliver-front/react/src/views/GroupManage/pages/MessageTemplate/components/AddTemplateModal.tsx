@@ -2,6 +2,8 @@ import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { Form, Input, Button, Select, Drawer, Space, message, FormInstance } from 'antd';
 import { getChannelType, getParam } from '@/api/system';
 import { useFormState } from '@/hooks/useFormState';
+import { useGlobalContext } from '@/context/GlobalContext';
+import { getApp } from '@/api/messageTemplate';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -15,6 +17,7 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
   const [open, setOpen] = useState(false);
   const formRef = useRef<FormInstance>(null);
   const { formState, updateFormState } = useFormState();
+  const { userTypeParams } = useGlobalContext();
 
   const handleUsersTypeChange = async (value: number) => {
     formRef?.current?.resetFields(['channelType', 'channelProviderType', 'messageType', 'appId']);
@@ -30,7 +33,6 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
       updateFormState({ channelTypes: response });
     } catch (error) {
       console.error('获取渠道类型失败:', error);
-      message.error('获取渠道类型失败，请稍后重试');
     }
   };
 
@@ -45,20 +47,24 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
       });
     } catch (error) {
       console.error('获取渠道供应商和消息类型失败:', error);
-      message.error('获取渠道供应商和消息类型失败，请稍后重试');
     }
   };
 
-  const handleChannelProviderChange = (value: number) => {
+  const handleChannelProviderChange = async (value: number) => {
     formRef?.current?.resetFields(['appId']);
     updateFormState({ appIds: [] });
-    // 模拟获取应用 ID 列表
-    updateFormState({
-      appIds: [
-        { id: 0, name: '应用1' },
-        { id: 1, name: '应用2' }
-      ]
-    });
+    try {
+      const params = {
+        channelType: formRef?.current?.getFieldValue('channelType'),
+        channelProviderType: value
+      };
+      const res = await getApp(params);
+      updateFormState({
+        appIds: res
+      });
+    } catch (error) {
+      console.error('获取渠道供应商和消息类型失败:', error);
+    }
   };
 
   const handleSubmit = () => {
@@ -123,7 +129,7 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
         </Space>
       }
     >
-      <Form ref={formRef} labelCol={{ span: 7 }} wrapperCol={{ span: 16 }}>
+      <Form ref={formRef} layout="vertical" wrapperCol={{ span: 24 }}>
         <Form.Item
           label="模板名"
           name="templateName"
@@ -144,8 +150,11 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
           rules={[{ required: true, message: '请选择用户类型' }]}
         >
           <Select placeholder="请选择用户类型" onChange={handleUsersTypeChange}>
-            <Option value={0}>选项1</Option>
-            <Option value={1}>选项2</Option>
+            {userTypeParams.map((item) => (
+              <Option key={item.usersType} value={item.usersType}>
+                {item.usersTypeName}
+              </Option>
+            ))}
           </Select>
         </Form.Item>
         <Form.Item

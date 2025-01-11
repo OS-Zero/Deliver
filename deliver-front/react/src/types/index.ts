@@ -45,3 +45,8 @@ export interface PlatFormFile {
   platformFileType: number;
   platformFileTypeName: string;
 }
+
+export interface Users {
+  usersType: number;
+  usersTypeName: string;
+}

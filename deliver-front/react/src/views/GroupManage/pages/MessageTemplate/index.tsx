@@ -129,7 +129,7 @@ const Template: React.FC = () => {
         {...proTableConfig({
           filterOpen,
           deleteData: deleteTemplateData,
-          name: '应用名'
+          name: '模版名'
         })}
       />
       <DetailDrawer ref={detailRef} columns={templateColumns} />

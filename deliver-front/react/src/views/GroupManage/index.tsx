@@ -7,6 +7,7 @@ import { GroupCard, GroupCardList } from './type';
 import styles from './index.module.scss';
 import { groupDescriptionRule, groupNameRule } from './constant';
 import { SearchOutlined } from '@ant-design/icons';
+import deleteConfirmModal from '@/components/DeleteConfirmModal';
 
 // 操作类型
 type Operation = 'add' | 'edit' | 'delete' | 'toTop' | 'cancelTop';
@@ -34,7 +35,6 @@ const GroupManage: React.FC = () => {
       setGroupList(res);
     } catch (error) {
       console.error('获取分组数据失败', error);
-      message.error('获取分组数据失败');
     }
   };
 
@@ -49,29 +49,34 @@ const GroupManage: React.FC = () => {
         const operationMap = {
           add: () => addGroup(cardRefValue),
           edit: () => updateGroup({ groupId, ...cardRefValue }),
-          delete: () => deleteGroup({ ids: [Number(data?.groupId)] }),
+          delete: () =>
+            deleteConfirmModal({
+              onConfirm: () => {
+                deleteGroup({ ids: [Number(data?.groupId)] });
+                fetchCardData();
+              }
+            }),
           toTop: () => toTopGroup({ groupId: Number(data?.groupId), topUp: 1 }),
           cancelTop: () => toTopGroup({ groupId: Number(data?.groupId), topUp: 0 })
         };
         const successMessages = {
           add: '新增成功',
           edit: '编辑成功',
-          delete: '删除成功',
+          delete: null,
           toTop: '置顶成功',
           cancelTop: '取消置顶成功'
         };
-        const res = await operationMap[operation]();
-        if (res) {
+        await operationMap[operation]();
+        if (successMessages[operation]) {
           message.success(successMessages[operation]);
-          if (operation === 'add' || operation === 'edit') {
-            setState((prev) => ({ ...prev, open: false }));
-            cardRef.current?.resetFields();
-          }
-          fetchCardData();
         }
+        if (operation === 'add' || operation === 'edit') {
+          setState((prev) => ({ ...prev, open: false }));
+          cardRef.current?.resetFields();
+        }
+        fetchCardData();
       } catch (error) {
         console.error('操作失败', error);
-        message.error('操作失败');
       }
     },
     [cardRef, groupId, fetchCardData]

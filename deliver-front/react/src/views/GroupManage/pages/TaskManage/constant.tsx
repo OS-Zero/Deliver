@@ -45,7 +45,7 @@ export const taskTableSchema: (statusConfig: ProColumns<TaskDetail>) => ProColum
   statusConfig,
   {
     width: 120,
-    title: '人群名称',
+    title: '关联人群',
     dataIndex: 'peopleGroupName',
     valueType: 'text'
   },
@@ -59,7 +59,7 @@ export const taskTableSchema: (statusConfig: ProColumns<TaskDetail>) => ProColum
     width: 150,
     title: '创建时间',
     dataIndex: 'createTime',
-    valueType: 'dateTime',
+    valueType: 'dateTime'
   }
 ];
 
@@ -109,7 +109,7 @@ export const taskColumns: ProDescriptionsItemProps<TaskDetail>[] = [
   },
   {
     key: 'text',
-    title: '人群名称',
+    title: '关联人群',
     dataIndex: 'peopleGroupName'
   },
   {

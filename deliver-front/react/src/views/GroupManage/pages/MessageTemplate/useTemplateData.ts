@@ -14,7 +14,11 @@ const useTemplateData = () => {
    * 搜索请求表单数据
    * @param data
    */
-  const fetchTemplateData = async (params: SearchMessage) => {
+  const fetchTemplateData = async ({ current, ...restParams }: SearchMessage & { current: number }) => {
+    const params: SearchMessage & { currentPage: number } = {
+      ...restParams,
+      currentPage: current || 1
+    };
     setCurrentParams(params);
     const res = await getTemplatePages(params);
     return {
