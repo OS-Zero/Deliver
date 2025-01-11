@@ -7,7 +7,7 @@ export const menuConfig: Record<string, ItemType[]> = {
 		{
 			key: 'MC',
 			icon: h(MessageOutlined),
-			label: '消息配置',
+			label: '模板配置',
 			children: [
 				{
 					key: '/groupManage/template',
