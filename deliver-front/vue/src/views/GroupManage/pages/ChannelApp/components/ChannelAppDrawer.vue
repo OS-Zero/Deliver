@@ -63,10 +63,12 @@ const operationDispatch = {
 	add: async () => {
 		await saveChannelApp(getDataFromSchema(channelAppForm))
 		message.success('新增成功')
+		handleCancel()
 	},
 	edit: async () => {
 		await updateChannelApp(getDataFromSchema(channelAppForm))
 		message.success('编辑成功')
+		handleCancel()
 	},
 }
 

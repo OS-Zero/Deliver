@@ -101,7 +101,8 @@ const handleFilterClose = () => {
 	formRef.value?.resetFields()
 }
 const handleDrawerClose = () => {
-	drawerState.open = false
+	drawerState.open = false;
+	(drawerState.operation === 'add' || drawerState.operation === 'edit') && handleSearch();
 }
 const changeStatus = async (record: Record<string, any>) => {
 	record.appStatus = !record.appStatus

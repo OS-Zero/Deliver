@@ -64,10 +64,12 @@ const operationDispatch = {
 	add: async () => {
 		await savePeopleGroup(getDataFromSchema(taskForm))
 		message.success('新增成功')
+		handleCancel()
 	},
 	edit: async () => {
 		await updatePeopleGroup(getDataFromSchema(taskForm))
 		message.success('编辑成功')
+		handleCancel()
 	}
 }
 

@@ -86,10 +86,12 @@ const operationDispatch = {
 	add: async () => {
 		await addMessageTemplate(getDataFromSchema(messageTemplateForm))
 		message.success('新增成功')
+		handleCancel()
 	},
 	edit: async () => {
 		await updateMessageTemplate(getDataFromSchema(messageTemplateForm))
 		message.success('编辑成功')
+		handleCancel()
 	},
 	testSend: async () => {
 		await testSendMessage(getDataFromSchema(testMessageForm))

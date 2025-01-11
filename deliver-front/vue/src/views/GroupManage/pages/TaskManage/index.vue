@@ -107,7 +107,8 @@ const handleFilterClose = () => {
 	formRef.value?.resetFields()
 }
 const handleDrawerClose = () => {
-	drawerState.open = false
+	drawerState.open = false;
+	(drawerState.operation === 'add' || drawerState.operation === 'edit') && handleSearch();
 }
 onBeforeMount(() => {
 	handleSearch()
