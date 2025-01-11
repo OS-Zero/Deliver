@@ -80,6 +80,9 @@ const handleBatchDelete = () => {
 		},
 	});
 }
+const handleCancelBatchDelete = () => {
+	rowSelection.selectedRowKeys = []
+}
 const copyId = async (text: string) => {
 	try {
 		await copyToClipboard(text)
@@ -122,7 +125,10 @@ onUnmounted(() => {
 			</div>
 			<div class="selections--delete" v-show="rowSelection.selectedRowKeys?.length">
 				<div>已选择 {{ rowSelection.selectedRowKeys?.length }} 项</div>
-				<a-button type="link" danger @click="handleBatchDelete">批量删除</a-button>
+				<div class="selections_btns">
+					<a-button type="link" @click="handleCancelBatchDelete">取消选择</a-button>
+					<a-button type="link" danger @click="handleBatchDelete">批量删除</a-button>
+				</div>
 			</div>
 			<a-table row-key="templateId" :dataSource="dataSource" :columns="messageTemplateColumns"
 				:row-selection="rowSelection" :pagination="pagination" :scroll="{ x: 1400, y: 680 }">
