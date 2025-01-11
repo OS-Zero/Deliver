@@ -34,7 +34,7 @@ public class MessageTemplateSearchResponseDto {
     private String usersTypeName;
     private Integer channelType;
     private String channelTypeName;
-    private String channelProviderType;
+    private Integer channelProviderType;
     private String channelProviderTypeName;
     private String messageType;
     private String messageTypeName;

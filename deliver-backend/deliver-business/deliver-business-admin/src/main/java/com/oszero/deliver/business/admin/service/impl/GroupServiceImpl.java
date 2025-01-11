@@ -21,6 +21,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oszero.deliver.business.admin.mapper.GroupMapper;
 import com.oszero.deliver.business.admin.mapper.PeopleGroupMapper;
@@ -131,8 +132,12 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupInfo>
         if (association > 0) {
             throw new BusinessException("该分组下存在关联数据，无法删除，请删除关联的消息模板、渠道应用、群发任务、人群后再删除此分组");
         }
-        int deleteById = groupMapper.deleteById(groupId);
-        if (DataBaseUtils.isSingleDataModifyFail(deleteById)) {
+        LambdaUpdateWrapper<UserGroup> wrapper = new LambdaUpdateWrapper<UserGroup>()
+                .eq(UserGroup::getGroupId, groupId)
+                .eq(UserGroup::getUserId, UserUtils.getCurrentLoginUserId());
+        int deleteUserGroup = userGroupMapper.delete(wrapper);
+        int deleteGroup = groupMapper.deleteById(groupId);
+        if (DataBaseUtils.isSingleDataModifyFail(deleteUserGroup) || DataBaseUtils.isSingleDataModifyFail(deleteGroup)) {
             throw new BusinessException("删除分组失败");
         }
     }
@@ -154,11 +159,11 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupInfo>
         checkGroupNameIsDuplicate(null, dto.getGroupName());
         GroupInfo groupInfo = new GroupInfo();
         BeanUtil.copyProperties(dto, groupInfo);
+        int insert1 = groupMapper.insert(groupInfo);
         UserGroup userGroup = UserGroup.builder()
                 .userId(UserUtils.getCurrentLoginUserId())
                 .groupId(groupInfo.getGroupId())
                 .build();
-        int insert1 = groupMapper.insert(groupInfo);
         int insert2 = userGroupMapper.insert(userGroup);
         if (DataBaseUtils.isSingleDataModifyFail(insert1) || DataBaseUtils.isSingleDataModifyFail(insert2)) {
             throw new BusinessException("新增分组失败");

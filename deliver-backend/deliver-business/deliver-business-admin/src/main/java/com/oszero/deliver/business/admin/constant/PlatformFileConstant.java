@@ -32,7 +32,7 @@ public interface PlatformFileConstant {
     Set<String> FEI_SHU_IMAGE_FORMAT_SET =
             new HashSet<>(Arrays.asList("jpeg", "png", "webp", "gif", "tiff", "bmp", "ico"));
     Set<String> FEI_SHU_FILE_FORMAT_SET =
-            new HashSet<>(Arrays.asList("opus", "mp4", "pdf", "doc", "xls", "ppt", "stream"));
+            new HashSet<>(Arrays.asList("opus", "mp4", "pdf", "doc", "xls", "ppt", "stream", "xlsx"));
     Long FEI_SHU_IMAGE_FILE_MAX_SIZE = 10L * 1024 * 1024;
     Long FEI_SHU_FILE_MAX_SIZE = 30L * 1024 * 1024;
 

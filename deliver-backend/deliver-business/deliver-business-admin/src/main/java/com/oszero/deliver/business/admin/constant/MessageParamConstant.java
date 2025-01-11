@@ -347,7 +347,58 @@ public class MessageParamConstant {
         MESSAGE_PARAM_MAP.put(getKeyByCode(ChannelTypeEnum.FEI_SHU, MessageTypeEnum.FEI_SHU_INTERACTIVE), """
                 {
                   "feiShuUserIdType": "user_id 或者 email 或者 chat_id 或者 department_id",
-                  "card": {}
+                  "content": {
+                    "config": {
+                      "wide_screen_mode": true
+                    },
+                    "elements": [
+                      {
+                        "alt": {
+                          "content": "",
+                          "tag": "plain_text"
+                        },
+                        "img_key": "img_7ea74629-9191-4176-998c-2e603c9c5e8g",
+                        "tag": "img"
+                      },
+                      {
+                        "tag": "div",
+                        "text": {
+                          "content": "你是否曾因为一本书而产生心灵共振，开始感悟人生？\\n你有哪些想极力推荐给他人的珍藏书单？\\n\\n加入 **4·23 飞书读书节**，分享你的**挚爱书单**及**读书笔记**，**赢取千元读书礼**！\\n\\n📬 填写问卷，晒出你的珍藏好书\\n😍 想知道其他人都推荐了哪些好书？马上[入群围观](https://open.feishu.cn/)\\n📝 用[读书笔记模板](https://open.feishu.cn/)（桌面端打开），记录你的心得体会\\n🙌 更有惊喜特邀嘉宾 4月12日起带你共读",
+                          "tag": "lark_md"
+                        }
+                      },
+                      {
+                        "actions": [
+                          {
+                            "tag": "button",
+                            "text": {
+                              "content": "立即推荐好书",
+                              "tag": "plain_text"
+                            },
+                            "type": "primary",
+                            "url": "https://open.feishu.cn/"
+                          },
+                          {
+                            "tag": "button",
+                            "text": {
+                              "content": "查看活动指南",
+                              "tag": "plain_text"
+                            },
+                            "type": "default",
+                            "url": "https://open.feishu.cn/"
+                          }
+                        ],
+                        "tag": "action"
+                      }
+                    ],
+                    "header": {
+                      "template": "turquoise",
+                      "title": {
+                        "content": "📚晒挚爱好书，赢读书礼金",
+                        "tag": "plain_text"
+                      }
+                    }
+                  }
                 }
                 """);
         MESSAGE_PARAM_MAP.put(getKeyByCode(ChannelTypeEnum.FEI_SHU, MessageTypeEnum.FEI_SHU_SHARE_CHAT), """

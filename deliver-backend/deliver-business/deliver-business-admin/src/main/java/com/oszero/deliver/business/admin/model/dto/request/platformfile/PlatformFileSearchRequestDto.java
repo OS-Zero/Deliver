@@ -34,6 +34,7 @@ public class PlatformFileSearchRequestDto extends PageRequest {
     private String platformFileType;
     private String platformFileKey;
     private Integer channelType;
+    private Integer channelProviderType;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 }
