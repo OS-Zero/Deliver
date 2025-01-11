@@ -158,14 +158,11 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
     <Drawer
       title={formRef?.current?.getFieldValue('appId') ? '编辑应用' : '新增应用'}
       open={open}
-      onClose={() => {
-        setOpen(false);
-        handleReset();
-      }}
+      onClose={() => setOpen(false)}
       width={500}
       extra={
         <Space>
-          <Button onClick={handleReset}>重置</Button>
+          <Button onClick={() => setOpen(false)}>取消</Button>
           <Button type="primary" onClick={handleSubmit}>
             确定
           </Button>

@@ -33,10 +33,6 @@ const AddFileDrawer = forwardRef((props: AddFileDrawerProps, ref) => {
     }
   };
 
-  const handleReset = () => {
-    formRef?.current?.resetFields();
-  };
-
   useImperativeHandle(ref, () => ({
     addFileDrawer: () => {
       setOpen(true);
@@ -138,14 +134,11 @@ const AddFileDrawer = forwardRef((props: AddFileDrawerProps, ref) => {
     <Drawer
       title="上传文件"
       open={open}
-      onClose={() => {
-        setOpen(false);
-        handleReset();
-      }}
+      onClose={() => setOpen(false)}
       width={500}
       extra={
         <Space>
-          <Button onClick={handleReset}>重置</Button>
+          <Button onClick={() => setOpen(false)}>取消</Button>
           <Button type="primary" onClick={handleSubmit}>
             确定
           </Button>

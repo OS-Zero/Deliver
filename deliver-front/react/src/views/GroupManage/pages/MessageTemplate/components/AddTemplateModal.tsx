@@ -115,17 +115,6 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
     }
   };
 
-  const handleReset = () => {
-    formRef?.current?.resetFields();
-    updateFormState({
-      channelTypes: [],
-      channelProviders: [],
-      messageTypes: [],
-      appIds: [],
-      isChannelTypeDisabled: true
-    });
-  };
-
   useImperativeHandle(ref, () => ({
     addTemplateModal: () => {
       setOpen(true);
@@ -153,14 +142,11 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
     <Drawer
       title={formRef?.current?.getFieldValue('templateId') ? '编辑模板' : '新增模板'}
       open={open}
-      onClose={() => {
-        setOpen(false);
-        handleReset();
-      }}
+      onClose={() => setOpen(false)}
       width={500}
       extra={
         <Space>
-          <Button onClick={handleReset}>重置</Button>
+          <Button onClick={() => setOpen(false)}>取消</Button>
           <Button type="primary" onClick={handleSubmit}>
             确定
           </Button>
