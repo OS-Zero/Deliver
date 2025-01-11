@@ -102,8 +102,8 @@ const routes = [
                     <PeopleGroupPage />
                   </Suspense>
                 ),
-                name: '人群配置'
-              },
+                name: '人群模版配置'
+              }
             ]
           },
           {

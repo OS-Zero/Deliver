@@ -64,7 +64,7 @@ export const useFormOptions = (props: UseFormOptionsProps) => {
     if (channelType && value) {
       try {
         const response = await getAppConfig({ channelType, channelProviderType: value });
-        myRef?.current?.setFieldsValue({ paramMap: JSON.parse(response) });
+        myRef?.current?.setFieldsValue({ appConfig: JSON.parse(response) });
         setJsonEditorKey?.((prev: number) => prev + 1); // 渲染视图，处理变更
       } catch (error) {
         console.error('获取应用配置失败:', error);

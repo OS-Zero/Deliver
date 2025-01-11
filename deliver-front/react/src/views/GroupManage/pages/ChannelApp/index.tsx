@@ -28,6 +28,7 @@ const Channel: React.FC = () => {
   const addRef = useRef<AddRef>();
   const testRef = useRef<{ getTestSendDrawer: () => void }>();
   const [tableParams, setTableParams] = useState({});
+  // const [checked, setChecked] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
   const { fetchChannelData, deleteChannelData, saveChannelData, changeStatus } = useChannelData();
 
@@ -45,14 +46,20 @@ const Channel: React.FC = () => {
       title: '模板状态',
       width: 120,
       dataIndex: 'appStatus',
-      render: (_, record: ChannelApp) => (
-        <Switch
-          checkedChildren="启用"
-          unCheckedChildren="禁用"
-          checked={Boolean(record?.appStatus)}
-          onClick={() => changeStatus(record.appId, record.appStatus === 0 ? 1 : 0)}
-        />
-      )
+      render: (_, record: ChannelApp) => {
+        const handleStatusChange = async (checked: boolean) => {
+          await changeStatus(record.appId, checked ? 1 : 0);
+          record.appStatus = checked ? 1 : 0;
+        };
+        return (
+          <Switch
+            checkedChildren="启用"
+            unCheckedChildren="禁用"
+            checked={Boolean(record?.appStatus)}
+            onChange={handleStatusChange}
+          />
+        );
+      }
     }),
     {
       title: '操作',
@@ -123,11 +130,12 @@ const Channel: React.FC = () => {
         {...proTableConfig({
           filterOpen,
           deleteData: deleteChannelData,
-          name: '应用名'
+          name: '应用名',
+          onSearch: setTableParams
         })}
       />
-      <DetailDrawer ref={detailRef} columns={appColumns} />
-      <AddChannelDrawer ref={addRef} onSubmit={saveChannelData} />
+      <DetailDrawer ref={detailRef} columns={appColumns} title={'应用详情'} />
+      <AddChannelDrawer ref={addRef} onSubmit={saveChannelData} onSearch={fetchChannelData} />
       {filterOpen && (
         <div className={styles['filter-container']}>
           <FilterCard onClose={() => setFilterOpen(false)} onFilter={handleFilter} />

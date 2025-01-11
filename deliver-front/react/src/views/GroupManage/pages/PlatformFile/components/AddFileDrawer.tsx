@@ -127,9 +127,9 @@ const AddFileDrawer = forwardRef((props: AddFileDrawerProps, ref) => {
       ...rule('文件类型')
     },
     {
-      title: '应用 ID',
+      title: '关联应用',
       dataIndex: 'appId',
-      ...rule('应用 ID'),
+      ...rule('关联应用'),
       width: '100%'
     }
   ];

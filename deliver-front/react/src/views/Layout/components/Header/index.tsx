@@ -24,7 +24,7 @@ const Header: React.FC = () => {
   const items = [
     {
       label: '分组管理',
-      key: 'groupManage/template',
+      key: 'groupManage',
       icon: <AppstoreOutlined />
     },
     {
@@ -62,7 +62,16 @@ const Header: React.FC = () => {
   ];
 
   const onClick: MenuProps['onClick'] = (e) => {
-    navigate(`/${e.key}`);
+    switch (e.key) {
+      case 'groupManage':
+        navigate('/groupManage/template');
+        break;
+      case 'systemManage':
+        navigate('/systemManage');
+        break;
+      default:
+        break;
+    }
   };
 
   return (

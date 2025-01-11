@@ -42,7 +42,12 @@ const FilterDrawer = (props: FilterDrawerProps) => {
   // 确认筛选
   const handleFilter = () => {
     const filters = formRef?.current?.getFieldsValue();
-    debouncedFilter(filters);
+    const { startTime, endTime, ...rest } = filters;
+    debouncedFilter({
+      startTime: startTime?.format('YYYY-MM-DD HH:mm:ss'),
+      endTime: endTime?.format('YYYY-MM-DD HH:mm:ss'),
+      ...rest
+    });
   };
 
   // 关闭筛选

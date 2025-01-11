@@ -46,10 +46,9 @@ const Template: React.FC = () => {
 
   // 这两列涉及到状态的改变，于是写在视图层
   const columns: ProColumns<MessageTemplate>[] = [
-    ...messageTableSchema,
-    {
+    ...messageTableSchema({
       title: '模板状态',
-      width: 120,
+      // width: 120,
       dataIndex: 'templateStatus',
       render: (_, record: MessageTemplate) => (
         <Switch
@@ -59,10 +58,10 @@ const Template: React.FC = () => {
           onClick={() => changeStatus(record.templateId, record.templateStatus === 0 ? 1 : 0)}
         />
       )
-    },
+    }),
     {
       title: '操作',
-      width: 160,
+      width: 200,
       valueType: 'option',
       fixed: 'right',
       render: (_, record) => [
@@ -129,11 +128,12 @@ const Template: React.FC = () => {
         {...proTableConfig({
           filterOpen,
           deleteData: deleteTemplateData,
-          name: '模版名'
+          name: '模版名',
+          onSearch: setTableParams
         })}
       />
-      <DetailDrawer ref={detailRef} columns={templateColumns} />
-      <AddTemplateModal ref={addRef} onSubmit={addTemplate} />
+      <DetailDrawer ref={detailRef} columns={templateColumns} title="模版详情" />
+      <AddTemplateModal ref={addRef} onSubmit={addTemplate} onSearch={fetchTemplateData} />
       <TestSendDrawer ref={testRef} />
       {filterOpen && (
         <div className={styles['filter-container']}>

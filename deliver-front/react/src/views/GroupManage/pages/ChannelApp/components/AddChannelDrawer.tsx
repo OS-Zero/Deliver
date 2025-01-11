@@ -1,5 +1,5 @@
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
-import { Button, Drawer, Space, FormInstance } from 'antd';
+import { Button, Drawer, Space, FormInstance, message } from 'antd';
 import { JsonEditor } from 'jsoneditor-react';
 import { BetaSchemaForm, ProFormColumnsType } from '@ant-design/pro-components';
 import { handleFieldValue } from '@/utils/handleFieldValue';
@@ -7,10 +7,11 @@ import { useFormOptions } from '@/hooks/useFormOptions';
 
 interface AddChannelDrawerProps {
   onSubmit?: (values: any) => void;
+  onSearch?: (values: any) => void;
 }
 
 const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
-  const { onSubmit } = props;
+  const { onSubmit, onSearch } = props;
   const [open, setOpen] = useState(false);
   const formRef = useRef<FormInstance>(null);
   const [jsonEditorKey, setJsonEditorKey] = useState(0);
@@ -40,8 +41,11 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
         'channelProviderType'
       );
 
+      values.appConfig = JSON.stringify(values.appConfig);
       onSubmit?.(values);
+      message.success('保存成功');
       formRef?.current?.resetFields();
+      onSearch?.({currentPage: 1, pageSize: 10});
     } catch (error) {
       console.error('保存失败:', error);
     } finally {
@@ -83,22 +87,30 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
 
   const columns: ProFormColumnsType[] = [
     {
+      title: '应用ID',
+      dataIndex: 'appId',
+      valueType: 'text',
+      formItemProps: {
+        hidden: true
+      }
+    },
+    {
       title: '应用名',
       dataIndex: 'appName',
       ...rule,
-      width: 'm'
+      width: '100%'
     },
     {
       title: '应用描述',
       dataIndex: 'appDescription',
       ...rule,
-      width: 'm'
+      width: '100%'
     },
     {
       title: '渠道类型',
       dataIndex: 'channelType',
       valueType: 'select',
-      width: 'm',
+      width: '100%',
       fieldProps: {
         options: options.channelTypeOptions.map((d) => ({
           value: d.channelType,
@@ -112,7 +124,7 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
       title: '渠道供应商类型',
       dataIndex: 'channelProviderType',
       valueType: 'select',
-      width: 'm',
+      width: '100%',
       fieldProps: {
         options: options.channelProvidersOptions.map((d) => ({
           value: d.channelProviderType,
@@ -124,16 +136,16 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
       ...rule
     },
     {
-      title: '发送参数',
-      key: 'paramMap',
-      dataIndex: 'paramMap',
+      title: '应用配置',
+      key: 'appConfig',
+      dataIndex: 'appConfig',
       initialValue: {},
       renderFormItem: () => {
         return (
           <JsonEditor
             key={jsonEditorKey}
             mode="code"
-            onChange={(e: object) => formRef.current?.setFieldsValue({ paramMap: e })}
+            onChange={(e: object) => formRef.current?.setFieldsValue({ appConfig: e })}
           />
         );
       }

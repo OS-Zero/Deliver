@@ -12,7 +12,7 @@ export const menuConfig = {
     {
       key: 'MC',
       icon: <MessageOutlined />,
-      label: '消息配置',
+      label: '模版配置',
       children: [
         {
           key: '/groupManage/template',
@@ -53,10 +53,10 @@ export const menuConfig = {
         },
         {
           key: '/groupManage/peopleGroup',
-          label: <Link to="/groupManage/peopleGroup">人群配置</Link>
-        },
+          label: <Link to="/groupManage/peopleGroup">人群模版配置</Link>
+        }
       ]
-    },
+    }
   ],
   systemManage: [
     {

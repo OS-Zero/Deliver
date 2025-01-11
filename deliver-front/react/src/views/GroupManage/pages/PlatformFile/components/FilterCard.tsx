@@ -78,8 +78,8 @@ const FilterDrawer = (props: FilterDrawerProps) => {
             }))}
           />
         </Form.Item>
-        <Form.Item label="应用 ID" name="appId">
-          <Input placeholder="请输入应用 ID" />
+        <Form.Item label="关联应用" name="appId">
+          <Input placeholder="请输入关联应用" />
         </Form.Item>
         <Form.Item label="开始时间" name="startTime">
           <DatePicker

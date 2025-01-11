@@ -1,12 +1,14 @@
 import type { ProColumns, ProDescriptionsItemProps } from '@ant-design/pro-components';
 import { MessageTemplate } from './type';
 import { Tag, Typography } from 'antd';
-import { getColor, getImg } from '@/utils/getTagStyle';
+import { getColor } from '@/utils/getTagStyle';
 
 const { Paragraph } = Typography;
 
 // 表格schema配置
-export const messageTableSchema: ProColumns<MessageTemplate>[] = [
+export const messageTableSchema: (
+  statusConfig: ProColumns<MessageTemplate>
+) => ProColumns<MessageTemplate>[] = (statusConfig) => [
   {
     title: '模板 ID',
     width: 80,
@@ -35,11 +37,7 @@ export const messageTableSchema: ProColumns<MessageTemplate>[] = [
     title: '渠道类型',
     width: 120,
     dataIndex: 'channelTypeName',
-    valueType: 'image',
-    render: (_, record) => {
-      const { src, alt } = getImg(record?.channelType);
-      return <img src={src} alt={alt} style={{ width: 35, height: 35 }} />;
-    }
+    render: (_, record) => <Tag color={getColor(Number(record?.channelType))}>{_}</Tag>
   },
   {
     title: '渠道供应商类型',
@@ -47,6 +45,25 @@ export const messageTableSchema: ProColumns<MessageTemplate>[] = [
     dataIndex: 'channelProviderTypeName',
     render: (_, record) => <Tag color={getColor(record?.channelProviderType)}>{_}</Tag>
   },
+  statusConfig,
+  {
+    title: '关联应用',
+    width: 120,
+    dataIndex: 'appName',
+    render: (_, record) => <Tag color={getColor(record?.appId)}>{_}</Tag>
+  },
+  {
+    width: 120,
+    title: '创建人',
+    dataIndex: 'createUser',
+    valueType: 'text'
+  },
+  {
+    width: 150,
+    title: '创建时间',
+    dataIndex: 'createTime',
+    valueType: 'dateTime'
+  }
 ];
 
 // 详情schema配置

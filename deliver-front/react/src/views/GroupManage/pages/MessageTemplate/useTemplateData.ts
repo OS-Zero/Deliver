@@ -2,7 +2,8 @@ import {
   saveMessageTemplate,
   deleteMessageTemplate,
   getTemplatePages,
-  updateMessageTemplateStatus
+  updateMessageTemplateStatus,
+  updateMessageTemplate
 } from '@/api/messageTemplate';
 import deleteConfirmModal from '@/components/DeleteConfirmModal';
 import { useCallback, useState } from 'react';
@@ -14,17 +15,21 @@ const useTemplateData = () => {
    * 搜索请求表单数据
    * @param data
    */
-  const fetchTemplateData = async ({ current, ...restParams }: SearchMessage & { current: number }) => {
+  const fetchTemplateData = async ({
+    current,
+    ...restParams
+  }: SearchMessage & { current: number }) => {
     const params: SearchMessage & { currentPage: number } = {
       ...restParams,
       currentPage: current || 1
     };
     setCurrentParams(params);
     const res = await getTemplatePages(params);
+    // debugger;
     return {
-      data: res?.data?.records,
+      data: res?.records,
       success: true,
-      total: res?.data?.total
+      total: res?.total
     };
   };
 
@@ -32,10 +37,8 @@ const useTemplateData = () => {
    * 新增模版
    * @param data
    */
-  const addTemplate = async (params: MessageTemplate) => {
-    console.log(params);
-    await saveMessageTemplate(params);
-  };
+  const addTemplate = async (params: MessageTemplate) =>
+    params?.templateId ? await updateMessageTemplate(params) : await saveMessageTemplate(params);
 
   /**
    * 更新模板状态

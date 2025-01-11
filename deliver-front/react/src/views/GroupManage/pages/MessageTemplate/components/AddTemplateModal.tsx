@@ -4,16 +4,18 @@ import { getChannelType, getParam } from '@/api/system';
 import { useFormState } from '@/hooks/useFormState';
 import { useGlobalContext } from '@/context/GlobalContext';
 import { getApp } from '@/api/messageTemplate';
+import { handleFieldValue } from '@/utils/handleFieldValue';
 
 const { Option } = Select;
 const { TextArea } = Input;
 
 interface AddTemplateModalProps {
   onSubmit?: (values: any) => void;
+  onSearch?: (params: any) => void;
 }
 
 const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
-  const { onSubmit } = props;
+  const { onSubmit, onSearch } = props;
   const [open, setOpen] = useState(false);
   const formRef = useRef<FormInstance>(null);
   const { formState, updateFormState } = useFormState();
@@ -50,12 +52,12 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
     }
   };
 
-  const handleChannelProviderChange = async (value: number) => {
+  const handleChannelProviderChange = async (value: number, editValue?: number) => {
     formRef?.current?.resetFields(['appId']);
     updateFormState({ appIds: [] });
     try {
       const params = {
-        channelType: formRef?.current?.getFieldValue('channelType'),
+        channelType: formRef?.current?.getFieldValue('channelType') || editValue,
         channelProviderType: value
       };
       const res = await getApp(params);
@@ -67,17 +69,50 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
     }
   };
 
-  const handleSubmit = () => {
-    formRef?.current
-      ?.validateFields()
-      .then((values) => {
-        onSubmit?.(values);
-        formRef?.current?.resetFields();
-        setOpen(false);
-      })
-      .catch((info) => {
-        console.log('Validate Failed:', info);
-      });
+  const handleSubmit = async () => {
+    try {
+      const values = await formRef?.current?.validateFields();
+
+      values.channelType = handleFieldValue(
+        values.channelType,
+        formState.channelTypes,
+        'channelTypeName',
+        'channelType'
+      );
+
+      // 处理 channelProviderType
+      values.channelProviderType = handleFieldValue(
+        values.channelProviderType,
+        formState.channelProviders,
+        'channelProviderTypeName',
+        'channelProviderType'
+      );
+
+      values.appId = handleFieldValue(values.appId, formState.appIds, 'appName', 'appId');
+
+      values.messageType = handleFieldValue(
+        values.messageType,
+        formState.messageTypes,
+        'messageTypeName',
+        'messageType'
+      );
+
+      values.usersType = handleFieldValue(
+        values.usersType,
+        userTypeParams,
+        'usersTypeName',
+        'usersType'
+      );
+
+      onSubmit?.(values);
+      message.success('保存成功');
+      formRef?.current?.resetFields();
+      onSearch?.({ currentPage: 1, pageSize: 10 });
+    } catch (error) {
+      console.error('保存失败:', error);
+    } finally {
+      setOpen(false);
+    }
   };
 
   const handleReset = () => {
@@ -97,9 +132,12 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
     },
     editTemplateModal: async (values: any) => {
       setOpen(true);
-      await handleUsersTypeChange(values.usersType);
-      await handleChannelTypeChange(values.channelType);
-      await handleChannelProviderChange(values.channelProviderType);
+      await handleUsersTypeChange(Number(values.usersType));
+      await handleChannelTypeChange(Number(values.channelType));
+      await handleChannelProviderChange(
+        Number(values.channelProviderType),
+        Number(values.channelType)
+      );
       formRef?.current?.setFieldsValue({
         ...values,
         usersType: values.usersTypeName,
@@ -130,6 +168,7 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
       }
     >
       <Form ref={formRef} layout="vertical" wrapperCol={{ span: 24 }}>
+        <Form.Item label="模板 ID" name="templateId" hidden></Form.Item>
         <Form.Item
           label="模板名"
           name="templateName"
@@ -208,17 +247,17 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
           </Select>
         </Form.Item>
         <Form.Item
-          label="应用 ID"
+          label="关联应用"
           name="appId"
-          rules={[{ required: true, message: '请选择应用 ID' }]}
+          rules={[{ required: true, message: '请选择关联应用' }]}
         >
           <Select
-            placeholder="请选择应用 ID"
+            placeholder="请选择关联应用"
             disabled={!formRef?.current?.getFieldValue('channelProviderType')}
           >
             {formState.appIds.map((app) => (
-              <Option key={app.id} value={app.id}>
-                {app.name}
+              <Option key={app.appId} value={app.appId}>
+                {app.appName}
               </Option>
             ))}
           </Select>

@@ -1,7 +1,7 @@
 import type { ProColumns, ProDescriptionsItemProps } from '@ant-design/pro-components';
 import { ChannelApp } from './type';
 import { Tag, Typography } from 'antd';
-import { getColor, getImg } from '@/utils/getTagStyle';
+import { getColor } from '@/utils/getTagStyle';
 
 const { Paragraph } = Typography;
 
@@ -26,11 +26,7 @@ export const appTableSchema: (statusConfig: ProColumns<ChannelApp>) => ProColumn
     title: '渠道类型',
     width: 120,
     dataIndex: 'channelTypeName',
-    valueType: 'image',
-    render: (_, record) => {
-      const { src, alt } = getImg(record?.channelType) || { src: '', alt: '' };
-      return <img src={src} alt={alt} style={{ width: 35, height: 35 }} />;
-    }
+    render: (_, record) => <Tag color={getColor(record?.channelType)}>{_}</Tag>
   },
   {
     title: '渠道供应商类型',
