@@ -42,7 +42,8 @@ const taskForm = reactive(taskSchema)
 const initFormDate = () => {
 	nextTick(() => {
 		for (const key in taskForm) {
-			taskForm[key].value = props.record[key]
+			if (key === 'taskParam') taskForm[key].value = JSON.parse(props.record[key] || '{}')
+			else taskForm[key].value = props.record[key]
 		}
 	})
 }
