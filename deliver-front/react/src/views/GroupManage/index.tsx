@@ -28,7 +28,7 @@ const GroupManage: React.FC = () => {
   const [groupId, setGroupId] = useState<number>();
 
   // 获取分组数据
-  const fetchCardData = useCallback(async (groupName = '') => {
+  const fetchCardData = async (groupName = '') => {
     try {
       const res = await getGroupData({ groupName });
       setGroupList(res);
@@ -36,7 +36,7 @@ const GroupManage: React.FC = () => {
       console.error('获取分组数据失败', error);
       message.error('获取分组数据失败');
     }
-  }, []);
+  };
 
   // 操作成功处理
   const handleOperation = useCallback(
@@ -100,7 +100,6 @@ const GroupManage: React.FC = () => {
   // 检查主页状态
   useEffect(() => {
     const checkMainPage = async () => {
-      debugger;
       const groupId = localStorage.getItem('group_id');
       if (groupId) {
         setState((prev) => ({ ...prev, mainPage: true }));
@@ -111,12 +110,20 @@ const GroupManage: React.FC = () => {
       }
     };
     checkMainPage();
-  }, [location.pathname, navigate, fetchCardData]);
+  }, [location.pathname, navigate]);
 
   return !state.mainPage ? (
     <div>
       <div className={styles['card-top']}>
         <h3>置顶分组</h3>
+        {!groupList.topUpGroupList.length && (
+          <Card
+            isEmpty
+            isTop
+            setOpen={() => setState((prev) => ({ ...prev, operation: 'add', open: true }))}
+            onTop={() => setState((prev) => ({ ...prev, operation: 'add', open: true }))}
+          />
+        )}
         {renderGroupCards(groupList.topUpGroupList, true)}
       </div>
       <div className={styles['card-bottom']}>

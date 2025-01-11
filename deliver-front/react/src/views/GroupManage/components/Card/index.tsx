@@ -68,6 +68,13 @@ const Card: React.FC<CardProps> = ({
   };
 
   if (isEmpty) {
+    if (isTop) {
+      return (
+        <div className={`${styles['card']} ${styles['card-empty']}`} onClick={setOpen}>
+          <div className={styles['empty-desc']}>当前置顶分组为空，你可以选择置顶分组方便后续查找分组</div>
+        </div>
+      );
+    }
     return (
       <div className={`${styles['card']} ${styles['card-empty']}`} onClick={setOpen}>
         <PlusOutlined className={styles['empty-icon']} />
