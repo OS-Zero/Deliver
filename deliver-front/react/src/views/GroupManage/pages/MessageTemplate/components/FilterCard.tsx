@@ -3,6 +3,7 @@ import { getChannelType, getParam } from '@/api/system';
 import { useFormState } from '../../../../../hooks/useFormState';
 import { CloseOutlined } from '@ant-design/icons';
 import { useRef } from 'react';
+import { useDebounce } from '@/hooks/useDebounce';
 
 const { Option } = Select;
 interface FilterDrawerProps {
@@ -52,10 +53,12 @@ const FilterDrawer = (props: FilterDrawerProps) => {
     }
   };
 
+  const debouncedFilter = useDebounce(onFilter);
+
   // 确认筛选
   const handleFilter = () => {
     const filters = formRef?.current?.getFieldsValue();
-    onFilter(filters);
+    debouncedFilter(filters);
   };
 
   // 关闭筛选

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import local from 'antd/lib/date-picker/locale/zh_CN.js';
 import { getChannelType, getParam } from '@/api/system';
 import { Channel, ChannelProvider } from '../type';
+import { useDebounce } from '@/hooks/useDebounce';
 
 interface FilterDrawerProps {
   onFilter: (filters: any) => void;
@@ -22,7 +23,7 @@ const FilterDrawer = (props: FilterDrawerProps) => {
     channelProvidersOptions: []
   });
 
-  // // 渠道类型变更处理
+  // 渠道类型变更处理
   const handleChannelTypeChange = async (value: number) => {
     formRef?.current?.resetFields(['channelProviderType']);
     try {
@@ -36,10 +37,12 @@ const FilterDrawer = (props: FilterDrawerProps) => {
     }
   };
 
+  const debouncedFilter = useDebounce(onFilter);
+
   // 确认筛选
   const handleFilter = () => {
     const filters = formRef?.current?.getFieldsValue();
-    onFilter(filters);
+    debouncedFilter(filters);
   };
 
   // 关闭筛选

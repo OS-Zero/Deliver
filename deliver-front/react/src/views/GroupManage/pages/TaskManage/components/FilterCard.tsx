@@ -15,7 +15,7 @@ const FilterDrawer = (props: FilterDrawerProps) => {
   const { onClose, onFilter } = props;
   const formRef = useRef<FormInstance>(null);
 
-  const debouncedFilter = useDebounce(onFilter, 500);
+  const debouncedFilter = useDebounce(onFilter);
 
   // 确认筛选
   const handleFilter = () => {

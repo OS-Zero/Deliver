@@ -2,8 +2,8 @@ import { Button, Card, FormInstance, DatePicker, Form, Select, Input } from 'ant
 import { CloseOutlined } from '@ant-design/icons';
 import { memo, useRef } from 'react';
 import local from 'antd/lib/date-picker/locale/zh_CN.js';
-import { BetaSchemaForm, ProFormColumnsType } from '@ant-design/pro-components';
 import { useFormOptions } from '@/hooks/useFormOptions';
+import { useDebounce } from '@/hooks/useDebounce';
 
 interface FilterDrawerProps {
   onFilter: (filters: any) => void;
@@ -14,34 +14,23 @@ const FilterDrawer = (props: FilterDrawerProps) => {
   const { onClose, onFilter } = props;
   const formRef = useRef<FormInstance>(null);
 
-  const { options, handleChannelTypeChange, handleChannelProviderTypeChange } = useFormOptions({
+  const { options, handleChannelTypeChange } = useFormOptions({
     myRef: formRef,
     key: 'file'
   });
 
+  const debouncedFilter = useDebounce(onFilter);
+
   // 确认筛选
   const handleFilter = () => {
     const filters = formRef?.current?.getFieldsValue();
-    onFilter(filters);
+    debouncedFilter(filters);
   };
 
   // 关闭筛选
   const handleReset = () => {
     formRef?.current?.resetFields();
     onClose(false);
-  };
-
-  const rule = (title: string) => {
-    return {
-      formItemProps: {
-        rules: [
-          {
-            required: true,
-            message: `${title}不可为空`
-          }
-        ]
-      }
-    };
   };
 
   return (
