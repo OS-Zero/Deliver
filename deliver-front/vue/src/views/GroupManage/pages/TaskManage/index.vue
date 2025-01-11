@@ -63,6 +63,9 @@ const operationDispatch = {
 			cancelText: '取消',
 			async onOk() {
 				await deleteTask({ ids: record.taskId })
+				pagination.current = 1
+				pagination.pageSize = 10
+				handleSearch()
 				message.success('删除成功')
 			},
 		});
@@ -86,6 +89,9 @@ const handleBatchDelete = () => {
 		cancelText: '取消',
 		async onOk() {
 			await deleteTask({ ids: rowSelection.selectedRowKeys as number[] })
+			pagination.current = 1
+			pagination.pageSize = 10
+			handleSearch()
 			message.success('删除成功')
 		},
 	});

@@ -57,8 +57,11 @@ const operationDispatch = {
 			okText: '确认',
 			cancelText: '取消',
 			async onOk() {
-				await deleteMessageTemplate({ ids: record.taskId })
+				await deleteMessageTemplate({ ids: record.templateId })
 				message.success('删除成功')
+				pagination.current = 1
+				pagination.pageSize = 10
+				handleSearch()
 			},
 		});
 	}
@@ -76,6 +79,9 @@ const handleBatchDelete = () => {
 		cancelText: '取消',
 		async onOk() {
 			await deleteMessageTemplate({ ids: rowSelection.selectedRowKeys as number[] })
+			pagination.current = 1
+			pagination.pageSize = 10
+			handleSearch()
 			message.success('删除成功')
 		},
 	});
