@@ -100,6 +100,7 @@ const handleCancelBatchDelete = () => {
 	rowSelection.selectedRowKeys = []
 }
 const changeStatus = (record: Record<string, any>) => {
+	record.taskStatus = !record.taskStatus
 	updateTaskStatus({ taskId: record.taskId, taskStatus: Number(record.taskStatus) })
 }
 const handleFilterClose = () => {
@@ -142,7 +143,7 @@ onBeforeMount(() => {
 						<CopyOutlined class="id--copy" @click="copyId(text)" />
 					</template>
 					<template v-if="column.key === 'taskStatus'">
-						<a-switch v-model:checked="record[column.key]" checked-children="开启" un-checked-children="关闭"
+						<a-switch :checked="Boolean(record[column.key])" checked-children="开启" un-checked-children="关闭"
 							@click="changeStatus(record)" />
 					</template>
 					<template v-if="column.key === 'taskType'">
