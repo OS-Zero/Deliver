@@ -81,6 +81,11 @@ export const templateColumns: ProDescriptionsItemProps<MessageTemplate>[] = [
     dataIndex: 'templateName'
   },
   {
+    title: '模版内容',
+    key: 'text',
+    dataIndex: 'templateDescription',
+  },
+  {
     title: '消息类型',
     dataIndex: 'messageTypeName',
     render: (_) => <a>{_}</a>

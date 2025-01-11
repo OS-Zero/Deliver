@@ -45,7 +45,7 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
       onSubmit?.(values);
       message.success('保存成功');
       formRef?.current?.resetFields();
-      onSearch?.({currentPage: 1, pageSize: 10});
+      onSearch?.({ currentPage: 1, pageSize: 10 });
     } catch (error) {
       console.error('保存失败:', error);
     } finally {
@@ -69,8 +69,10 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
       formRef?.current?.setFieldsValue({
         ...values,
         channelType: values.channelTypeName,
-        channelProviderType: values.channelProviderTypeName
+        channelProviderType: values.channelProviderTypeName,
+        appConfig: JSON.parse(values.appConfig)
       });
+      setJsonEditorKey((prev) => prev + 1);
     }
   }));
 

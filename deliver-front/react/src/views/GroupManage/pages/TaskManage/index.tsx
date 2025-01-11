@@ -42,7 +42,7 @@ const TaskManage: React.FC = () => {
   // 这两列涉及到状态的改变，于是写在视图层
   const columns: ProColumns<TaskDetail>[] = [
     ...taskTableSchema({
-      title: '模板状态',
+      title: '任务状态',
       width: 120,
       dataIndex: 'taskStatus',
       render: (_, record: TaskDetail) => (

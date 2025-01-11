@@ -48,7 +48,7 @@ const Template: React.FC = () => {
   const columns: ProColumns<MessageTemplate>[] = [
     ...messageTableSchema({
       title: '模板状态',
-      // width: 120,
+      width: 100,
       dataIndex: 'templateStatus',
       render: (_, record: MessageTemplate) => (
         <Switch
