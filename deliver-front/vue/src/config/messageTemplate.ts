@@ -57,6 +57,11 @@ export const messageTemplateColumns: ColumnsType = [
 		key: 'templateStatus',
 	},
 	{
+		title: '关联应用',
+		dataIndex: 'appName',
+		key: 'appName',
+	},
+	{
 		title: '创建者',
 		dataIndex: 'createUser',
 		key: 'createUser',
