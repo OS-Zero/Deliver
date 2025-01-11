@@ -48,7 +48,7 @@ export const menuConfig: Record<string, ItemType[]> = {
 				},
 				{
 					key: '/groupManage/peopleGroup',
-					label: h(ItemLink, { label: '人群配置', to: '/groupManage/peopleGroup' }),
+					label: h(ItemLink, { label: '人群模板配置', to: '/groupManage/peopleGroup' }),
 				},
 			],
 		},

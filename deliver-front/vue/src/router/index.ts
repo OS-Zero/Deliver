@@ -65,10 +65,10 @@ const routes: RouteRecordRaw[] = [
 					},
 					{
 						path: 'peopleGroup',
-						name: '人群配置',
+						name: '人群模板配置',
 						component: () => import('@/views/GroupManage/pages/TaskManage/PeopleGroup/index.vue'),
 						meta: {
-							name: '人群配置 - Deliver 企业消息推送平台',
+							name: '人群模板配置 - Deliver 企业消息推送平台',
 						},
 					},
 				],
