@@ -75,6 +75,7 @@ watch(() => router.currentRoute.value.path, async (to: string) => {
 <template>
 	<div class="groupManage">
 		<template v-if="state.mainPage">
+			<p class="desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt et esse quo.</p>
 			<div class="card-top">
 				<h3>置顶分组</h3>
 				<div class="top_cards">
@@ -136,6 +137,13 @@ watch(() => router.currentRoute.value.path, async (to: string) => {
 	h3 {
 		margin-right: var(--spacing-md);
 	}
+}
+
+.desc {
+	font-size: var(--font-size-small);
+	background-color: var(--gray-lightest);
+	padding: var(--spacing-xs);
+	border-radius: var(--border-radius-small);
 }
 
 .search_input {

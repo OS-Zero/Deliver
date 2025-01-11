@@ -36,7 +36,7 @@ const copyId = async (text: string) => {
 }
 const drawerState = reactive<{
 	open: boolean
-	operation: 'add' | 'edit' | 'more' | 'testSend'
+	operation: 'add' | 'edit' | 'more'
 	record: Record<string, any>
 }>({
 	open: false,
@@ -135,7 +135,7 @@ onUnmounted(() => {
 						<a-switch :checked="Boolean(record[column.key])" @change="changeStatus(record)" checked-children="开启"
 							un-checked-children="关闭" />
 					</template>
-					<template v-if="['channelProviderTypeName', 'channelTypeName'].includes(column.key)">
+					<template v-if="['channelProviderTypeName', 'channelTypeName'].includes(column.key as string)">
 						<a-tag :color="getColor(index)">{{ text }}</a-tag>
 					</template>
 					<template v-else-if="column.key === 'actions'">
