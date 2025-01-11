@@ -48,7 +48,12 @@ export const peopleGroupColumns: ColumnsType = [
 		width: 270,
 	},
 ];
-
+const userTypes: SelectProps['options'] = JSON.parse(localStorage.getItem('startup') || '{}')?.usersTypeParamList.map(
+	(item: Record<string, any>) => ({
+		value: item.usersType,
+		label: item.usersTypeName,
+	}),
+);
 type Schema<T> = Record<string, FormItem<keyof T>>;
 export const peopleGroupSchema: Schema<PeopleGroupForm> = {
 	peopleGroupId: {
@@ -85,18 +90,9 @@ export const peopleGroupSchema: Schema<PeopleGroupForm> = {
 	usersType: {
 		type: 'select',
 		fieldName: 'usersType',
-		label: '人群类型',
-		rules: [getRequiredRule('请选择人群类型')],
-		options: [
-			{
-				value: 1,
-				label: '实时',
-			},
-			{
-				value: 2,
-				label: '定时',
-			},
-		],
+		label: '用户类型',
+		rules: [getRequiredRule('请选择用户类型')],
+		options: userTypes,
 	},
 };
 export const peopleGroupSchemaDeps = [
@@ -107,12 +103,6 @@ export const peopleGroupSchemaDeps = [
 		}
 	},
 ];
-const userTypes: SelectProps['options'] = JSON.parse(localStorage.getItem('startup') || '{}')?.usersTypeParamList.map(
-	(item: Record<string, any>) => ({
-		value: item.usersType,
-		label: item.usersTypeName,
-	}),
-);
 
 export const filterSchema: Record<string, FormItem<keyof SearchParams>> = {
 	usersType: {
