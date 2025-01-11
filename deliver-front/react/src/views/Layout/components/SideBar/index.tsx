@@ -20,7 +20,6 @@ const SideBar: React.FC<SideBarProps> = ({ items }) => {
   };
 
   const handleMenuClick: MenuProps['onClick'] = (info) => {
-    debugger;
     navigate(info.key);
   };
 

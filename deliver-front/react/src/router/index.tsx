@@ -1,6 +1,6 @@
 import { Suspense, lazy } from 'react';
 import { Navigate } from 'react-router-dom';
-import PrivateRoute from './PrivateRoute';
+import PrivateRoute from './PrivateRoute.tsx';
 import Layout from '../views/Layout';
 
 const LoadingPage = lazy(() => import('../components/Loading'));

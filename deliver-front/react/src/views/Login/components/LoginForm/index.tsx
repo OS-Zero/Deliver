@@ -22,8 +22,8 @@ const LoginForm: React.FC = () => {
     try {
       await formRef?.current?.validateFields();
       const res = await login(loginData);
-      if (res?.token) {
-        localStorage.setItem('access_token', res.token);
+      if (res) {
+        localStorage.setItem('access_token', res);
         message.success('登录成功');
         const _res = await getCurrentLoginUserInfo();
         localStorage.setItem('userInfo', JSON.stringify(_res));

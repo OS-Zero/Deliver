@@ -1,7 +1,7 @@
 import request from '@/utils/request.ts';
 import { UserInfo, RegisterInfo, ForgotInfo } from '@/views/Login/type.ts';
 
-export function login(data: UserInfo): Promise<{ token: string }> {
+export function login(data: UserInfo): Promise<string> {
   return request({
     url: '/user/login',
     method: 'post',

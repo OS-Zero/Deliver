@@ -2,9 +2,6 @@ import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { Button, Drawer, Space, FormInstance } from 'antd';
 import { JsonEditor } from 'jsoneditor-react';
 import { BetaSchemaForm, ProFormColumnsType } from '@ant-design/pro-components';
-import { handleFieldValue } from '@/utils/handleFieldValue';
-import { useFormOptions } from '@/hooks/useFormOptions';
-
 interface AddChannelDrawerProps {
   onSubmit?: (values: any) => void;
 }
@@ -15,91 +12,69 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
   const formRef = useRef<FormInstance>(null);
   const [jsonEditorKey, setJsonEditorKey] = useState(0);
 
-  const { options, handleChannelTypeChange, handleChannelProviderTypeChange } = useFormOptions({
-    myRef: formRef,
-    setJsonEditorKey,
-    key: 'channel',
-  });
-
   const handleSubmit = async () => {
     try {
       const values = await formRef?.current?.validateFields();
-
-      values.channelType = handleFieldValue(
-        values.channelType,
-        options.channelTypeOptions,
-        'channelTypeName',
-        'channelType'
-      );
-
-      // 处理 channelProviderType
-      values.channelProviderType = handleFieldValue(
-        values.channelProviderType,
-        options.channelProvidersOptions,
-        'channelProviderTypeName',
-        'channelProviderType'
-      );
-
       onSubmit?.(values);
+      setOpen(false);
       formRef?.current?.resetFields();
     } catch (error) {
       console.error('保存失败:', error);
-    } finally {
-      setOpen(false);
     }
   };
 
   const handleReset = () => {
     formRef?.current?.resetFields();
-    formRef?.current?.setFieldsValue({ paramMap: {} }); // 重置时设置默认值为 {}
+    formRef?.current?.setFieldsValue({ taskParam: {} }); // 重置时设置默认值为 {}
   };
 
   useImperativeHandle(ref, () => ({
     addTaskDrawer: () => {
-      formRef?.current?.setFieldsValue({ paramMap: {} }); // 打开弹窗时设置默认值为 {}
+      formRef?.current?.setFieldsValue({ taskParam: {} }); // 打开弹窗时设置默认值为 {}
       setOpen(true);
     },
     editTaskModal: async (values: any) => {
       setOpen(true);
-      await handleChannelTypeChange(values.channelType);
       formRef?.current?.setFieldsValue({
         ...values,
-        channelType: values.channelTypeName,
-        channelProviderType: values.channelProviderTypeName
+        taskParam: JSON.parse(values.taskParam)
       });
+      setJsonEditorKey(jsonEditorKey + 1);
     }
   }));
 
-  const rule = {
-    formItemProps: {
-      rules: [
-        {
-          required: true,
-          message: '应用描述不可为空'
-        }
-      ]
-    }
+  const rule = (label: string) => {
+    return {
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: `${label}不可为空`
+          }
+        ]
+      }
+    };
   };
 
   const columns: ProFormColumnsType[] = [
     {
       title: '任务名',
       dataIndex: 'taskName',
-      ...rule,
+      ...rule('任务名'),
       width: '100%'
     },
     {
       title: '任务描述',
       dataIndex: 'taskDescription',
       valueType: 'textarea',
-      ...rule,
+      ...rule('任务描述'),
       width: '100%'
     },
     {
       title: '任务类型',
       dataIndex: 'taskType',
       valueType: 'select',
-      ...rule,
+      ...rule('任务类型'),
       width: '100%',
       fieldProps: {
         options: [
@@ -112,38 +87,26 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
             label: '定时'
           }
         ]
-      },
+      }
     },
     {
       title: '人群 ID',
       dataIndex: 'peopleGroupId',
-      valueType: 'select',
-      ...rule,
-      width: '100%',
-      fieldProps: {
-        options: [
-          {
-            value: 1,
-            label: '实时'
-          },
-          {
-            value: 2,
-            label: '定时'
-          }
-        ]
-      },
+      valueType: 'text',
+      ...rule('人群 ID'),
+      width: '100%'
     },
     {
       title: '发送参数',
-      key: 'paramMap',
-      dataIndex: 'paramMap',
+      key: 'taskParam',
+      dataIndex: 'taskParam',
       initialValue: {},
       renderFormItem: () => {
         return (
           <JsonEditor
             key={jsonEditorKey}
             mode="code"
-            onChange={(e: object) => formRef.current?.setFieldsValue({ paramMap: e })}
+            onChange={(e: object) => formRef.current?.setFieldsValue({ taskParam: e })}
           />
         );
       }

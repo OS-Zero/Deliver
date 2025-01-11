@@ -100,6 +100,7 @@ const GroupManage: React.FC = () => {
   // 检查主页状态
   useEffect(() => {
     const checkMainPage = async () => {
+      debugger;
       const groupId = localStorage.getItem('group_id');
       if (groupId) {
         setState((prev) => ({ ...prev, mainPage: true }));

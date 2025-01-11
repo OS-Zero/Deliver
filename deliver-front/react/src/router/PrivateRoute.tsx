@@ -1,4 +1,4 @@
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 // 路由守卫
 const PrivateRoute = () => {
@@ -6,14 +6,15 @@ const PrivateRoute = () => {
   const isAuthenticated = !!localStorage.getItem('access_token');
   const hasGroupId = !!localStorage.getItem('groupId');
 
+  const navigate = useNavigate();
+
   // 如果没有 token，重定向到登录
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
-  // 如果没有 groupId，且当前不在 welcome 页面，重定向到欢迎页
-  // if (!hasGroupId && location.pathname !== '/welcome') {
-  //   return <Navigate to="/welcome" replace />;
+  // if (!hasGroupId && location.pathname.includes('groupManage')) {
+  //   navigate('/groupManage', { replace: true });
   // }
 
   // 都满足条件，正常渲染子路由
