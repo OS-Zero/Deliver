@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { ProColumns, ProTable } from '@ant-design/pro-components';
-import { Button, Space, Input, Switch, Dropdown, MenuProps } from 'antd';
-import { DownOutlined, FilterOutlined, SearchOutlined } from '@ant-design/icons';
+import { Button, Space, Switch, Dropdown, MenuProps } from 'antd';
+import { DownOutlined, FilterOutlined } from '@ant-design/icons';
 import { MessageTemplate } from './type';
 import { templateColumns, messageTableSchema } from './constant.tsx';
 import useTemplateData from './useTemplateData';
@@ -10,6 +10,7 @@ import DetailDrawer from '@/components/DetailDrawer/index.tsx';
 import AddTemplateModal from './components/AddTemplateModal.tsx';
 import TestSendDrawer from '@/components/TestSendDrawer/index.tsx';
 import FilterCard from './components/FilterCard.tsx';
+import { proTableConfig } from '@/config/index.tsx';
 
 interface AddRef {
   addTemplateModal: () => void;
@@ -102,55 +103,12 @@ const Template: React.FC = () => {
 
   return (
     <div className={styles['template-container']}>
-      <ProTable<MessageTemplate>
-        style={{
-          width: filterOpen ? 'calc(100% - 300px)' : '100%',
-          transition: 'width 0.3s ease-in-out'
-        }}
+      <ProTable
         params={tableParams}
         columns={columns}
         rowSelection={{}}
-        // TODO: 这里到底传什么？入参为currentPage，反参是current？
         request={fetchTemplateData}
-        tableAlertRender={({ selectedRowKeys, onCleanSelected }) => {
-          return (
-            <Space size={24}>
-              <span>
-                已选 {selectedRowKeys.length} 项
-                <a style={{ marginInlineStart: 8 }} onClick={onCleanSelected}>
-                  取消选择
-                </a>
-              </span>
-            </Space>
-          );
-        }}
-        tableAlertOptionRender={({ selectedRowKeys }) => {
-          return (
-            <Space size={16}>
-              <a onClick={() => deleteTemplateData(selectedRowKeys as number[])}>批量删除</a>
-            </Space>
-          );
-        }}
-        scroll={{ x: 1300 }}
-        options={false}
-        search={false}
-        pagination={{
-          defaultCurrent: 1,
-          defaultPageSize: 10,
-          showSizeChanger: true,
-          showTotal: (_) => `共 ${_} 条`,
-          size: 'default'
-        }}
         rowKey="templateId"
-        headerTitle={
-          <div style={{ width: '200px' }}>
-            <Input
-              placeholder="请输入模板名进行查询"
-              style={{ borderRadius: '50px' }}
-              prefix={<SearchOutlined />}
-            />
-          </div>
-        }
         toolBarRender={() => [
           <>
             <Button
@@ -168,6 +126,11 @@ const Template: React.FC = () => {
             />
           </>
         ]}
+        {...proTableConfig({
+          filterOpen,
+          deleteData: deleteTemplateData,
+          name: '应用名'
+        })}
       />
       <DetailDrawer ref={detailRef} columns={templateColumns} />
       <AddTemplateModal ref={addRef} onSubmit={addTemplate} />

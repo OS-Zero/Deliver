@@ -101,7 +101,6 @@ const Channel: React.FC = () => {
         params={tableParams}
         columns={columns}
         rowSelection={{}}
-        // TODO: 这里到底传什么？入参为currentPage，反参是current？
         request={fetchChannelData}
         rowKey="appId"
         toolBarRender={() => [
