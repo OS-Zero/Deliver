@@ -23,12 +23,29 @@ service.interceptors.request.use(
 service.interceptors.response.use(
 	(res) => {
 		if (res.status === 200) {
+			const contentType = res.headers['content-type']; // 获取返回的 Content-Type
 			const _res = res.data;
-			return _res.data;
-			if (_res.code === 0) return _res.data;
-			if (_res.code === 1) {
-				message.error(_res.errorMessage);
-				return Promise.reject(_res.errorMessage);
+			if (contentType && contentType.includes('application/json')) {
+				// 如果是 JSON 响应，按照 code 进行处理
+				if (_res.code === 0) return _res.data;
+				if (_res.code === 1) {
+					message.error(_res.errorMessage);
+					return Promise.reject(_res.errorMessage);
+				}
+				message.error('服务端错误');
+				return Promise.reject('服务端错误');
+			}
+			if (contentType && contentType.includes('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
+				// 如果是 Excel 文件（application/vnd.openxmlformats-officedocument.spreadsheetml.sheet），启动下载
+				// 尝试从 Content-Disposition 中提取文件名
+				let fileName = 'downloaded-file.xlsx';  // 默认文件名
+				// 创建 Blob 对象并下载
+				const blob = new Blob([_res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+				const link = document.createElement('a');
+				link.href = URL.createObjectURL(blob);
+				link.download = fileName;
+				link.click();
+				return;
 			}
 			message.error('服务端错误');
 			return Promise.reject('服务端错误');
