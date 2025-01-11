@@ -123,38 +123,42 @@ export const platformFileSchemaDeps = [
 	async (data: Schema<UploadPlatformFile>) => {
 		try {
 			if (notUndefined(data.channelType.value)) {
-				data.channelProviderType.value = undefined;
 				const { channelProviderTypeList } = await getParam({ channelType: data.channelType.value });
 				data.channelProviderType.options = channelProviderTypeList.map((item) => ({
 					value: item.channelProviderType,
 					label: item.channelProviderTypeName,
 				}));
+				!data.channelProviderType.options.some((item) => item.value === data.channelProviderType.value) &&
+					(data.channelProviderType.value = undefined);
 			} else {
+				data.channelProviderType.value = undefined;
 				data.channelProviderType.options = [];
 			}
 		} catch (error) {
+			data.channelProviderType.value = undefined;
 			data.channelProviderType.options = [];
 		}
 	},
 	async (data: Schema<UploadPlatformFile>) => {
 		try {
 			if (notUndefined(data.channelType.value)) {
-				data.platformFileType.value = undefined;
 				data.platformFileType.options = (await getPlatformFileType({ channelType: data.channelType.value })).map((item) => ({
 					value: item.platformFileType,
 					label: item.platformFileTypeName,
 				}));
+				!data.platformFileType.options.some((item) => item.value === data.platformFileType.value) && (data.platformFileType.value = undefined);
 			} else {
+				data.platformFileType.value = undefined;
 				data.platformFileType.options = [];
 			}
 		} catch (error) {
+			data.platformFileType.value = undefined;
 			data.platformFileType.options = [];
 		}
 	},
 	async (data: Schema<UploadPlatformFile>) => {
 		try {
 			if (notUndefined(data.channelType.value) && notUndefined(data.channelProviderType.value)) {
-				data.appId.value = undefined;
 				const appOptions = await getAppByChannel({
 					channelType: data.channelType.value,
 					channelProviderType: data.channelProviderType.value,
@@ -163,10 +167,13 @@ export const platformFileSchemaDeps = [
 					value: item.appId,
 					label: item.appName,
 				}));
+				!data.appId.options.some((item) => item.value === data.appId.value) && (data.appId.value = undefined);
 			} else {
+				data.appId.value = undefined;
 				data.appId.options = [];
 			}
 		} catch (error) {
+			data.appId.value = undefined;
 			data.appId.options = [];
 		}
 	},

@@ -140,23 +140,23 @@ export const messageTemplateSchemaDeps = [
 	async (data: MessageTemplateSchema) => {
 		try {
 			if (notUndefined(data.usersType.value)) {
-				data.channelType.value = undefined;
 				data.channelType.options = (await getChannelType({ usersType: data.usersType.value })).map((item) => ({
 					value: item.channelType,
 					label: item.channelTypeName,
 				}));
+				!data.channelType.options.some((item) => item.value === data.channelType.value) && (data.channelType.value = undefined);
 			} else {
+				data.channelType.value = undefined;
 				data.channelType.options = [];
 			}
 		} catch (error) {
+			data.channelType.value = undefined;
 			data.channelType.options = [];
 		}
 	},
 	async (data: MessageTemplateSchema) => {
 		try {
 			if (notUndefined(data.channelType.value)) {
-				data.channelProviderType.value = undefined;
-				data.messageType.value = undefined;
 				const { channelProviderTypeList, messageTypeList } = await getParam({ channelType: data.channelType.value });
 				data.channelProviderType.options = channelProviderTypeList.map((item) => ({
 					value: item.channelProviderType,
@@ -166,11 +166,18 @@ export const messageTemplateSchemaDeps = [
 					value: item.messageType,
 					label: item.messageTypeName,
 				}));
+				!data.channelProviderType.options.some((item) => item.value === data.channelProviderType.value) &&
+					(data.channelProviderType.value = undefined);
+				!data.messageType.options.some((item) => item.value === data.messageType.value) && (data.messageType.value = undefined);
 			} else {
+				data.channelProviderType.value = undefined;
+				data.messageType.value = undefined;
 				data.channelProviderType.options = [];
 				data.messageType.options = [];
 			}
 		} catch (error) {
+			data.channelProviderType.value = undefined;
+			data.messageType.value = undefined;
 			data.channelProviderType.options = [];
 			data.messageType.options = [];
 		}
@@ -178,7 +185,6 @@ export const messageTemplateSchemaDeps = [
 	async (data: MessageTemplateSchema) => {
 		try {
 			if (notUndefined(data.channelType.value) && notUndefined(data.channelProviderType.value)) {
-				data.appId.value = undefined;
 				const appOptions = await getAppByChannel({
 					channelType: data.channelType.value,
 					channelProviderType: data.channelProviderType.value,
@@ -187,10 +193,13 @@ export const messageTemplateSchemaDeps = [
 					value: item.appId,
 					label: item.appName,
 				}));
+				!data.appId.options.some((item) => item.value === data.appId.value) && (data.appId.value = undefined);
 			} else {
+				data.appId.value = undefined;
 				data.appId.options = [];
 			}
 		} catch (error) {
+			data.appId.value = undefined;
 			data.appId.options = [];
 		}
 	},

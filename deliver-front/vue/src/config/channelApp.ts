@@ -112,23 +112,25 @@ export const channelAppSchemaDeps = [
 	async (data: Schema<ChannelAppForm>) => {
 		try {
 			if (notUndefined(data.channelType.value)) {
-				data.channelProviderType.value = undefined;
 				const { channelProviderTypeList } = await getParam({ channelType: data.channelType.value });
 				data.channelProviderType.options = channelProviderTypeList.map((item) => ({
 					value: item.channelProviderType,
 					label: item.channelProviderTypeName,
 				}));
+				!data.channelProviderType.options.some((item) => item.value === data.channelProviderType.value) &&
+					(data.channelProviderType.value = undefined);
 			} else {
+				data.channelProviderType.value = undefined;
 				data.channelProviderType.options = [];
 			}
 		} catch (error) {
+			data.channelProviderType.value = undefined;
 			data.channelProviderType.options = [];
 		}
 	},
 	async (data: Schema<ChannelAppForm>) => {
 		try {
 			if (notUndefined(data.channelType.value) && notUndefined(data.channelProviderType.value)) {
-				data.appConfig.value = undefined;
 				const appConfig = await getAppConfig({
 					channelType: data.channelType.value,
 					channelProviderType: data.channelProviderType.value,

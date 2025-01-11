@@ -136,7 +136,7 @@ onUnmounted(() => {
 							@change="changeStatus(record)" />
 					</template>
 					<template
-						v-if="['usersTypeName', 'channelProviderTypeName', 'messageTypeName', 'channelTypeName'].includes(column.key)">
+						v-if="['usersTypeName', 'channelProviderTypeName', 'messageTypeName', 'channelTypeName'].includes(column.key as string)">
 						<a-tag :color="getColor(index)">{{ text }}</a-tag>
 					</template>
 					<template v-if="column.key === 'actions'">
