@@ -61,11 +61,13 @@ const initMoreDate = () => {
 const moreInfo = reactive<Array<{ label: string; value: any }>>([])
 const operationDispatch = {
 	add: async () => {
+		await formRef.value.validate()
 		await saveChannelApp(getDataFromSchema(channelAppForm))
 		message.success('新增成功')
 		handleCancel()
 	},
 	edit: async () => {
+		await formRef.value.validate()
 		await updateChannelApp(getDataFromSchema(channelAppForm))
 		message.success('编辑成功')
 		handleCancel()
