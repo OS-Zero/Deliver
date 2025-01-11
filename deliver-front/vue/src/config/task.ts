@@ -114,7 +114,7 @@ export const filterSchema: Record<string, FormItem<keyof SearchParams>> = {
 	taskType: {
 		type: 'select',
 		fieldName: 'taskType',
-		label: '消息类型',
+		label: '任务类型',
 		options: [
 			{
 				key: 1,
@@ -132,12 +132,12 @@ export const filterSchema: Record<string, FormItem<keyof SearchParams>> = {
 		label: '任务状态',
 		options: [
 			{
-				value: 1,
-				label: '实时',
+				value: 0,
+				label: '关闭',
 			},
 			{
-				value: 2,
-				label: '定时',
+				value: 1,
+				label: '开启',
 			},
 		],
 	},
