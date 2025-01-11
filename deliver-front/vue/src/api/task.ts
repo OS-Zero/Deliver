@@ -10,6 +10,7 @@ export function getTask(data: SearchParams): Promise<TableData<Task>> {
 	});
 }
 export function saveTask(data: TaskForm): Promise<never> {
+	data.taskParam = JSON.stringify(data.taskParam || '{}');
 	return request({
 		url: '/sendTask/save',
 		method: 'post',
@@ -17,6 +18,7 @@ export function saveTask(data: TaskForm): Promise<never> {
 	});
 }
 export function updateTask(data: TaskForm): Promise<never> {
+	data.taskParam = JSON.stringify(data.taskParam || '{}');
 	return request({
 		url: '/sendTask/update',
 		method: 'post',
