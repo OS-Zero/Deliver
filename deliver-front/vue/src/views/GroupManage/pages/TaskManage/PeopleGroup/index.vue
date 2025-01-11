@@ -120,7 +120,7 @@ onUnmounted(() => {
 	<div class="container">
 		<div class="container-table">
 			<div class="table-header">
-				<SearchInput class="search_input" placeholder="请输入关联人群" v-model="searchValue" @search="debounceSearch()">
+				<SearchInput class="search_input" placeholder="请输入人群名" v-model="searchValue" @search="debounceSearch()">
 				</SearchInput>
 				<div class="operation">
 					<a-button class="btn--add" @click="handleActions('download')">下载人群模板文件</a-button>

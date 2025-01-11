@@ -16,12 +16,12 @@ export const peopleGroupLocale = {
 };
 export const peopleGroupColumns: ColumnsType = [
 	{
-		title: '关联人群 Id',
+		title: '人群 Id',
 		dataIndex: 'peopleGroupId',
 		key: 'peopleGroupId',
 	},
 	{
-		title: '关联人群',
+		title: '人群名',
 		dataIndex: 'peopleGroupName',
 		key: 'peopleGroupName',
 	},
