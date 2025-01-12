@@ -63,7 +63,7 @@ const operationDispatch = {
 			okText: '确认',
 			cancelText: '取消',
 			async onOk() {
-				await deleteChannelApp({ ids: record && record.appId })
+				await deleteChannelApp({ ids: [record.appId] })
 				pagination.current = 1
 				pagination.pageSize = 10
 				handleSearch()

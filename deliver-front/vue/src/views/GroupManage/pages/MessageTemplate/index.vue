@@ -57,7 +57,7 @@ const operationDispatch = {
 			okText: '确认',
 			cancelText: '取消',
 			async onOk() {
-				await deleteMessageTemplate({ ids: record.templateId })
+				await deleteMessageTemplate({ ids: [record.templateId] })
 				message.success('删除成功')
 				pagination.current = 1
 				pagination.pageSize = 10

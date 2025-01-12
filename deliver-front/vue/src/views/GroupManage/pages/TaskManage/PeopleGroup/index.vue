@@ -64,7 +64,7 @@ const operationDispatch = {
 			okText: '确认',
 			cancelText: '取消',
 			async onOk() {
-				await deletePeopleGroup({ ids: record.taskId })
+				await deletePeopleGroup({ ids: [record.taskId] })
 				pagination.current = 1
 				pagination.pageSize = 10
 				handleSearch()
