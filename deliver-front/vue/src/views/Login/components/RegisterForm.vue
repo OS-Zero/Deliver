@@ -39,16 +39,22 @@ const registerForm = reactive<Schema<RegisterForm>>({
 		rules: [{ validator: validateEmail, trigger: 'change' }]
 	},
 	userPassword: {
-		type: 'input',
+		type: 'inputPassword',
 		fieldName: 'userPassword',
 		placeholder: '请输入用户密码',
 		rules: [getRequiredRule('请输入用户密码'), ...getRangeRule(6, 16, '密码长度范围为6-16位')],
 	},
 	confirmPwd: {
-		type: 'input',
+		type: 'inputPassword',
 		fieldName: 'confirmPwd',
 		placeholder: '请确认用户密码',
 		rules: [{ validator: validatePwd }],
+	},
+	userRealName: {
+		type: 'input',
+		fieldName: 'userRealName',
+		placeholder: '请输入用户真实姓名',
+		rules: [getRequiredRule('请输入用户真实姓名')],
 	},
 	verificationCode: {
 		type: 'verificationCode',

@@ -19,8 +19,7 @@ const handleAction = async (opt: string) => {
 			break;
 		case 'logout':
 			await logout()
-			localStorage.removeItem("access_token")
-			localStorage.removeItem("user_info")
+			localStorage.clear()
 			router.push('/login')
 			break;
 		default:
