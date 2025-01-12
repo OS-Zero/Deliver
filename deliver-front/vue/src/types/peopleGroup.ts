@@ -12,7 +12,4 @@ export interface SearchParams extends TableSearchParams, Pick<Partial<PeopleGrou
 	startTime?: string;
 	endTime?: string;
 }
-export interface PeopleGroupForm
-	extends Pick<PeopleGroup, 'peopleGroupId' | 'peopleGroupName' | 'peopleGroupDescription' | 'peopleGroupList' | 'usersType'> {
-	excelTemplateFile: File;
-}
+export type PeopleGroupForm = Pick<PeopleGroup, 'peopleGroupId' | 'peopleGroupName' | 'peopleGroupDescription' | 'peopleGroupList' | 'usersType'>;

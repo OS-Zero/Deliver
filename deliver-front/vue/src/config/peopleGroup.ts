@@ -5,6 +5,7 @@ import { SelectProps } from 'ant-design-vue';
 import { analysisExcelTemplateFile } from '@/api/peopleGroup';
 import { getRangeRule, getRequiredRule } from '@/utils/validate';
 import { notUndefined } from '@/utils/utils';
+import { Schema } from '@/types';
 export const peopleGroupLocale = {
 	peopleGroupId: '关联人群 Id',
 	peopleGroupDescription: '人群描述',
@@ -54,8 +55,24 @@ const userTypes: SelectProps['options'] = JSON.parse(localStorage.getItem('start
 		label: item.usersTypeName,
 	}),
 );
-type Schema<T> = Record<string, FormItem<keyof T>>;
-export const peopleGroupSchema: Schema<PeopleGroupForm> = {
+interface PeopleGroupSchema extends PeopleGroupForm {
+	$radioGroup: number;
+	$excelTemplateFile: File;
+}
+
+const validatePeopleGroupList = (_rule: any, value: any) => {
+	const regExp = /^([^\s,]{1,30})(,([^\s,]{1,30}))*$/;
+	if (!value) {
+		return Promise.reject('请输入人群列表');
+	} else if (regExp.test(value)) {
+		return Promise.resolve();
+	}
+	return Promise.reject('人群列表格式错误');
+};
+const getTextareaDescription = (num: number) => {
+	return `使用英文逗号分割，最多可输入100个；共输入了 <span style="color:red">${num}</span> 个号码`;
+};
+export const peopleGroupSchema: Schema<PeopleGroupSchema> = {
 	peopleGroupId: {
 		type: 'none',
 		fieldName: 'peopleGroupId',
@@ -72,21 +89,6 @@ export const peopleGroupSchema: Schema<PeopleGroupForm> = {
 		label: '人群描述',
 		rules: [getRequiredRule('请输入人群描述'), ...getRangeRule(3, 20, '字符长度限制在3-20')],
 	},
-	excelTemplateFile: {
-		type: 'upload',
-		fieldName: 'excelTemplateFile',
-		label: '人群文件',
-		uploadConifg: {
-			name: '解析excel人群文件',
-			maxCount: 1,
-		},
-	},
-	peopleGroupList: {
-		type: 'textarea',
-		fieldName: 'peopleGroupList',
-		label: '人群列表',
-		rules: [getRequiredRule('请输入人群列表')],
-	},
 	usersType: {
 		type: 'select',
 		fieldName: 'usersType',
@@ -94,12 +96,66 @@ export const peopleGroupSchema: Schema<PeopleGroupForm> = {
 		rules: [getRequiredRule('请选择用户类型')],
 		options: userTypes,
 	},
+	$radioGroup: {
+		value: 0,
+		type: 'radioGroup',
+		fieldName: '$radioGroup',
+		radioGroupConfig: {
+			options: [
+				{
+					label: '上传文件解析人群列表',
+					value: 0,
+				},
+				{
+					label: '手动输入人群列表',
+					value: 1,
+				},
+			],
+		},
+	},
+	$excelTemplateFile: {
+		type: 'upload',
+		fieldName: '$excelTemplateFile',
+		label: '人群文件',
+		uploadConifg: {
+			title: '解析人群文件',
+			description: '单次人群最多支持上传100条，请上传csv、xlsx格式文件，大小10MB以内',
+			maxCount: 1,
+		},
+	},
+	peopleGroupList: {
+		type: 'none',
+		fieldName: 'peopleGroupList',
+		label: '人群列表',
+		rules: [{ required: true, validator: validatePeopleGroupList, trigger: 'blur' }],
+		textareaConfig: {
+			description: getTextareaDescription(0),
+		},
+	},
 };
 export const peopleGroupSchemaDeps = [
-	async (data: Schema<PeopleGroupForm>) => {
-		if (notUndefined(data.excelTemplateFile.value)) {
+	async (data: Schema<PeopleGroupSchema>) => {
+		if (notUndefined(data.$excelTemplateFile.value)) {
 			data.peopleGroupList.value = undefined;
-			data.peopleGroupList.value = await analysisExcelTemplateFile({ file: data.excelTemplateFile.value });
+			data.peopleGroupList.value = await analysisExcelTemplateFile({ file: data.$excelTemplateFile.value });
+		}
+	},
+	async (data: Schema<PeopleGroupSchema>) => {
+		const radio = data.$radioGroup.value;
+		if (radio === 0) {
+			data.peopleGroupList.type = 'none';
+			data.$excelTemplateFile.type = 'upload';
+		} else if (radio === 1) {
+			data.$excelTemplateFile.type = 'none';
+			data.peopleGroupList.type = 'textarea';
+		}
+	},
+	async (data: Schema<PeopleGroupSchema>) => {
+		const list = data.peopleGroupList.value;
+		if (list) {
+			data.peopleGroupList.textareaConfig!.description = getTextareaDescription(list.split(',').length);
+		} else {
+			data.peopleGroupList.textareaConfig!.description = getTextareaDescription(0);
 		}
 	},
 ];

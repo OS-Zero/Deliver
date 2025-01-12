@@ -40,8 +40,9 @@ defineExpose({
 				<a-input v-model:value="formSchema[field.fieldName].value" />
 			</a-form-item>
 			<a-form-item v-else-if="field.type === 'button'">
-				<a-button v-bind="field.buttonConfig" @click="field.buttonConfig?.onClick">{{ field.buttonConfig?.name
-					}}</a-button>
+				<a-button style="width: 100%;" v-bind="field.buttonConfig" @click="field.buttonConfig?.onClick">{{
+					field.buttonConfig?.name
+				}}</a-button>
 			</a-form-item>
 			<a-form-item v-if="field.type !== 'none'" :label="field.label" :name="name(field)" :rules="field.rules">
 				<template v-if="field.type === 'input'">
@@ -56,6 +57,7 @@ defineExpose({
 				</template>
 				<template v-else-if="field.type === 'textarea'">
 					<a-textarea v-model:value="formSchema[field.fieldName].value" />
+					<p class="textarea-desc" v-html="field.textareaConfig?.description"></p>
 				</template>
 				<template v-else-if="field.type === 'list'">
 					<div class="list-item" v-for="(item, index) in formSchema[field.fieldName].value" :key="item.id">
@@ -82,6 +84,9 @@ defineExpose({
 				</template>
 				<template v-else-if="field.type === 'upload'">
 					<Upload v-model="formSchema[field.fieldName].value" :config="field.uploadConifg"></Upload>
+				</template>
+				<template v-else-if="field.type === 'radioGroup'">
+					<a-radio-group v-model:value="formSchema[field.fieldName].value" v-bind="field.radioGroupConfig" />
 				</template>
 				<template v-else-if="field.type === 'verificationCode'">
 					<div class="verify">
@@ -119,7 +124,7 @@ defineExpose({
 	}
 }
 
-.submit_btn {
-	width: 100%
+.textarea-desc {
+	color: var(--gray-medium-dark);
 }
 </style>

@@ -2,9 +2,11 @@
 import { UploadFile, UploadProps } from 'ant-design-vue';
 import { InboxOutlined } from '@ant-design/icons-vue';
 import { ref, watch } from 'vue';
+import { UploadConfig } from '@/types/form';
+
 const props = defineProps<{
 	modelValue: File | UploadFile<any>[]
-	config?: UploadProps
+	config?: UploadConfig
 }>()
 const emit = defineEmits(['update:modelValue'])
 const fileList = ref()
@@ -27,8 +29,15 @@ watch(props, () => {
 		<p class="ant-upload-drag-icon">
 			<InboxOutlined />
 		</p>
-		<p class="ant-upload-text">{{ config?.name ? config.name : '点击或拖拽上传' }}</p>
+		<p class="ant-upload-text">{{ config?.title ? config.title : '点击或拖拽上传' }}</p>
+		<p class="ant-upload-hint">
+			{{ config?.description }}
+		</p>
 	</a-upload-dragger>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+p {
+	padding: 0 var(--spacing-xs);
+}
+</style>

@@ -27,7 +27,7 @@ export async function copyToClipboard(text: string) {
 export function getDataFromSchema(record: Record<string, FormItem<string>>) {
 	const _obj: any = {};
 	for (const key in record) {
-		_obj[key] = record[key].value;
+		key[0] !== '$' && (_obj[key] = record[key].value);
 	}
 	return _obj;
 }

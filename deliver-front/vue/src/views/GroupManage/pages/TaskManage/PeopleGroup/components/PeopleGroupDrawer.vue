@@ -42,7 +42,8 @@ const { dynamicData: peopleGroupForm, stop } = dynamic(peopleGroupSchema, people
 const initFormDate = () => {
 	nextTick(() => {
 		for (const key in peopleGroupForm) {
-			peopleGroupForm[key].value = props.record[key]
+			if (key === '$radioGroup') peopleGroupForm[key].value = 1
+			else peopleGroupForm[key].value = props.record[key]
 		}
 	})
 }

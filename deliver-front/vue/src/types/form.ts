@@ -1,6 +1,9 @@
-import { SelectProps, UploadProps } from 'ant-design-vue';
+import { RadioGroupProps, SelectProps, UploadProps } from 'ant-design-vue';
 import { Rule } from 'ant-design-vue/es/form';
-
+export interface UploadConfig extends UploadProps {
+	title?: string;
+	description?: string;
+}
 type ItemType =
 	| 'none'
 	| 'input'
@@ -17,7 +20,8 @@ type ItemType =
 	| 'datePicker'
 	| 'upload'
 	| 'button'
-	| 'verificationCode';
+	| 'verificationCode'
+	| 'radioGroup';
 
 export interface FormItem<T> {
 	value?: any;
@@ -29,8 +33,10 @@ export interface FormItem<T> {
 	rules?: Rule[];
 	options?: SelectProps['options'];
 	disabled?: boolean;
+	textareaConfig?: Record<string, any>;
 	editorConfig?: Record<string, any>;
-	uploadConifg?: UploadProps;
+	uploadConifg?: UploadConfig;
 	buttonConfig?: Record<string, any>;
+	radioGroupConfig?: RadioGroupProps;
 	max?: number;
 }
