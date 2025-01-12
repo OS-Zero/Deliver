@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author oszero
@@ -46,42 +47,14 @@ public class WeChatParamSetting implements MessageLink<SendTaskDto> {
         String appConfig = appConfigUtils.decryptAppConfig(sendTaskDto.getAppConfig());
         WeChatApp weChatApp = JSONUtil.toBean(appConfig, WeChatApp.class);
         Map<String, Object> paramMap = sendTaskDto.getMessageParam();
-        String pushSubject = paramMap.get("pushSubject").toString();
-        String wechatUserIdType = paramMap.get("wechatUserIdType").toString();
-        List<String> users = sendTaskDto.getUsers();
-        if ("app".equals(pushSubject)) {
-            switch (wechatUserIdType) {
-                case "touser":
-                case "toparty":
-                case "totag": {
-                    paramMap.put("agentid", weChatApp.getAgentid());
-                    paramMap.put(wechatUserIdType, String.join("|", users));
-                    break;
-                }
-                case "to_parent_userid":
-                case "to_student_userid":
-                case "to_party": {
-                    paramMap.put("agentid", weChatApp.getAgentid());
-                    paramMap.put(wechatUserIdType, users);
-                    break;
-                }
-                case "toall": {
-                    paramMap.put("agentid", weChatApp.getAgentid());
-                    paramMap.put(wechatUserIdType, users.get(0));
-                    break;
-                }
-                case "chatid": {
-                    paramMap.put(wechatUserIdType, users.get(0));
-                    break;
-                }
-                default: {
-                }
-            }
-        }
-        MessageTypeEnum messageTypeEnum = MessageTypeEnum.getInstanceByCode(sendTaskDto.getMessageType());
-        if (messageTypeEnum == null) {
+        String messageType = sendTaskDto.getMessageType();
+        MessageTypeEnum messageTypeEnum = MessageTypeEnum.getInstanceByCode(messageType);
+        if (Objects.isNull(messageTypeEnum)) {
             throw new RuntimeException("消息类型非法");
         }
+        String pushSubject = messageTypeEnum.getPushSubject();
+        String wechatUserIdType = paramMap.get("wechatUserIdType").toString();
+        List<String> users = sendTaskDto.getUsers();
         paramMap.put("msgtype", messageTypeEnum.getMsgType());
     }
 }

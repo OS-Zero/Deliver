@@ -17,17 +17,22 @@
 
 package com.oszero.deliver.business.server.handler.impl;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import com.oszero.deliver.business.common.enums.MessageTypeEnum;
+import com.oszero.deliver.business.common.enums.PushSubjectEnum;
 import com.oszero.deliver.business.common.util.AppConfigUtils;
 import com.oszero.deliver.business.server.handler.BaseHandler;
 import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.platformclient.client.wechat.WeChatClient;
+import com.oszero.deliver.platformclient.common.ClientConstant;
 import com.oszero.deliver.platformclient.model.app.WeChatApp;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author oszero
@@ -47,23 +52,24 @@ public class WeChatHandler extends BaseHandler {
     @Override
     protected void handle(SendTaskDto sendTaskDto) throws Exception {
         String appConfig = appConfigUtils.decryptAppConfig(sendTaskDto.getAppConfig());
+        String messageType = sendTaskDto.getMessageType();
+        MessageTypeEnum messageTypeEnum = MessageTypeEnum.getInstanceByCode(messageType);
+        if (Objects.isNull(messageTypeEnum)) {
+            throw new RuntimeException("消息类型非法");
+        }
+        String pushSubject = messageTypeEnum.getPushSubject();
         WeChatApp weChatApp = JSONUtil.toBean(appConfig, WeChatApp.class);
         String accessToken = weChatClient.getAccessToken(weChatApp);
         Map<String, Object> messageParam = sendTaskDto.getMessageParam();
-        String pushSubject = messageParam.get("pushSubject").toString();
-        String wechatUserIdType = messageParam.get("wechatUserIdType").toString();
-        messageParam.remove("pushSubject");
-        messageParam.remove("wechatUserIdType");
-        if ("app".equals(pushSubject)) {
-            if (new HashSet<>(Arrays.asList("touser", "toparty", "totag")).contains(wechatUserIdType)) {
-                weChatClient.sendAppMessage(accessToken, messageParam);
-            } else if (new HashSet<>(Arrays.asList("to_parent_userid", "to_student_userid", "to_party", "toall")).contains(wechatUserIdType)) {
-                weChatClient.sendAppSchoolMessage(accessToken, messageParam);
-            } else {
-                weChatClient.sendAppGroupMessage(accessToken, messageParam);
-            }
-        } else if ("robot".equals(pushSubject)) {
-            weChatClient.sendRobotMessage(accessToken, messageParam, sendTaskDto.getUsers());
+        messageParam.remove(ClientConstant.USER_ID_TYPE);
+        if (StrUtil.equals(PushSubjectEnum.WECHAT_APP.getCode(), pushSubject)) {
+            weChatClient.sendAppMessage(accessToken, messageParam);
+        } else if (StrUtil.equals(PushSubjectEnum.WECHAT_APP_TO_GROUP.getCode(), pushSubject)) {
+            weChatClient.sendAppGroupMessage(accessToken, messageParam);
+        } else if (StrUtil.equals(PushSubjectEnum.WECHAT_SCHOOL.getCode(), pushSubject)) {
+            weChatClient.sendAppSchoolMessage(accessToken, messageParam);
+        } else if (StrUtil.equals(PushSubjectEnum.WECHAT_GROUP_ROBOT.getCode(), pushSubject)) {
+            weChatClient.sendRobotMessage(messageParam, sendTaskDto.getUsers());
         }
     }
 }

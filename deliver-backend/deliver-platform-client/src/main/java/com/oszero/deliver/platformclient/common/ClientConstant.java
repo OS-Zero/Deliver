@@ -21,9 +21,27 @@ package com.oszero.deliver.platformclient.common;
  * @author oszero
  * @version 1.0.0
  */
-public class ClientConstant {
+public interface ClientConstant {
     /********** 渠道供应商类型 **********/
-    public static final String DEFAULT = "默认平台";
-    public static final String ALI_YUN = "阿里云";
-    public static final String TENCENT = "腾讯云";
+    String DEFAULT = "默认平台";
+    String ALI_YUN = "阿里云";
+    String TENCENT = "腾讯云";
+    /********** 渠道通用相关常量 **********/
+    String SPILT = ",";
+    String USER_ID_TYPE = "userIdType";
+    /********** 电话相关常量 **********/
+    /********** 短信相关常量 **********/
+    /********** 邮件相关常量 **********/
+    /********** 钉钉相关常量 **********/
+    String DING_AGENT_ID = "agent_id";
+    String DING_MSG_TYPE = "msgtype";
+    String DING_MSG_PARAM = "msgParam";
+    String DING_ROBOT_CODE = "robotCode";
+    String DING_MSG_KEY = "msgKey";
+    String DING_OPEN_CONVERSATION_ID = "openConversationId";
+    /********** 企微相关常量 **********/
+    String WECHAT_AGENT_ID = "agentid";
+    String WECHAT_MSG_TYPE = "msgtype";
+    String WECHAT_SPILT = "|";
+    /********** 飞书相关常量 **********/
 }

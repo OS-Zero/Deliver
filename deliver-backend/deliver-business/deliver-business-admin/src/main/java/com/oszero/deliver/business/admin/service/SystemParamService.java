@@ -18,9 +18,7 @@
 package com.oszero.deliver.business.admin.service;
 
 import com.oszero.deliver.business.admin.model.dto.request.systemparam.GetParamRequestDto;
-import com.oszero.deliver.business.admin.model.dto.response.systemparam.GetChannelTypeResponseDto;
-import com.oszero.deliver.business.admin.model.dto.response.systemparam.GetParamResponseDto;
-import com.oszero.deliver.business.admin.model.dto.response.systemparam.GetPlatformFileTypeResponseDto;
+import com.oszero.deliver.business.admin.model.dto.response.systemparam.*;
 
 import java.util.List;
 
@@ -30,7 +28,8 @@ import java.util.List;
  */
 public interface SystemParamService {
     List<GetChannelTypeResponseDto> getChannelType(GetParamRequestDto dto);
-    GetParamResponseDto getParam(GetParamRequestDto dto);
+    List<GetChannelProviderTypeResponseDto> getChannelProviderType(GetParamRequestDto dto);
+    List<GetMessageTypeResponseDto> getMessageType(GetParamRequestDto dto);
     String getAppConfig(GetParamRequestDto dto);
     List<GetPlatformFileTypeResponseDto> getPlatformFileType(GetParamRequestDto dto);
     String getMessageParam(GetParamRequestDto dto);

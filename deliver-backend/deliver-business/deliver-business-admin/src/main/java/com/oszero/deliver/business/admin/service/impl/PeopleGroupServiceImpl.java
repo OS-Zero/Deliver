@@ -74,6 +74,8 @@ public class PeopleGroupServiceImpl extends ServiceImpl<PeopleGroupMapper, Peopl
         wrapper.like(StrUtil.isNotBlank(dto.getPeopleGroupName()), PeopleGroup::getPeopleGroupName, dto.getPeopleGroupName())
                 .eq(!Objects.isNull(dto.getUsersType()), PeopleGroup::getUsersType, dto.getUsersType())
                 .eq(PeopleGroup::getGroupId, GroupUtils.getGroupId())
+                .gt(!Objects.isNull(dto.getStartTime()), PeopleGroup::getCreateTime, dto.getStartTime())
+                .lt(!Objects.isNull(dto.getEndTime()), PeopleGroup::getCreateTime, dto.getEndTime())
                 .orderByDesc(PeopleGroup::getCreateTime);
         Page<PeopleGroup> peopleGroupPage = new Page<>(dto.getCurrentPage(), dto.getPageSize());
         peopleGroupMapper.selectPage(peopleGroupPage, wrapper);

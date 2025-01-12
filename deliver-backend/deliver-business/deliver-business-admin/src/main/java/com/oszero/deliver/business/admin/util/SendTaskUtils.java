@@ -17,10 +17,9 @@
 
 package com.oszero.deliver.business.admin.util;
 
-import cn.hutool.json.JSONUtil;
+import com.oszero.deliver.business.admin.constant.AdminConstant;
 import com.oszero.deliver.business.admin.constant.JobConstant;
 import com.oszero.deliver.business.admin.model.entity.database.SendTask;
-import com.oszero.deliver.business.admin.model.json.SendTaskParam;
 import com.oszero.deliver.business.admin.service.impl.SendTaskServiceImpl;
 import com.oszero.deliver.business.common.constant.CommonConstant;
 import jakarta.annotation.PostConstruct;
@@ -30,6 +29,11 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Component;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * @author oszero
@@ -47,17 +51,34 @@ public class SendTaskUtils {
         scheduler = schedulerFactoryBean.getScheduler();
     }
 
-    public boolean isCronJob(SendTask sendTask) {
-        return sendTask.getTaskType() == JobConstant.CRON_TIME;
+    public boolean isTimeJob(SendTask sendTask) {
+        Integer taskType = sendTask.getTaskType();
+        return taskType == JobConstant.CRON_TIME || taskType == JobConstant.SINGLE_TIME;
     }
 
-    public void addJob(SendTask sendTask) throws SchedulerException {
-        String taskParam = sendTask.getTaskParam();
-        SendTaskParam sendTaskParam = JSONUtil.toBean(taskParam, SendTaskParam.class);
+    private boolean isCronJob(SendTask sendTask) {
+        Integer taskType = sendTask.getTaskType();
+        return taskType == JobConstant.CRON_TIME;
+    }
+
+    private boolean isSingleJob(SendTask sendTask) {
+        Integer taskType = sendTask.getTaskType();
+        return taskType == JobConstant.SINGLE_TIME;
+    }
+
+    public void addJob(SendTask sendTask) throws SchedulerException, ParseException {
         JobDataMap jobDataMap = new JobDataMap();
         jobDataMap.put(JobConstant.TASK_ID, sendTask.getTaskId());
-        QuartzJobUtils.addJobWithParams(scheduler, sendTask.getTaskName(), JobConstant.JOB_GROUP_NAME,
-                sendTaskParam.getCronExpression(), jobDataMap, SendTaskServiceImpl.class);
+        String taskTimeExpression = sendTask.getTaskTimeExpression();
+        if (isCronJob(sendTask)) {
+            QuartzJobUtils.addJobWithParams(scheduler, sendTask.getTaskName(), JobConstant.JOB_GROUP_NAME,
+                    taskTimeExpression, jobDataMap, SendTaskServiceImpl.class);
+        } else if (isSingleJob(sendTask)) {
+            SimpleDateFormat sdf = new SimpleDateFormat(AdminConstant.DATE_FORMAT);
+            Date date = sdf.parse(taskTimeExpression);
+            QuartzJobUtils.addSingleExecutionJob(scheduler, sendTask.getTaskName(), JobConstant.JOB_GROUP_NAME,
+                    date, jobDataMap, SendTaskServiceImpl.class);
+        }
     }
 
     public void deleteJob(SendTask sendTask) throws SchedulerException {

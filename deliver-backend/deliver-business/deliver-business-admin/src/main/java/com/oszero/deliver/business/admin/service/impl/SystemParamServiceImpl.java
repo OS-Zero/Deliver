@@ -21,9 +21,7 @@ import cn.hutool.core.util.StrUtil;
 import com.oszero.deliver.business.admin.constant.AppConfigConstant;
 import com.oszero.deliver.business.admin.constant.MessageParamConstant;
 import com.oszero.deliver.business.admin.model.dto.request.systemparam.GetParamRequestDto;
-import com.oszero.deliver.business.admin.model.dto.response.systemparam.GetChannelTypeResponseDto;
-import com.oszero.deliver.business.admin.model.dto.response.systemparam.GetParamResponseDto;
-import com.oszero.deliver.business.admin.model.dto.response.systemparam.GetPlatformFileTypeResponseDto;
+import com.oszero.deliver.business.admin.model.dto.response.systemparam.*;
 import com.oszero.deliver.business.admin.service.SystemParamService;
 import com.oszero.deliver.business.common.enums.*;
 import com.oszero.deliver.business.admin.exception.BusinessException;
@@ -40,12 +38,25 @@ public class SystemParamServiceImpl implements SystemParamService {
     @Override
     public List<GetChannelTypeResponseDto> getChannelType(GetParamRequestDto dto) {
         Integer usersType = dto.getUsersType();
+        if (usersType == -1) { // 代表平台文件里获取渠道类型
+            return Arrays.asList(
+                    GetChannelTypeResponseDto.builder()
+                            .channelType(Integer.valueOf(ChannelTypeEnum.DING.getCode()))
+                            .channelTypeName(ChannelTypeEnum.DING.getName())
+                            .build(),
+                    GetChannelTypeResponseDto.builder()
+                            .channelType(Integer.valueOf(ChannelTypeEnum.WECHAT.getCode()))
+                            .channelTypeName(ChannelTypeEnum.WECHAT.getName())
+                            .build(),
+                    GetChannelTypeResponseDto.builder()
+                            .channelType(Integer.valueOf(ChannelTypeEnum.FEI_SHU.getCode()))
+                            .channelTypeName(ChannelTypeEnum.FEI_SHU.getName())
+                            .build()
+            );
+        }
         UsersTypeEnum usersTypeEnum = UsersTypeEnum.getInstanceByCode(usersType);
         if (Objects.isNull(usersTypeEnum)) {
-            return Arrays.stream(ChannelTypeEnum.values()).map(item -> GetChannelTypeResponseDto.builder()
-                    .channelType(Integer.valueOf(item.getCode()))
-                    .channelTypeName(item.getName())
-                    .build()).toList();
+            throw new BusinessException("用户类型参数异常");
         }
         switch (usersTypeEnum) {
             case PHONE -> {
@@ -101,44 +112,53 @@ public class SystemParamServiceImpl implements SystemParamService {
     }
 
     @Override
-    public GetParamResponseDto getParam(GetParamRequestDto dto) {
+    public List<GetChannelProviderTypeResponseDto> getChannelProviderType(GetParamRequestDto dto) {
         Integer channelType = dto.getChannelType();
         ChannelTypeEnum channelTypeEnum = ChannelTypeEnum.getInstanceByCode(channelType);
-        List<GetParamResponseDto.ChannelProviderType> channelProviderTypeList = new ArrayList<>();
-        List<GetParamResponseDto.MessageType> messageTypeList = new ArrayList<>();
-        if (channelTypeEnum == ChannelTypeEnum.CALL || channelTypeEnum == ChannelTypeEnum.SMS) {
-            channelProviderTypeList.addAll(
-                    Arrays.asList(GetParamResponseDto.ChannelProviderType.builder()
-                                    .channelProviderType(Integer.valueOf(ChannelProviderTypeEnum.ALI.getCode()))
-                                    .channelProviderTypeName(ChannelProviderTypeEnum.ALI.getName())
-                                    .build(),
-                            GetParamResponseDto.ChannelProviderType.builder()
-                                    .channelProviderType(Integer.valueOf(ChannelProviderTypeEnum.TENCENT.getCode()))
-                                    .channelProviderTypeName(ChannelProviderTypeEnum.TENCENT.getName())
-                                    .build())
-            );
-        } else {
-            channelProviderTypeList.add(GetParamResponseDto.ChannelProviderType.builder()
-                    .channelProviderType(Integer.valueOf(ChannelProviderTypeEnum.DEFAULT.getCode()))
-                    .channelProviderTypeName(ChannelProviderTypeEnum.DEFAULT.getName())
-                    .build());
+        if (Objects.isNull(channelTypeEnum)) {
+            throw new BusinessException("渠道类型参数异常");
         }
-        messageTypeList.add(GetParamResponseDto.MessageType.builder()
-                .messageType(MessageTypeEnum.COMMON_TEXT.getCode())
-                .messageTypeName(MessageTypeEnum.COMMON_TEXT.getName())
-                .build());
-        messageTypeList.addAll(
-                Arrays.stream(MessageTypeEnum.values())
-                        .filter(item -> StrUtil.equals(item.getChannelType(), String.valueOf(channelType)))
-                        .map(item -> GetParamResponseDto.MessageType.builder()
-                                .messageType(item.getCode())
-                                .messageTypeName(item.getName())
-                                .build()).toList()
-        );
-        return GetParamResponseDto.builder()
-                .channelProviderTypeList(channelProviderTypeList)
-                .messageTypeList(messageTypeList)
-                .build();
+        switch (channelTypeEnum) {
+            case CALL, SMS -> {
+                return Arrays.asList(
+                        GetChannelProviderTypeResponseDto.builder()
+                                .channelProviderType(Integer.valueOf(ChannelProviderTypeEnum.ALI.getCode()))
+                                .channelProviderTypeName(ChannelProviderTypeEnum.ALI.getName())
+                                .build(),
+                        GetChannelProviderTypeResponseDto.builder()
+                                .channelProviderType(Integer.valueOf(ChannelProviderTypeEnum.TENCENT.getCode()))
+                                .channelProviderTypeName(ChannelProviderTypeEnum.TENCENT.getName())
+                                .build()
+                );
+            }
+            default -> {
+                return Collections.singletonList(
+                        GetChannelProviderTypeResponseDto.builder()
+                                .channelProviderType(Integer.valueOf(ChannelProviderTypeEnum.DEFAULT.getCode()))
+                                .channelProviderTypeName(ChannelProviderTypeEnum.DEFAULT.getName())
+                                .build()
+                );
+            }
+        }
+    }
+
+    @Override
+    public List<GetMessageTypeResponseDto> getMessageType(GetParamRequestDto dto) {
+        Integer channelType = dto.getChannelType();
+        Integer channelProviderType = dto.getChannelProviderType();
+        ChannelTypeEnum channelTypeEnum = ChannelTypeEnum.getInstanceByCode(channelType);
+        ChannelProviderTypeEnum channelProviderTypeEnum = ChannelProviderTypeEnum.getInstanceByCode(channelProviderType);
+        if (Objects.isNull(channelTypeEnum) || Objects.isNull(channelProviderTypeEnum)) {
+            throw new BusinessException("渠道参数异常");
+        }
+        return Arrays.stream(MessageTypeEnum.values())
+                .filter(messageTypeEnum ->
+                        StrUtil.equals(String.valueOf(channelType), messageTypeEnum.getChannelType())
+                                && StrUtil.equals(String.valueOf(channelProviderType), messageTypeEnum.getChannelProviderType()))
+                .map(messageTypeEnum -> GetMessageTypeResponseDto.builder()
+                        .messageType(messageTypeEnum.getCode())
+                        .messageTypeName(messageTypeEnum.getName()).build())
+                .toList();
     }
 
     @Override
@@ -197,9 +217,9 @@ public class SystemParamServiceImpl implements SystemParamService {
 
     @Override
     public String getMessageParam(GetParamRequestDto dto) {
-        if (dto.getChannelType() == null || dto.getMessageType() == null) {
+        if (Objects.isNull(dto.getMessageType())) {
             throw new BusinessException("参数异常");
         }
-        return MessageParamConstant.getMessageParamJsonConfig(String.valueOf(dto.getChannelType()), dto.getMessageType());
+        return MessageParamConstant.getMessageParamJsonConfig(dto.getMessageType());
     }
 }

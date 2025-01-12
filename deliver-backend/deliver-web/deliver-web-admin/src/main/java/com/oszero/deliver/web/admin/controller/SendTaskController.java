@@ -32,6 +32,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.ParseException;
+
 /**
  * @author oszero
  * @version 1.0.0
@@ -48,13 +50,13 @@ public class SendTaskController {
     }
 
     @PostMapping(AdminPathConstant.SEND_TASK_SAVE)
-    public CommonResult<Void> save(@Valid @RequestBody SendTaskSaveRequestDto dto) throws SchedulerException {
+    public CommonResult<Void> save(@Valid @RequestBody SendTaskSaveRequestDto dto) throws SchedulerException, ParseException {
         sendTaskService.save(dto);
         return CommonResult.success();
     }
 
     @PostMapping(AdminPathConstant.SEND_TASK_UPDATE)
-    public CommonResult<Void> update(@Valid @RequestBody SendTaskUpdateRequestDto dto) throws SchedulerException {
+    public CommonResult<Void> update(@Valid @RequestBody SendTaskUpdateRequestDto dto) throws SchedulerException, ParseException {
         sendTaskService.update(dto);
         return CommonResult.success();
     }

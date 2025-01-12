@@ -26,4 +26,5 @@ public interface JobConstant {
     String TASK_ID = "taskId";
     int REAL_TIME = 1;
     int CRON_TIME = 2;
+    int SINGLE_TIME = 3;
 }

@@ -107,7 +107,7 @@ create table if not exists deliver.platform_file
     platform_file_id          bigint auto_increment comment '平台文件id' primary key,
     platform_file_name        varchar(10)                        not null comment '平台文件名',
     platform_file_description varchar(50)                        not null comment '平台文件描述',
-    platform_file_type        varchar(5)                        not null comment '平台文件类型（参考平台文件类型枚举）',
+    platform_file_type        varchar(5)                         not null comment '平台文件类型（参考平台文件类型枚举）',
     platform_file_key         varchar(100)                       not null comment '平台文件Key',
     channel_type              tinyint                            not null comment '渠道类型（参考渠道类型枚举）',
     platform_file_status      tinyint  default 1                 null comment '平台文件状态（1-生效、0-失效）',
@@ -124,19 +124,21 @@ create table if not exists deliver.platform_file
 drop table if exists deliver.send_task;
 create table if not exists deliver.send_task
 (
-    task_id          bigint auto_increment comment '任务id' primary key,
-    task_name        varchar(10)                        not null comment '任务名称',
-    task_description varchar(50)                        not null comment '任务描述',
-    task_param       text                               not null comment '任务参数JSON',
-    task_type        tinyint                            not null comment '任务类型（1-实时、2-定时）',
-    task_status      tinyint  default 0                 not null comment '任务状态（1-生效、0-失效）',
-    people_group_id  bigint                             not null comment '关联人群id',
-    group_id         bigint                             not null comment '关联分组id',
-    create_user      varchar(10)                        not null comment '创建者',
-    update_user      varchar(10)                        not null comment '更新者',
-    create_time      datetime default CURRENT_TIMESTAMP not null comment '创建时间',
-    update_time      datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
-    deleted          tinyint  default 0                 not null comment '是否删除（0-不删除、1-删除）'
+    task_id              bigint auto_increment comment '任务id' primary key,
+    task_name            varchar(10)                        not null comment '任务名称',
+    task_description     varchar(50)                        not null comment '任务描述',
+    task_message_param   text                               not null comment '任务消息参数JSON',
+    task_time_expression varchar(50)                        null comment '任务时间表达式',
+    task_type            tinyint                            not null comment '任务类型（1-实时任务、2-定时循环任务、3-定时单次任务）',
+    task_status          tinyint  default 0                 not null comment '任务状态（1-生效、0-失效）',
+    template_id          bigint                             not null comment '关联模板id',
+    people_group_id      bigint                             not null comment '关联人群id',
+    group_id             bigint                             not null comment '关联分组id',
+    create_user          varchar(10)                        not null comment '创建者',
+    update_user          varchar(10)                        not null comment '更新者',
+    create_time          datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+    update_time          datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+    deleted              tinyint  default 0                 not null comment '是否删除（0-不删除、1-删除）'
 ) comment '群发任务表';
 
 -- 人群表

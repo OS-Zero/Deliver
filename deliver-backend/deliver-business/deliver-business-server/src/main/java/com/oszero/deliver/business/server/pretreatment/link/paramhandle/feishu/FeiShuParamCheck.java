@@ -43,7 +43,7 @@ public class FeiShuParamCheck implements MessageLink<SendTaskDto> {
      */
     private static final Set<String> DEPARTMENT_MESSAGE_TYPE =
             new HashSet<>(Arrays.asList(
-                    MessageTypeEnum.COMMON_TEXT.getCode(),
+                    MessageTypeEnum.FEI_SHU_TEXT.getCode(),
                     MessageTypeEnum.FEI_SHU_POST.getCode(),
                     MessageTypeEnum.FEI_SHU_IMAGE.getCode(),
                     MessageTypeEnum.FEI_SHU_INTERACTIVE.getCode(),

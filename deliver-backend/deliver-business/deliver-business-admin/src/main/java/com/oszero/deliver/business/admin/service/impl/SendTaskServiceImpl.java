@@ -35,7 +35,6 @@ import com.oszero.deliver.business.admin.model.dto.response.common.SearchRespons
 import com.oszero.deliver.business.admin.model.dto.response.sendtask.SendTaskSearchResponseDto;
 import com.oszero.deliver.business.admin.model.entity.database.PeopleGroup;
 import com.oszero.deliver.business.admin.model.entity.database.SendTask;
-import com.oszero.deliver.business.admin.model.json.SendTaskParam;
 import com.oszero.deliver.business.admin.service.SendTaskService;
 import com.oszero.deliver.business.admin.util.GroupUtils;
 import com.oszero.deliver.business.admin.util.SendMessageUtils;
@@ -49,8 +48,10 @@ import org.quartz.JobExecutionContext;
 import org.quartz.SchedulerException;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -96,9 +97,9 @@ public class SendTaskServiceImpl extends ServiceImpl<SendTaskMapper, SendTask>
     }
 
     @Override
-    public void save(SendTaskSaveRequestDto dto) throws SchedulerException {
+    public void save(SendTaskSaveRequestDto dto) throws SchedulerException, ParseException {
         checkNameIsDuplicate(null, dto.getTaskName());
-        checkUsersType(dto.getPeopleGroupId(), dto.getTaskParam());
+        checkUsersType(dto.getPeopleGroupId(), dto.getTemplateId());
         SendTask sendTask = new SendTask();
         BeanUtil.copyProperties(dto, sendTask);
         sendTask.setGroupId(GroupUtils.getGroupId());
@@ -106,22 +107,22 @@ public class SendTaskServiceImpl extends ServiceImpl<SendTaskMapper, SendTask>
         if (DataBaseUtils.isSingleDataModifyFail(insert)) {
             throw new BusinessException("保存任务失败");
         }
-        if (sendTaskUtils.isCronJob(sendTask)) {
+        if (sendTaskUtils.isTimeJob(sendTask)) {
             sendTaskUtils.addJob(sendTask);
         }
     }
 
     @Override
-    public void update(SendTaskUpdateRequestDto dto) throws SchedulerException {
+    public void update(SendTaskUpdateRequestDto dto) throws SchedulerException, ParseException {
         checkNameIsDuplicate(dto.getTaskId(), dto.getTaskName());
-        checkUsersType(dto.getPeopleGroupId(), dto.getTaskParam());
+        checkUsersType(dto.getPeopleGroupId(), dto.getTemplateId());
         SendTask sendTask = new SendTask();
         BeanUtil.copyProperties(dto, sendTask);
         int updateById = sendTaskMapper.updateById(sendTask);
         if (DataBaseUtils.isSingleDataModifyFail(updateById)) {
             throw new BusinessException("更新任务失败");
         }
-        if (sendTaskUtils.isCronJob(sendTask)) {
+        if (sendTaskUtils.isTimeJob(sendTask)) {
             sendTaskUtils.deleteJob(sendTask);
             sendTaskUtils.addJob(sendTask);
         }
@@ -136,7 +137,7 @@ public class SendTaskServiceImpl extends ServiceImpl<SendTaskMapper, SendTask>
             throw new BusinessException("更新任务失败");
         }
         sendTask = sendTaskMapper.selectById(dto.getTaskId());
-        if (sendTaskUtils.isCronJob(sendTask)) {
+        if (sendTaskUtils.isTimeJob(sendTask)) {
             sendTaskUtils.updateJobStatus(sendTask);
         }
     }
@@ -145,7 +146,7 @@ public class SendTaskServiceImpl extends ServiceImpl<SendTaskMapper, SendTask>
     public void delete(DeleteIdsRequestDto dto) throws SchedulerException {
         for (int i = 0; i < dto.getIds().size(); i++) {
             SendTask sendTask = sendTaskMapper.selectById(dto.getIds().get(i));
-            if (sendTaskUtils.isCronJob(sendTask)) {
+            if (sendTaskUtils.isTimeJob(sendTask)) {
                 sendTaskUtils.deleteJob(sendTask);
             }
         }
@@ -169,13 +170,15 @@ public class SendTaskServiceImpl extends ServiceImpl<SendTaskMapper, SendTask>
 
     private void sendMessage(Long taskId) {
         SendTask sendTask = sendTaskMapper.selectById(taskId);
-        SendTaskParam sendTaskParam = JSONUtil.toBean(sendTask.getTaskParam(), SendTaskParam.class);
+        Long templateId = sendTask.getTemplateId();
         Long peopleGroupId = sendTask.getPeopleGroupId();
+        String taskMessageParam = sendTask.getTaskMessageParam();
+        Map<String, Object> messageParam = JSONUtil.toBean(taskMessageParam, Map.class, true);
         PeopleGroup peopleGroup = peopleGroupMapper.selectById(peopleGroupId);
         List<String> users = Arrays.stream(peopleGroup.getPeopleGroupList().split(",")).toList();
         SendMessageRequestDto sendMessageRequestDto = new SendMessageRequestDto();
-        sendMessageRequestDto.setTemplateId(sendTaskParam.getTemplateId());
-        sendMessageRequestDto.setMessageParam(sendTaskParam.getMessageParam());
+        sendMessageRequestDto.setTemplateId(templateId);
+        sendMessageRequestDto.setMessageParam(messageParam);
         sendMessageRequestDto.setUsers(users);
         sendMessageUtils.sendMessage(sendMessageRequestDto);
     }
@@ -197,14 +200,7 @@ public class SendTaskServiceImpl extends ServiceImpl<SendTaskMapper, SendTask>
         }
     }
 
-    private void checkUsersType(Long peopleGroupId, String taskParam) {
-        SendTaskParam sendTaskParam;
-        try {
-            sendTaskParam = JSONUtil.toBean(taskParam, SendTaskParam.class);
-        } catch (Exception e) {
-            throw new BusinessException("请输入正确的任务参数格式");
-        }
-        Long templateId = sendTaskParam.getTemplateId();
+    private void checkUsersType(Long templateId, Long peopleGroupId) {
         LambdaQueryWrapper<MessageTemplate> messageTemplateWrapper = new LambdaQueryWrapper<>();
         messageTemplateWrapper.eq(MessageTemplate::getTemplateId, templateId)
                 .eq(MessageTemplate::getGroupId, GroupUtils.getGroupId());

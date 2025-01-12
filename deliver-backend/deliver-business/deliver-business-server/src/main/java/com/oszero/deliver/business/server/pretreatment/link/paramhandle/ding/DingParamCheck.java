@@ -17,12 +17,10 @@
 
 package com.oszero.deliver.business.server.pretreatment.link.paramhandle.ding;
 
-import cn.hutool.core.util.StrUtil;
-import com.oszero.deliver.business.common.enums.MessageTypeEnum;
-import com.oszero.deliver.business.server.exception.MessageException;
 import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.business.server.pretreatment.common.LinkContext;
 import com.oszero.deliver.business.server.pretreatment.common.MessageLink;
+import com.oszero.deliver.platformclient.common.ClientConstant;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -39,25 +37,7 @@ public class DingParamCheck implements MessageLink<SendTaskDto> {
         SendTaskDto sendTaskDto = context.getProcessModel();
         String messageType = sendTaskDto.getMessageType();
         Map<String, Object> paramMap = sendTaskDto.getMessageParam();
-        String pushSubject = paramMap.getOrDefault("pushSubject", "").toString();
-        String dingUserIdType = paramMap.getOrDefault("dingUserIdType", "").toString();
-        if (StrUtil.isBlank(pushSubject) || StrUtil.isBlank(dingUserIdType)) {
-            throw new MessageException("钉钉 pushSubject 或者 dingUserIdType 参数为空");
-        }
-        if (!("workNotice".equals(pushSubject) || "robot".equals(pushSubject))) {
-            throw new MessageException("钉钉 pushSubject 非法，必须为 workNotice 或者 robot");
-        }
-        if ("workNotice".equals(pushSubject)) {
-            if (!("userid_list".equals(dingUserIdType) || "dept_id_list".equals(dingUserIdType))) {
-                throw new MessageException("当 pushSubject 为 workNotice 时，dingUserIdType 必须为 userid_list 或者 dept_id_list");
-            }
-        } else {
-            if (!("userIds".equals(dingUserIdType) || "openConversationId".equals(dingUserIdType))) {
-                throw new MessageException("当 pushSubject 为 robot 时，dingUserIdType 必须为 userIds 或者 openConversationId");
-            }
-            if (MessageTypeEnum.DING_OA.getCode().equals(messageType)) {
-                throw new MessageException("钉钉 pushSubject 为 robot 时，不支持 OA 消息类型");
-            }
-        }
+        String dingUserIdType = paramMap.getOrDefault(ClientConstant.USER_ID_TYPE, "").toString();
+
     }
 }

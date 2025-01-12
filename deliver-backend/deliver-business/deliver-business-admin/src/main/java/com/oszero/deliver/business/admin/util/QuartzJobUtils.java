@@ -21,6 +21,8 @@ import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
 
+import java.util.Date;
+
 /**
  * @author oszero
  * @version 1.0.0
@@ -46,8 +48,8 @@ public class QuartzJobUtils {
         scheduler.scheduleJob(jobDetail, trigger);
     }
 
-    public static void addJobWithParams(Scheduler scheduler, String jobName, String jobGroup, String cronExpression, JobDataMap jobDataMap,
-                                        Class<? extends Job> jobClass) throws SchedulerException {
+    public static void addJobWithParams(Scheduler scheduler, String jobName, String jobGroup, String cronExpression,
+                                        JobDataMap jobDataMap, Class<? extends Job> jobClass) throws SchedulerException {
         JobKey jobKey = new JobKey(jobName, jobGroup);
         if (scheduler.checkExists(jobKey)) {
             return;
@@ -60,6 +62,23 @@ public class QuartzJobUtils {
             .withIdentity(TRIGGER_PRE_NAME + jobName, jobGroup)
             .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
             .build();
+        scheduler.scheduleJob(jobDetail, trigger);
+    }
+
+    public static void addSingleExecutionJob(Scheduler scheduler, String jobName, String jobGroup, Date executionTime,
+                                             JobDataMap jobDataMap, Class<? extends Job> jobClass) throws SchedulerException {
+        JobKey jobKey = new JobKey(jobName, jobGroup);
+        if (scheduler.checkExists(jobKey)) {
+            return;
+        }
+        JobDetail jobDetail = JobBuilder.newJob(jobClass)
+                .withIdentity(jobName, jobGroup)
+                .setJobData(jobDataMap)
+                .build();
+        Trigger trigger = TriggerBuilder.newTrigger()
+                .withIdentity(TRIGGER_PRE_NAME + jobName, jobGroup)
+                .startAt(executionTime)
+                .build();
         scheduler.scheduleJob(jobDetail, trigger);
     }
 

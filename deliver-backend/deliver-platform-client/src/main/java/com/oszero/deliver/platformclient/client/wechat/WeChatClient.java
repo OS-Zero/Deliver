@@ -152,7 +152,7 @@ public class WeChatClient {
         }
     }
 
-    public void sendRobotMessage(String accessToken, Map<String, Object> paramMap, List<String> users) {
+    public void sendRobotMessage(Map<String, Object> paramMap, List<String> users) {
         String body = JSONUtil.toJsonStr(paramMap);
         try (HttpResponse response = HttpRequest.post(users.get(0))
                 .header("Content-Type", "application/json; charset=utf-8")

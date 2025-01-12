@@ -38,8 +38,10 @@ public class SendTask extends BaseGroupIdEntity {
     private Long taskId;
     private String taskName;
     private String taskDescription;
-    private String taskParam;
+    private String taskMessageParam;
+    private String taskTimeExpression;
     private Integer taskType;
     private Integer taskStatus;
+    private Long templateId;
     private Long peopleGroupId;
 }

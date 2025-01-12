@@ -17,15 +17,20 @@
 
 package com.oszero.deliver.business.server.handler.impl;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import com.oszero.deliver.business.common.enums.MessageTypeEnum;
+import com.oszero.deliver.business.common.enums.PushSubjectEnum;
 import com.oszero.deliver.business.common.util.AppConfigUtils;
 import com.oszero.deliver.business.server.handler.BaseHandler;
 import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.platformclient.client.ding.DingClient;
+import com.oszero.deliver.platformclient.common.ClientConstant;
 import com.oszero.deliver.platformclient.model.app.DingApp;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author oszero
@@ -44,18 +49,20 @@ public class DingHandler extends BaseHandler {
 
     @Override
     protected void handle(SendTaskDto sendTaskDto) throws Exception {
+        String messageType = sendTaskDto.getMessageType();
+        MessageTypeEnum messageTypeEnum = MessageTypeEnum.getInstanceByCode(messageType);
+        if (Objects.isNull(messageTypeEnum)) {
+            throw new Exception("消息类型非法");
+        }
+        String pushSubject = messageTypeEnum.getPushSubject();
         String appConfig = appConfigUtils.decryptAppConfig(sendTaskDto.getAppConfig());
         DingApp dingApp = JSONUtil.toBean(appConfig, DingApp.class);
         String accessToken = dingClient.getAccessToken(dingApp);
         Map<String, Object> messageParam = sendTaskDto.getMessageParam();
-        String pushSubject = messageParam.get("pushSubject").toString();
-        messageParam.remove("dingUserIdType");
-        messageParam.remove("pushSubject");
-        if ("robot".equals(pushSubject)) {
-            messageParam.compute("msgParam", (k, msgParam) -> JSONUtil.toJsonStr(msgParam));
-            dingClient.sendRobotMessage(accessToken, messageParam);
-        } else {
+        if (StrUtil.equals(PushSubjectEnum.DING_WORK_NOTICE.getCode(), pushSubject)) {
             dingClient.sendWorkNoticeMessage(accessToken, messageParam);
+        } else if (StrUtil.equals(PushSubjectEnum.DING_ROBOT.getCode(), pushSubject)){
+            dingClient.sendRobotMessage(accessToken, messageParam);
         }
     }
 }

@@ -40,10 +40,15 @@ public class SendTaskUpdateRequestDto {
     private String taskDescription;
 
     @JsonString
-    private String taskParam;
+    private String taskMessageParam;
 
-    @StatusRange(min = 1, max = 2, message = "任务类型只能是1或2")
+    private String taskTimeExpression;
+
+    @StatusRange(min = 1, max = 3, message = "任务类型只能是1-3")
     private Integer taskType;
+
+    @NotNull(message = "模板id不能为空")
+    private Long templateId;
 
     @NotNull(message = "人群id不能为空")
     private Long peopleGroupId;

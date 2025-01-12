@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.oszero.deliver.business.admin.constant.AdminConstant;
 import com.oszero.deliver.web.admin.interceptor.FrontPlatformInterceptor;
 import com.oszero.deliver.web.admin.interceptor.GroupInterceptor;
 import com.oszero.deliver.web.admin.interceptor.UserInterceptor;
@@ -41,7 +42,6 @@ import java.time.format.DateTimeFormatter;
 @RequiredArgsConstructor
 public class AdminWebMvcConfig implements WebMvcConfigurer {
 
-    private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private final FrontPlatformInterceptor frontPlatformInterceptor;
     private final UserInterceptor userInterceptor;
     private final GroupInterceptor groupInterceptor;
@@ -56,7 +56,7 @@ public class AdminWebMvcConfig implements WebMvcConfigurer {
     @Bean
     public ObjectMapper objectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(AdminConstant.DATE_FORMAT);
         SimpleModule module = new SimpleModule();
         module.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(formatter));
         module.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(formatter));

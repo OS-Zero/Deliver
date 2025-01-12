@@ -23,6 +23,7 @@ import com.oszero.deliver.business.admin.model.dto.request.messagetemplate.*;
 import com.oszero.deliver.business.admin.model.dto.response.common.SearchResponseDto;
 import com.oszero.deliver.business.admin.model.dto.response.messagetemplate.MessageTemplateSearchResponseDto;
 import com.oszero.deliver.business.common.model.entity.MessageTemplate;
+import jakarta.validation.Valid;
 
 /**
  * @author oszero
@@ -41,4 +42,6 @@ public interface MessageTemplateService extends IService<MessageTemplate> {
     void delete(DeleteIdsRequestDto dto);
 
     void testSendMessage(SendMessageRequestDto sendMessageRequestDto);
+
+    String getMessageParam(@Valid GetMessageParamRequestDto dto);
 }

@@ -17,7 +17,7 @@
 
 package com.oszero.deliver.business.admin.constant;
 
-import com.oszero.deliver.business.common.enums.ChannelTypeEnum;
+import com.oszero.deliver.business.admin.constant.messageparam.*;
 import com.oszero.deliver.business.common.enums.MessageTypeEnum;
 
 import java.util.HashMap;
@@ -31,433 +31,100 @@ public class MessageParamConstant {
     private static final Map<String, String> MESSAGE_PARAM_MAP = new HashMap<>();
 
     static {
-        // 电话消息参数
-        MESSAGE_PARAM_MAP.put(getKeyByCode(ChannelTypeEnum.CALL, MessageTypeEnum.COMMON_TEXT), """
-                {
-                   "aliyun": {
-                     "callProvider": "aliyun --指定提供商 必须",
-                     "region": "服务地址",
-                     "calledShowNumber": "被叫显号  非必须",
-                     "ttsCode": "已通过审核的语音通知文本转语音模板或语音验证码模板的模板 ID 必须",
-                     "ttsParam": "模板中的变量参数   非必须",
-                     "playTimes": "一通电话内语音通知内容的播放次数 非必须",
-                     "volume": "语音通知的播放音量  非必须",
-                     "speed": "语速控制 非必须",
-                     "outId": "发起请求时预留给调用方的自定义 ID，最终会通过在回执消息中将此 ID 带回给调用方。非必须"
-                   },
-                   "tencent": {
-                     "callProvider": "tencent --指定提供商 必填",
-                     "region": "地域列表 ap-beijing 或者 ap-guangzhou 必填",
-                     "templateId": "模板 ID，在控制台审核通过的模板 ID。 必填",
-                     "templateParamSet": [
-                       "1 模板参数，若模板没有参数，请提供为空数组。 非必填"
-                     ],
-                     "playTimes": 1,
-                     "sessionContext": "1 用户的 session 内容，腾讯 server 回包中会原样返回。 非必填",
-                     "voiceSdkAppid": "1 在语音控制台添加应用后生成的实际SdkAppid 非必填"
-                   }
-                 }
-                """);
-        // 短信消息参数
-        MESSAGE_PARAM_MAP.put(getKeyByCode(ChannelTypeEnum.SMS, MessageTypeEnum.COMMON_TEXT), """
-                {
-                   "aliyun": {
-                     "smsProvider": "aliyun --指定提供商 必须",
-                     "region": "服务地址 cn-zhangjiakou 或者 cn-beijing 或者 cn-huhehaote 等 必须",
-                     "signName": "短信签名名称  必须",
-                     "templateCode": "短信模板Code 必须",
-                     "templateParam": "{有参数情况下必须}",
-                     "outId": "外部流水扩展字段   非必须",
-                     "smsUpExtendCode": "上行短信扩展码 非必须"
-                   },
-                   "tencent": {
-                     "smsProvider": "tencent 必填",
-                     "region": "ap-beijing 或 ap-guangzhou 或 ap-nanjing 必填",
-                     "smsSdkAppId": "必填",
-                     "signName": "必填",
-                     "templateId": "必填",
-                     "templateParam": [
-                       "有动态参数，必填"
-                     ],
-                     "extendCode": "短信码号扩展号 非必填",
-                     "sessionContext": "用户的 session 内容，可以携带用户侧 ID 等上下文信息，server 会原样返回 非必填",
-                     "senderId": "国内短信无需填写该项；国际/港澳台短信已申请独立 SenderId 需要填写该字段，默认使用公共 SenderId，无需填写该字段。 非必填"
-                   }
-                 }
-                """);
-        // 邮件消息参数
-        MESSAGE_PARAM_MAP.put(getKeyByCode(ChannelTypeEnum.MAIL, MessageTypeEnum.COMMON_TEXT), """
-                {
-                    "title": "dsadas",
-                    "content": "test",
-                    "toCC": [
-                        "xxx"
-                    ],
-                    "toBCC": [
-                        "xxx"
-                    ],
-                    "htmlFlag": true
-                }
-                """);
-
-        // 钉钉消息参数
-        MESSAGE_PARAM_MAP.put(getKeyByCode(ChannelTypeEnum.DING, MessageTypeEnum.COMMON_TEXT), """
-                {
-                  "pushSubject": "workNotice 或者 robot",
-                  "dingUserIdType": "userid_list 或者 dept_id_list 或者 userIds 或者 openConversationId",
-                  "msgParam": {
-                    "content": "xxxx"
-                  },
-                  "msg": {
-                    "text": {
-                      "content": "月会通知"
-                    }
-                  }
-                }
-                """);
-        MESSAGE_PARAM_MAP.put(getKeyByCode(ChannelTypeEnum.DING, MessageTypeEnum.DING_IMAGE), """
-                {
-                  "dingUserIdType": "userid_list 或者 dept_id_list 或者 userIds 或者 openConversationId",
-                  "pushSubject": "workNotice 或者 robot",
-                  "msgParam": {
-                    "photoURL": "xxxx"
-                  },
-                  "msg": {
-                    "image": {
-                      "media_id": ""
-                    }
-                  }
-                }
-                """);
-        MESSAGE_PARAM_MAP.put(getKeyByCode(ChannelTypeEnum.DING, MessageTypeEnum.DING_VOICE), """
-                {
-                  "dingUserIdType": "userid_list 或者 dept_id_list 或者 userIds 或者 openConversationId",
-                  "pushSubject": "workNotice 或者 robot",
-                  "msgParam": {
-                    "mediaId": "@IR_P********nFkfhsisbf4A",
-                    "duration": "xxxxx"
-                  },
-                  "msg": {
-                    "voice": {
-                      "media_id": "",
-                      "duration": "10"
-                    }
-                  }
-                }
-                """);
-        MESSAGE_PARAM_MAP.put(getKeyByCode(ChannelTypeEnum.DING, MessageTypeEnum.DING_FILE), """
-                {
-                  "dingUserIdType": "userid_list 或者 dept_id_list 或者 userIds 或者 openConversationId",
-                  "pushSubject": "workNotice 或者 robot",
-                  "msgParam": {
-                    "mediaId": "@lAz*********shRs5m2pRL",
-                    "fileName": "表格.xlsx",
-                    "fileType": "xlsx"
-                  },
-                  "msg": {
-                    "file": {
-                      "media_id": "MEDIA_ID"
-                    }
-                  }
-                }
-                """);
-        MESSAGE_PARAM_MAP.put(getKeyByCode(ChannelTypeEnum.DING, MessageTypeEnum.DING_LINK), """
-                {
-                  "dingUserIdType": "userid_list 或者 dept_id_list 或者 userIds 或者 openConversationId",
-                  "pushSubject": "workNotice 或者 robot",
-                  "msgParam": {
-                    "text": "消息内容测试",
-                    "title": "sampleLink消息测试",
-                    "picUrl": "@lADOADmaWMzazQKA",
-                    "messageUrl": "http://dingtalk.com"
-                  },
-                  "msg": {
-                    "link": {
-                      "messageUrl": "http://s.dingtalk.com/market/dingtalk/error_code.php",
-                      "picUrl": "@lALOACZwe2Rk",
-                      "title": "测试",
-                      "text": "测试"
-                    }
-                  }
-                }
-                """);
-        MESSAGE_PARAM_MAP.put(getKeyByCode(ChannelTypeEnum.DING, MessageTypeEnum.DING_OA), """
-                {
-                  "dingUserIdType": "userid_list 或者 dept_id_list",
-                  "pushSubject": "workNotice",
-                  "msg": {
-                    "oa": {
-                      "message_url": "http://dingtalk.com",
-                      "head": {
-                        "bgcolor": "FFBBBBBB",
-                        "text": "头部标题"
-                      },
-                      "body": {
-                        "title": "正文标题",
-                        "form": [
-                          {
-                            "key": "姓名:",
-                            "value": "黑子你家哥哥"
-                          },
-                          {
-                            "key": "年龄:",
-                            "value": "20"
-                          },
-                          {
-                            "key": "身高:",
-                            "value": "1.8米"
-                          },
-                          {
-                            "key": "体重:",
-                            "value": "130斤"
-                          },
-                          {
-                            "key": "学历:",
-                            "value": "本科"
-                          },
-                          {
-                            "key": "爱好:",
-                            "value": "唱跳RAP篮球"
-                          }
-                        ],
-                        "rich": {
-                          "num": "15.6",
-                          "unit": "元"
-                        },
-                        "content": "大段文本大段文本大段文本大段文本大段文本大段文本",
-                        "image": "@lADOADmaWMzazQKA",
-                        "file_count": "3",
-                        "author": "李四 "
-                      }
-                    }
-                  }
-                }
-                """);
-        MESSAGE_PARAM_MAP.put(getKeyByCode(ChannelTypeEnum.DING, MessageTypeEnum.DING_MARKDOWN), """
-                {
-                  "dingUserIdType": "userid_list 或者 dept_id_list 或者 userIds 或者 openConversationId",
-                  "pushSubject": "workNotice 或者 robot",
-                  "msgParam": {
-                    "title": "xxxx",
-                    "text": "xxxx"
-                  },
-                  "msg": {
-                    "markdown": {
-                      "title": "首屏会话透出的展示内容",
-                      "text": "# 这是支持markdown的文本   \\n   ## 标题2    \\n   * 列表1   \\n  ![alt 啊](https://img.alicdn.com/tps/TB1XLjqNVXXXXc4XVXXXXXXXXXX-170-64.png)"
-                    }
-                  }
-                }
-                """);
-        MESSAGE_PARAM_MAP.put(getKeyByCode(ChannelTypeEnum.DING, MessageTypeEnum.DING_CARD), """
-                {
-                  "dingUserIdType": "userid_list 或者 dept_id_list 或者 userIds 或者 openConversationId",
-                  "pushSubject": "workNotice 或者 robot",
-                  "msgParam": {
-                    "title": "测试标题",
-                    "text": "内容测试",
-                    "singleTitle": "查看详情",
-                    "singleURL": "https://open.dingtalk.com"
-                  },
-                  "msg": {
-                    "action_card": {
-                      "title": "是透出到会话列表和通知的文案",
-                      "markdown": "支持markdown格式的正文内容",
-                      "single_title": "查看详情",
-                      "single_url": "https://open.dingtalk.com"
-                    }
-                  }
-                }
-                """);
-
-        // 企业微信消息参数
-        MESSAGE_PARAM_MAP.put(getKeyByCode(ChannelTypeEnum.DING, MessageTypeEnum.COMMON_TEXT), """
-                {
-                  "pushSubject": "app 或者 robot",
-                  "wechatUserIdType": "touser 或者 toparty 或者 totag 或者 to_parent_userid 或者 to_student_userid 或者 to_party 或者 toall 或者 chatid 或者 webhook",
-                  "text": {
-                    "content": "你的快递已到，请携带工卡前往邮件中心领取。\\n出发前可查看<a href=\\"http://work.weixin.qq.com\\">邮件中心视频实况</a>，聪明避开排队。"
-                  },
-                  "safe": 0,
-                  "enable_id_trans": 0,
-                  "enable_duplicate_check": 0,
-                  "duplicate_check_interval": 1800
-                }
-                """);
-        //TODO:更多参数待补充
-
-        // 飞书消息参数
-        MESSAGE_PARAM_MAP.put(getKeyByCode(ChannelTypeEnum.FEI_SHU, MessageTypeEnum.COMMON_TEXT), """
-                {
-                  "feiShuUserIdType": "user_id 或者 email 或者 chat_id 或者 department_id",
-                  "content": {
-                    "text": "test content"
-                  }
-                }
-                """);
-        MESSAGE_PARAM_MAP.put(getKeyByCode(ChannelTypeEnum.FEI_SHU, MessageTypeEnum.FEI_SHU_POST), """
-                {
-                  "feiShuUserIdType": "user_id 或者 email 或者 chat_id 或者 department_id",
-                  "content": {
-                    "post": {
-                      "zh_cn": {
-                        "title": "我是一个标题",
-                        "content": [
-                          [
-                            {
-                              "tag": "text",
-                              "text": "第一行"
-                            },
-                            {
-                              "tag": "a",
-                              "href": "http://www.feishu.cn",
-                              "text": "飞书"
-                            }
-                          ]
-                        ]
-                      },
-                      "en_us": {
-                        "title": "I am a title",
-                        "content": [
-                          [
-                            {
-                              "tag": "text",
-                              "text": "first line"
-                            },
-                            {
-                              "tag": "a",
-                              "href": "http://www.feishu.cn",
-                              "text": "feishu"
-                            }
-                          ]
-                        ]
-                      }
-                    }
-                  }
-                }
-                """);
-        MESSAGE_PARAM_MAP.put(getKeyByCode(ChannelTypeEnum.FEI_SHU, MessageTypeEnum.FEI_SHU_IMAGE), """
-                {
-                  "feiShuUserIdType": "user_id 或者 email 或者 chat_id 或者 department_id",
-                  "content": {
-                    "image_key": ""
-                  }
-                }
-                """);
-        MESSAGE_PARAM_MAP.put(getKeyByCode(ChannelTypeEnum.FEI_SHU, MessageTypeEnum.FEI_SHU_INTERACTIVE), """
-                {
-                  "feiShuUserIdType": "user_id 或者 email 或者 chat_id 或者 department_id",
-                  "content": {
-                    "config": {
-                      "wide_screen_mode": true
-                    },
-                    "elements": [
-                      {
-                        "alt": {
-                          "content": "",
-                          "tag": "plain_text"
-                        },
-                        "img_key": "img_7ea74629-9191-4176-998c-2e603c9c5e8g",
-                        "tag": "img"
-                      },
-                      {
-                        "tag": "div",
-                        "text": {
-                          "content": "你是否曾因为一本书而产生心灵共振，开始感悟人生？\\n你有哪些想极力推荐给他人的珍藏书单？\\n\\n加入 **4·23 飞书读书节**，分享你的**挚爱书单**及**读书笔记**，**赢取千元读书礼**！\\n\\n📬 填写问卷，晒出你的珍藏好书\\n😍 想知道其他人都推荐了哪些好书？马上[入群围观](https://open.feishu.cn/)\\n📝 用[读书笔记模板](https://open.feishu.cn/)（桌面端打开），记录你的心得体会\\n🙌 更有惊喜特邀嘉宾 4月12日起带你共读",
-                          "tag": "lark_md"
-                        }
-                      },
-                      {
-                        "actions": [
-                          {
-                            "tag": "button",
-                            "text": {
-                              "content": "立即推荐好书",
-                              "tag": "plain_text"
-                            },
-                            "type": "primary",
-                            "url": "https://open.feishu.cn/"
-                          },
-                          {
-                            "tag": "button",
-                            "text": {
-                              "content": "查看活动指南",
-                              "tag": "plain_text"
-                            },
-                            "type": "default",
-                            "url": "https://open.feishu.cn/"
-                          }
-                        ],
-                        "tag": "action"
-                      }
-                    ],
-                    "header": {
-                      "template": "turquoise",
-                      "title": {
-                        "content": "📚晒挚爱好书，赢读书礼金",
-                        "tag": "plain_text"
-                      }
-                    }
-                  }
-                }
-                """);
-        MESSAGE_PARAM_MAP.put(getKeyByCode(ChannelTypeEnum.FEI_SHU, MessageTypeEnum.FEI_SHU_SHARE_CHAT), """
-                {
-                  "feiShuUserIdType": "user_id 或者 email 或者 chat_id 或者 department_id",
-                  "content": {
-                    "chat_id": ""
-                  }
-                }
-                """);
-        MESSAGE_PARAM_MAP.put(getKeyByCode(ChannelTypeEnum.FEI_SHU, MessageTypeEnum.FEI_SHU_SHARE_USER), """
-                {
-                  "feiShuUserIdType": "user_id 或者 email 或者 chat_id",
-                  "content": {
-                    "user_id": ""
-                  }
-                }
-                """);
-        MESSAGE_PARAM_MAP.put(getKeyByCode(ChannelTypeEnum.FEI_SHU, MessageTypeEnum.FEI_SHU_AUDIO), """
-                {
-                  "feiShuUserIdType": "user_id 或者 email 或者 chat_id",
-                  "content": {
-                    "file_key": ""
-                  }
-                }
-                """);
-        MESSAGE_PARAM_MAP.put(getKeyByCode(ChannelTypeEnum.FEI_SHU, MessageTypeEnum.FEI_SHU_MEDIA), """
-                {
-                  "feiShuUserIdType": "user_id 或者 email 或者 chat_id",
-                  "content": {
-                    "file_key": "75235e0c-430a-a99b-8446610223cg",
-                    "image_key": "img_xxxxxx"
-                  }
-                }
-                """);
-        MESSAGE_PARAM_MAP.put(getKeyByCode(ChannelTypeEnum.FEI_SHU, MessageTypeEnum.FEI_SHU_FILE), """
-                {
-                  "feiShuUserIdType": "user_id 或者 email 或者 chat_id",
-                  "content": {
-                    "file_key": "75235e0c-430a-a99b-8446610223cg"
-                  }
-                }
-                """);
-        MESSAGE_PARAM_MAP.put(getKeyByCode(ChannelTypeEnum.FEI_SHU, MessageTypeEnum.FEI_SHU_STICKER), """
-                {
-                  "feiShuUserIdType": "user_id 或者 email 或者 chat_id",
-                  "content": {
-                    "file_key": "75235e0c-430a-a99b-8446610223cg"
-                  }
-                }
-                """);
-
+        /********* 电话消息参数 **********/
+        // 阿里云
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.CALL_ALI_TEXT), CallMessageParam.ALI_PARAM);
+        // 腾讯云
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.CALL_TENCENT_TEXT), CallMessageParam.TENCENT_PARAM);
+        /*********** 短信消息参数 **********/
+        // 阿里云
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.SMS_ALI_TEXT), SmsMessageParam.ALI_PARAM);
+        // 腾讯云
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.SMS_TENCENT_TEXT), SmsMessageParam.TENCENT_PARAM);
+        /*********** 邮件消息参数 **********/
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.EMAIL_TEXT), EmailMessageParam.EMAIL_PARAM);
+        /*********** 钉钉消息参数 **********/
+        // 钉钉工作通知消息
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.DING_WORK_NOTICE_TEXT), DingMessageParam.WORK_NOTICE_TEXT_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.DING_WORK_NOTICE_IMAGE), DingMessageParam.WORK_NOTICE_IMAGE_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.DING_WORK_NOTICE_VOICE), DingMessageParam.WORK_NOTICE_VOICE_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.DING_WORK_NOTICE_FILE), DingMessageParam.WORK_NOTICE_FILE_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.DING_WORK_NOTICE_LINK), DingMessageParam.WORK_NOTICE_LINK_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.DING_WORK_NOTICE_OA), DingMessageParam.WORK_NOTICE_OA_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.DING_WORK_NOTICE_MARKDOWN), DingMessageParam.WORK_NOTICE_MARKDOWN_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.DING_WORK_NOTICE_CARD), DingMessageParam.WORK_NOTICE_CARD_PARAM);
+        // 钉钉机器人消息
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.DING_ROBOT_TEXT), DingMessageParam.ROBOT_TEXT_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.DING_ROBOT_MARKDOWN), DingMessageParam.ROBOT_MARKDOWN_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.DING_ROBOT_IMAGE_MSG), DingMessageParam.ROBOT_IMAGE_MSG_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.DING_ROBOT_LINK), DingMessageParam.ROBOT_LINK_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.DING_ROBOT_ACTION_CARD), DingMessageParam.ROBOT_ACTION_CARD_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.DING_ROBOT_ACTION_CARD_2), DingMessageParam.ROBOT_ACTION_CARD_2_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.DING_ROBOT_ACTION_CARD_3), DingMessageParam.ROBOT_ACTION_CARD_3_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.DING_ROBOT_ACTION_CARD_4), DingMessageParam.ROBOT_ACTION_CARD_4_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.DING_ROBOT_ACTION_CARD_5), DingMessageParam.ROBOT_ACTION_CARD_5_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.DING_ROBOT_ACTION_CARD_6), DingMessageParam.ROBOT_ACTION_CARD_6_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.DING_ROBOT_AUDIO), DingMessageParam.ROBOT_AUDIO_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.DING_ROBOT_FILE), DingMessageParam.ROBOT_FILE_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.DING_ROBOT_VIDEO), DingMessageParam.ROBOT_VIDEO_PARAM);
+        /*********** 企微消息参数 **********/
+        // 企微应用消息
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_APP_TEXT), WechatMessageParam.APP_TEXT_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_APP_IMAGE), WechatMessageParam.APP_IMAGE_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_APP_VOICE), WechatMessageParam.APP_VOICE_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_APP_VIDEO), WechatMessageParam.APP_VIDEO_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_APP_FILE), WechatMessageParam.APP_FILE_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_APP_TEXT_CARD), WechatMessageParam.APP_TEXT_CARD_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_APP_NEWS), WechatMessageParam.APP_NEWS_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_APP_MPNEWS), WechatMessageParam.APP_MPNEWS_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_APP_MARKDOWN), WechatMessageParam.APP_MARKDOWN_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_APP_MINIPROGRAM_NOTICE), WechatMessageParam.APP_MINIPROGRAM_NOTICE_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_APP_TEMPLATE_CARD), WechatMessageParam.APP_TEMPLATE_CARD_PARAM);
+        // 企微应用消息到群聊会话
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_APP_TO_GROUP_TEXT), WechatMessageParam.APP_TO_GROUP_TEXT_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_APP_TO_GROUP_IMAGE), WechatMessageParam.APP_TO_GROUP_IMAGE_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_APP_TO_GROUP_VOICE), WechatMessageParam.APP_TO_GROUP_VOICE_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_APP_TO_GROUP_VIDEO), WechatMessageParam.APP_TO_GROUP_VIDEO_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_APP_TO_GROUP_FILE), WechatMessageParam.APP_TO_GROUP_FILE_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_APP_TO_GROUP_TEXT_CARD), WechatMessageParam.APP_TO_GROUP_TEXT_CARD_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_APP_TO_GROUP_NEWS), WechatMessageParam.APP_TO_GROUP_NEWS_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_APP_TO_GROUP_MPNEWS), WechatMessageParam.APP_TO_GROUP_MPNEWS_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_APP_TO_GROUP_MARKDOWN), WechatMessageParam.APP_TO_GROUP_MARKDOWN_PARAM);
+        // 企微家校消息
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_SCHOOL_TEXT), WechatMessageParam.SCHOOL_TEXT_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_SCHOOL_IMAGE), WechatMessageParam.SCHOOL_IMAGE_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_SCHOOL_VOICE), WechatMessageParam.SCHOOL_VOICE_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_SCHOOL_VIDEO), WechatMessageParam.SCHOOL_VIDEO_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_SCHOOL_FILE), WechatMessageParam.SCHOOL_FILE_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_SCHOOL_NEWS), WechatMessageParam.SCHOOL_NEWS_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_SCHOOL_MPNEWS), WechatMessageParam.SCHOOL_MPNEWS_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_SCHOOL_MINIPROGRAM_NOTICE), WechatMessageParam.SCHOOL_MINIPROGRAM_NOTICE_PARAM);
+        // 企微群机器人消息
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_GROUP_ROBOT_TEXT), WechatMessageParam.GROUP_ROBOT_TEXT_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_GROUP_ROBOT_MARKDOWN), WechatMessageParam.GROUP_ROBOT_MARKDOWN_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_GROUP_ROBOT_IMAGE), WechatMessageParam.GROUP_ROBOT_IMAGE_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_GROUP_ROBOT_MPNEWS), WechatMessageParam.GROUP_ROBOT_MPNEWS_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_GROUP_ROBOT_FILE), WechatMessageParam.GROUP_ROBOT_FILE_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_GROUP_ROBOT_VOICE), WechatMessageParam.GROUP_ROBOT_VOICE_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.WECHAT_GROUP_ROBOT_TEMPLATE_CARD), WechatMessageParam.GROUP_ROBOT_TEMPLATE_CARD_PARAM);
+        /*********** 飞书消息参数 **********/
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.FEI_SHU_TEXT), FeiShuMessageParam.TEXT_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.FEI_SHU_POST), FeiShuMessageParam.POST_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.FEI_SHU_IMAGE), FeiShuMessageParam.IMAGE_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.FEI_SHU_INTERACTIVE), FeiShuMessageParam.INTERACTIVE_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.FEI_SHU_SHARE_CHAT), FeiShuMessageParam.SHARE_CHAT_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.FEI_SHU_SHARE_USER), FeiShuMessageParam.SHARE_USER_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.FEI_SHU_AUDIO), FeiShuMessageParam.AUDIO_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.FEI_SHU_MEDIA), FeiShuMessageParam.MEDIA_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.FEI_SHU_FILE), FeiShuMessageParam.FILE_PARAM);
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.FEI_SHU_STICKER), FeiShuMessageParam.STICKER_PARAM);
     }
 
-    private static String getKeyByCode(ChannelTypeEnum channelTypeEnum, MessageTypeEnum messageTypeEnum) {
-        return channelTypeEnum.getCode() + com.oszero.deliver.business.common.constant.CommonConstant.CODE_SEPARATE + messageTypeEnum.getCode();
+    private static String getKeyByCode(MessageTypeEnum messageTypeEnum) {
+        return messageTypeEnum.getCode();
     }
 
-    public static String getMessageParamJsonConfig(String channelTypeEnumCode, String messageTypeEnumCode) {
-        return MESSAGE_PARAM_MAP.getOrDefault(channelTypeEnumCode + com.oszero.deliver.business.common.constant.CommonConstant.CODE_SEPARATE + messageTypeEnumCode, "{}");
+    public static String getMessageParamJsonConfig(String messageTypeEnumCode) {
+        return MESSAGE_PARAM_MAP.getOrDefault(messageTypeEnumCode, "{}");
     }
 }

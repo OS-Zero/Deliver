@@ -75,4 +75,10 @@ public class MessageTemplateController {
         messageTemplateService.testSendMessage(sendMessageRequestDto);
         return CommonResult.success();
     }
+
+    @PostMapping(AdminPathConstant.MESSAGE_TEMPLATE_GET_MESSAGE_PARAM)
+    public CommonResult<String> getMessageParam(@Valid @RequestBody GetMessageParamRequestDto dto) {
+        return CommonResult.success(messageTemplateService.getMessageParam(dto));
+    }
+
 }

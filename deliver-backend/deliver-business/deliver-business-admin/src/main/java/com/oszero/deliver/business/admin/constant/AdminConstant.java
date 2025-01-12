@@ -22,6 +22,8 @@ package com.oszero.deliver.business.admin.constant;
  * @version 1.0.0
  */
 public interface AdminConstant {
+    /********************* 时间相关 *********************/
+    String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     /********************* 请求头相关 *********************/
     String AUTH_HEARD_NAME = "Authorization";
     String FRONT_PLATFORM = "FrontPlatform";

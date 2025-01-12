@@ -23,7 +23,6 @@ package com.oszero.deliver.business.common.constant;
  */
 public interface CommonConstant {
     /********************* 枚举相关 *********************/
-    String COMMON_MESSAGE_TYPE_CODE = "0-0";
     String CODE_SEPARATE = "-";
     int MIN_INDEX = 1;
     /********************* 状态相关 *********************/

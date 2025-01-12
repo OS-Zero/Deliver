@@ -36,7 +36,8 @@ public interface AdminPathConstant {
     /********** 系统参数模块 **********/
     String SYSTEM_PARAM_PREFIX_PATH = "/systemParam";
     String SYSTEM_PARAM_GET_CHANNEL_TYPE = SYSTEM_PARAM_PREFIX_PATH + "/getChannelType";
-    String SYSTEM_PARAM_GET_PARAM = SYSTEM_PARAM_PREFIX_PATH + "/getParam";
+    String SYSTEM_PARAM_GET_CHANNEL_PROVIDER_TYPE = SYSTEM_PARAM_PREFIX_PATH + "/getChannelProviderType";
+    String SYSTEM_PARAM_GET_MESSAGE_TYPE = SYSTEM_PARAM_PREFIX_PATH + "/getMessageType";
     String SYSTEM_PARAM_GET_APP_CONFIG = SYSTEM_PARAM_PREFIX_PATH + "/getAppConfig";
     String SYSTEM_PARAM_GET_PLATFORM_FILE_TYPE = SYSTEM_PARAM_PREFIX_PATH + "/getPlatformFileType";
     String SYSTEM_PARAM_GET_MESSAGE_PARAM = SYSTEM_PARAM_PREFIX_PATH + "/getMessageParam";
@@ -55,6 +56,7 @@ public interface AdminPathConstant {
     String MESSAGE_TEMPLATE_UPDATE_STATUS = MESSAGE_TEMPLATE_PREFIX_PATH + "/updateStatus";
     String MESSAGE_TEMPLATE_DELETE = MESSAGE_TEMPLATE_PREFIX_PATH + "/delete";
     String MESSAGE_TEMPLATE_TEST_SEND_MESSAGE = MESSAGE_TEMPLATE_PREFIX_PATH + "/testSendMessage";
+    String MESSAGE_TEMPLATE_GET_MESSAGE_PARAM = MESSAGE_TEMPLATE_PREFIX_PATH + "/getMessageParam";
     /********** 渠道应用模块 **********/
     String CHANNEL_APP_PREFIX_PATH = "/channelApp";
     String CHANNEL_APP_SEARCH = CHANNEL_APP_PREFIX_PATH + "/search";

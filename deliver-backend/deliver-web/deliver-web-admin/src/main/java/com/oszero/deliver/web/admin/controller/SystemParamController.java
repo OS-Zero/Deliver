@@ -18,9 +18,7 @@
 package com.oszero.deliver.web.admin.controller;
 
 import com.oszero.deliver.business.admin.model.dto.request.systemparam.GetParamRequestDto;
-import com.oszero.deliver.business.admin.model.dto.response.systemparam.GetChannelTypeResponseDto;
-import com.oszero.deliver.business.admin.model.dto.response.systemparam.GetParamResponseDto;
-import com.oszero.deliver.business.admin.model.dto.response.systemparam.GetPlatformFileTypeResponseDto;
+import com.oszero.deliver.business.admin.model.dto.response.systemparam.*;
 import com.oszero.deliver.business.admin.service.SystemParamService;
 import com.oszero.deliver.business.common.model.common.CommonResult;
 import com.oszero.deliver.web.admin.constant.AdminPathConstant;
@@ -47,9 +45,14 @@ public class SystemParamController {
         return CommonResult.success(systemParamService.getChannelType(dto));
     }
 
-    @PostMapping(AdminPathConstant.SYSTEM_PARAM_GET_PARAM)
-    public CommonResult<GetParamResponseDto> getParam(@RequestBody GetParamRequestDto dto) {
-        return CommonResult.success(systemParamService.getParam(dto));
+    @PostMapping(AdminPathConstant.SYSTEM_PARAM_GET_CHANNEL_PROVIDER_TYPE)
+    public CommonResult<List<GetChannelProviderTypeResponseDto>> getChannelProviderType(@RequestBody GetParamRequestDto dto) {
+        return CommonResult.success(systemParamService.getChannelProviderType(dto));
+    }
+
+    @PostMapping(AdminPathConstant.SYSTEM_PARAM_GET_MESSAGE_TYPE)
+    public CommonResult<List<GetMessageTypeResponseDto>> getMessageType(@RequestBody GetParamRequestDto dto) {
+        return CommonResult.success(systemParamService.getMessageType(dto));
     }
 
     @PostMapping(AdminPathConstant.SYSTEM_PARAM_GET_APP_CONFIG)

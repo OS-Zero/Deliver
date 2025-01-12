@@ -26,6 +26,8 @@ import com.oszero.deliver.business.admin.model.entity.database.SendTask;
 import org.quartz.Job;
 import org.quartz.SchedulerException;
 
+import java.text.ParseException;
+
 /**
  * @author oszero
  * @version 1.0.0
@@ -34,9 +36,9 @@ public interface SendTaskService extends IService<SendTask>, Job {
 
     SearchResponseDto<SendTaskSearchResponseDto> search(SendTaskSearchRequestDto dto);
 
-    void save(SendTaskSaveRequestDto dto) throws SchedulerException;
+    void save(SendTaskSaveRequestDto dto) throws SchedulerException, ParseException;
 
-    void update(SendTaskUpdateRequestDto dto) throws SchedulerException;
+    void update(SendTaskUpdateRequestDto dto) throws SchedulerException, ParseException;
 
     void updateStatus(SendTaskUpdateStatusRequestDto dto) throws SchedulerException;
 

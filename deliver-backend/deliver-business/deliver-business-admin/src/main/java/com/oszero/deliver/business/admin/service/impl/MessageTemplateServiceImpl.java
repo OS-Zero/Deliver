@@ -22,6 +22,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.oszero.deliver.business.admin.constant.MessageParamConstant;
 import com.oszero.deliver.business.admin.model.dto.request.common.DeleteIdsRequestDto;
 import com.oszero.deliver.business.admin.model.dto.request.messagetemplate.*;
 import com.oszero.deliver.business.admin.model.dto.response.common.SearchResponseDto;
@@ -177,6 +178,19 @@ public class MessageTemplateServiceImpl extends ServiceImpl<MessageTemplateMappe
     @Override
     public void testSendMessage(SendMessageRequestDto sendMessageRequestDto) {
         sendMessageUtils.sendMessage(sendMessageRequestDto);
+    }
+
+    @Override
+    public String getMessageParam(GetMessageParamRequestDto dto) {
+        Long templateId = dto.getTemplateId();
+        LambdaQueryWrapper<MessageTemplate> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(MessageTemplate::getTemplateId, templateId)
+                .eq(MessageTemplate::getGroupId, GroupUtils.getGroupId());
+        MessageTemplate messageTemplate = messageTemplateMapper.selectOne(wrapper);
+        if (Objects.isNull(messageTemplate)) {
+            throw new BusinessException("请输入正确的模板ID");
+        }
+        return MessageParamConstant.getMessageParamJsonConfig(messageTemplate.getMessageType());
     }
 
     private void checkTemplateNameIsDuplicate(Long templateId, String templateName) {

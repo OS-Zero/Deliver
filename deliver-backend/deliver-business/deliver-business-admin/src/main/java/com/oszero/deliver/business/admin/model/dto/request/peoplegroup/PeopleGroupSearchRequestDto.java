@@ -21,6 +21,8 @@ import com.oszero.deliver.business.admin.model.dto.request.common.PageRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.time.LocalDateTime;
+
 /**
  * @author oszero
  * @version 1.0.0
@@ -30,4 +32,6 @@ import lombok.EqualsAndHashCode;
 public class PeopleGroupSearchRequestDto extends PageRequest {
     private String peopleGroupName;
     private Integer usersType;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
 }
