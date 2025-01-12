@@ -129,6 +129,7 @@ export const peopleGroupSchema: Schema<PeopleGroupSchema> = {
 		label: '人群列表',
 		rules: [{ required: true, validator: validatePeopleGroupList, trigger: 'blur' }],
 		textareaConfig: {
+			rows: 10,
 			description: getTextareaDescription(0),
 		},
 	},

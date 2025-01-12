@@ -10,6 +10,7 @@ import { getPlatformFile } from '@/api/platformFile';
 import { PlatformFile } from '@/types/platformFile';
 import { filterSchema, filterSchemaMaps, platformFileColumns } from '@/config/platformFile';
 import PlatformFileDrawer from './components/PlatformFileDrawer.vue';
+import { getColor } from '@/utils/table';
 type Operation = 'upload' | 'more'
 const dataSource = ref<PlatformFile[]>([])
 const { dynamicData: filterForm, stop } = dynamic(filterSchema, filterSchemaMaps)
@@ -87,6 +88,9 @@ onUnmounted(() => {
 					<template v-if="column.key === 'platformFileStatus'">
 						<a-tag v-if="record[column.key]" color="success">生效中</a-tag>
 						<a-tag v-else="record[column.key]" color="error">已过期</a-tag>
+					</template>
+					<template v-if="['platformFileTypeName', 'channelTypeName'].includes(column.key as string)">
+						<a-tag :color="getColor(text)">{{ text }}</a-tag>
 					</template>
 					<template v-else-if="column.key === 'actions'">
 						<a-dropdown placement="bottom">

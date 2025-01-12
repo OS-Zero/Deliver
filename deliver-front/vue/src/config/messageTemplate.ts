@@ -50,6 +50,7 @@ export const messageTemplateColumns: ColumnsType = [
 		title: '消息类型',
 		dataIndex: 'messageTypeName',
 		key: 'messageTypeName',
+		width: 180,
 	},
 	{
 		title: '模板状态',

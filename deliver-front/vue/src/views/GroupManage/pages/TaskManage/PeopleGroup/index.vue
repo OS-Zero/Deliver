@@ -11,6 +11,7 @@ import { usePagination } from '@/hooks/table';
 import { Key } from 'ant-design-vue/lib/_util/type';
 import { PeopleGroup } from '@/types/peopleGroup';
 import PeopleGroupDrawer from './components/PeopleGroupDrawer.vue';
+import { getColor } from '@/utils/table';
 
 type Operation = 'add' | 'edit' | 'delete' | 'more' | 'download'
 const dataSource = ref<PeopleGroup[]>([])
@@ -141,6 +142,9 @@ onUnmounted(() => {
 					<template v-if="column.key === 'peopleGroupId'">
 						{{ text }}
 						<CopyOutlined class="id--copy" @click="copyId(text)" />
+					</template>
+					<template v-if="column.key === 'usersTypeName'">
+						<a-tag :color="getColor(text)">{{ text }}</a-tag>
 					</template>
 					<template v-if="column.key === 'actions'">
 						<a-button type="link" @click="handleActions('edit', record)">编辑 </a-button>

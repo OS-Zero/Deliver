@@ -56,7 +56,7 @@ defineExpose({
 						:disabled="!!!field.options?.length" />
 				</template>
 				<template v-else-if="field.type === 'textarea'">
-					<a-textarea v-model:value="formSchema[field.fieldName].value" />
+					<a-textarea v-model:value="formSchema[field.fieldName].value" v-bind="field.textareaConfig" />
 					<p class="textarea-desc" v-html="field.textareaConfig?.description"></p>
 				</template>
 				<template v-else-if="field.type === 'list'">

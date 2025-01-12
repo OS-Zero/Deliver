@@ -137,7 +137,7 @@ onUnmounted(() => {
 			</div>
 			<a-table row-key="appId" :dataSource="dataSource" :columns="channelAppColumns" :row-selection="rowSelection"
 				:pagination="pagination" :scroll="{ x: 1400, y: 680 }">
-				<template #bodyCell="{ column, text, record, index }">
+				<template #bodyCell="{ column, text, record }">
 					<template v-if="column.key === 'appId'">
 						{{ text }}
 						<CopyOutlined class="id--copy" @click="copyId(text)" />
@@ -147,7 +147,7 @@ onUnmounted(() => {
 							un-checked-children="关闭" />
 					</template>
 					<template v-if="['channelProviderTypeName', 'channelTypeName'].includes(column.key as string)">
-						<a-tag :color="getColor(index)">{{ text }}</a-tag>
+						<a-tag :color="getColor(text)">{{ text }}</a-tag>
 					</template>
 					<template v-else-if="column.key === 'actions'">
 						<a-button type="link" @click="handleActions('edit', record)">编辑 </a-button>

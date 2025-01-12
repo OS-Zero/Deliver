@@ -138,7 +138,7 @@ onUnmounted(() => {
 			</div>
 			<a-table row-key="templateId" :dataSource="dataSource" :columns="messageTemplateColumns"
 				:row-selection="rowSelection" :pagination="pagination" :scroll="{ x: 1400, y: 680 }">
-				<template #bodyCell="{ column, text, record, index }">
+				<template #bodyCell="{ column, text, record }">
 					<template v-if="column.key === 'templateId'">
 						{{ text }}
 						<CopyOutlined class="id--copy" @click="copyId(text)" />
@@ -149,7 +149,7 @@ onUnmounted(() => {
 					</template>
 					<template
 						v-if="['usersTypeName', 'channelProviderTypeName', 'messageTypeName', 'channelTypeName'].includes(column.key as string)">
-						<a-tag :color="getColor(index)">{{ text }}</a-tag>
+						<a-tag :color="getColor(text)">{{ text }}</a-tag>
 					</template>
 					<template v-if="column.key === 'actions'">
 						<a-button type="link" @click="handleActions('edit', record)">编辑 </a-button>
