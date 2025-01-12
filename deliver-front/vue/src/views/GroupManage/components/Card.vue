@@ -20,7 +20,7 @@ const handleOperation = (op: Op) => {
 </script>
 
 <template>
-	<div class="card" v-if="!isEmpty" @dblclick="jumpLink">
+	<div class="card" v-if="!isEmpty" @click="jumpLink">
 		<div class="card_more">
 			<a-dropdown placement="bottom">
 				<EllipsisOutlined />
