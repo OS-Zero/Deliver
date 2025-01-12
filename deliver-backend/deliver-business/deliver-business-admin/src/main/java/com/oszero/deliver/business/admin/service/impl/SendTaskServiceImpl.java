@@ -205,8 +205,20 @@ public class SendTaskServiceImpl extends ServiceImpl<SendTaskMapper, SendTask>
             throw new BusinessException("请输入正确的任务参数格式");
         }
         Long templateId = sendTaskParam.getTemplateId();
-        MessageTemplate messageTemplate = messageTemplateMapper.selectById(templateId);
-        PeopleGroup peopleGroup = peopleGroupMapper.selectById(peopleGroupId);
+        LambdaQueryWrapper<MessageTemplate> messageTemplateWrapper = new LambdaQueryWrapper<>();
+        messageTemplateWrapper.eq(MessageTemplate::getTemplateId, templateId)
+                .eq(MessageTemplate::getGroupId, GroupUtils.getGroupId());
+        MessageTemplate messageTemplate = messageTemplateMapper.selectOne(messageTemplateWrapper);
+        if (Objects.isNull(messageTemplate)) {
+            throw new BusinessException("请输入正确的模板ID");
+        }
+        LambdaQueryWrapper<PeopleGroup> peopleGroupWrapper = new LambdaQueryWrapper<>();
+        peopleGroupWrapper.eq(PeopleGroup::getPeopleGroupId, peopleGroupId)
+                .eq(PeopleGroup::getGroupId, GroupUtils.getGroupId());
+        PeopleGroup peopleGroup = peopleGroupMapper.selectOne(peopleGroupWrapper);
+        if (Objects.isNull(peopleGroup)) {
+            throw new BusinessException("请输入正确的人群ID");
+        }
         if (!NumberUtil.equals(messageTemplate.getUsersType(), peopleGroup.getUsersType())) {
             throw new BusinessException("关联的人群类型与消息模板中的人群类型不匹配");
         }
