@@ -22,7 +22,7 @@ const handleSearch = async () => {
 	pagination.total = total
 }
 const debounceSearch = debounce(handleSearch, 200)
-const { pagination } = usePagination(handleSearch)
+const { pagination, resetPagination } = usePagination(handleSearch)
 watch(filterForm, () => {
 	debounceSearch()
 })
@@ -63,9 +63,7 @@ const operationDispatch = {
 			cancelText: '取消',
 			async onOk() {
 				await deleteTask({ ids: [record.taskId] })
-				pagination.current = 1
-				pagination.pageSize = 10
-				handleSearch()
+				resetPagination()
 				message.success('删除成功')
 			},
 		});
@@ -89,8 +87,7 @@ const handleBatchDelete = () => {
 		cancelText: '取消',
 		async onOk() {
 			await deleteTask({ ids: rowSelection.selectedRowKeys as number[] })
-			pagination.current = 1
-			pagination.pageSize = 10
+			resetPagination()
 			handleSearch()
 			message.success('删除成功')
 		},
@@ -109,6 +106,7 @@ const handleFilterClose = () => {
 }
 const handleDrawerClose = () => {
 	drawerState.open = false;
+	drawerState.operation === 'add' && resetPagination();
 	(drawerState.operation === 'add' || drawerState.operation === 'edit') && handleSearch();
 }
 onBeforeMount(() => {

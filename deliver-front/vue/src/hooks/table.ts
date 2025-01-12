@@ -30,8 +30,13 @@ export function usePagination(cb: Callback, options: Options = { defaultSize: 10
 	const setTotal = (value: number) => {
 		pagination.total = value;
 	};
+	const resetPagination = () => {
+		pagination.current = 1;
+		pagination.pageSize = 10;
+	};
 	return {
 		setTotal,
 		pagination,
+		resetPagination,
 	};
 }
