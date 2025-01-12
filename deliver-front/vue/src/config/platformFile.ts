@@ -69,6 +69,7 @@ export const platformFileColumns: ColumnsType = [
 type Schema<T> = Record<string, FormItem<keyof T>>;
 export const platformFileSchema: Schema<UploadPlatformFile> = {
 	platformFile: {
+		value: [],
 		type: 'upload',
 		fieldName: 'platformFile',
 		label: '文件',

@@ -25,6 +25,7 @@ const listRemove = (list: string[], id: string) => {
 	const index = list.indexOf(id)
 	index !== -1 && list.splice(index, 1)
 }
+
 const { state, handleVarify } = useVerify()
 defineExpose({
 	validate,
