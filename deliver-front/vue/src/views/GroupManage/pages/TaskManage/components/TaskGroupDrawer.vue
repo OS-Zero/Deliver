@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { savePeopleGroup, updatePeopleGroup } from '@/api/peopleGroup';
+import { saveTask, updateTask } from '@/api/task';
 import { taskLocale, taskSchema } from '@/config/task';
 import { DrawerProps } from '@/types/components';
 import { getDataFromSchema } from '@/utils/utils';
@@ -64,13 +64,13 @@ const moreInfo = reactive<Array<{ label: string; value: any }>>([])
 const operationDispatch = {
 	add: async () => {
 		await formRef.value.validate()
-		await savePeopleGroup(getDataFromSchema(taskForm))
+		await saveTask(getDataFromSchema(taskForm))
 		message.success('新增成功')
 		handleCancel()
 	},
 	edit: async () => {
 		await formRef.value.validate()
-		await updatePeopleGroup(getDataFromSchema(taskForm))
+		await updateTask(getDataFromSchema(taskForm))
 		message.success('编辑成功')
 		handleCancel()
 	}

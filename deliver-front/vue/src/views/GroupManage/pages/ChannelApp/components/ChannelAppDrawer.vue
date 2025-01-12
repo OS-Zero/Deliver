@@ -40,8 +40,10 @@ watch(props, (newProps) => {
 const { dynamicData: channelAppForm, stop } = dynamic(channelAppSchema, channelAppSchemaDeps)
 const initFormDate = () => {
 	nextTick(() => {
+		channelAppForm.appConfig.depSock = true
 		for (const key in channelAppForm) {
-			channelAppForm[key].value = props.record[key]
+			if (key === 'appConfig') channelAppForm[key].value = JSON.parse(props.record[key] || "{}")
+			else channelAppForm[key].value = props.record[key]
 		}
 	})
 }

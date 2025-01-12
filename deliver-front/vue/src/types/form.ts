@@ -28,6 +28,7 @@ export interface FormItem<T> {
 	type: ItemType;
 	fieldName: T;
 	label?: string;
+	depSock?: boolean;
 	placeholder?: string;
 	initValue?: any;
 	rules?: Rule[];

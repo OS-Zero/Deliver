@@ -131,6 +131,9 @@ export const channelAppSchemaDeps = [
 	async (data: Schema<ChannelAppForm>) => {
 		try {
 			if (notUndefined(data.channelType.value) && notUndefined(data.channelProviderType.value)) {
+				if (data.appConfig.depSock) {
+					return (data.appConfig.depSock = !data.appConfig.depSock);
+				}
 				const appConfig = await getAppConfig({
 					channelType: data.channelType.value,
 					channelProviderType: data.channelProviderType.value,
