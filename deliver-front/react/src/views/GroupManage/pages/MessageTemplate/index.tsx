@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ProColumns, ProTable } from '@ant-design/pro-components';
 import { Button, Space, Switch, Dropdown, MenuProps } from 'antd';
 import { DownOutlined, FilterOutlined } from '@ant-design/icons';
@@ -11,6 +11,7 @@ import AddTemplateModal from './components/AddTemplateModal.tsx';
 import TestSendDrawer from '@/components/TestSendDrawer/index.tsx';
 import FilterCard from './components/FilterCard.tsx';
 import { proTableConfig } from '@/config/index.tsx';
+import { useNavigate } from 'react-router-dom';
 
 interface AddRef {
   addTemplateModal: () => void;
@@ -29,6 +30,7 @@ const items: MenuProps['items'] = [
 ];
 
 const Template: React.FC = () => {
+  const navigator = useNavigate();
   const detailRef = useRef<{ getDetail: (record: MessageTemplate) => void }>();
   const addRef = useRef<AddRef>();
   const testRef = useRef<{ getTestSendDrawer: (record: MessageTemplate) => void }>();
@@ -99,6 +101,12 @@ const Template: React.FC = () => {
   const handleFilter = (filters: any) => {
     setTableParams(filters);
   };
+
+  useEffect(() => {
+    if(!localStorage.getItem('group_id')){
+      navigator('/groupManage');
+    }
+  }, []);
 
   return (
     <div className={styles['template-container']}>

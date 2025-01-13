@@ -3,6 +3,7 @@ import { Form, Input, Button, message } from 'antd';
 import { login, getCurrentLoginUserInfo } from '@/api/user';
 import { useNavigate } from 'react-router-dom';
 import { emailValidationRule, passwordValidationRule } from '@/views/Login/constant';
+import { useGlobalContext } from '@/context/GlobalContext';
 
 interface UserInfo {
   userEmail: string;
@@ -14,7 +15,7 @@ const LoginForm: React.FC = () => {
     userEmail: '',
     userPassword: ''
   });
-
+  const { setUserInfo } = useGlobalContext();
   const formRef = useRef<any>(null);
   const navigate = useNavigate();
 
@@ -26,6 +27,7 @@ const LoginForm: React.FC = () => {
         localStorage.setItem('access_token', res);
         message.success('登录成功');
         const _res = await getCurrentLoginUserInfo();
+        setUserInfo(_res);
         localStorage.setItem('userInfo', JSON.stringify(_res));
         navigate('/', { replace: true });
       }

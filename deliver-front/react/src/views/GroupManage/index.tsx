@@ -89,8 +89,8 @@ const GroupManage: React.FC = () => {
         <Card
           key={item.groupId}
           data={item}
-          isTop={isTopGroup}
-          onTop={() => handleOperation(isTopGroup ? 'cancelTop' : 'toTop', item)}
+          isTop={!!item?.topUp}
+          onTop={() => handleOperation(item?.topUp ? 'cancelTop' : 'toTop', item)}
           onEdit={() => {
             setState((prev) => ({ ...prev, operation: 'edit', open: true }));
             setGroupId(item.groupId);
@@ -108,7 +108,6 @@ const GroupManage: React.FC = () => {
       const groupId = localStorage.getItem('group_id');
       if (groupId) {
         setState((prev) => ({ ...prev, mainPage: true }));
-        // navigate('/groupManage/template');
       } else {
         setState((prev) => ({ ...prev, mainPage: false }));
         await fetchCardData();

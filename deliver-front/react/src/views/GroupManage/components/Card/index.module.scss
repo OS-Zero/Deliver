@@ -54,6 +54,16 @@
     }
   }
 
+  .top-card-empty {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-image: none;
+    font-size: small;
+    color: var(--gray-medium-dark);
+  }
+
   .empty-icon,
   .empty-desc {
     transition: 0.5s all;
