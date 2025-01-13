@@ -1,14 +1,12 @@
 import type { ProColumns, ProDescriptionsItemProps } from '@ant-design/pro-components';
-import { ChannelApp } from './type';
+import { PlatformFileDetail } from './type';
 import { Tag, Typography } from 'antd';
 import { getColor } from '@/utils/getTagStyle';
 
 const { Paragraph } = Typography;
 
 // 表格schema配置
-export const platformTableSchema: (statusConfig: ProColumns<ChannelApp>) => ProColumns<ChannelApp>[] = (
-  statusConfig
-) => [
+export const platformTableSchema: ProColumns<PlatformFileDetail>[] = [
   {
     title: '文件 ID',
     width: 80,
@@ -33,9 +31,14 @@ export const platformTableSchema: (statusConfig: ProColumns<ChannelApp>) => ProC
     title: '文件类型',
     width: 120,
     dataIndex: 'platformFileTypeName',
-    render: (_, record) => <Tag color={getColor(record?.platformFileKey)}>{_}</Tag>
+    render: (_, record) => <Tag color={getColor(Number(record?.platformFileType))}>{_}</Tag>
   },
-  statusConfig,
+  {
+    title: '文件状态',
+    width: 120,
+    dataIndex: 'platformFileStatus',
+    render: (_, record) => (record?.platformFileStatus ? '启用' : '禁用')
+  },
   {
     width: 120,
     title: '创建用户',
@@ -51,7 +54,7 @@ export const platformTableSchema: (statusConfig: ProColumns<ChannelApp>) => ProC
 ];
 
 // 详情schema配置
-export const platformColumns: ProDescriptionsItemProps<ChannelApp>[] = [
+export const platformColumns: ProDescriptionsItemProps<PlatformFileDetail>[] = [
   {
     title: '文件 ID',
     key: 'text',
@@ -67,12 +70,12 @@ export const platformColumns: ProDescriptionsItemProps<ChannelApp>[] = [
   {
     key: 'textarea',
     title: '文件描述',
-    dataIndex: 'platformFileDescription',
+    dataIndex: 'platformFileDescription'
   },
   {
     key: 'text',
     title: '文件类型',
-    dataIndex: 'platformFileTypeName',
+    dataIndex: 'platformFileTypeName'
   },
   {
     key: 'text',
@@ -104,5 +107,5 @@ export const platformColumns: ProDescriptionsItemProps<ChannelApp>[] = [
     key: 'date',
     dataIndex: 'createTime',
     valueType: 'dateTime'
-  },
+  }
 ];

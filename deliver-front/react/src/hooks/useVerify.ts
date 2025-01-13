@@ -23,7 +23,7 @@ export const useVerify = (props: { email: string }) => {
     try {
       await validateEmail(null, email);
       setVerifyDisabled(true);
-      setCountdown(5);
+      setCountdown(60);
       await getVerificationCode({ userEmail: email });
       message.success('验证码已发送');
       const interval = setInterval(() => {

@@ -22,3 +22,12 @@ export interface PlatformFileDetail extends PlatformFileBase {
   createUser: string | null;
   createTime: string;
 }
+
+export interface PlatformFileUploadParams {
+  platformFile: File;
+  platformFileName: string;
+  platformFileDescription: string;
+  platformFileType: number;
+  channelType: number;
+  appId: number;
+}

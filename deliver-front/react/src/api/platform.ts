@@ -17,9 +17,9 @@ export async function getPlatformPages(
   });
 }
 
-export function saveChannelApp(data): Promise<never> {
+export function savePlatformData(data): Promise<never> {
   return request({
-    url: '/channelApp/save',
+    url: '/platformFile/uploadFile',
     method: 'post',
     data
   });

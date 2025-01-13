@@ -6,3 +6,14 @@ export function omitProperty(obj: object, key: string) {
     )
   );
 }
+
+export function transformParams(params: any) {
+  if (params?.current) {
+    const { current, ...rest } = params;
+    return {
+      ...rest,
+      currentPage: current || 1
+    };
+  }
+  return params;
+}

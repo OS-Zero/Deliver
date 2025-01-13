@@ -1,5 +1,5 @@
 import { getPlatformPages } from '@/api/platform';
-import { PlatformFileDetail, PlatformFileSearchParams } from './type';
+import { PlatformFileSearchParams, PlatformFileUploadParams } from './type';
 
 const useTemplateData = () => {
   /**
@@ -9,9 +9,9 @@ const useTemplateData = () => {
   const fetchPlatformData = async (params: PlatformFileSearchParams) => {
     const res = await getPlatformPages(params);
     return {
-      data: res?.data?.records,
+      data: res?.records,
       success: true,
-      total: res?.data?.total
+      total: res?.total
     };
   };
 
@@ -19,23 +19,14 @@ const useTemplateData = () => {
    * 新增模版
    * @param data
    */
-  const savePlatformData = async (params: PlatformFileDetail) => {
+  const savePlatformData = async (params: PlatformFileUploadParams) => {
     console.log(params);
-    await savePlatformApp(params);
-  };
-
-  /**
-   * 更新模板状态
-   * @param data
-   */
-  const changeStatus = async (appId: number, appStatus: number) => {
-    await updatePlatformApp({ appId, appStatus });
+    await savePlatformData(params);
   };
 
   return {
     fetchPlatformData,
-    savePlatformData,
-    changeStatus
+    savePlatformData
   };
 };
 

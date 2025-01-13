@@ -6,21 +6,17 @@ import {
   updateChannelAppStatus
 } from '@/api/channelApp';
 import deleteConfirmModal from '@/components/DeleteConfirmModal';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { ChannelApp, SearchParams } from './type';
+import { transformParams } from '@/utils/omitProperty';
 
 const useChannelData = () => {
-  const [currentParams, setCurrentParams] = useState({ currentPage: 1, pageSize: 10 });
   /**
    * 搜索请求表单数据
    * @param data
    */
-  const fetchChannelData = async ({ current, ...restParams }: SearchParams & { current: number }) => {
-    const params: SearchParams & { currentPage: number } = {
-      ...restParams,
-      currentPage: current || 1
-    };
-    setCurrentParams(params);
+  const fetchChannelData = async (filter: SearchParams) => {
+    const params = transformParams(filter);
     const res = await getChannelApp(params);
     return {
       data: res?.records,
@@ -33,7 +29,8 @@ const useChannelData = () => {
    * 新增模版
    * @param data
    */
-  const saveChannelData = async (params: ChannelApp) => params?.appId ? await updateChannelApp(params) : await saveChannelApp(params);
+  const saveChannelData = async (params: ChannelApp) =>
+    params?.appId ? await updateChannelApp(params) : await saveChannelApp(params);
 
   /**
    * 更新模板状态
@@ -51,7 +48,7 @@ const useChannelData = () => {
     deleteConfirmModal({
       onConfirm: () => {
         deleteChannelApp({ ids });
-        fetchChannelData(currentParams);
+        fetchChannelData({ currentPage: 1, pageSize: 10 });
       }
     });
   }, []);
