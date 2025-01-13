@@ -48,3 +48,12 @@ export function analysisExcelTemplateFile(data: { file: File }): Promise<string>
 		data,
 	});
 }
+export function searchPeopleGroupByName(
+	data: Pick<PeopleGroup, 'peopleGroupName'>,
+): Promise<Array<Pick<PeopleGroup, 'peopleGroupId' | 'peopleGroupName'>>> {
+	return request({
+		url: '/peopleGroup/searchByName',
+		method: 'post',
+		data,
+	});
+}

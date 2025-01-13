@@ -1,7 +1,7 @@
 import { FormItem } from '@/types/form';
 import type { ColumnsType } from 'ant-design-vue/es/table/interface';
 import { ChannelAppForm, SearchParams } from '@/types/channelApp';
-import { getAppConfig, getChannelType, getParam } from '@/api/system';
+import { getAppConfig, getChannelProviderType, getChannelType, getMessageType } from '@/api/system';
 import { notUndefined } from '@/utils/utils';
 import { getRangeRule, getRequiredRule } from '@/utils/validate';
 export const channelAppLocale = {
@@ -112,7 +112,7 @@ export const channelAppSchemaDeps = [
 	async (data: Schema<ChannelAppForm>) => {
 		try {
 			if (notUndefined(data.channelType.value)) {
-				const { channelProviderTypeList } = await getParam({ channelType: data.channelType.value });
+				const channelProviderTypeList = await getChannelProviderType({ channelType: data.channelType.value });
 				data.channelProviderType.options = channelProviderTypeList.map((item) => ({
 					value: item.channelProviderType,
 					label: item.channelProviderTypeName,
@@ -125,7 +125,30 @@ export const channelAppSchemaDeps = [
 			}
 		} catch (error) {
 			data.channelProviderType.value = undefined;
+			data.messageType.value = undefined;
 			data.channelProviderType.options = [];
+			data.messageType.options = [];
+		}
+	},
+	async (data: Schema<ChannelAppForm>) => {
+		try {
+			if (notUndefined(data.channelType.value) && notUndefined(data.channelProviderType.value)) {
+				const messageTypeList = await getMessageType({
+					channelType: data.channelType.value,
+					channelProviderType: data.channelProviderType.value,
+				});
+				data.messageType.options = messageTypeList.map((item) => ({
+					value: item.messageType,
+					label: item.messageTypeName,
+				}));
+				!data.messageType.options.some((item) => item.value === data.messageType.value) && (data.messageType.value = undefined);
+			} else {
+				data.messageType.value = undefined;
+				data.messageType.options = [];
+			}
+		} catch (error) {
+			data.messageType.value = undefined;
+			data.messageType.options = [];
 		}
 	},
 	async (data: Schema<ChannelAppForm>) => {

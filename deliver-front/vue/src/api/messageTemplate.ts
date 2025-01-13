@@ -1,6 +1,6 @@
 import request from '@/utils/request.ts';
 import { TableData } from '@/types';
-import type { MessageTemplate, SearchParams, TestSendMessage } from '@/types/messageTemplate';
+import type { MessageTemplate, SearchParams, Template, TestSendMessage } from '@/types/messageTemplate';
 
 /**
  * 模版分页查询
@@ -75,6 +75,20 @@ export async function deleteMessageTemplate(data: { ids: Array<number> }): Promi
 export async function testSendMessage(data: TestSendMessage): Promise<never> {
 	return await request({
 		url: '/messageTemplate/testSendMessage',
+		method: 'post',
+		data,
+	});
+}
+export async function searchTemplateByName(data: Pick<MessageTemplate, 'templateName'>): Promise<Array<Template>> {
+	return await request({
+		url: '/messageTemplate/searchByName',
+		method: 'post',
+		data,
+	});
+}
+export async function getMessageParam(data: Pick<MessageTemplate, 'templateId'>): Promise<string> {
+	return await request({
+		url: '/messageTemplate/getMessageParam',
 		method: 'post',
 		data,
 	});

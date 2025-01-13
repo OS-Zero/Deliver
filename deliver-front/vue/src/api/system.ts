@@ -10,24 +10,24 @@ export function getChannelType(data: { usersType: User['usersType'] }): Promise<
 		data,
 	});
 }
-export function getParam(data: { channelType: Channel['channelType'] }): Promise<{
-	channelProviderTypeList: ChannelProvider[];
-	messageTypeList: Message[];
-}> {
+export function getChannelProviderType(data: { channelType: Channel['channelType'] }): Promise<ChannelProvider[]> {
 	return request({
-		url: '/systemParam/getParam',
+		url: '/systemParam/getChannelProviderType',
 		method: 'post',
 		data,
 	});
 }
-export function getMessageParam(data: { channelType: Channel['channelType']; messageType: Message['messageType'] }): Promise<string> {
+export function getMessageParam(data: { messageType: Message['messageType'] }): Promise<string> {
 	return request({
 		url: '/systemParam/getMessageParam',
 		method: 'post',
 		data,
 	});
 }
-export function getAppConfig(data: { channelType: Channel['channelType']; channelProviderType: Channel['channelTypeName'] }): Promise<string> {
+export function getAppConfig(data: {
+	channelType: Channel['channelType'];
+	channelProviderType: ChannelProvider['channelProviderType'];
+}): Promise<string> {
 	return request({
 		url: '/systemParam/getAppConfig',
 		method: 'post',
@@ -39,6 +39,16 @@ export function getPlatformFileType(data: {
 }): Promise<Array<Pick<PlatformFile, 'platformFileType' | 'platformFileTypeName'>>> {
 	return request({
 		url: '/systemParam/getPlatformFileType',
+		method: 'post',
+		data,
+	});
+}
+export function getMessageType(data: {
+	channelType: Channel['channelType'];
+	channelProviderType: ChannelProvider['channelProviderType'];
+}): Promise<Array<Message>> {
+	return request({
+		url: '/systemParam/getMessageType',
 		method: 'post',
 		data,
 	});

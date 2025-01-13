@@ -64,7 +64,7 @@ const initTestMessageFormDate = () => {
 		testMessageForm.users.value = []
 		testMessageForm.templateId.value = props.record.templateId
 	})
-	getMessageParam({ messageType: props.record.messageType, channelType: props.record.channelType }).then(res => {
+	getMessageParam({ messageType: props.record.messageType }).then(res => {
 		testMessageForm.messageParam.value = JSON.parse(res || '{}')
 	})
 }

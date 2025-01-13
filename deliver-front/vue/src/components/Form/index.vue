@@ -47,13 +47,14 @@ defineExpose({
 			<a-form-item v-if="field.type !== 'none'" :label="field.label" :name="name(field)" :rules="field.rules">
 				<template v-if="field.type === 'input'">
 					<a-input v-model:value="formSchema[field.fieldName!].value" :placeholder="field.placeholder" />
+					<p class="input-desc" v-html="field.tip"></p>
 				</template>
 				<template v-if="field.type === 'inputPassword'">
 					<a-input-password v-model:value.trim="formSchema[field.fieldName!].value" :placeholder="field.placeholder" />
 				</template>
 				<template v-else-if="field.type === 'select'">
 					<a-select v-model:value="formSchema[field.fieldName].value" :options="field.options"
-						:disabled="!!!field.options?.length" />
+						v-bind="field.selectConfig" />
 				</template>
 				<template v-else-if="field.type === 'textarea'">
 					<a-textarea v-model:value="formSchema[field.fieldName].value" v-bind="field.textareaConfig" />
@@ -124,7 +125,9 @@ defineExpose({
 	}
 }
 
-.textarea-desc {
+.textarea-desc,
+.input-desc {
 	color: var(--gray-medium-dark);
+	font-size: small;
 }
 </style>

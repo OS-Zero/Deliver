@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { saveTask, updateTask } from '@/api/task';
-import { taskLocale, taskSchema } from '@/config/task';
+import { taskLocale, taskSchema, taskSchemaMaps } from '@/config/task';
 import { DrawerProps } from '@/types/components';
-import { getDataFromSchema } from '@/utils/utils';
+import { dynamic, getDataFromSchema } from '@/utils/utils';
 import { message } from 'ant-design-vue';
 import { ref, reactive, onUnmounted, watch, nextTick } from 'vue';
 
@@ -38,7 +38,7 @@ watch(props, (newProps) => {
 	newProps.operation === 'more' && initMoreDate();
 })
 
-const taskForm = reactive(taskSchema)
+const { dynamicData: taskForm, stop } = dynamic(taskSchema, taskSchemaMaps)
 const initFormDate = () => {
 	nextTick(() => {
 		for (const key in taskForm) {

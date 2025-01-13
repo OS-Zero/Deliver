@@ -10,7 +10,6 @@ type ItemType =
 	| 'inputPassword'
 	| 'textarea'
 	| 'inputNumber'
-	| 'timePicker'
 	| 'select'
 	| 'radio'
 	| 'switch'
@@ -39,5 +38,7 @@ export interface FormItem<T> {
 	uploadConifg?: UploadConfig;
 	buttonConfig?: Record<string, any>;
 	radioGroupConfig?: RadioGroupProps;
+	selectConfig?: SelectProps;
 	max?: number;
+	tip?: string;
 }

@@ -5,8 +5,11 @@ export interface Task extends Pick<PeopleGroup, 'peopleGroupId' | 'peopleGroupNa
 	taskId: number;
 	taskName: string;
 	taskDescription: string;
-	taskParam: string;
+	taskMessageParam: string;
 	taskType: number;
+	taskTimeExpression: string;
+	templateId: number;
+	peopleGroupId: number;
 	taskStatus: number;
 	createUser: string;
 	createTime: string;
@@ -15,4 +18,7 @@ export interface SearchParams extends TableSearchParams, Pick<Partial<Task>, 'ta
 	startTime?: string;
 	endTime?: string;
 }
-export type TaskForm = Pick<Task, 'taskId' | 'taskName' | 'taskDescription' | 'taskParam' | 'taskType' | 'peopleGroupId'>;
+export type TaskForm = Pick<
+	Task,
+	'taskId' | 'taskName' | 'taskDescription' | 'taskMessageParam' | 'taskType' | 'peopleGroupId' | 'taskTimeExpression' | 'templateId'
+>;
