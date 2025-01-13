@@ -3,13 +3,11 @@ import { Button, Drawer, Form, FormInstance, Input, Space } from 'antd';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { JsonEditor } from 'jsoneditor-react';
 import styles from './index.module.scss';
-import { getAppConfig } from '@/api/system';
+import { getMessageParamByMessageType } from '@/api/messageTemplate';
 
 const TestSendDrawer = forwardRef((_, ref) => {
   const [open, setOpen] = useState(false);
   const formRef = useRef<FormInstance>(null);
-  const jsonEditorRef = useRef<any>(null);
-  const [paramMap, setParamMap] = useState({});
   const [jsonEditorKey, setJsonEditorKey] = useState(0);
 
   const showDrawer = () => {
@@ -21,12 +19,12 @@ const TestSendDrawer = forwardRef((_, ref) => {
   };
 
   // 渠道供应商类型变更处理
-  const handleChannelProviderTypeChange = async (values: any) => {
-    const { channelType, channelProviderType } = values;
-    if (channelType && channelProviderType) {
+  const handleParams = async (values: any) => {
+    const { messageType } = values;
+    if (messageType) {
       try {
-        const response = await getAppConfig({ channelType, channelProviderType });
-        setParamMap(JSON.parse(response));
+        const response = await getMessageParamByMessageType({ messageType });
+        formRef?.current?.setFieldsValue({ messageParam: response });
         setJsonEditorKey((prev) => prev + 1); // 渲染视图，处理变更
       } catch (error) {
         console.error('获取应用配置失败:', error);
@@ -37,18 +35,23 @@ const TestSendDrawer = forwardRef((_, ref) => {
   useImperativeHandle(ref, () => ({
     getTestSendDrawer: async (values: any) => {
       showDrawer();
-      await handleChannelProviderTypeChange(values);
+      await handleParams(values);
     }
   }));
 
-  const onFinish = (values: any) => {
-    console.log('Received values of form:', values);
-    console.log('Received values of form:', paramMap);
+  const onSubmit = async () => {
+    try {
+      await formRef?.current?.validateFields();
+      const values = formRef?.current?.getFieldsValue();
+      console.log('values', values);
+      onClose();
+    } catch (error) {
+      console.error('保存失败:', error);
+    }
   };
 
   useEffect(() => {
     formRef?.current?.resetFields();
-    setParamMap({});
     setJsonEditorKey((prev) => prev + 1);
   }, [open]);
 
@@ -64,19 +67,20 @@ const TestSendDrawer = forwardRef((_, ref) => {
       extra={
         <Space>
           <Button onClick={onClose}>取消</Button>
-          <Button type="primary" onClick={() => formRef?.current?.submit()}>
+          <Button type="primary" onClick={onSubmit}>
             确认
           </Button>
         </Space>
       }
     >
-      <Form ref={formRef} name="dynamic_user_ids" onFinish={onFinish}>
+      <Form ref={formRef} name="dynamic_user_ids">
         <Form.List
-          name="userIds"
+          key="users"
+          name="users"
           rules={[
             {
-              validator: async (_, userIds) => {
-                if (!userIds || userIds.length < 1) {
+              validator: async (_, users) => {
+                if (!users || users.length < 1) {
                   return Promise.reject(new Error('至少需要一个用户ID'));
                 }
               }
@@ -132,13 +136,16 @@ const TestSendDrawer = forwardRef((_, ref) => {
             </>
           )}
         </Form.List>
-        <Form.Item label="发送参数" labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
+        <Form.Item
+          key="messageParam"
+          label="发送参数"
+          labelCol={{ span: 24 }}
+          wrapperCol={{ span: 24 }}
+        >
           <JsonEditor
             key={jsonEditorKey}
-            ref={jsonEditorRef}
-            value={paramMap}
             mode="code"
-            onChange={(e: object) => setParamMap(e)}
+            onChange={(e: object) => formRef.current?.setFieldsValue({ appConfig: e })}
           />
         </Form.Item>
       </Form>

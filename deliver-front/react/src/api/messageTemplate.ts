@@ -127,7 +127,6 @@ export async function testSendMessage(data: TestSendMessage): Promise<never> {
  */
 export async function getMessageParamByMessageType(data: {
   messageType: number;
-  channelType: number;
 }): Promise<any> {
   return await request({
     url: '/template/getMessageParamByMessageType',

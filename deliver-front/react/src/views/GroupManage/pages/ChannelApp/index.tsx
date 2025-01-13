@@ -110,6 +110,7 @@ const Channel: React.FC = () => {
         rowSelection={{}}
         request={fetchChannelData}
         rowKey="appId"
+        scroll={{ x: 1200 }}
         toolBarRender={() => [
           <>
             <Button

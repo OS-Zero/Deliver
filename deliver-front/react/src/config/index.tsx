@@ -70,7 +70,6 @@ export const proTableConfig = ({
         />
       </div>
     ),
-    scroll: { x: 1300 },
     options: false,
     search: false,
     pagination: {

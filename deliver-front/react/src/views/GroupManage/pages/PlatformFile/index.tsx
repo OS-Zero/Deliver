@@ -3,7 +3,7 @@ import { ProColumns, ProTable } from '@ant-design/pro-components';
 import { Button } from 'antd';
 import { FilterOutlined } from '@ant-design/icons';
 import { PlatformFileDetail } from './type.ts';
-import { platformColumns } from './constant.tsx';
+import { platformColumns, platformTableSchema } from './constant.tsx';
 import styles from './index.module.scss';
 import DetailDrawer from '@/components/DetailDrawer/index.tsx';
 import useFileData from './useFileData.ts';
@@ -24,6 +24,7 @@ const PlatformFile: React.FC = () => {
 
   // 这两列涉及到状态的改变，于是写在视图层
   const columns: ProColumns<PlatformFileDetail>[] = [
+    ...platformTableSchema,
     {
       title: '操作',
       width: 160,

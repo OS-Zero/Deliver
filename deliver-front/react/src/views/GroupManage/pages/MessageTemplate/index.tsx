@@ -63,7 +63,7 @@ const Template: React.FC = () => {
     }),
     {
       title: '操作',
-      width: 200,
+      width: 150,
       valueType: 'option',
       fixed: 'right',
       render: (_, record) => [
@@ -116,6 +116,7 @@ const Template: React.FC = () => {
         rowSelection={{}}
         request={fetchTemplateData}
         rowKey="templateId"
+        scroll={{ x: 1800 }}
         toolBarRender={() => [
           <>
             <Button
