@@ -19,15 +19,15 @@ package com.oszero.deliver.web.admin.controller;
 
 import com.oszero.deliver.business.admin.model.dto.request.common.DeleteIdsRequestDto;
 import com.oszero.deliver.business.admin.model.dto.request.peoplegroup.PeopleGroupSaveRequestDto;
+import com.oszero.deliver.business.admin.model.dto.request.peoplegroup.PeopleGroupSearchByNameRequestDto;
 import com.oszero.deliver.business.admin.model.dto.request.peoplegroup.PeopleGroupSearchRequestDto;
 import com.oszero.deliver.business.admin.model.dto.request.peoplegroup.PeopleGroupUpdateRequestDto;
 import com.oszero.deliver.business.admin.model.dto.response.common.SearchResponseDto;
+import com.oszero.deliver.business.admin.model.dto.response.peoplegroup.PeopleGroupSearchByNameResponseDto;
 import com.oszero.deliver.business.admin.model.dto.response.peoplegroup.PeopleGroupSearchResponseDto;
 import com.oszero.deliver.business.admin.service.PeopleGroupService;
 import com.oszero.deliver.business.common.model.common.CommonResult;
 import com.oszero.deliver.web.admin.constant.AdminPathConstant;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author oszero
@@ -78,5 +79,10 @@ public class PeopleGroupController {
     @PostMapping(AdminPathConstant.PEOPLE_GROUP_ANALYSIS_EXCEL_TEMPLATE_FILE)
     public CommonResult<String> analysisExcelTemplateFile(@RequestParam("file") MultipartFile file) throws IOException {
         return CommonResult.success(peopleGroupService.analysisExcelTemplateFile(file));
+    }
+
+    @PostMapping(AdminPathConstant.PEOPLE_GROUP_SEARCH_BY_NAME)
+    public CommonResult<List<PeopleGroupSearchByNameResponseDto>> searchByName(@Valid @RequestBody PeopleGroupSearchByNameRequestDto dto) {
+        return CommonResult.success(peopleGroupService.searchByName(dto));
     }
 }

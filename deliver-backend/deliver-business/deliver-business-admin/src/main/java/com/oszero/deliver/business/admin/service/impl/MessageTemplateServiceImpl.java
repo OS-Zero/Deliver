@@ -18,6 +18,7 @@
 package com.oszero.deliver.business.admin.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -26,6 +27,7 @@ import com.oszero.deliver.business.admin.constant.MessageParamConstant;
 import com.oszero.deliver.business.admin.model.dto.request.common.DeleteIdsRequestDto;
 import com.oszero.deliver.business.admin.model.dto.request.messagetemplate.*;
 import com.oszero.deliver.business.admin.model.dto.response.common.SearchResponseDto;
+import com.oszero.deliver.business.admin.model.dto.response.messagetemplate.MessageTemplateSearchByNameResponseDto;
 import com.oszero.deliver.business.admin.model.dto.response.messagetemplate.MessageTemplateSearchResponseDto;
 import com.oszero.deliver.business.admin.service.MessageTemplateService;
 import com.oszero.deliver.business.admin.util.GroupUtils;
@@ -191,6 +193,21 @@ public class MessageTemplateServiceImpl extends ServiceImpl<MessageTemplateMappe
             throw new BusinessException("请输入正确的模板ID");
         }
         return MessageParamConstant.getMessageParamJsonConfig(messageTemplate.getMessageType());
+    }
+
+    @Override
+    public List<MessageTemplateSearchByNameResponseDto> searchByName(MessageTemplateSearchByNameRequestDto dto) {
+        LambdaQueryWrapper<MessageTemplate> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(MessageTemplate::getGroupId, GroupUtils.getGroupId())
+                .like(MessageTemplate::getTemplateName, dto.getTemplateName())
+                .orderByDesc(MessageTemplate::getCreateTime);
+        List<MessageTemplate> messageTemplates = messageTemplateMapper.selectList(wrapper);
+        if (!CollUtil.isEmpty(messageTemplates)) {
+            return messageTemplates.stream().map(messageTemplate -> MessageTemplateSearchByNameResponseDto.builder()
+                    .templateId(messageTemplate.getTemplateId())
+                    .templateName(messageTemplate.getTemplateName()).build()).toList();
+        }
+        return List.of();
     }
 
     private void checkTemplateNameIsDuplicate(Long templateId, String templateName) {

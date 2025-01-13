@@ -57,6 +57,7 @@ public interface AdminPathConstant {
     String MESSAGE_TEMPLATE_DELETE = MESSAGE_TEMPLATE_PREFIX_PATH + "/delete";
     String MESSAGE_TEMPLATE_TEST_SEND_MESSAGE = MESSAGE_TEMPLATE_PREFIX_PATH + "/testSendMessage";
     String MESSAGE_TEMPLATE_GET_MESSAGE_PARAM = MESSAGE_TEMPLATE_PREFIX_PATH + "/getMessageParam";
+    String MESSAGE_TEMPLATE_SEARCH_BY_NAME = MESSAGE_TEMPLATE_PREFIX_PATH + "/searchByName";
     /********** 渠道应用模块 **********/
     String CHANNEL_APP_PREFIX_PATH = "/channelApp";
     String CHANNEL_APP_SEARCH = CHANNEL_APP_PREFIX_PATH + "/search";
@@ -85,4 +86,5 @@ public interface AdminPathConstant {
     String PEOPLE_GROUP_DELETE = PEOPLE_GROUP_PREFIX_PATH + "/delete";
     String PEOPLE_GROUP_GET_EXCEL_TEMPLATE_FILE = PEOPLE_GROUP_PREFIX_PATH + "/getExcelTemplateFile";
     String PEOPLE_GROUP_ANALYSIS_EXCEL_TEMPLATE_FILE = PEOPLE_GROUP_PREFIX_PATH + "/analysisExcelTemplateFile";
+    String PEOPLE_GROUP_SEARCH_BY_NAME = PEOPLE_GROUP_PREFIX_PATH + "/searchByName";
 }

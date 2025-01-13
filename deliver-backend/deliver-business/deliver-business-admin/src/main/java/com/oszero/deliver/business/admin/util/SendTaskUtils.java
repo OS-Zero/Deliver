@@ -19,6 +19,7 @@ package com.oszero.deliver.business.admin.util;
 
 import com.oszero.deliver.business.admin.constant.AdminConstant;
 import com.oszero.deliver.business.admin.constant.JobConstant;
+import com.oszero.deliver.business.admin.exception.BusinessException;
 import com.oszero.deliver.business.admin.model.entity.database.SendTask;
 import com.oszero.deliver.business.admin.service.impl.SendTaskServiceImpl;
 import com.oszero.deliver.business.common.constant.CommonConstant;
@@ -66,11 +67,19 @@ public class SendTaskUtils {
         return taskType == JobConstant.SINGLE_TIME;
     }
 
+    public static boolean isValidCron(String cronExpression) {
+        String cronRegex = "^([0-5]?[0-9]|\\*)\\s([0-5]?[0-9]|\\*)\\s([01]?[0-9]|2[0-3]|\\*)\\s([12]?[0-9]|3[01]|\\*)\\s([1-9]|1[0-2]|\\*)\\s([0-6]|SUN|MON|TUE|WED|THU|FRI|SAT|\\*)\\s?([0-9]{4}|\\*)?$";
+        return cronExpression.matches(cronRegex);
+    }
+
     public void addJob(SendTask sendTask) throws SchedulerException, ParseException {
         JobDataMap jobDataMap = new JobDataMap();
         jobDataMap.put(JobConstant.TASK_ID, sendTask.getTaskId());
         String taskTimeExpression = sendTask.getTaskTimeExpression();
         if (isCronJob(sendTask)) {
+            if (!isValidCron(taskTimeExpression)) {
+                throw new BusinessException("cron表达式不合法");
+            }
             QuartzJobUtils.addJobWithParams(scheduler, sendTask.getTaskName(), JobConstant.JOB_GROUP_NAME,
                     taskTimeExpression, jobDataMap, SendTaskServiceImpl.class);
         } else if (isSingleJob(sendTask)) {
@@ -88,7 +97,7 @@ public class SendTaskUtils {
     public void updateJobStatus(SendTask sendTask) throws SchedulerException {
         if (sendTask.getTaskStatus() == CommonConstant.ENABLE_STATUS) {
             QuartzJobUtils.resumeJob(scheduler, sendTask.getTaskName(), JobConstant.JOB_GROUP_NAME);
-        } else if (sendTask.getTaskStatus() == CommonConstant.DISABLE_STATUS){
+        } else if (sendTask.getTaskStatus() == CommonConstant.DISABLE_STATUS) {
             QuartzJobUtils.pauseJob(scheduler, sendTask.getTaskName(), JobConstant.JOB_GROUP_NAME);
         }
     }

@@ -20,16 +20,18 @@ package com.oszero.deliver.business.admin.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.oszero.deliver.business.admin.model.dto.request.common.DeleteIdsRequestDto;
 import com.oszero.deliver.business.admin.model.dto.request.peoplegroup.PeopleGroupSaveRequestDto;
+import com.oszero.deliver.business.admin.model.dto.request.peoplegroup.PeopleGroupSearchByNameRequestDto;
 import com.oszero.deliver.business.admin.model.dto.request.peoplegroup.PeopleGroupSearchRequestDto;
 import com.oszero.deliver.business.admin.model.dto.request.peoplegroup.PeopleGroupUpdateRequestDto;
 import com.oszero.deliver.business.admin.model.dto.response.common.SearchResponseDto;
+import com.oszero.deliver.business.admin.model.dto.response.peoplegroup.PeopleGroupSearchByNameResponseDto;
 import com.oszero.deliver.business.admin.model.dto.response.peoplegroup.PeopleGroupSearchResponseDto;
 import com.oszero.deliver.business.admin.model.entity.database.PeopleGroup;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author oszero
@@ -42,4 +44,5 @@ public interface PeopleGroupService extends IService<PeopleGroup> {
     void delete(DeleteIdsRequestDto dto);
     void getExcelTemplateFile();
     String analysisExcelTemplateFile(MultipartFile file) throws IOException;
+    List<PeopleGroupSearchByNameResponseDto> searchByName(@Valid PeopleGroupSearchByNameRequestDto dto);
 }

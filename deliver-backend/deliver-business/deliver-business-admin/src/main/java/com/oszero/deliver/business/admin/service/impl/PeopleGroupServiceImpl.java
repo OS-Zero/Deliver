@@ -18,6 +18,7 @@
 package com.oszero.deliver.business.admin.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.read.listener.PageReadListener;
@@ -28,9 +29,11 @@ import com.oszero.deliver.business.admin.mapper.PeopleGroupMapper;
 import com.oszero.deliver.business.admin.mapper.SendTaskMapper;
 import com.oszero.deliver.business.admin.model.dto.request.common.DeleteIdsRequestDto;
 import com.oszero.deliver.business.admin.model.dto.request.peoplegroup.PeopleGroupSaveRequestDto;
+import com.oszero.deliver.business.admin.model.dto.request.peoplegroup.PeopleGroupSearchByNameRequestDto;
 import com.oszero.deliver.business.admin.model.dto.request.peoplegroup.PeopleGroupSearchRequestDto;
 import com.oszero.deliver.business.admin.model.dto.request.peoplegroup.PeopleGroupUpdateRequestDto;
 import com.oszero.deliver.business.admin.model.dto.response.common.SearchResponseDto;
+import com.oszero.deliver.business.admin.model.dto.response.peoplegroup.PeopleGroupSearchByNameResponseDto;
 import com.oszero.deliver.business.admin.model.dto.response.peoplegroup.PeopleGroupSearchResponseDto;
 import com.oszero.deliver.business.admin.model.entity.database.PeopleGroup;
 import com.oszero.deliver.business.admin.model.entity.database.SendTask;
@@ -187,6 +190,22 @@ public class PeopleGroupServiceImpl extends ServiceImpl<PeopleGroupMapper, Peopl
             }
         }, 100)).sheet().doRead();
         return String.join(",", data);
+    }
+
+    @Override
+    public List<PeopleGroupSearchByNameResponseDto> searchByName(PeopleGroupSearchByNameRequestDto dto) {
+        LambdaQueryWrapper<PeopleGroup> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(PeopleGroup::getGroupId, GroupUtils.getGroupId())
+                .eq(PeopleGroup::getDeleted, 0)
+                .like(PeopleGroup::getPeopleGroupName, dto.getPeopleGroupName())
+                .orderByDesc(PeopleGroup::getCreateTime);
+        List<PeopleGroup> list = peopleGroupMapper.selectList(wrapper);
+        if (CollUtil.isNotEmpty(list)) {
+            return list.stream().map(peopleGroup -> PeopleGroupSearchByNameResponseDto.builder()
+                    .peopleGroupId(peopleGroup.getPeopleGroupId())
+                    .peopleGroupName(peopleGroup.getPeopleGroupName()).build()).toList();
+        }
+        return List.of();
     }
 
     private void checkNameIsDuplicate(Long peopleGroupId, String peopleGroupName) {

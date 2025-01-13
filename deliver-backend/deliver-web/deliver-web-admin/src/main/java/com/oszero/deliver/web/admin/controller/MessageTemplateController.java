@@ -20,6 +20,7 @@ package com.oszero.deliver.web.admin.controller;
 import com.oszero.deliver.business.admin.model.dto.request.common.DeleteIdsRequestDto;
 import com.oszero.deliver.business.admin.model.dto.request.messagetemplate.*;
 import com.oszero.deliver.business.admin.model.dto.response.common.SearchResponseDto;
+import com.oszero.deliver.business.admin.model.dto.response.messagetemplate.MessageTemplateSearchByNameResponseDto;
 import com.oszero.deliver.business.admin.model.dto.response.messagetemplate.MessageTemplateSearchResponseDto;
 import com.oszero.deliver.business.admin.service.MessageTemplateService;
 import com.oszero.deliver.business.common.model.common.CommonResult;
@@ -28,8 +29,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author oszero
@@ -81,4 +83,8 @@ public class MessageTemplateController {
         return CommonResult.success(messageTemplateService.getMessageParam(dto));
     }
 
+    @PostMapping(AdminPathConstant.MESSAGE_TEMPLATE_SEARCH_BY_NAME)
+    public CommonResult<List<MessageTemplateSearchByNameResponseDto>> searchByName(@Valid @RequestBody MessageTemplateSearchByNameRequestDto dto) {
+        return CommonResult.success(messageTemplateService.searchByName(dto));
+    }
 }

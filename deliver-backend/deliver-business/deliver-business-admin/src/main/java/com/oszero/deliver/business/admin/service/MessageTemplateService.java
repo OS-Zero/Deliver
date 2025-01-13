@@ -21,9 +21,12 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.oszero.deliver.business.admin.model.dto.request.common.DeleteIdsRequestDto;
 import com.oszero.deliver.business.admin.model.dto.request.messagetemplate.*;
 import com.oszero.deliver.business.admin.model.dto.response.common.SearchResponseDto;
+import com.oszero.deliver.business.admin.model.dto.response.messagetemplate.MessageTemplateSearchByNameResponseDto;
 import com.oszero.deliver.business.admin.model.dto.response.messagetemplate.MessageTemplateSearchResponseDto;
 import com.oszero.deliver.business.common.model.entity.MessageTemplate;
 import jakarta.validation.Valid;
+
+import java.util.List;
 
 /**
  * @author oszero
@@ -44,4 +47,6 @@ public interface MessageTemplateService extends IService<MessageTemplate> {
     void testSendMessage(SendMessageRequestDto sendMessageRequestDto);
 
     String getMessageParam(@Valid GetMessageParamRequestDto dto);
+
+    List<MessageTemplateSearchByNameResponseDto> searchByName(@Valid MessageTemplateSearchByNameRequestDto dto);
 }
