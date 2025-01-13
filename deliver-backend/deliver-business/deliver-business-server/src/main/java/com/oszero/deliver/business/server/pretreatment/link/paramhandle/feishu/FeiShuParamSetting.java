@@ -21,6 +21,7 @@ import com.oszero.deliver.business.common.enums.MessageTypeEnum;
 import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.business.server.pretreatment.common.LinkContext;
 import com.oszero.deliver.business.server.pretreatment.common.MessageLink;
+import com.oszero.deliver.platformclient.common.ClientConstant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,7 @@ public class FeiShuParamSetting implements MessageLink<SendTaskDto> {
             throw new RuntimeException("消息类型非法");
         }
         Map<String, Object> messageParam = sendTaskDto.getMessageParam();
-        messageParam.put("user_ids", sendTaskDto.getUsers());
-        messageParam.put("msg_type", messageTypeEnum.getMsgType());
+        messageParam.put(ClientConstant.FEI_SHU_USER_IDS, sendTaskDto.getUsers());
+        messageParam.put(ClientConstant.FEI_SHU_MSG_TYPE, messageTypeEnum.getMsgType());
     }
 }

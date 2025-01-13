@@ -48,12 +48,6 @@ public interface FeiShuMessageParam {
                     ],
                     [
                       {
-                        "tag": "img",
-                        "image_key": "img_7ea74629-9191-4176-998c-2e603c9c5e8g"
-                      }
-                    ],
-                    [
-                      {
                         "tag": "text",
                         "text": "第二行:",
                         "style": [
@@ -64,19 +58,6 @@ public interface FeiShuMessageParam {
                       {
                         "tag": "text",
                         "text": "文本测试"
-                      }
-                    ],
-                    [
-                      {
-                        "tag": "img",
-                        "image_key": "img_7ea74629-9191-4176-998c-2e603c9c5e8g"
-                      }
-                    ],
-                    [
-                      {
-                        "tag": "media",
-                        "file_key": "file_v2_0dcdd7d9-fib0-4432-a519-41d25aca542j",
-                        "image_key": "img_7ea74629-9191-4176-998c-2e603c9c5e8g"
                       }
                     ],
                     [
@@ -104,8 +85,6 @@ public interface FeiShuMessageParam {
                       }
                     ]
                   ]
-                },
-                "en_us": {
                 }
               }
             }

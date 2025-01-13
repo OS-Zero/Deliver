@@ -23,6 +23,7 @@ import com.oszero.deliver.business.server.exception.MessageException;
 import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.business.server.pretreatment.common.LinkContext;
 import com.oszero.deliver.business.server.pretreatment.common.MessageLink;
+import com.oszero.deliver.platformclient.common.ClientConstant;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -54,15 +55,15 @@ public class FeiShuParamCheck implements MessageLink<SendTaskDto> {
         SendTaskDto sendTaskDto = context.getProcessModel();
         String messageType = sendTaskDto.getMessageType();
         Map<String, Object> paramMap = sendTaskDto.getMessageParam();
-        String feiShuUserIdType = paramMap.getOrDefault("feiShuUserIdType", "").toString();
+        String feiShuUserIdType = paramMap.getOrDefault(ClientConstant.USER_ID_TYPE, "").toString();
         if (StrUtil.isBlank(feiShuUserIdType)) {
-            throw new MessageException("飞书 feiShuUserIdType 参数为空");
+            throw new MessageException("飞书userIdType参数为空");
         }
         if (!FEI_SHU_USER_ID_TYPE_SET.contains(feiShuUserIdType)) {
-            throw new MessageException("飞书 feiShuUserIdType 参数非法，必须为 user_id 或者 email 或者 chat_id 或者 department_id");
+            throw new MessageException("飞书userIdType参数非法，必须为 user_id 或者 email 或者 chat_id 或者 department_id");
         }
         if ("department_id".equals(feiShuUserIdType) && !DEPARTMENT_MESSAGE_TYPE.contains(messageType)) {
-            throw new MessageException("飞书 feiShuUserIdType 为 department_id 时，不支持此消息类型");
+            throw new MessageException("飞书userIdType为department_id时，不支持此消息类型");
         }
     }
 }

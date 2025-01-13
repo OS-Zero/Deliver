@@ -22,6 +22,7 @@ import com.oszero.deliver.business.common.util.AppConfigUtils;
 import com.oszero.deliver.business.server.handler.BaseHandler;
 import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.platformclient.client.feishu.FeiShuClient;
+import com.oszero.deliver.platformclient.common.ClientConstant;
 import com.oszero.deliver.platformclient.model.app.FeiShuApp;
 import org.springframework.stereotype.Component;
 
@@ -51,9 +52,9 @@ public class FeiShuHandler extends BaseHandler {
         FeiShuApp feiShuApp = JSONUtil.toBean(appConfig, FeiShuApp.class);
         String tenantAccessToken = feiShuClient.getTenantAccessToken(feiShuApp);
         Map<String, Object> messageParam = sendTaskDto.getMessageParam();
-        String feiShuUserIdType = messageParam.get("feiShuUserIdType").toString();
-        String msgType = messageParam.get("msg_type").toString();
-        messageParam.remove("feiShuUserIdType");
+        String feiShuUserIdType = messageParam.get(ClientConstant.USER_ID_TYPE).toString();
+        String msgType = messageParam.get(ClientConstant.FEI_SHU_MSG_TYPE).toString();
+        messageParam.remove(ClientConstant.USER_ID_TYPE);
         List<String> users = sendTaskDto.getUsers();
         // 支持发送多种飞书的 usersId，包括 [用户(user_id),用户(email),群组(chat_id),部门(department_id)]
         if ("user_id".equals(feiShuUserIdType)) {

@@ -44,4 +44,6 @@ public interface ClientConstant {
     String WECHAT_MSG_TYPE = "msgtype";
     String WECHAT_SPILT = "|";
     /********** 飞书相关常量 **********/
+    String FEI_SHU_USER_IDS = "user_ids";
+    String FEI_SHU_MSG_TYPE = "msg_type";
 }
