@@ -39,6 +39,7 @@ import com.oszero.deliver.business.admin.service.SendTaskService;
 import com.oszero.deliver.business.admin.util.GroupUtils;
 import com.oszero.deliver.business.admin.util.SendMessageUtils;
 import com.oszero.deliver.business.admin.util.SendTaskUtils;
+import com.oszero.deliver.business.common.constant.CommonConstant;
 import com.oszero.deliver.business.common.mapper.MessageTemplateMapper;
 import com.oszero.deliver.business.common.model.entity.MessageTemplate;
 import com.oszero.deliver.business.common.util.DataBaseUtils;
@@ -85,6 +86,7 @@ public class SendTaskServiceImpl extends ServiceImpl<SendTaskMapper, SendTask>
                 .map(task -> {
                     SendTaskSearchResponseDto sendTaskSearchResponseDto = new SendTaskSearchResponseDto();
                     BeanUtil.copyProperties(task, sendTaskSearchResponseDto);
+                    sendTaskSearchResponseDto.setTemplateName(messageTemplateMapper.selectById(task.getTemplateId()).getTemplateName());
                     sendTaskSearchResponseDto.setPeopleGroupName(peopleGroupMapper.selectById(task.getPeopleGroupId()).getPeopleGroupName());
                     return sendTaskSearchResponseDto;
                 }).toList();
@@ -101,6 +103,8 @@ public class SendTaskServiceImpl extends ServiceImpl<SendTaskMapper, SendTask>
         checkNameIsDuplicate(null, dto.getTaskName());
         checkUsersType(dto.getPeopleGroupId(), dto.getTemplateId());
         SendTask sendTask = new SendTask();
+        // 默认启用
+        sendTask.setTaskStatus(CommonConstant.ENABLE_STATUS);
         BeanUtil.copyProperties(dto, sendTask);
         sendTask.setGroupId(GroupUtils.getGroupId());
         int insert = sendTaskMapper.insert(sendTask);

@@ -36,9 +36,12 @@ public class SendTaskSearchResponseDto {
     private Long taskId;
     private String taskName;
     private String taskDescription;
-    private String taskParam;
     private Integer taskType;
+    private String taskTimeExpression;
+    private String taskMessageParam;
     private Integer taskStatus;
+    private Long templateId;
+    private String templateName;
     private Long peopleGroupId;
     private String peopleGroupName;
     private String createUser;

@@ -38,7 +38,13 @@ public class SystemParamServiceImpl implements SystemParamService {
     @Override
     public List<GetChannelTypeResponseDto> getChannelType(GetParamRequestDto dto) {
         Integer usersType = dto.getUsersType();
-        if (usersType == -1) { // 代表平台文件里获取渠道类型
+        if (usersType == -1) { // 代表渠道应用里获取所有渠道类型
+            return Arrays.stream(ChannelTypeEnum.values()).map(channelTypeEnum ->
+                    GetChannelTypeResponseDto.builder()
+                            .channelType(Integer.valueOf(channelTypeEnum.getCode()))
+                            .channelTypeName(channelTypeEnum.getName()).build()).toList();
+        }
+        if (usersType == -2) { // 代表平台文件里获取渠道类型
             return Arrays.asList(
                     GetChannelTypeResponseDto.builder()
                             .channelType(Integer.valueOf(ChannelTypeEnum.DING.getCode()))

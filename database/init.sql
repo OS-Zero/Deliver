@@ -57,7 +57,7 @@ create table if not exists deliver.message_template
     users_type            tinyint                            not null comment '用户类型（参考用户类型枚举）',
     channel_type          tinyint                            not null comment '渠道类型（参考渠道类型枚举）',
     channel_provider_type tinyint                            not null comment '渠道供应商类型（参考渠道供应商类型枚举）',
-    message_type          varchar(5)                         not null comment '消息类型（参考消息类型枚举）',
+    message_type          varchar(10)                        not null comment '消息类型（参考消息类型枚举）',
     template_status       tinyint  default 0                 not null comment '模板状态（1-启用、0-禁用）',
     group_id              bigint                             not null comment '关联分组id',
     create_user           varchar(10)                        not null comment '创建者',
