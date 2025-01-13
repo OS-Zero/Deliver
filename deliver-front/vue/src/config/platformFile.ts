@@ -123,7 +123,7 @@ export const platformFileSchemaDeps = [
 	async (data: Schema<UploadPlatformFile>) => {
 		data.channelType.value = undefined;
 		try {
-			data.channelType.options = (await getChannelType({ usersType: -1 })).map((item) => ({
+			data.channelType.options = (await getChannelType({ usersType: -2 })).map((item) => ({
 				value: item.channelType,
 				label: item.channelTypeName,
 			}));

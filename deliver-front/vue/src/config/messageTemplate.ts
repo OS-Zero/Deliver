@@ -275,7 +275,7 @@ export const filterSchema: Record<string, FormItem<keyof SearchParams>> = {
 		label: '结束时间',
 	},
 };
-export const filterSchemaMaps = messageTemplateSchemaDeps.slice(0, 2);
+export const filterSchemaMaps = messageTemplateSchemaDeps.slice(0, 3);
 export const testMessageSchema: Record<string, FormItem<keyof TestSendMessage>> = {
 	templateId: {
 		type: 'none',
