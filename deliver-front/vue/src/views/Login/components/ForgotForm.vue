@@ -32,25 +32,34 @@ const forgotForm = reactive<Schema<RegisterForm>>({
 	userEmail: {
 		type: 'input',
 		fieldName: 'userEmail',
-		placeholder: '请输入邮箱',
+		inputConfig: {
+			placeholder: '请输入邮箱',
+		},
 		rules: [{ validator: validateEmail, trigger: 'change' }]
 	},
 	userPassword: {
 		type: 'inputPassword',
 		fieldName: 'userPassword',
-		placeholder: '请输入用户密码',
+		inputConfig: {
+			placeholder: '请输入用户密码',
+		},
 		rules: [getRequiredRule('请输入用户密码'), ...getRangeRule(6, 16, '密码长度范围为6-16位')],
 	},
 	confirmPwd: {
 		type: 'inputPassword',
 		fieldName: 'confirmPwd',
-		placeholder: '请确认用户密码',
+		inputConfig: {
+			placeholder: '请确认用户密码',
+		},
 		rules: [getRequiredRule('请确认用户密码'), { validator: validatePwd }],
 	},
 	verificationCode: {
 		type: 'verificationCode',
 		fieldName: 'verificationCode',
-		placeholder: '请输入验证码',
+		inputConfig: {
+			placeholder: '请输入验证码',
+
+		},
 		rules: [getRequiredRule('请输入验证码'), ...getRangeRule(6, 6, '验证码长度为6位')],
 		buttonConfig: {
 			onClick: () => {

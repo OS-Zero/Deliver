@@ -26,13 +26,17 @@ const loginForm = reactive<Schema<LoginForm>>({
 	userEmail: {
 		type: 'input',
 		fieldName: 'userEmail',
-		placeholder: '请输入邮箱',
+		inputConfig: {
+			placeholder: '请输入邮箱',
+		},
 		rules: [{ validator: validateEmail, trigger: 'blur' }]
 	},
 	userPassword: {
 		type: 'input',
 		fieldName: 'userPassword',
-		placeholder: '请输入用户密码',
+		inputConfig: {
+			placeholder: '请输入用户密码',
+		},
 		rules: [getRequiredRule('请输入用户密码'), ...getRangeRule(6, 16, '密码长度范围为6-16位')],
 	},
 	$login: {
@@ -47,11 +51,11 @@ const loginForm = reactive<Schema<LoginForm>>({
 				let res: any = await login(getDataFromSchema(loginForm))
 				localStorage.setItem('access_token', res)
 				message.success('登录成功')
-				router.push('/')
 				res = await startup()
 				localStorage.setItem('startup', JSON.stringify(res))
 				res = await getCurrentLoginUserInfo()
 				localStorage.setItem('user_info', JSON.stringify(res))
+				router.push('/')
 			}
 		}
 	},
