@@ -108,6 +108,7 @@ const changeStatus = async (record: Record<string, any>) => {
 	record.appStatus = !record.appStatus
 	await updateChannelAppStatus({ appId: record.appId, appStatus: Number(record.appStatus) })
 }
+const tableView = ref(true)
 onBeforeMount(() => {
 	setFilterOptionsDispatch['channelType']()
 	handleSearch()
@@ -123,13 +124,20 @@ onBeforeMount(() => {
 				<div class="operation">
 					<a-button class="btn--add" @click="handleActions('add')" type="primary">新增</a-button>
 					<div class="toggle_btns">
-						<a-button :icon="h(AppstoreOutlined)" shape="circle" type="text"
-							@click="filterState.open = !filterState.open"></a-button>
-						<a-button :icon="h(MenuOutlined)" shape="circle" type="text"
-							@click="filterState.open = !filterState.open"></a-button>
+						<a-tooltip placement="top">
+							<template #title>
+								<span>表格视图</span>
+							</template>
+							<a-button :icon="h(MenuOutlined)" size="small" type="text" @click="tableView = true"></a-button>
+						</a-tooltip>
+						<a-tooltip placement="top">
+							<template #title>
+								<span>卡片视图</span>
+							</template>
+							<a-button :icon="h(AppstoreOutlined)" size="small" type="text" @click="tableView = false"></a-button>
+						</a-tooltip>
 					</div>
-					<a-button :icon="h(FilterOutlined)" shape="circle" type="text"
-						@click="filterState.open = !filterState.open"></a-button>
+					<a-button :icon="h(FilterOutlined)" @click="filterState.open = !filterState.open"></a-button>
 				</div>
 			</div>
 			<div class="selections--delete" v-show="rowSelection.selectedRowKeys?.length">
@@ -139,8 +147,8 @@ onBeforeMount(() => {
 					<a-button type="link" danger @click="handleBatchDelete">批量删除</a-button>
 				</div>
 			</div>
-			<a-table row-key="appId" :dataSource="dataSource" :columns="channelAppColumns" :row-selection="rowSelection"
-				:pagination="pagination" :scroll="{ x: 1400, y: 680 }">
+			<a-table v-show="tableView" row-key="appId" :dataSource="dataSource" :columns="channelAppColumns"
+				:row-selection="rowSelection" :pagination="pagination" :scroll="{ x: 1400, y: 680 }">
 				<template #bodyCell="{ column, text, record }">
 					<template v-if="column.key === 'appId'">
 						{{ text }}
@@ -172,8 +180,8 @@ onBeforeMount(() => {
 					</template>
 				</template>
 			</a-table>
-			<div class="card-list">
-				<!-- <Card v-for="item in dataSource" :key="item.appId" :></Card> -->
+			<div class="card-list" v-show="!tableView">
+				<Card v-for="item in dataSource" :key="item.appId" :data="item"></Card>
 			</div>
 		</div>
 		<a-card size="small" class="filter-form" :class="{ open: filterState.open }" title="筛选">
@@ -255,5 +263,22 @@ onBeforeMount(() => {
 
 .operation {
 	display: flex;
+	align-items: center;
+	gap: var(--spacing-xs);
+}
+
+.toggle_btns {
+	border: 1px solid var(--gray-lighter);
+	padding: var(--spacing-xs);
+	border-radius: var(--border-radius-small);
+	display: flex;
+	align-items: center;
+	gap: var(--spacing-xs);
+}
+
+.card-list {
+	display: grid;
+	gap: var(--spacing-md);
+	grid-template-columns: repeat(6, 250px);
 }
 </style>
