@@ -5,7 +5,6 @@ interface FormState {
   channelProviders: any[];
   messageTypes: any[];
   appIds: any[];
-  isChannelTypeDisabled: boolean;
 }
 
 export const useFormState = () => {
@@ -13,8 +12,7 @@ export const useFormState = () => {
     channelTypes: [],
     channelProviders: [],
     messageTypes: [],
-    appIds: [],
-    isChannelTypeDisabled: true
+    appIds: []
   });
 
   const updateFormState = (newState: Partial<FormState>) => {

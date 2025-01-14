@@ -61,7 +61,6 @@ const FilterDrawer = (props: FilterDrawerProps) => {
         <Form.Item label="渠道供应商类型" name="channelProviderType">
           <Select
             placeholder="请选择渠道供应商类型"
-            disabled={!formRef?.current?.getFieldValue('channelType')}
             options={(options.channelProvidersOptions || []).map((d) => ({
               value: d.channelProviderType,
               label: d.channelProviderTypeName
@@ -71,7 +70,6 @@ const FilterDrawer = (props: FilterDrawerProps) => {
         <Form.Item label="文件类型" name="fileType">
           <Select
             placeholder="请选择文件类型"
-            disabled={!formRef?.current?.getFieldValue('channelType')}
             options={(options.fileTypeOptions || []).map((d) => ({
               value: d.platformFileType,
               label: d.platformFileTypeName

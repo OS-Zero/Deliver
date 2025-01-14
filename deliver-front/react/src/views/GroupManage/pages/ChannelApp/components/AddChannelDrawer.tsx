@@ -132,7 +132,6 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
           value: d.channelProviderType,
           label: d.channelProviderTypeName
         })),
-        disabled: !formRef?.current?.getFieldValue('channelType'),
         onChange: handleChannelProviderTypeChange // 添加渠道供应商类型变更处理
       },
       ...rule

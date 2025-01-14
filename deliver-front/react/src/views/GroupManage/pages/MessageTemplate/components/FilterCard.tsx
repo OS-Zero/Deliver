@@ -27,8 +27,7 @@ const FilterDrawer = (props: FilterDrawerProps) => {
     updateFormState({
       channelTypes: [],
       channelProviders: [],
-      messageTypes: [],
-      isChannelTypeDisabled: false
+      messageTypes: []
     });
     try {
       const response = await getChannelType({ usersType: value });
@@ -89,11 +88,7 @@ const FilterDrawer = (props: FilterDrawerProps) => {
           </Select>
         </Form.Item>
         <Form.Item label="渠道类型" name="channelType">
-          <Select
-            placeholder="请选择渠道类型"
-            onChange={handleChannelTypeChange}
-            disabled={formState.isChannelTypeDisabled}
-          >
+          <Select placeholder="请选择渠道类型" onChange={handleChannelTypeChange}>
             {formState.channelTypes.map((channel) => (
               <Option key={channel.channelType} value={channel.channelType}>
                 {channel.channelTypeName}
@@ -102,10 +97,7 @@ const FilterDrawer = (props: FilterDrawerProps) => {
           </Select>
         </Form.Item>
         <Form.Item label="渠道供应商类型" name="channelProviderType">
-          <Select
-            placeholder="请选择渠道供应商类型"
-            disabled={!formRef?.current?.getFieldValue('channelType')}
-          >
+          <Select placeholder="请选择渠道供应商类型">
             {formState.channelProviders.map((provider) => (
               <Option key={provider.channelProviderType} value={provider.channelProviderType}>
                 {provider.channelProviderTypeName}
@@ -114,10 +106,7 @@ const FilterDrawer = (props: FilterDrawerProps) => {
           </Select>
         </Form.Item>
         <Form.Item label="消息类型" name="messageType">
-          <Select
-            placeholder="请选择消息类型"
-            disabled={!formRef?.current?.getFieldValue('channelType')}
-          >
+          <Select placeholder="请选择消息类型">
             {formState.messageTypes.map((messageType) => (
               <Option key={messageType.messageType} value={messageType.messageType}>
                 {messageType.messageTypeName}

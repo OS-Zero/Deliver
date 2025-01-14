@@ -103,7 +103,6 @@ const AddFileDrawer = forwardRef((props: AddFileDrawerProps, ref) => {
           value: d.channelProviderType,
           label: d.channelProviderTypeName
         })),
-        disabled: !formRef?.current?.getFieldValue('channelType'),
         onChange: handleChannelProviderTypeChange
       },
       ...rule('请选择渠道供应商类型')
@@ -118,7 +117,6 @@ const AddFileDrawer = forwardRef((props: AddFileDrawerProps, ref) => {
           value: d.platformFileType,
           label: d.platformFileTypeName
         })),
-        disabled: !formRef?.current?.getFieldValue('channelType')
       },
       ...rule('文件类型')
     },

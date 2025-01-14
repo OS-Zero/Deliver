@@ -27,8 +27,7 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
       channelTypes: [],
       channelProviders: [],
       messageTypes: [],
-      appIds: [],
-      isChannelTypeDisabled: false
+      appIds: []
     });
     try {
       const response = await getChannelType({ usersType: value });
@@ -187,11 +186,7 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
           name="channelType"
           rules={[{ required: true, message: '请选择渠道类型' }]}
         >
-          <Select
-            placeholder="请选择渠道类型"
-            onChange={handleChannelTypeChange}
-            disabled={formState.isChannelTypeDisabled}
-          >
+          <Select placeholder="请选择渠道类型" onChange={handleChannelTypeChange}>
             {formState.channelTypes.map((channel) => (
               <Option key={channel.channelType} value={channel.channelType}>
                 {channel.channelTypeName}
@@ -204,11 +199,7 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
           name="channelProviderType"
           rules={[{ required: true, message: '请选择渠道供应商类型' }]}
         >
-          <Select
-            placeholder="请选择渠道供应商类型"
-            onChange={handleChannelProviderChange}
-            disabled={!formRef?.current?.getFieldValue('channelType')}
-          >
+          <Select placeholder="请选择渠道供应商类型" onChange={handleChannelProviderChange}>
             {formState.channelProviders.map((provider) => (
               <Option key={provider.channelProviderType} value={provider.channelProviderType}>
                 {provider.channelProviderTypeName}
@@ -221,10 +212,7 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
           name="messageType"
           rules={[{ required: true, message: '请选择消息类型' }]}
         >
-          <Select
-            placeholder="请选择消息类型"
-            disabled={!formRef?.current?.getFieldValue('channelType')}
-          >
+          <Select placeholder="请选择消息类型">
             {formState.messageTypes.map((messageType) => (
               <Option key={messageType.messageType} value={messageType.messageType}>
                 {messageType.messageTypeName}
@@ -237,10 +225,7 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
           name="appId"
           rules={[{ required: true, message: '请选择关联应用' }]}
         >
-          <Select
-            placeholder="请选择关联应用"
-            disabled={!formRef?.current?.getFieldValue('channelProviderType')}
-          >
+          <Select placeholder="请选择关联应用">
             {formState.appIds.map((app) => (
               <Option key={app.appId} value={app.appId}>
                 {app.appName}
