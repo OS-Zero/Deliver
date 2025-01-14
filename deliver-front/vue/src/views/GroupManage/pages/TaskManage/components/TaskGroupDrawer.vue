@@ -3,7 +3,7 @@ import { saveTask, updateTask } from '@/api/task';
 import { taskLocale, taskForm } from '@/config/task';
 import { DrawerProps } from '@/types/components';
 import { getDataFromSchema } from '@/utils/utils';
-import { message } from 'ant-design-vue';
+import { FormInstance, message } from 'ant-design-vue';
 import { ref, reactive, watch, nextTick } from 'vue';
 
 type Operation = 'add' | 'edit' | 'more'
@@ -13,7 +13,7 @@ const props = defineProps<{
 	record: Record<string, any>
 }>()
 const emit = defineEmits(['close'])
-const formRef = ref()
+const formRef = ref<FormInstance>()
 
 const titleList: Record<Operation, string> = {
 	add: '新增任务',
@@ -62,13 +62,13 @@ const initMoreDate = () => {
 const moreInfo = reactive<Array<{ label: string; value: any }>>([])
 const operationDispatch = {
 	add: async () => {
-		await formRef.value.validate()
+		await formRef.value?.validate()
 		await saveTask(getDataFromSchema(taskForm))
 		message.success('新增成功')
 		handleCancel()
 	},
 	edit: async () => {
-		await formRef.value.validate()
+		await formRef.value?.validate()
 		await updateTask(getDataFromSchema(taskForm))
 		message.success('编辑成功')
 		handleCancel()
@@ -76,11 +76,14 @@ const operationDispatch = {
 }
 
 const handleCancel = () => {
-	props.operation !== 'more' && formRef.value.resetFields()
+	props.operation !== 'more' && formRef.value?.resetFields()
 	drawerState.open = false
 	emit('close')
 }
 
+watch(() => taskForm.taskTimeExpression.type, () => {
+	formRef.value?.clearValidate(['taskTimeExpression', 'value'])
+})
 </script>
 
 <template>

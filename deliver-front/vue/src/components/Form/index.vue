@@ -17,10 +17,12 @@ withDefaults(defineProps<{
 const formRef = ref<FormInstance>()
 const validate = async () => { await formRef.value?.validate() }
 const resetFields = () => { formRef.value?.resetFields() }
+const clearValidate = () => { formRef.value?.clearValidate() }
 const { state, handleVarify } = useVerify()
 defineExpose({
 	validate,
-	resetFields
+	resetFields,
+	clearValidate
 })
 </script>
 

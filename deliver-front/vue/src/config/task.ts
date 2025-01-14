@@ -119,12 +119,12 @@ export const taskForm: Schema<TaskForm> = reactive({
 					taskForm.taskTimeExpression.type = 'none';
 				} else if (target.value === 2) {
 					taskForm.taskTimeExpression.type = 'input';
-					taskForm.taskTimeExpression.rules = [{ validator: validateCronExpression, trigger: 'change' }];
+					taskForm.taskTimeExpression.rules = [{ validator: validateCronExpression }];
 					taskForm.taskTimeExpression.customConfig!.tip =
 						'Cron 表达式格式：秒(0-59) 分钟(0-59) 小时(0-23) 日(1-31) 月(1-12) 星期(0-6或SUN-SAT) 年(可选,1970-2099)。例如：20 3 * * * ? 表示每天 3:20 执行任务；20 3 8 * * ? 表示每月 8 号 3:20 执行任务；* 表示任意值；? 用于表示不指定某个字段的值。';
 				} else if (target.value === 3) {
-					taskForm.taskTimeExpression.type = 'datePicker';
 					taskForm.taskTimeExpression.rules = [getRequiredRule('请选择日期')];
+					taskForm.taskTimeExpression.type = 'datePicker';
 				}
 			},
 		},
