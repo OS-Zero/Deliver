@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, onBeforeMount, reactive, h, watch } from 'vue'
 import { channelAppColumns, filterForm, setFilterOptionsDispatch } from "@/config/channelApp"
-import { CopyOutlined, DownOutlined, ExclamationCircleOutlined, FilterOutlined, CloseOutlined } from '@ant-design/icons-vue';
+import { CopyOutlined, DownOutlined, ExclamationCircleOutlined, FilterOutlined, CloseOutlined, AppstoreOutlined, MenuOutlined } from '@ant-design/icons-vue';
 import { copyToClipboard, getDataFromSchema } from '@/utils/utils';
 import { FormInstance, message, Modal, TableProps } from 'ant-design-vue';
 import SearchInput from '@/components/SearchInput/index.vue'
@@ -12,6 +12,7 @@ import { deleteChannelApp, getChannelApp, updateChannelAppStatus } from '@/api/c
 import { ChannelApp } from '@/types/channelApp';
 import ChannelAppDrawer from './components/ChannelAppDrawer.vue';
 import { getColor } from '@/utils/table';
+import Card from './components/Card.vue'
 type Operation = 'add' | 'edit' | 'delete' | 'more'
 const dataSource = ref<ChannelApp[]>([])
 const searchValue = ref('')
@@ -86,6 +87,7 @@ const handleBatchDelete = () => {
 			await deleteChannelApp({ ids: rowSelection.selectedRowKeys as number[] })
 			resetPagination()
 			handleSearch()
+			rowSelection.selectedRowKeys = []
 			message.success('删除成功')
 		},
 	});
@@ -120,6 +122,12 @@ onBeforeMount(() => {
 				</SearchInput>
 				<div class="operation">
 					<a-button class="btn--add" @click="handleActions('add')" type="primary">新增</a-button>
+					<div class="toggle_btns">
+						<a-button :icon="h(AppstoreOutlined)" shape="circle" type="text"
+							@click="filterState.open = !filterState.open"></a-button>
+						<a-button :icon="h(MenuOutlined)" shape="circle" type="text"
+							@click="filterState.open = !filterState.open"></a-button>
+					</div>
 					<a-button :icon="h(FilterOutlined)" shape="circle" type="text"
 						@click="filterState.open = !filterState.open"></a-button>
 				</div>
@@ -164,6 +172,9 @@ onBeforeMount(() => {
 					</template>
 				</template>
 			</a-table>
+			<div class="card-list">
+				<!-- <Card v-for="item in dataSource" :key="item.appId" :></Card> -->
+			</div>
 		</div>
 		<a-card size="small" class="filter-form" :class="{ open: filterState.open }" title="筛选">
 			<template #extra><a-button type="text" :icon="h(CloseOutlined)" @click="handleFilterClose"></a-button></template>
@@ -240,5 +251,9 @@ onBeforeMount(() => {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+}
+
+.operation {
+	display: flex;
 }
 </style>

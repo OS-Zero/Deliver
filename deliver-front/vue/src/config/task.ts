@@ -4,7 +4,10 @@ import { getRangeRule, getRequiredRule } from '@/utils/validate';
 import { SearchParams, TaskForm } from '@/types/task';
 import { getMessageParam, searchTemplateByName } from '@/api/messageTemplate';
 import { searchPeopleGroupByName } from '@/api/peopleGroup';
-import { reactive } from 'vue';
+import { h, reactive } from 'vue';
+import { debounce } from 'lodash';
+import { Spin } from 'ant-design-vue';
+import { isValidCron } from 'cron-validator';
 export const taskLocale = {
 	taskId: '任务 Id',
 	taskDescription: '任务描述',
@@ -68,9 +71,13 @@ export const taskColumns: ColumnsType = [
 	},
 ];
 const validateCronExpression = (_rule: any, value: any) => {
-	const regExp =
-		/^([0-5]?[0-9]|\*)\s([0-5]?[0-9]|\*)\s([01]?[0-9]|2[0-3]|\*)\s([12]?[0-9]|3[01]|\*)\s([1-9]|1[0-2]|\*)\s([0-6]|SUN|MON|TUE|WED|THU|FRI|SAT|\*)\s?([0-9]{4}|\*)?$/;
-	if (regExp.test(value)) {
+	const isValidate = isValidCron(value, {
+		seconds: true,
+		alias: true,
+		allowBlankDay: true,
+		allowSevenAsSunday: true,
+	});
+	if (isValidate) {
 		return Promise.resolve();
 	}
 	return Promise.reject('请提供正确的 Cron 表达式');
@@ -145,14 +152,18 @@ export const taskForm: Schema<TaskForm> = reactive({
 		selectConfig: {
 			options: [],
 			showSearch: true,
-			onSearch: (value: string) => {
+			filterOption: false,
+			onSearch: debounce((value: string) => {
+				if (!value) return;
+				taskForm.templateId.selectConfig!.notFoundContent = h(Spin);
 				searchTemplateByName({ templateName: value }).then((res) => {
 					taskForm.templateId.selectConfig!.options = res.map((item) => ({
 						value: item.templateId,
 						label: item.templateName,
 					}));
+					taskForm.templateId.selectConfig!.notFoundContent = undefined;
 				});
-			},
+			}, 200),
 			onChange: (value: any) => {
 				getMessageParam({ templateId: Number(value) }).then((res) => {
 					taskForm.taskMessageParam.value = JSON.parse(res || '{}');
@@ -167,14 +178,18 @@ export const taskForm: Schema<TaskForm> = reactive({
 		rules: [getRequiredRule('请输入关联人群')],
 		selectConfig: {
 			showSearch: true,
-			onSearch: (value: string) => {
+			filterOption: false,
+			onSearch: debounce((value: string) => {
+				if (!value) return;
+				taskForm.peopleGroupId.selectConfig!.notFoundContent = h(Spin);
 				searchPeopleGroupByName({ peopleGroupName: value }).then((res) => {
 					taskForm.peopleGroupId.selectConfig!.options = res.map((item) => ({
 						value: item.peopleGroupId,
 						label: item.peopleGroupName,
 					}));
+					taskForm.peopleGroupId.selectConfig!.notFoundContent = undefined;
 				});
-			},
+			}, 200),
 		},
 	},
 	taskMessageParam: {

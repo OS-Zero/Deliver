@@ -91,6 +91,7 @@ const handleBatchDelete = () => {
 			await deletePeopleGroup({ ids: rowSelection.selectedRowKeys as number[] })
 			resetPagination()
 			handleSearch()
+			rowSelection.selectedRowKeys = []
 			message.success('删除成功')
 		},
 	});
