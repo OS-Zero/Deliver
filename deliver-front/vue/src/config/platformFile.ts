@@ -124,6 +124,11 @@ export const platformFileForm: Schema<UploadPlatformFile> = reactive({
 		rules: [getRequiredRule('请上传文件')],
 		uploadConifg: {
 			maxCount: 1,
+			customRequest: (options) => {
+				setTimeout(() => {
+					options.onSuccess && options.onSuccess('');
+				}, 0);
+			},
 		},
 	},
 	platformFileName: {

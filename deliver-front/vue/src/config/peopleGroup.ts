@@ -72,6 +72,13 @@ const validatePeopleGroupList = (_rule: any, value: any) => {
 const getTextareaDescription = (num: number) => {
 	return `使用英文逗号分割，最多可输入100个；共输入了 <span style="color:red">${num}</span> 个号码`;
 };
+export const setPeopleGroupListTip = (list: string) => {
+	if (list) {
+		peopleGroupForm.peopleGroupList.customConfig!.tip = getTextareaDescription(list.split(',').length);
+	} else {
+		peopleGroupForm.peopleGroupList.customConfig!.tip = getTextareaDescription(0);
+	}
+};
 export const peopleGroupForm: Schema<PeopleGroupSchema> = reactive({
 	peopleGroupId: {
 		type: 'none',
@@ -130,15 +137,23 @@ export const peopleGroupForm: Schema<PeopleGroupSchema> = reactive({
 		fieldName: '$excelTemplateFile',
 		label: '人群文件',
 		uploadConifg: {
-			title: '解析人群文件',
-			description: '单次人群最多支持上传100条，请上传csv、xlsx格式文件，大小10MB以内',
 			maxCount: 1,
+			customRequest: (options) => {
+				peopleGroupForm.peopleGroupList.value = undefined;
+				analysisExcelTemplateFile({ file: options.file as File })
+					.then((res) => {
+						peopleGroupForm.peopleGroupList.value = res;
+						options.onSuccess && options.onSuccess(res);
+						setPeopleGroupListTip(res);
+					})
+					.catch((err) => {
+						options.onError && options.onError(err);
+					});
+			},
 		},
 		customConfig: {
-			onChange: async (value: any) => {
-				peopleGroupForm.peopleGroupList.value = undefined;
-				peopleGroupForm.peopleGroupList.value = await analysisExcelTemplateFile({ file: value });
-			},
+			title: '解析人群文件',
+			description: '单次人群最多支持上传100条，请上传csv、xlsx格式文件，大小10MB以内',
 		},
 	},
 	peopleGroupList: {
@@ -149,12 +164,7 @@ export const peopleGroupForm: Schema<PeopleGroupSchema> = reactive({
 		textareaConfig: {
 			rows: 10,
 			onChange: ({ target }) => {
-				const list = target.value;
-				if (list) {
-					peopleGroupForm.peopleGroupList.customConfig!.tip = getTextareaDescription(list.split(',').length);
-				} else {
-					peopleGroupForm.peopleGroupList.customConfig!.tip = getTextareaDescription(0);
-				}
+				setPeopleGroupListTip(target.value || '');
 			},
 		},
 		customConfig: {

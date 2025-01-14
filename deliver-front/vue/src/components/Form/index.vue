@@ -4,7 +4,7 @@ import { FormItem } from '@/types/form';
 import { FormInstance } from 'ant-design-vue/es/form';
 import JsonEditor from "json-editor-vue3"
 import { useVerify } from '@/hooks/verify';
-
+import { InboxOutlined } from '@ant-design/icons-vue';
 withDefaults(defineProps<{
 	formSchema: Record<string, FormItem<string>>;
 	name?: (field: FormItem<string>) => string | number | (string | number)[];
@@ -30,7 +30,7 @@ defineExpose({
 	<a-form ref="formRef" :label-col="labelCol" :model="formSchema" :layout="layout">
 		<template v-for="field in formSchema">
 			<a-form-item v-if="field.type === 'none'" :name="name(field)" v-show="false">
-				<a-input v-model:value="formSchema[field.fieldName].value" />
+				<input v-model="formSchema[field.fieldName].value" />
 			</a-form-item>
 			<a-form-item v-else-if="field.type === 'button'">
 				<a-button style="width: 100%;" v-bind="field.buttonConfig" @click="field.buttonConfig?.onClick">{{
@@ -73,8 +73,15 @@ defineExpose({
 						format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD HH:mm:ss" />
 				</template>
 				<template v-else-if="field.type === 'upload'">
-					<Upload v-model="formSchema[field.fieldName].value" :config="field.uploadConifg"
-						@change="field.customConfig?.onChange"></Upload>
+					<a-upload-dragger v-model:fileList="formSchema[field.fieldName].value" v-bind="field.uploadConifg">
+						<p class=" ant-upload-drag-icon">
+							<component :is="field.customConfig?.icon || InboxOutlined"></component>
+						</p>
+						<p class="ant-upload-text">{{ field.customConfig?.title ? field.customConfig.title : '点击或拖拽上传' }}</p>
+						<p class="ant-upload-hint">
+							{{ field.customConfig?.description }}
+						</p>
+					</a-upload-dragger>
 				</template>
 				<template v-else-if="field.type === 'radioGroup'">
 					<a-radio-group v-model:value="formSchema[field.fieldName].value" v-bind="field.radioGroupConfig" />
@@ -118,5 +125,9 @@ defineExpose({
 .input-desc {
 	color: var(--gray-medium-dark);
 	font-size: small;
+}
+
+.ant-upload-hint {
+	padding: 0 var(--spacing-xs);
 }
 </style>

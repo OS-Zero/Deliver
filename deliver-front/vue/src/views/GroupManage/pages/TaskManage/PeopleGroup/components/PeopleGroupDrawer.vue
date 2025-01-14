@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { savePeopleGroup, updatePeopleGroup } from '@/api/peopleGroup';
-import { peopleGroupLocale, peopleGroupForm } from '@/config/peopleGroup';
+import { peopleGroupLocale, peopleGroupForm, setPeopleGroupListTip } from '@/config/peopleGroup';
 import { DrawerProps } from '@/types/components';
 import { getDataFromSchema } from '@/utils/utils';
 import { message } from 'ant-design-vue';
@@ -43,6 +43,9 @@ const initFormDate = () => {
 			if (key === '$radioGroup') peopleGroupForm[key].value = 1
 			else peopleGroupForm[key].value = props.record[key]
 		}
+		peopleGroupForm.$excelTemplateFile.type = 'none';
+		peopleGroupForm.peopleGroupList.type = 'textarea';
+		setPeopleGroupListTip(peopleGroupForm.peopleGroupList.value)
 	})
 }
 const initMoreDate = () => {

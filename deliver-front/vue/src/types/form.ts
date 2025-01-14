@@ -1,9 +1,5 @@
 import { InputProps, RadioGroupProps, SelectProps, TextAreaProps, UploadProps } from 'ant-design-vue';
 import { Rule } from 'ant-design-vue/es/form';
-export interface UploadConfig extends UploadProps {
-	title?: string;
-	description?: string;
-}
 type ItemType =
 	| 'none'
 	| 'input'
@@ -31,7 +27,7 @@ export interface FormItem<T> {
 	rules?: Rule[];
 	textareaConfig?: TextAreaProps;
 	editorConfig?: Record<string, any>;
-	uploadConifg?: UploadConfig;
+	uploadConifg?: UploadProps;
 	buttonConfig?: Record<string, any>;
 	radioGroupConfig?: RadioGroupProps;
 	inputConfig?: InputProps;

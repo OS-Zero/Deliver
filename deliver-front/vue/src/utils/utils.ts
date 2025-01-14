@@ -27,7 +27,9 @@ export async function copyToClipboard(text: string) {
 export function getDataFromSchema(record: Record<string, FormItem<string>>) {
 	const _obj: any = {};
 	for (const key in record) {
-		key[0] !== '$' && (_obj[key] = record[key].value);
+		if (key[0] === '$') continue;
+		if (record[key].type === 'upload') _obj[key] = record[key].value[0].originFileObj;
+		else _obj[key] = record[key].value;
 	}
 	return _obj;
 }

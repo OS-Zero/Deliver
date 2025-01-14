@@ -4,7 +4,7 @@ import { getDataFromSchema } from '@/utils/utils';
 import { message } from 'ant-design-vue';
 import { ref, reactive, watch, onBeforeMount } from 'vue';
 import { platformFileLocale, platformFileForm, setOptionsDispatch } from '@/config/platformFile';
-import { updateChannelApp } from '@/api/channelApp';
+import { uploadPlatformFile } from '@/api/platformFile';
 type Operation = 'upload' | 'more'
 const props = defineProps<{
 	open: boolean
@@ -52,7 +52,7 @@ const moreInfo = reactive<Array<{ label: string; value: any }>>([])
 const operationDispatch = {
 	upload: async () => {
 		await formRef.value.validate()
-		await updateChannelApp(getDataFromSchema(platformFileForm))
+		await uploadPlatformFile(getDataFromSchema(platformFileForm))
 		message.success('上传成功')
 		handleCancel()
 	},
