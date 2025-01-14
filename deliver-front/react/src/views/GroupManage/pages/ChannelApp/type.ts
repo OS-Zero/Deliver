@@ -28,10 +28,7 @@ export type SaveChannelApp = Pick<
   'appName' | 'appDescription' | 'channelType' | 'channelProviderType' | 'appConfig'
 >;
 
-export type UpdateChannelApp = Pick<
-  ChannelApp,
-  'appId' | 'appStatus'
->;
+export type UpdateChannelApp = Pick<ChannelApp, 'appId' | 'appStatus'>;
 
 export interface SearchParams
   extends Pagination,

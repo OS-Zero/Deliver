@@ -2,7 +2,7 @@ import { Form, Select, Button, Card, FormInstance, DatePicker } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 import { useEffect, useRef, useState } from 'react';
 import local from 'antd/lib/date-picker/locale/zh_CN.js';
-import { getChannelType, getParam } from '@/api/system';
+import { getChannelType, getChannelProviderType } from '@/api/system';
 import { Channel, ChannelProvider } from '../type';
 import { useDebounce } from '@/hooks/useDebounce';
 
@@ -27,10 +27,10 @@ const FilterDrawer = (props: FilterDrawerProps) => {
   const handleChannelTypeChange = async (value: number) => {
     formRef?.current?.resetFields(['channelProviderType']);
     try {
-      const response = await getParam({ channelType: value });
+      const response = await getChannelProviderType({ channelType: value });
       setOptions((prev) => ({
         ...prev,
-        channelProvidersOptions: response?.channelProviderTypeList || []
+        channelProvidersOptions: response
       }));
     } catch (error) {
       console.error('获取渠道供应商失败:', error);

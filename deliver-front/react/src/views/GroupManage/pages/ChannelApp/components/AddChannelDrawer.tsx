@@ -2,16 +2,15 @@ import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { Button, Drawer, Space, FormInstance, message } from 'antd';
 import { JsonEditor } from 'jsoneditor-react';
 import { BetaSchemaForm, ProFormColumnsType } from '@ant-design/pro-components';
-import { handleFieldValue } from '@/utils/handleFieldValue';
 import { useFormOptions } from '@/hooks/useFormOptions';
 
 interface AddChannelDrawerProps {
   onSubmit?: (values: any) => void;
-  onSearch?: (values: any) => void;
+  reFresh?: () => void;
 }
 
 const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
-  const { onSubmit, onSearch } = props;
+  const { onSubmit, reFresh } = props;
   const [open, setOpen] = useState(false);
   const formRef = useRef<FormInstance>(null);
   const [jsonEditorKey, setJsonEditorKey] = useState(0);
@@ -25,42 +24,23 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
   const handleSubmit = async () => {
     try {
       const values = await formRef?.current?.validateFields();
-
-      values.channelType = handleFieldValue(
-        values.channelType,
-        options.channelTypeOptions,
-        'channelTypeName',
-        'channelType'
-      );
-
-      // 处理 channelProviderType
-      values.channelProviderType = handleFieldValue(
-        values.channelProviderType,
-        options.channelProvidersOptions,
-        'channelProviderTypeName',
-        'channelProviderType'
-      );
-
       values.appConfig = JSON.stringify(values.appConfig);
-      onSubmit?.(values);
+      await onSubmit?.(values);
+      onClose();
       message.success('保存成功');
-      formRef?.current?.resetFields();
-      onSearch?.({ currentPage: 1, pageSize: 10 });
+      reFresh?.();
     } catch (error) {
       console.error('保存失败:', error);
-    } finally {
-      setOpen(false);
     }
   };
 
-  const handleReset = () => {
+  const onClose = () => {
+    setOpen(false);
     formRef?.current?.resetFields();
-    formRef?.current?.setFieldsValue({ paramMap: {} }); // 重置时设置默认值为 {}
   };
 
   useImperativeHandle(ref, () => ({
     addChannelDrawer: () => {
-      formRef?.current?.setFieldsValue({ paramMap: {} }); // 打开弹窗时设置默认值为 {}
       setOpen(true);
     },
     editChannelModal: async (values: any) => {
@@ -68,8 +48,6 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
       await handleChannelTypeChange(values.channelType);
       formRef?.current?.setFieldsValue({
         ...values,
-        channelType: values.channelTypeName,
-        channelProviderType: values.channelProviderTypeName,
         appConfig: JSON.parse(values.appConfig)
       });
       setJsonEditorKey((prev) => prev + 1);
@@ -142,13 +120,7 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
       dataIndex: 'appConfig',
       initialValue: {},
       renderFormItem: () => {
-        return (
-          <JsonEditor
-            key={jsonEditorKey}
-            mode="code"
-            onChange={(e: object) => formRef.current?.setFieldsValue({ appConfig: e })}
-          />
-        );
+        return <JsonEditor key={jsonEditorKey} mode="code" />;
       }
     }
   ];
@@ -157,11 +129,11 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
     <Drawer
       title={formRef?.current?.getFieldValue('appId') ? '编辑应用' : '新增应用'}
       open={open}
-      onClose={() => setOpen(false)}
+      onClose={onClose}
       width={500}
       extra={
         <Space>
-          <Button onClick={() => setOpen(false)}>取消</Button>
+          <Button onClick={onClose}>取消</Button>
           <Button type="primary" onClick={handleSubmit}>
             确定
           </Button>

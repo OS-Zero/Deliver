@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react';
-import { ProColumns, ProTable } from '@ant-design/pro-components';
+import React, { MutableRefObject, useRef, useState } from 'react';
+import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
 import { Button, Space, Switch, Dropdown, MenuProps } from 'antd';
 import { DownOutlined, FilterOutlined } from '@ant-design/icons';
 import { ChannelApp } from './type.ts';
@@ -25,31 +25,30 @@ const items: MenuProps['items'] = [
 
 const Channel: React.FC = () => {
   const detailRef = useRef<{ getDetail: (record: ChannelApp) => void }>();
+  const proTableRef = useRef<ActionType>();
   const addRef = useRef<AddRef>();
-  const testRef = useRef<{ getTestSendDrawer: () => void }>();
   const [tableParams, setTableParams] = useState({});
-  // const [checked, setChecked] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
-  const { fetchChannelData, deleteChannelData, saveChannelData, changeStatus } = useChannelData();
+  const { fetchChannelData, deleteChannelData, saveChannelData, changeStatus } = useChannelData({
+    proTableRef
+  });
 
   const handleMenuClick = (e: any, record: ChannelApp) => {
     if (e?.key === 'detail') {
       detailRef.current?.getDetail(record);
-    } else {
-      testRef.current?.getTestSendDrawer();
     }
   };
 
   // 这两列涉及到状态的改变，于是写在视图层
   const columns: ProColumns<ChannelApp>[] = [
     ...appTableSchema({
-      title: '模板状态',
+      title: '应用状态',
       width: 120,
       dataIndex: 'appStatus',
       render: (_, record: ChannelApp) => {
         const handleStatusChange = async (checked: boolean) => {
           await changeStatus(record.appId, checked ? 1 : 0);
-          record.appStatus = checked ? 1 : 0;
+          proTableRef?.current?.reload();
         };
         return (
           <Switch
@@ -105,6 +104,7 @@ const Channel: React.FC = () => {
   return (
     <div className={styles['app-container']}>
       <ProTable
+        actionRef={proTableRef}
         params={tableParams}
         columns={columns}
         rowSelection={{}}
@@ -136,7 +136,13 @@ const Channel: React.FC = () => {
         })}
       />
       <DetailDrawer ref={detailRef} columns={appColumns} title={'应用详情'} />
-      <AddChannelDrawer ref={addRef} onSubmit={saveChannelData} onSearch={fetchChannelData} />
+      <AddChannelDrawer
+        ref={addRef}
+        onSubmit={saveChannelData}
+        reFresh={() => {
+          (proTableRef as MutableRefObject<ActionType>)?.current?.reset?.();
+        }}
+      />
       {filterOpen && (
         <div className={styles['filter-container']}>
           <FilterCard onClose={() => setFilterOpen(false)} onFilter={handleFilter} />

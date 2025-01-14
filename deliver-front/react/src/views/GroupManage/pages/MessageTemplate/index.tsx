@@ -8,7 +8,7 @@ import useTemplateData from './useTemplateData';
 import styles from './index.module.scss';
 import DetailDrawer from '@/components/DetailDrawer/index.tsx';
 import AddTemplateModal from './components/AddTemplateModal.tsx';
-import TestSendDrawer from '@/components/TestSendDrawer/index.tsx';
+import TestSendDrawer from '@/views/GroupManage/pages/MessageTemplate/components/TestSendDrawer/index.tsx';
 import FilterCard from './components/FilterCard.tsx';
 import { proTableConfig } from '@/config/index.tsx';
 import { useNavigate } from 'react-router-dom';

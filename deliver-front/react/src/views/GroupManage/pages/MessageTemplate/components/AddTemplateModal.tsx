@@ -1,6 +1,6 @@
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { Form, Input, Button, Select, Drawer, Space, message, FormInstance } from 'antd';
-import { getChannelType, getParam } from '@/api/system';
+import { getChannelType, getChannelProviderType } from '@/api/system';
 import { useFormState } from '@/hooks/useFormState';
 import { useGlobalContext } from '@/context/GlobalContext';
 import { getApp } from '@/api/messageTemplate';
@@ -41,7 +41,7 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
     formRef?.current?.resetFields(['channelProviderType', 'messageType', 'appId']);
     updateFormState({ channelProviders: [], messageTypes: [], appIds: [] });
     try {
-      const response = await getParam({ channelType: value });
+      const response = await getChannelProviderType({ channelType: value });
       updateFormState({
         channelProviders: response.channelProviderTypeList,
         messageTypes: response.messageTypeList

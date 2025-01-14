@@ -1,5 +1,5 @@
 import { Form, Select, Button, message, Card, FormInstance } from 'antd';
-import { getChannelType, getParam } from '@/api/system';
+import { getChannelType, getChannelProviderType } from '@/api/system';
 import { useFormState } from '../../../../../hooks/useFormState';
 import { CloseOutlined } from '@ant-design/icons';
 import { useRef } from 'react';
@@ -42,7 +42,7 @@ const FilterDrawer = (props: FilterDrawerProps) => {
     formRef?.current?.resetFields(['channelProviderType', 'messageType']);
     updateFormState({ channelProviders: [], messageTypes: [] });
     try {
-      const response = await getParam({ channelType: value });
+      const response = await getChannelProviderType({ channelType: value });
       updateFormState({
         channelProviders: response.channelProviderTypeList,
         messageTypes: response.messageTypeList

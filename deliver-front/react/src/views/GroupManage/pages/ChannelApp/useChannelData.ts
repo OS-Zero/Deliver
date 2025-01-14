@@ -6,11 +6,13 @@ import {
   updateChannelAppStatus
 } from '@/api/channelApp';
 import deleteConfirmModal from '@/components/DeleteConfirmModal';
-import { useCallback } from 'react';
+import { MutableRefObject, useCallback } from 'react';
 import { ChannelApp, SearchParams } from './type';
 import { transformParams } from '@/utils/omitProperty';
+import { ActionType } from '@ant-design/pro-components';
 
-const useChannelData = () => {
+const useChannelData = (props: { proTableRef: MutableRefObject<ActionType | undefined> }) => {
+  const { proTableRef } = props;
   /**
    * 搜索请求表单数据
    * @param data
@@ -29,8 +31,7 @@ const useChannelData = () => {
    * 新增模版
    * @param data
    */
-  const saveChannelData = async (params: ChannelApp) =>
-    params?.appId ? await updateChannelApp(params) : await saveChannelApp(params);
+  const saveChannelData = async (params: ChannelApp) => params?.appId ? await updateChannelApp(params) : await saveChannelApp(params);
 
   /**
    * 更新模板状态
@@ -48,7 +49,7 @@ const useChannelData = () => {
     deleteConfirmModal({
       onConfirm: () => {
         deleteChannelApp({ ids });
-        fetchChannelData({ currentPage: 1, pageSize: 10 });
+        (proTableRef as MutableRefObject<ActionType>)?.current?.reset?.();
       }
     });
   }, []);

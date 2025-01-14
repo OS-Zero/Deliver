@@ -12,12 +12,21 @@ export function getChannelType(data: { usersType: number }): Promise<Channel[]> 
 }
 
 // 根据渠道类型获取渠道供应商以及消息类型
-export function getParam(data: { channelType: number }): Promise<{
-  channelProviderTypeList: ChannelProvider[];
-  messageTypeList: Message[];
-}> {
+export function getChannelProviderType(data: { channelType: number }): Promise<ChannelProvider[]> {
   return request({
-    url: '/systemParam/getParam',
+    url: '/systemParam/getChannelProviderType',
+    method: 'post',
+    data
+  });
+}
+
+// 根据渠道类型和渠道供应商获取消息类型
+export function getMessageType(data: {
+  channelType: number;
+  channelProviderType: number;
+}): Promise<Message[]> {
+  return request({
+    url: '/systemParam/getMessageType',
     method: 'post',
     data
   });
