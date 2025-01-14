@@ -31,8 +31,6 @@ import org.springframework.data.redis.connection.stream.ObjectRecord;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.Objects;
-
 /**
  * @author oszero
  * @version 1.0.0

@@ -21,7 +21,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.oszero.deliver.business.admin.model.dto.request.userinfo.*;
 import com.oszero.deliver.business.admin.model.dto.response.userinfo.UserInfoResponseDto;
 import com.oszero.deliver.business.admin.model.entity.database.UserInfo;
-import jakarta.validation.Valid;
 
 /**
  * @author oszero

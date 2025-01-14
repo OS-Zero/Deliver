@@ -17,7 +17,6 @@
 
 package com.oszero.deliver.business.server.exception;
 
-import com.oszero.deliver.business.common.enums.ResultEnum;
 import lombok.Getter;
 
 /**

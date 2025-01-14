@@ -18,14 +18,16 @@
 package com.oszero.deliver.web.admin.controller;
 
 import com.oszero.deliver.business.admin.model.dto.request.systemparam.GetParamRequestDto;
-import com.oszero.deliver.business.admin.model.dto.response.systemparam.*;
+import com.oszero.deliver.business.admin.model.dto.response.systemparam.GetChannelProviderTypeResponseDto;
+import com.oszero.deliver.business.admin.model.dto.response.systemparam.GetChannelTypeResponseDto;
+import com.oszero.deliver.business.admin.model.dto.response.systemparam.GetMessageTypeResponseDto;
+import com.oszero.deliver.business.admin.model.dto.response.systemparam.GetPlatformFileTypeResponseDto;
 import com.oszero.deliver.business.admin.service.SystemParamService;
 import com.oszero.deliver.business.common.model.common.CommonResult;
 import com.oszero.deliver.web.admin.constant.AdminPathConstant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;

@@ -29,8 +29,6 @@ import com.oszero.deliver.platformclient.common.ClientConstant;
 import com.oszero.deliver.platformclient.model.app.WeChatApp;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 

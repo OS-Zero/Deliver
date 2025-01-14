@@ -25,6 +25,7 @@ import com.oszero.deliver.business.admin.service.impl.SendTaskServiceImpl;
 import com.oszero.deliver.business.common.constant.CommonConstant;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.quartz.CronExpression;
 import org.quartz.JobDataMap;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -33,7 +34,6 @@ import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -68,8 +68,7 @@ public class SendTaskUtils {
     }
 
     public static boolean isValidCron(String cronExpression) {
-        String cronRegex = "^([0-5]?[0-9]|\\*)\\s([0-5]?[0-9]|\\*)\\s([01]?[0-9]|2[0-3]|\\*)\\s([12]?[0-9]|3[01]|\\*)\\s([1-9]|1[0-2]|\\*)\\s([0-6]|SUN|MON|TUE|WED|THU|FRI|SAT|\\*)\\s?([0-9]{4}|\\*)?$";
-        return cronExpression.matches(cronRegex);
+        return CronExpression.isValidExpression(cronExpression);
     }
 
     public void addJob(SendTask sendTask) throws SchedulerException, ParseException {

@@ -21,7 +21,6 @@ import com.oszero.deliver.business.admin.validator.StatusRangeValidator;
 import com.oszero.deliver.business.common.constant.CommonConstant;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-import org.hibernate.validator.constraints.Length;
 
 import java.lang.annotation.*;
 

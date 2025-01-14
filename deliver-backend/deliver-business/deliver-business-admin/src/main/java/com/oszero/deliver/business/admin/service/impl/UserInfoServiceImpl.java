@@ -18,11 +18,11 @@
 package com.oszero.deliver.business.admin.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oszero.deliver.business.admin.cache.AdminCacheManager;
+import com.oszero.deliver.business.admin.exception.BusinessException;
 import com.oszero.deliver.business.admin.mapper.UserInfoMapper;
 import com.oszero.deliver.business.admin.model.dto.request.messagetemplate.SendMessageRequestDto;
 import com.oszero.deliver.business.admin.model.dto.request.userinfo.*;
@@ -32,7 +32,6 @@ import com.oszero.deliver.business.admin.model.entity.database.UserInfo;
 import com.oszero.deliver.business.admin.service.UserInfoService;
 import com.oszero.deliver.business.admin.util.SendMessageUtils;
 import com.oszero.deliver.business.admin.util.UserUtils;
-import com.oszero.deliver.business.admin.exception.BusinessException;
 import com.oszero.deliver.business.common.util.DataBaseUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

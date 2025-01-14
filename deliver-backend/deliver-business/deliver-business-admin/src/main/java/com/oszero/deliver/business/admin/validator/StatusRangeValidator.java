@@ -18,7 +18,6 @@
 package com.oszero.deliver.business.admin.validator;
 
 import com.oszero.deliver.business.admin.annotation.StatusRange;
-import com.oszero.deliver.business.common.constant.CommonConstant;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

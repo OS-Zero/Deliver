@@ -48,6 +48,7 @@ import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.SchedulerException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.util.Arrays;
@@ -99,9 +100,10 @@ public class SendTaskServiceImpl extends ServiceImpl<SendTaskMapper, SendTask>
     }
 
     @Override
+    @Transactional(rollbackFor = Throwable.class)
     public void save(SendTaskSaveRequestDto dto) throws SchedulerException, ParseException {
         checkNameIsDuplicate(null, dto.getTaskName());
-        checkUsersType(dto.getPeopleGroupId(), dto.getTemplateId());
+        checkUsersType(dto.getTemplateId(), dto.getPeopleGroupId());
         SendTask sendTask = new SendTask();
         // 默认启用
         sendTask.setTaskStatus(CommonConstant.ENABLE_STATUS);
@@ -117,9 +119,10 @@ public class SendTaskServiceImpl extends ServiceImpl<SendTaskMapper, SendTask>
     }
 
     @Override
+    @Transactional(rollbackFor = Throwable.class)
     public void update(SendTaskUpdateRequestDto dto) throws SchedulerException, ParseException {
         checkNameIsDuplicate(dto.getTaskId(), dto.getTaskName());
-        checkUsersType(dto.getPeopleGroupId(), dto.getTemplateId());
+        checkUsersType(dto.getTemplateId(), dto.getPeopleGroupId());
         SendTask sendTask = new SendTask();
         BeanUtil.copyProperties(dto, sendTask);
         int updateById = sendTaskMapper.updateById(sendTask);
@@ -133,6 +136,7 @@ public class SendTaskServiceImpl extends ServiceImpl<SendTaskMapper, SendTask>
     }
 
     @Override
+    @Transactional(rollbackFor = Throwable.class)
     public void updateStatus(SendTaskUpdateStatusRequestDto dto) throws SchedulerException {
         SendTask sendTask = new SendTask();
         BeanUtil.copyProperties(dto, sendTask);
@@ -147,6 +151,7 @@ public class SendTaskServiceImpl extends ServiceImpl<SendTaskMapper, SendTask>
     }
 
     @Override
+    @Transactional(rollbackFor = Throwable.class)
     public void delete(DeleteIdsRequestDto dto) throws SchedulerException {
         for (int i = 0; i < dto.getIds().size(); i++) {
             SendTask sendTask = sendTaskMapper.selectById(dto.getIds().get(i));

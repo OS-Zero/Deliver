@@ -21,7 +21,6 @@ import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.business.common.enums.ChannelProviderTypeEnum;
 import com.oszero.deliver.business.common.util.AppConfigUtils;
 import com.oszero.deliver.business.common.util.ChannelProviderUtils;
-import com.oszero.deliver.business.server.constant.ServerConstant;
 import com.oszero.deliver.business.server.exception.MessageException;
 import com.oszero.deliver.business.server.handler.BaseHandler;
 import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
@@ -32,7 +31,6 @@ import com.oszero.deliver.platformclient.model.app.sms.SmsApp;
 import com.oszero.deliver.platformclient.model.app.sms.TencentSmsApp;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
 import java.util.Objects;
 
 /**

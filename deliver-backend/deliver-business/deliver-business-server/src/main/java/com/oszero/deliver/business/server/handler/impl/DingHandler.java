@@ -25,7 +25,6 @@ import com.oszero.deliver.business.common.util.AppConfigUtils;
 import com.oszero.deliver.business.server.handler.BaseHandler;
 import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.platformclient.client.ding.DingClient;
-import com.oszero.deliver.platformclient.common.ClientConstant;
 import com.oszero.deliver.platformclient.model.app.DingApp;
 import org.springframework.stereotype.Component;
 

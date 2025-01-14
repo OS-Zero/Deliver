@@ -18,7 +18,6 @@
 package com.oszero.deliver.business.server.cache;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Service;
 
 /**
