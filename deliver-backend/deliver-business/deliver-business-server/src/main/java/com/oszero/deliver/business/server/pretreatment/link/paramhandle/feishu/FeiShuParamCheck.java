@@ -38,17 +38,22 @@ import java.util.Set;
 @Service
 public class FeiShuParamCheck implements MessageLink<SendTaskDto> {
     private static final Set<String> FEI_SHU_USER_ID_TYPE_SET = new HashSet<>(
-            Arrays.asList("user_id", "email", "chat_id", "department_id"));
+            Arrays.asList(
+                    ClientConstant.FEI_SHU_USER_ID,
+                    ClientConstant.FEI_SHU_EMAIL,
+                    ClientConstant.FEI_SHU_CHAT_ID,
+                    ClientConstant.FEI_SHU_DEPT_ID
+            ));
     /**
      * 可以通过 department_id 发送的消息类型
      */
     private static final Set<String> DEPARTMENT_MESSAGE_TYPE =
             new HashSet<>(Arrays.asList(
                     MessageTypeEnum.FEI_SHU_TEXT.getCode(),
-                    MessageTypeEnum.FEI_SHU_POST.getCode(),
                     MessageTypeEnum.FEI_SHU_IMAGE.getCode(),
-                    MessageTypeEnum.FEI_SHU_INTERACTIVE.getCode(),
-                    MessageTypeEnum.FEI_SHU_SHARE_CHAT.getCode()));
+                    MessageTypeEnum.FEI_SHU_POST.getCode(),
+                    MessageTypeEnum.FEI_SHU_SHARE_CHAT.getCode(),
+                    MessageTypeEnum.FEI_SHU_INTERACTIVE.getCode()));
 
     @Override
     public void process(LinkContext<SendTaskDto> context) {
@@ -62,7 +67,7 @@ public class FeiShuParamCheck implements MessageLink<SendTaskDto> {
         if (!FEI_SHU_USER_ID_TYPE_SET.contains(feiShuUserIdType)) {
             throw new MessageException("飞书userIdType参数非法，必须为 user_id 或者 email 或者 chat_id 或者 department_id");
         }
-        if ("department_id".equals(feiShuUserIdType) && !DEPARTMENT_MESSAGE_TYPE.contains(messageType)) {
+        if (ClientConstant.FEI_SHU_DEPT_ID.equals(feiShuUserIdType) && !DEPARTMENT_MESSAGE_TYPE.contains(messageType)) {
             throw new MessageException("飞书userIdType为department_id时，不支持此消息类型");
         }
     }

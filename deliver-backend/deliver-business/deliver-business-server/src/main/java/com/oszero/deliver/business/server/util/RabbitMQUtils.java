@@ -76,8 +76,8 @@ public class RabbitMQUtils {
     }
 
     public void retry(String exchange, String routingKey, SendTaskDto sendTaskDto) {
-        if (sendTaskDto.getRetry() > 0) {
-            sendTaskDto.setRetry(sendTaskDto.getRetry() - 1);
+        if (sendTaskDto.getRetryCount() > 0) {
+            sendTaskDto.setRetryCount(sendTaskDto.getRetryCount() - 1);
             sendTaskDto.setRetried(1);
             String message = JSONUtil.toJsonStr(sendTaskDto);
             // 指定关联数据（消息的唯一标识符），这里发送一条新的数据，所以与之前的不一样

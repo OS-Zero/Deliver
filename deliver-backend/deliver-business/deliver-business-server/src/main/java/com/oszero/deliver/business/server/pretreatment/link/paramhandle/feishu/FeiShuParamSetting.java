@@ -17,6 +17,7 @@
 
 package com.oszero.deliver.business.server.pretreatment.link.paramhandle.feishu;
 
+import cn.hutool.core.util.StrUtil;
 import com.oszero.deliver.business.common.enums.MessageTypeEnum;
 import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.business.server.pretreatment.common.LinkContext;
@@ -45,7 +46,12 @@ public class FeiShuParamSetting implements MessageLink<SendTaskDto> {
             throw new RuntimeException("消息类型非法");
         }
         Map<String, Object> messageParam = sendTaskDto.getMessageParam();
-        messageParam.put(ClientConstant.FEI_SHU_USER_IDS, sendTaskDto.getUsers());
+        String feiShuUserIdType = messageParam.get(ClientConstant.USER_ID_TYPE).toString();
+        if (StrUtil.equals(feiShuUserIdType, ClientConstant.FEI_SHU_DEPT_ID)) {
+            messageParam.put(ClientConstant.FEI_SHU_DEPT_IDS, sendTaskDto.getUsers());
+        } else if (StrUtil.equals(feiShuUserIdType, ClientConstant.FEI_SHU_USER_ID)) {
+            messageParam.put(ClientConstant.FEI_SHU_USER_IDS, sendTaskDto.getUsers());
+        }
         messageParam.put(ClientConstant.FEI_SHU_MSG_TYPE, messageTypeEnum.getMsgType());
     }
 }

@@ -18,6 +18,7 @@
 package com.oszero.deliver.business.server.handler.impl;
 
 import cn.hutool.json.JSONUtil;
+import com.oszero.deliver.business.common.enums.MessageTypeEnum;
 import com.oszero.deliver.business.common.util.AppConfigUtils;
 import com.oszero.deliver.business.server.handler.BaseHandler;
 import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
@@ -39,7 +40,13 @@ public class FeiShuHandler extends BaseHandler {
     private final AppConfigUtils appConfigUtils;
 
     private static final Set<String> BATCH_MESSAGE_TYPE =
-            new HashSet<>(Arrays.asList("text", "image", "post", "share_chat", "interactive"));
+            new HashSet<>(Arrays.asList(
+                    MessageTypeEnum.FEI_SHU_TEXT.getCode(),
+                    MessageTypeEnum.FEI_SHU_IMAGE.getCode(),
+                    MessageTypeEnum.FEI_SHU_POST.getCode(),
+                    MessageTypeEnum.FEI_SHU_SHARE_CHAT.getCode(),
+                    MessageTypeEnum.FEI_SHU_INTERACTIVE.getCode())
+            );
 
     public FeiShuHandler(FeiShuClient feiShuClient, AppConfigUtils appConfigUtils) {
         this.feiShuClient = feiShuClient;
@@ -57,24 +64,20 @@ public class FeiShuHandler extends BaseHandler {
         messageParam.remove(ClientConstant.USER_ID_TYPE);
         List<String> users = sendTaskDto.getUsers();
         // 支持发送多种飞书的 usersId，包括 [用户(user_id),用户(email),群组(chat_id),部门(department_id)]
-        if ("user_id".equals(feiShuUserIdType)) {
+        if (ClientConstant.FEI_SHU_USER_ID.equals(feiShuUserIdType)) {
             // 如果满足批量发送的用户类型则批量发送
             if (BATCH_MESSAGE_TYPE.contains(msgType)) {
                 feiShuClient.sendMessageBatch(tenantAccessToken, messageParam);
             } else { // 否则单个发送
                 feiShuClient.sendMessage(tenantAccessToken, users, messageParam, feiShuUserIdType);
             }
-        } else if ("email".equals(feiShuUserIdType)) {
+        } else if (ClientConstant.FEI_SHU_EMAIL.equals(feiShuUserIdType)) {
             // 邮箱类型只支持单个发送
             feiShuClient.sendMessage(tenantAccessToken, users, messageParam, feiShuUserIdType);
-        } else if ("chat_id".equals((feiShuUserIdType))) {
+        } else if (ClientConstant.FEI_SHU_CHAT_ID.equals((feiShuUserIdType))) {
             // 群聊类型只支持单个发送
             feiShuClient.sendMessage(tenantAccessToken, users, messageParam, feiShuUserIdType);
-        } else if ("department_id".equals((feiShuUserIdType))) {
-            // 参数的处理
-            Object user_ids = messageParam.get("user_ids");
-            messageParam.remove("user_ids");
-            messageParam.put("department_ids", user_ids);
+        } else if (ClientConstant.FEI_SHU_DEPT_ID.equals((feiShuUserIdType))) {
             // 部门只能批量
             feiShuClient.sendMessageBatch(tenantAccessToken, messageParam);
         }

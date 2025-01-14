@@ -59,7 +59,7 @@ public class SendServiceImpl implements SendService {
         Long templateId = sendRequestDto.getTemplateId();
         List<String> users = sendRequestDto.getUsers();
         Map<String, Object> messageParam = sendRequestDto.getMessageParam();
-        Integer retry = sendRequestDto.getRetry();
+        Integer retryCount = sendRequestDto.getRetryCount();
 
         SendTaskDto sendTaskDto = new SendTaskDto();
         SendTaskUtils.setSendTaskDto(sendTaskDto);
@@ -69,7 +69,7 @@ public class SendServiceImpl implements SendService {
         sendTaskDto.setClientIp(IpUtils.getClientIp());
         sendTaskDto.setUsers(users);
         sendTaskDto.setRetried(0);
-        sendTaskDto.setRetry(retry);
+        sendTaskDto.setRetryCount(retryCount);
 
         MessageTemplate template = messageTemplateMapper.selectById(templateId);
         if (Objects.isNull(template)) {

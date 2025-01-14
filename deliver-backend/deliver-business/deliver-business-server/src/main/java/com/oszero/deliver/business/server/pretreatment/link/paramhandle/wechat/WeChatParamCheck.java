@@ -37,13 +37,22 @@ import java.util.*;
 public class WeChatParamCheck implements MessageLink<SendTaskDto> {
 
     private static final Set<String> WECHAT_APP_USER_ID_TYPE_SET = new HashSet<>(
-            Arrays.asList("touser", "toparty", "totag"));
+            Arrays.asList(
+                    ClientConstant.WECHAT_APP_TO_USER,
+                    ClientConstant.WECHAT_APP_TO_PARTY,
+                    ClientConstant.WECHAT_APP_TO_TAG
+            ));
     private static final Set<String> WECHAT_APP_TO_GROUP_USER_ID_TYPE_SET = new HashSet<>(
-            List.of("chatid"));
+            List.of(ClientConstant.WECHAT_APP_TO_GROUP_CHAT_ID));
     private static final Set<String> WECHAT_SCHOOL_USER_ID_TYPE_SET = new HashSet<>(
-            Arrays.asList("to_parent_userid", "to_student_userid", "to_party", "toall"));
+            Arrays.asList(
+                    ClientConstant.WECHAT_SCHOOL_TO_PARENT_USER_ID,
+                    ClientConstant.WECHAT_SCHOOL_TO_STUDENT_USER_ID,
+                    ClientConstant.WECHAT_SCHOOL_TO_PARTY,
+                    ClientConstant.WECHAT_SCHOOL_TO_ALL
+            ));
     private static final Set<String> WECHAT_GROUP_ROBOT_ID_TYPE_SET = new HashSet<>(
-            List.of("webhook"));
+            List.of(ClientConstant.WECHAT_ROBOT_WEBHOOK));
 
     @Override
     public void process(LinkContext<SendTaskDto> context) {
@@ -58,19 +67,19 @@ public class WeChatParamCheck implements MessageLink<SendTaskDto> {
         String pushSubject = messageTypeEnum.getPushSubject();
         if (StrUtil.equals(pushSubject, PushSubjectEnum.WECHAT_APP.getCode())) {
             if (!WECHAT_APP_USER_ID_TYPE_SET.contains(userIdType)) {
-                throw new MessageException("用户ID类型非法");
+                throw new MessageException("用户ID类型非法，必须为touser 或者 toparty 或者 totag");
             }
         } else if (StrUtil.equals(pushSubject, PushSubjectEnum.WECHAT_APP_TO_GROUP.getCode())) {
             if (!WECHAT_APP_TO_GROUP_USER_ID_TYPE_SET.contains(userIdType)) {
-                throw new MessageException("用户ID类型非法");
+                throw new MessageException("用户ID类型非法，必须为chatid");
             }
         } else if (StrUtil.equals(pushSubject, PushSubjectEnum.WECHAT_SCHOOL.getCode())) {
             if (!WECHAT_SCHOOL_USER_ID_TYPE_SET.contains(userIdType)) {
-                throw new MessageException("用户ID类型非法");
+                throw new MessageException("用户ID类型非法，必须为to_parent_userid 或者 to_student_userid 或者 to_party 或者 toall");
             }
         } else if (StrUtil.equals(pushSubject, PushSubjectEnum.WECHAT_GROUP_ROBOT.getCode())) {
             if (!WECHAT_GROUP_ROBOT_ID_TYPE_SET.contains(userIdType)) {
-                throw new MessageException("用户ID类型非法");
+                throw new MessageException("用户ID类型非法，必须为webhook");
             }
         }
     }

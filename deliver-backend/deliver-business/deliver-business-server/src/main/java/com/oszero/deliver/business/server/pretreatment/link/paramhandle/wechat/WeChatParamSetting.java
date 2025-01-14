@@ -17,12 +17,15 @@
 
 package com.oszero.deliver.business.server.pretreatment.link.paramhandle.wechat;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.business.common.enums.MessageTypeEnum;
+import com.oszero.deliver.business.common.enums.PushSubjectEnum;
 import com.oszero.deliver.business.common.util.AppConfigUtils;
 import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.business.server.pretreatment.common.LinkContext;
 import com.oszero.deliver.business.server.pretreatment.common.MessageLink;
+import com.oszero.deliver.platformclient.common.ClientConstant;
 import com.oszero.deliver.platformclient.model.app.WeChatApp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -46,15 +49,23 @@ public class WeChatParamSetting implements MessageLink<SendTaskDto> {
         SendTaskDto sendTaskDto = context.getProcessModel();
         String appConfig = appConfigUtils.decryptAppConfig(sendTaskDto.getAppConfig());
         WeChatApp weChatApp = JSONUtil.toBean(appConfig, WeChatApp.class);
-        Map<String, Object> paramMap = sendTaskDto.getMessageParam();
         String messageType = sendTaskDto.getMessageType();
         MessageTypeEnum messageTypeEnum = MessageTypeEnum.getInstanceByCode(messageType);
         if (Objects.isNull(messageTypeEnum)) {
             throw new RuntimeException("消息类型非法");
         }
+        Map<String, Object> messageParam = sendTaskDto.getMessageParam();
         String pushSubject = messageTypeEnum.getPushSubject();
-        String wechatUserIdType = paramMap.get("wechatUserIdType").toString();
+        String wechatUserIdType = messageParam.get(ClientConstant.USER_ID_TYPE).toString();
         List<String> users = sendTaskDto.getUsers();
-        paramMap.put("msgtype", messageTypeEnum.getMsgType());
+        if (StrUtil.equals(pushSubject, PushSubjectEnum.WECHAT_APP.getCode())) {
+            messageParam.put(ClientConstant.WECHAT_AGENT_ID, weChatApp.getAgentid());
+            messageParam.put(wechatUserIdType, String.join(ClientConstant.WECHAT_SPILT, users));
+        } else if (StrUtil.equals(pushSubject, PushSubjectEnum.WECHAT_APP_TO_GROUP.getCode())) {
+            messageParam.put(wechatUserIdType, users.get(0));
+        } else if (StrUtil.equals(pushSubject, PushSubjectEnum.WECHAT_SCHOOL.getCode())) {
+            messageParam.put(wechatUserIdType, users);
+        }
+        messageParam.put(ClientConstant.WECHAT_MSG_TYPE, messageTypeEnum.getMsgType());
     }
 }

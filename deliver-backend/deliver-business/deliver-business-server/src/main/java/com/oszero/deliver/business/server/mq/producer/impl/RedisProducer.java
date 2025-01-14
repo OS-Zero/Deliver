@@ -66,8 +66,8 @@ public class RedisProducer implements Producer {
     }
 
     private void retry(SendTaskDto sendTaskDto) {
-        if (sendTaskDto.getRetry() > 0) {
-            sendTaskDto.setRetry(sendTaskDto.getRetry() - 1);
+        if (sendTaskDto.getRetryCount() > 0) {
+            sendTaskDto.setRetryCount(sendTaskDto.getRetryCount() - 1);
             sendTaskDto.setRetried(1);
             sendMessage(sendTaskDto);
         }

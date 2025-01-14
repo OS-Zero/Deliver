@@ -60,7 +60,11 @@ public class DingParamSetting implements MessageLink<SendTaskDto> {
         String dingUserIdType = messageParam.get(ClientConstant.USER_ID_TYPE).toString();
         List<String> users = sendTaskDto.getUsers();
         if (StrUtil.equals(PushSubjectEnum.DING_WORK_NOTICE.getCode(), pushSubject)) {
-            messageParam.put(dingUserIdType, String.join(ClientConstant.SPILT, users));
+            if (ClientConstant.DING_TO_ALL.equals(dingUserIdType)) {
+                messageParam.put(dingUserIdType, StrUtil.equals(dingUserIdType, "true"));
+            } else {
+                messageParam.put(dingUserIdType, String.join(ClientConstant.SPILT, users));
+            }
             messageParam.put(ClientConstant.DING_AGENT_ID, dingApp.getAgentId());
             messageParam.put(ClientConstant.DING_MSG_TYPE, messageTypeEnum.getMsgType());
         } else if (StrUtil.equals(PushSubjectEnum.DING_ROBOT.getCode(), pushSubject)) {

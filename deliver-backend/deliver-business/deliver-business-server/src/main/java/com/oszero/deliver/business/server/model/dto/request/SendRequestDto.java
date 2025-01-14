@@ -44,5 +44,5 @@ public class SendRequestDto {
     @NotNull(message = "消息参数不能为 NULL")
     private Map<String, Object> messageParam;
 
-    private Integer retry = 0;
+    private Integer retryCount = 0;
 }
