@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { DrawerProps } from '@/types/components';
-import { dynamic, getDataFromSchema } from '@/utils/utils';
+import { getDataFromSchema } from '@/utils/utils';
 import { message } from 'ant-design-vue';
-import { ref, reactive, onUnmounted, watch } from 'vue';
-import { platformFileLocale, platformFileSchema, platformFileSchemaDeps } from '@/config/platformFile';
+import { ref, reactive, watch, onBeforeMount } from 'vue';
+import { platformFileLocale, platformFileForm, setOptionsDispatch } from '@/config/platformFile';
 import { updateChannelApp } from '@/api/channelApp';
 type Operation = 'upload' | 'more'
 const props = defineProps<{
@@ -35,7 +35,6 @@ watch(props, (newProps) => {
 	newProps.operation === 'more' && initMoreDate();
 })
 
-const { dynamicData: platformFileForm, stop } = dynamic(platformFileSchema, platformFileSchemaDeps)
 const initMoreDate = () => {
 	const set = new Set(['channelType', 'appId', 'platformFileType'])
 	const arr: Array<{ label: string; value: any }> = []
@@ -64,10 +63,9 @@ const handleCancel = () => {
 	drawerState.open = false
 	emit('close')
 }
-onUnmounted(() => {
-	stop()
+onBeforeMount(() => {
+	setOptionsDispatch['channelType']()
 })
-
 </script>
 
 <template>

@@ -4,6 +4,7 @@ import { getRangeRule, getRequiredRule } from '@/utils/validate';
 import { SearchParams, TaskForm } from '@/types/task';
 import { getMessageParam, searchTemplateByName } from '@/api/messageTemplate';
 import { searchPeopleGroupByName } from '@/api/peopleGroup';
+import { reactive } from 'vue';
 export const taskLocale = {
 	taskId: '任务 Id',
 	taskDescription: '任务描述',
@@ -75,7 +76,7 @@ const validateCronExpression = (_rule: any, value: any) => {
 	return Promise.reject('请提供正确的 Cron 表达式');
 };
 type Schema<T> = Record<string, FormItem<keyof T>>;
-export const taskSchema: Schema<TaskForm> = {
+export const taskForm: Schema<TaskForm> = reactive({
 	taskId: {
 		type: 'none',
 		fieldName: 'taskId',
@@ -112,24 +113,41 @@ export const taskSchema: Schema<TaskForm> = {
 					label: '定时单次任务',
 				},
 			],
+			onChange: ({ target }) => {
+				taskForm.taskTimeExpression.value = undefined;
+				if (target.value === 1) {
+					taskForm.taskTimeExpression.type = 'none';
+				} else if (target.value === 2) {
+					taskForm.taskTimeExpression.type = 'input';
+					taskForm.taskTimeExpression.rules = [{ validator: validateCronExpression, trigger: 'change' }];
+					taskForm.taskTimeExpression.customConfig!.tip =
+						'Cron 表达式格式：秒(0-59) 分钟(0-59) 小时(0-23) 日(1-31) 月(1-12) 星期(0-6或SUN-SAT) 年(可选,1970-2099)。例如：20 3 * * * ? 表示每天 3:20 执行任务；20 3 8 * * ? 表示每月 8 号 3:20 执行任务；* 表示任意值；? 用于表示不指定某个字段的值。';
+				} else if (target.value === 3) {
+					taskForm.taskTimeExpression.type = 'datePicker';
+					taskForm.taskTimeExpression.rules = [getRequiredRule('请选择日期')];
+				}
+			},
 		},
 	},
 	taskTimeExpression: {
 		type: 'none',
 		fieldName: 'taskTimeExpression',
 		label: '任务时间表达式',
+		customConfig: {
+			tip: '',
+		},
 	},
 	templateId: {
 		type: 'select',
 		fieldName: 'templateId',
 		label: '关联模板',
 		rules: [getRequiredRule('请输入关联模板')],
-		options: [],
 		selectConfig: {
+			options: [],
 			showSearch: true,
 			onSearch: (value: string) => {
 				searchTemplateByName({ templateName: value }).then((res) => {
-					taskSchema.templateId.options = res.map((item) => ({
+					taskForm.templateId.selectConfig!.options = res.map((item) => ({
 						value: item.templateId,
 						label: item.templateName,
 					}));
@@ -137,7 +155,7 @@ export const taskSchema: Schema<TaskForm> = {
 			},
 			onChange: (value: any) => {
 				getMessageParam({ templateId: Number(value) }).then((res) => {
-					taskSchema.taskMessageParam.value = JSON.parse(res || '{}');
+					taskForm.taskMessageParam.value = JSON.parse(res || '{}');
 				});
 			},
 		},
@@ -151,7 +169,7 @@ export const taskSchema: Schema<TaskForm> = {
 			showSearch: true,
 			onSearch: (value: string) => {
 				searchPeopleGroupByName({ peopleGroupName: value }).then((res) => {
-					taskSchema.peopleGroupId.options = res.map((item) => ({
+					taskForm.peopleGroupId.selectConfig!.options = res.map((item) => ({
 						value: item.peopleGroupId,
 						label: item.peopleGroupName,
 					}));
@@ -165,24 +183,8 @@ export const taskSchema: Schema<TaskForm> = {
 		fieldName: 'taskMessageParam',
 		label: '任务消息参数',
 	},
-};
-export const taskSchemaMaps = [
-	async (data: Schema<TaskForm>) => {
-		if (data.taskType.value === 1) {
-			data.taskTimeExpression.type = 'none';
-		} else if (data.taskType.value === 2) {
-			data.taskTimeExpression.type = 'input';
-			data.taskTimeExpression.rules = [{ validator: validateCronExpression, trigger: 'blur' }];
-			data.taskTimeExpression.tip =
-				'Cron 表达式格式：秒(0-59) 分钟(0-59) 小时(0-23) 日(1-31) 月(1-12) 星期(0-6或SUN-SAT) 年(可选,1970-2099)。例如：20 3 * * * ? 表示每天 3:20 执行任务；20 3 8 * * ? 表示每月 8 号 3:20 执行任务；* 表示任意值；? 用于表示不指定某个字段的值。';
-		} else if (data.taskType.value === 3) {
-			data.taskTimeExpression.type = 'datePicker';
-			data.taskTimeExpression.rules = [getRequiredRule('请选择日期')];
-		}
-	},
-];
-
-export const filterSchema: Record<string, FormItem<keyof SearchParams>> = {
+});
+export const filterForm: Record<string, FormItem<keyof SearchParams>> = reactive({
 	taskName: {
 		type: 'input',
 		fieldName: 'taskName',
@@ -192,31 +194,35 @@ export const filterSchema: Record<string, FormItem<keyof SearchParams>> = {
 		type: 'select',
 		fieldName: 'taskType',
 		label: '任务类型',
-		options: [
-			{
-				key: 1,
-				value: '实时',
-			},
-			{
-				key: 2,
-				value: '定时',
-			},
-		],
+		selectConfig: {
+			options: [
+				{
+					key: 1,
+					value: '实时',
+				},
+				{
+					key: 2,
+					value: '定时',
+				},
+			],
+		},
 	},
 	taskStatus: {
 		type: 'select',
 		fieldName: 'taskStatus',
 		label: '任务状态',
-		options: [
-			{
-				value: 0,
-				label: '关闭',
-			},
-			{
-				value: 1,
-				label: '开启',
-			},
-		],
+		selectConfig: {
+			options: [
+				{
+					value: 0,
+					label: '关闭',
+				},
+				{
+					value: 1,
+					label: '开启',
+				},
+			],
+		},
 	},
 	startTime: {
 		type: 'datePicker',
@@ -228,4 +234,4 @@ export const filterSchema: Record<string, FormItem<keyof SearchParams>> = {
 		fieldName: 'endTime',
 		label: '结束时间',
 	},
-};
+});

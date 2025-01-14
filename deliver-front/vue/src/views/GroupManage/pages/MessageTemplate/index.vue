@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { ref, onBeforeMount, reactive, h, onUnmounted, watch } from 'vue'
+import { ref, onBeforeMount, reactive, h, watch } from 'vue'
 import { deleteMessageTemplate, getMessageTemplates, updateMessageTemplateStatus } from '@/api/messageTemplate'
-import { messageTemplateColumns, filterSchema, filterSchemaMaps } from "@/config/messageTemplate"
+import { messageTemplateColumns, filterForm } from "@/config/messageTemplate"
 import { CopyOutlined, DownOutlined, ExclamationCircleOutlined, FilterOutlined, CloseOutlined } from '@ant-design/icons-vue';
-import { copyToClipboard, dynamic, getDataFromSchema } from '@/utils/utils';
+import { copyToClipboard, getDataFromSchema } from '@/utils/utils';
 import { FormInstance, message, Modal, TableProps } from 'ant-design-vue';
 import SearchInput from '@/components/SearchInput/index.vue'
 import { debounce } from 'lodash'
@@ -16,7 +16,6 @@ const dataSource = ref<MessageTemplate[]>([])
 
 type Operation = 'add' | 'edit' | 'delete' | 'more' | 'testSend'
 const searchValue = ref('')
-const { dynamicData: filterForm, stop: stopFilterDynamic } = dynamic(filterSchema, filterSchemaMaps)
 const handleSearch = async () => {
 	const { records, total } = await getMessageTemplates({ templateName: searchValue.value, ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
 	dataSource.value = records
@@ -110,10 +109,6 @@ const handleDrawerClose = () => {
 }
 onBeforeMount(() => {
 	handleSearch()
-})
-onUnmounted(() => {
-	//停止监听动态数据
-	stopFilterDynamic()
 })
 </script>
 

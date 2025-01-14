@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { ref, onBeforeMount, reactive, h, onUnmounted, watch } from 'vue'
-import { channelAppColumns, filterSchema, filterSchemaMaps } from "@/config/channelApp"
+import { ref, onBeforeMount, reactive, h, watch } from 'vue'
+import { channelAppColumns, filterForm, setFilterOptionsDispatch } from "@/config/channelApp"
 import { CopyOutlined, DownOutlined, ExclamationCircleOutlined, FilterOutlined, CloseOutlined } from '@ant-design/icons-vue';
-import { copyToClipboard, dynamic, getDataFromSchema } from '@/utils/utils';
+import { copyToClipboard, getDataFromSchema } from '@/utils/utils';
 import { FormInstance, message, Modal, TableProps } from 'ant-design-vue';
 import SearchInput from '@/components/SearchInput/index.vue'
 import { debounce } from 'lodash'
@@ -14,7 +14,6 @@ import ChannelAppDrawer from './components/ChannelAppDrawer.vue';
 import { getColor } from '@/utils/table';
 type Operation = 'add' | 'edit' | 'delete' | 'more'
 const dataSource = ref<ChannelApp[]>([])
-const { dynamicData: filterForm, stop } = dynamic(filterSchema, filterSchemaMaps)
 const searchValue = ref('')
 const handleSearch = async () => {
 	const { records, total } = await getChannelApp({ appName: searchValue.value, ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
@@ -108,11 +107,8 @@ const changeStatus = async (record: Record<string, any>) => {
 	await updateChannelAppStatus({ appId: record.appId, appStatus: Number(record.appStatus) })
 }
 onBeforeMount(() => {
+	setFilterOptionsDispatch['channelType']()
 	handleSearch()
-})
-onUnmounted(() => {
-	//停止监听动态数据
-	stop()
 })
 </script>
 

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, onBeforeMount, reactive, h, watch } from 'vue'
 import { deleteTask, updateTaskStatus, getTask, sendRealTimeMessage } from '@/api/task'
-import { taskColumns, filterSchema } from "@/config/task"
+import { taskColumns, filterForm } from "@/config/task"
 import { CopyOutlined, DownOutlined, ExclamationCircleOutlined, FilterOutlined, CloseOutlined } from '@ant-design/icons-vue';
 import { copyToClipboard, getDataFromSchema } from '@/utils/utils';
 import { FormInstance, message, Modal, TableProps } from 'ant-design-vue';
@@ -14,7 +14,6 @@ import TaskGroupDrawer from './components/TaskGroupDrawer.vue';
 
 type Operation = 'add' | 'edit' | 'delete' | 'more' | 'sendTask'
 const dataSource = ref<Task[]>([])
-const filterForm = reactive(filterSchema)
 const searchValue = ref('')
 const handleSearch = async () => {
 	const { records, total } = await getTask({ taskName: searchValue.value, ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })

@@ -1,4 +1,4 @@
-import { RadioGroupProps, SelectProps, UploadProps } from 'ant-design-vue';
+import { InputProps, RadioGroupProps, SelectProps, TextAreaProps, UploadProps } from 'ant-design-vue';
 import { Rule } from 'ant-design-vue/es/form';
 export interface UploadConfig extends UploadProps {
 	title?: string;
@@ -28,17 +28,13 @@ export interface FormItem<T> {
 	fieldName: T;
 	label?: string;
 	depSock?: boolean;
-	placeholder?: string;
-	initValue?: any;
 	rules?: Rule[];
-	options?: SelectProps['options'];
-	disabled?: boolean;
-	textareaConfig?: Record<string, any>;
+	textareaConfig?: TextAreaProps;
 	editorConfig?: Record<string, any>;
 	uploadConifg?: UploadConfig;
 	buttonConfig?: Record<string, any>;
 	radioGroupConfig?: RadioGroupProps;
+	inputConfig?: InputProps;
 	selectConfig?: SelectProps;
-	max?: number;
-	tip?: string;
+	customConfig?: Record<string, any>;
 }

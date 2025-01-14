@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { messageTemplateLocale, messageTemplateSchema, messageTemplateSchemaDeps, testMessageSchema } from '@/config/messageTemplate';
+import { messageTemplateLocale, messageTemplateForm, testMessageForm, setOptionsDispatch } from '@/config/messageTemplate';
 import { DrawerProps } from '@/types/components';
-import { copyToClipboard, dynamic, getDataFromSchema } from '@/utils/utils';
-import { message } from 'ant-design-vue';
-import { ref, reactive, onUnmounted, watch, nextTick } from 'vue';
+import { copyToClipboard, getDataFromSchema } from '@/utils/utils';
+import { FormInstance, message } from 'ant-design-vue';
+import { ref, reactive, watch, nextTick } from 'vue';
 import { CopyOutlined } from '@ant-design/icons-vue';
 import { getMessageParam } from '@/api/system';
 import { addMessageTemplate, testSendMessage, updateMessageTemplate } from '@/api/messageTemplate';
@@ -14,7 +14,7 @@ const props = defineProps<{
 	record: Record<string, any>
 }>()
 const emit = defineEmits(['close'])
-const formRef = ref()
+const formRef = ref<FormInstance>()
 
 const titleList: Record<Operation, string> = {
 	add: '新增模板',
@@ -49,14 +49,15 @@ watch(props, (newProps) => {
 	newProps.operation === 'more' && initMoreDate();
 	newProps.operation === 'testSend' && initTestMessageFormDate();
 })
-
-const { dynamicData: messageTemplateForm, stop } = dynamic(messageTemplateSchema, messageTemplateSchemaDeps)
-const testMessageForm = reactive(testMessageSchema)
 const initFormDate = () => {
-	nextTick(() => {
+	nextTick(async () => {
 		for (const key in messageTemplateForm) {
 			messageTemplateForm[key].value = props.record[key]
 		}
+		setOptionsDispatch['channelType']({ usersType: messageTemplateForm.usersType.value });
+		setOptionsDispatch['channelProviderType']({ channelType: messageTemplateForm.channelType.value });
+		setOptionsDispatch['messageType']({ channelType: messageTemplateForm.channelType.value, channelProviderType: messageTemplateForm.channelProviderType.value });
+		setOptionsDispatch['appId']({ channelType: messageTemplateForm.channelType.value, channelProviderType: messageTemplateForm.channelProviderType.value });
 	})
 }
 const initTestMessageFormDate = () => {
@@ -84,31 +85,28 @@ const initMoreDate = () => {
 const moreInfo = reactive<Array<{ label: string; value: any }>>([])
 const operationDispatch = {
 	add: async () => {
-		await formRef.value.validate()
+		await formRef.value?.validate()
 		await addMessageTemplate(getDataFromSchema(messageTemplateForm))
 		message.success('新增成功')
 		handleCancel()
 	},
 	edit: async () => {
-		await formRef.value.validate()
+		await formRef.value?.validate()
 		await updateMessageTemplate(getDataFromSchema(messageTemplateForm))
 		message.success('编辑成功')
 		handleCancel()
 	},
 	testSend: async () => {
-		await formRef.value.validate()
+		await formRef.value?.validate()
 		await testSendMessage(getDataFromSchema(testMessageForm))
 	}
 }
 
 const handleCancel = () => {
-	props.operation !== 'more' && formRef.value.resetFields()
+	props.operation !== 'more' && formRef.value?.resetFields()
 	drawerState.open = false
 	emit('close')
 }
-onUnmounted(() => {
-	stop()
-})
 
 </script>
 

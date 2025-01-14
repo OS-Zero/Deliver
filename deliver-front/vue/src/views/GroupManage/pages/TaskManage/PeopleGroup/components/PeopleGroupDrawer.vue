@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { savePeopleGroup, updatePeopleGroup } from '@/api/peopleGroup';
-import { peopleGroupLocale, peopleGroupSchema, peopleGroupSchemaDeps } from '@/config/peopleGroup';
+import { peopleGroupLocale, peopleGroupForm } from '@/config/peopleGroup';
 import { DrawerProps } from '@/types/components';
-import { dynamic, getDataFromSchema } from '@/utils/utils';
+import { getDataFromSchema } from '@/utils/utils';
 import { message } from 'ant-design-vue';
-import { ref, reactive, onUnmounted, watch, nextTick } from 'vue';
+import { ref, reactive, watch, nextTick } from 'vue';
 
 type Operation = 'add' | 'edit' | 'more'
 const props = defineProps<{
@@ -37,8 +37,6 @@ watch(props, (newProps) => {
 	newProps.operation === 'edit' && newProps.open === true && initFormDate();
 	newProps.operation === 'more' && initMoreDate();
 })
-
-const { dynamicData: peopleGroupForm, stop } = dynamic(peopleGroupSchema, peopleGroupSchemaDeps)
 const initFormDate = () => {
 	nextTick(() => {
 		for (const key in peopleGroupForm) {
@@ -81,9 +79,6 @@ const handleCancel = () => {
 	drawerState.open = false
 	emit('close')
 }
-onUnmounted(() => {
-	stop()
-})
 
 </script>
 

@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { saveTask, updateTask } from '@/api/task';
-import { taskLocale, taskSchema, taskSchemaMaps } from '@/config/task';
+import { taskLocale, taskForm } from '@/config/task';
 import { DrawerProps } from '@/types/components';
-import { dynamic, getDataFromSchema } from '@/utils/utils';
+import { getDataFromSchema } from '@/utils/utils';
 import { message } from 'ant-design-vue';
-import { ref, reactive, onUnmounted, watch, nextTick } from 'vue';
+import { ref, reactive, watch, nextTick } from 'vue';
 
 type Operation = 'add' | 'edit' | 'more'
 const props = defineProps<{
@@ -38,7 +38,6 @@ watch(props, (newProps) => {
 	newProps.operation === 'more' && initMoreDate();
 })
 
-const { dynamicData: taskForm, stop } = dynamic(taskSchema, taskSchemaMaps)
 const initFormDate = () => {
 	nextTick(() => {
 		for (const key in taskForm) {
@@ -81,9 +80,6 @@ const handleCancel = () => {
 	drawerState.open = false
 	emit('close')
 }
-onUnmounted(() => {
-	stop()
-})
 
 </script>
 

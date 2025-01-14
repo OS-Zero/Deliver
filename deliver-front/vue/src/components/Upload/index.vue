@@ -8,9 +8,10 @@ const props = defineProps<{
 	modelValue: File | UploadFile<any>[]
 	config?: UploadConfig
 }>()
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'change'])
 const fileList = ref()
 const handleChange = ({ file }) => {
+	emit('change', file)
 	emit('update:modelValue', (props.config?.maxCount && props.config.maxCount === 1) ? file : [file])
 }
 const beforeUpload: UploadProps['beforeUpload'] = file => {

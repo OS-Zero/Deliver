@@ -1,19 +1,18 @@
 <script lang="ts" setup>
-import { ref, onBeforeMount, reactive, h, onUnmounted, watch } from 'vue'
+import { ref, onBeforeMount, reactive, h, watch } from 'vue'
 import { CopyOutlined, DownOutlined, FilterOutlined, CloseOutlined } from '@ant-design/icons-vue';
-import { copyToClipboard, dynamic, getDataFromSchema } from '@/utils/utils';
+import { copyToClipboard, getDataFromSchema } from '@/utils/utils';
 import { FormInstance, message } from 'ant-design-vue';
 import SearchInput from '@/components/SearchInput/index.vue'
 import { debounce } from 'lodash'
 import { usePagination } from '@/hooks/table';
 import { getPlatformFile } from '@/api/platformFile';
 import { PlatformFile } from '@/types/platformFile';
-import { filterSchema, filterSchemaMaps, platformFileColumns } from '@/config/platformFile';
+import { filterForm, platformFileColumns, setFilterOptionsDispatch } from '@/config/platformFile';
 import PlatformFileDrawer from './components/PlatformFileDrawer.vue';
 import { getColor } from '@/utils/table';
 type Operation = 'upload' | 'more'
 const dataSource = ref<PlatformFile[]>([])
-const { dynamicData: filterForm, stop } = dynamic(filterSchema, filterSchemaMaps)
 const searchValue = ref('')
 const handleSearch = async () => {
 	const { records, total } = await getPlatformFile({ platformFileName: searchValue.value, ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
@@ -59,10 +58,8 @@ const handleDrawerClose = () => {
 	drawerState.operation === 'upload' && resetPagination() && handleSearch();
 }
 onBeforeMount(() => {
+	setFilterOptionsDispatch['channelType']()
 	handleSearch()
-})
-onUnmounted(() => {
-	stop()
 })
 </script>
 

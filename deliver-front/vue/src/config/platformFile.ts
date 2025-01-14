@@ -1,10 +1,12 @@
-import { FormItem } from '@/types/form';
 import type { ColumnsType } from 'ant-design-vue/es/table/interface';
 import { getRangeRule, getRequiredRule } from '@/utils/validate';
 import { SearchParams, UploadPlatformFile } from '@/types/platformFile';
 import { getChannelProviderType, getChannelType, getMessageType, getPlatformFileType } from '@/api/system';
 import { getAppByChannel } from '@/api/channelApp';
 import { notUndefined } from '@/utils/utils';
+import { reactive } from 'vue';
+import { Schema } from '@/types';
+import { Channel, ChannelProvider } from '@/types/channelApp';
 export const platformFileLocale = {
 	platformFileId: '文件 Id',
 	platformFileName: '文件名',
@@ -66,8 +68,54 @@ export const platformFileColumns: ColumnsType = [
 		width: 270,
 	},
 ];
-type Schema<T> = Record<string, FormItem<keyof T>>;
-export const platformFileSchema: Schema<UploadPlatformFile> = {
+const generateDispatch = (form: Schema<any>) => {
+	return {
+		channelType: async () => {
+			form.channelType.selectConfig!.options = (await getChannelType({ usersType: -2 })).map((item) => ({
+				value: item.channelType,
+				label: item.channelTypeName,
+			}));
+		},
+		channelProviderType: async (data: { channelType: Channel['channelType'] }) => {
+			if (notUndefined(data.channelType)) {
+				form.channelProviderType.selectConfig!.options = (await getChannelProviderType(data)).map((item) => ({
+					value: item.channelProviderType,
+					label: item.channelProviderTypeName,
+				}));
+				!form.channelProviderType.selectConfig!.options.some((item) => item.value === form.channelProviderType.value) &&
+					(form.channelProviderType.value = undefined);
+			}
+		},
+		messageType: async (data: { channelType: Channel['channelType']; channelProviderType: ChannelProvider['channelProviderType'] }) => {
+			if (notUndefined(data.channelType) && notUndefined(data.channelProviderType)) {
+				form.messageType.selectConfig!.options = (await getMessageType(data)).map((item) => ({
+					value: item.messageType,
+					label: item.messageTypeName,
+				}));
+				!form.messageType.selectConfig!.options.some((item) => item.value === form.messageType.value) && (form.messageType.value = undefined);
+			}
+		},
+		platformFileType: async (data: { channelType: Channel['channelType'] }) => {
+			form.platformFileType.selectConfig!.options = (await getPlatformFileType(data)).map((item) => ({
+				value: item.platformFileType,
+				label: item.platformFileTypeName,
+			}));
+			!form.platformFileType.selectConfig!.options.some((item) => item.value === form.platformFileType.value) &&
+				(form.platformFileType.value = undefined);
+		},
+		appId: async (data: { channelType: Channel['channelType']; channelProviderType: ChannelProvider['channelProviderType'] }) => {
+			if (notUndefined(data.channelType) && notUndefined(data.channelProviderType)) {
+				form.appId.selectConfig!.options = (await getAppByChannel(data)).map((item) => ({
+					value: item.appId,
+					label: item.appName,
+				}));
+				!form.appId.selectConfig!.options.some((item) => item.value === form.appId.value) && (form.appId.value = undefined);
+			}
+		},
+	};
+};
+
+export const platformFileForm: Schema<UploadPlatformFile> = reactive({
 	platformFile: {
 		value: [],
 		type: 'upload',
@@ -95,124 +143,50 @@ export const platformFileSchema: Schema<UploadPlatformFile> = {
 		fieldName: 'channelType',
 		label: '渠道类型',
 		rules: [getRequiredRule('请选择渠道类型')],
-		options: [],
+		selectConfig: {
+			options: [],
+			onChange: (value: any) => {
+				setOptionsDispatch['channelProviderType']({ channelType: value });
+				setOptionsDispatch['platformFileType']({ channelType: value });
+				setOptionsDispatch['messageType']({ channelType: value, channelProviderType: platformFileForm.channelProviderType.value });
+				setOptionsDispatch['appId']({ channelType: value, channelProviderType: platformFileForm.channelProviderType.value });
+			},
+		},
 	},
 	channelProviderType: {
 		type: 'select',
 		fieldName: 'channelProviderType',
 		label: '渠道供应商类型',
 		rules: [getRequiredRule('请选择渠道供应商类型')],
-		options: [],
+		selectConfig: {
+			options: [],
+			onChange: (value: any) => {
+				setOptionsDispatch['messageType']({ channelType: platformFileForm.channelType.value, channelProviderType: value });
+				setOptionsDispatch['appId']({ channelType: platformFileForm.channelType.value, channelProviderType: value });
+			},
+		},
 	},
 	platformFileType: {
 		type: 'select',
 		fieldName: 'platformFileType',
 		label: '文件类型',
 		rules: [getRequiredRule('请选择文件类型')],
-		options: [],
+		selectConfig: {
+			options: [],
+		},
 	},
 	appId: {
 		type: 'select',
 		fieldName: 'appId',
 		label: '关联应用',
 		rules: [getRequiredRule('请选择关联应用')],
-		options: [],
+		selectConfig: {
+			options: [],
+		},
 	},
-};
-export const platformFileSchemaDeps = [
-	async (data: Schema<UploadPlatformFile>) => {
-		data.channelType.value = undefined;
-		try {
-			data.channelType.options = (await getChannelType({ usersType: -2 })).map((item) => ({
-				value: item.channelType,
-				label: item.channelTypeName,
-			}));
-		} catch (error) {
-			data.channelType.options = [];
-		}
-	},
-	async (data: Schema<UploadPlatformFile>) => {
-		try {
-			if (notUndefined(data.channelType.value)) {
-				const channelProviderTypeList = await getChannelProviderType({ channelType: data.channelType.value });
-				data.channelProviderType.options = channelProviderTypeList.map((item) => ({
-					value: item.channelProviderType,
-					label: item.channelProviderTypeName,
-				}));
-				!data.channelProviderType.options.some((item) => item.value === data.channelProviderType.value) &&
-					(data.channelProviderType.value = undefined);
-			} else {
-				data.channelProviderType.value = undefined;
-				data.channelProviderType.options = [];
-			}
-		} catch (error) {
-			data.channelProviderType.value = undefined;
-			data.messageType.value = undefined;
-			data.channelProviderType.options = [];
-			data.messageType.options = [];
-		}
-	},
-	async (data: Schema<UploadPlatformFile>) => {
-		try {
-			if (notUndefined(data.channelType.value) && notUndefined(data.channelProviderType.value)) {
-				const messageTypeList = await getMessageType({
-					channelType: data.channelType.value,
-					channelProviderType: data.channelProviderType.value,
-				});
-				data.messageType.options = messageTypeList.map((item) => ({
-					value: item.messageType,
-					label: item.messageTypeName,
-				}));
-				!data.messageType.options.some((item) => item.value === data.messageType.value) && (data.messageType.value = undefined);
-			} else {
-				data.messageType.value = undefined;
-				data.messageType.options = [];
-			}
-		} catch (error) {
-			data.messageType.value = undefined;
-			data.messageType.options = [];
-		}
-	},
-	async (data: Schema<UploadPlatformFile>) => {
-		try {
-			if (notUndefined(data.channelType.value)) {
-				data.platformFileType.options = (await getPlatformFileType({ channelType: data.channelType.value })).map((item) => ({
-					value: item.platformFileType,
-					label: item.platformFileTypeName,
-				}));
-				!data.platformFileType.options.some((item) => item.value === data.platformFileType.value) && (data.platformFileType.value = undefined);
-			} else {
-				data.platformFileType.value = undefined;
-				data.platformFileType.options = [];
-			}
-		} catch (error) {
-			data.platformFileType.value = undefined;
-			data.platformFileType.options = [];
-		}
-	},
-	async (data: Schema<UploadPlatformFile>) => {
-		try {
-			if (notUndefined(data.channelType.value) && notUndefined(data.channelProviderType.value)) {
-				const appOptions = await getAppByChannel({
-					channelType: data.channelType.value,
-					channelProviderType: data.channelProviderType.value,
-				});
-				data.appId.options = appOptions.map((item) => ({
-					value: item.appId,
-					label: item.appName,
-				}));
-				!data.appId.options.some((item) => item.value === data.appId.value) && (data.appId.value = undefined);
-			} else {
-				data.appId.value = undefined;
-				data.appId.options = [];
-			}
-		} catch (error) {
-			data.appId.value = undefined;
-			data.appId.options = [];
-		}
-	},
-];
-export const filterSchema: Schema<SearchParams> = {
+});
+export const setOptionsDispatch = generateDispatch(platformFileForm);
+export const filterForm: Schema<SearchParams> = reactive({
 	platformFileKey: {
 		type: 'input',
 		fieldName: 'platformFileKey',
@@ -222,25 +196,43 @@ export const filterSchema: Schema<SearchParams> = {
 		type: 'select',
 		fieldName: 'channelType',
 		label: '渠道类型',
-		options: [],
+		selectConfig: {
+			options: [],
+			onChange: (value: any) => {
+				setFilterOptionsDispatch['channelProviderType']({ channelType: value });
+				setFilterOptionsDispatch['platformFileType']({ channelType: value });
+				setFilterOptionsDispatch['messageType']({ channelType: value, channelProviderType: platformFileForm.channelProviderType.value });
+				setFilterOptionsDispatch['appId']({ channelType: value, channelProviderType: platformFileForm.channelProviderType.value });
+			},
+		},
 	},
 	channelProviderType: {
 		type: 'select',
 		fieldName: 'channelProviderType',
 		label: '渠道供应商类型',
-		options: [],
+		selectConfig: {
+			options: [],
+			onChange: (value: any) => {
+				setFilterOptionsDispatch['messageType']({ channelType: platformFileForm.channelType.value, channelProviderType: value });
+				setFilterOptionsDispatch['appId']({ channelType: platformFileForm.channelType.value, channelProviderType: value });
+			},
+		},
 	},
 	platformFileType: {
 		type: 'select',
 		fieldName: 'platformFileType',
 		label: '文件类型',
-		options: [],
+		selectConfig: {
+			options: [],
+		},
 	},
 	appId: {
 		type: 'select',
 		fieldName: 'appId',
 		label: '关联应用',
-		options: [],
+		selectConfig: {
+			options: [],
+		},
 	},
 	startTime: {
 		type: 'datePicker',
@@ -252,5 +244,5 @@ export const filterSchema: Schema<SearchParams> = {
 		fieldName: 'endTime',
 		label: '结束时间',
 	},
-};
-export const filterSchemaMaps = platformFileSchemaDeps;
+});
+export const setFilterOptionsDispatch = generateDispatch(filterForm);

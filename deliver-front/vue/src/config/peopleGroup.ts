@@ -4,7 +4,7 @@ import { SearchParams, PeopleGroupForm } from '@/types/peopleGroup';
 import { SelectProps } from 'ant-design-vue';
 import { analysisExcelTemplateFile } from '@/api/peopleGroup';
 import { getRangeRule, getRequiredRule } from '@/utils/validate';
-import { notUndefined } from '@/utils/utils';
+import { reactive } from 'vue';
 import { Schema } from '@/types';
 export const peopleGroupLocale = {
 	peopleGroupId: '关联人群 Id',
@@ -72,7 +72,7 @@ const validatePeopleGroupList = (_rule: any, value: any) => {
 const getTextareaDescription = (num: number) => {
 	return `使用英文逗号分割，最多可输入100个；共输入了 <span style="color:red">${num}</span> 个号码`;
 };
-export const peopleGroupSchema: Schema<PeopleGroupSchema> = {
+export const peopleGroupForm: Schema<PeopleGroupSchema> = reactive({
 	peopleGroupId: {
 		type: 'none',
 		fieldName: 'peopleGroupId',
@@ -94,7 +94,9 @@ export const peopleGroupSchema: Schema<PeopleGroupSchema> = {
 		fieldName: 'usersType',
 		label: '用户类型',
 		rules: [getRequiredRule('请选择用户类型')],
-		options: userTypes,
+		selectConfig: {
+			options: userTypes,
+		},
 	},
 	$radioGroup: {
 		value: 0,
@@ -111,6 +113,16 @@ export const peopleGroupSchema: Schema<PeopleGroupSchema> = {
 					value: 1,
 				},
 			],
+			onChange: ({ target }) => {
+				const value = target.value;
+				if (value === 0) {
+					peopleGroupForm.peopleGroupList.type = 'none';
+					peopleGroupForm.$excelTemplateFile.type = 'upload';
+				} else if (value === 1) {
+					peopleGroupForm.$excelTemplateFile.type = 'none';
+					peopleGroupForm.peopleGroupList.type = 'textarea';
+				}
+			},
 		},
 	},
 	$excelTemplateFile: {
@@ -122,6 +134,12 @@ export const peopleGroupSchema: Schema<PeopleGroupSchema> = {
 			description: '单次人群最多支持上传100条，请上传csv、xlsx格式文件，大小10MB以内',
 			maxCount: 1,
 		},
+		customConfig: {
+			onChange: async (value: any) => {
+				peopleGroupForm.peopleGroupList.value = undefined;
+				peopleGroupForm.peopleGroupList.value = await analysisExcelTemplateFile({ file: value });
+			},
+		},
 	},
 	peopleGroupList: {
 		type: 'none',
@@ -130,43 +148,28 @@ export const peopleGroupSchema: Schema<PeopleGroupSchema> = {
 		rules: [{ required: true, validator: validatePeopleGroupList, trigger: 'blur' }],
 		textareaConfig: {
 			rows: 10,
-			description: getTextareaDescription(0),
+			onChange: ({ target }) => {
+				const list = target.value;
+				if (list) {
+					peopleGroupForm.peopleGroupList.customConfig!.tip = getTextareaDescription(list.split(',').length);
+				} else {
+					peopleGroupForm.peopleGroupList.customConfig!.tip = getTextareaDescription(0);
+				}
+			},
+		},
+		customConfig: {
+			tip: getTextareaDescription(0),
 		},
 	},
-};
-export const peopleGroupSchemaDeps = [
-	async (data: Schema<PeopleGroupSchema>) => {
-		if (notUndefined(data.$excelTemplateFile.value)) {
-			data.peopleGroupList.value = undefined;
-			data.peopleGroupList.value = await analysisExcelTemplateFile({ file: data.$excelTemplateFile.value });
-		}
-	},
-	async (data: Schema<PeopleGroupSchema>) => {
-		const radio = data.$radioGroup.value;
-		if (radio === 0) {
-			data.peopleGroupList.type = 'none';
-			data.$excelTemplateFile.type = 'upload';
-		} else if (radio === 1) {
-			data.$excelTemplateFile.type = 'none';
-			data.peopleGroupList.type = 'textarea';
-		}
-	},
-	async (data: Schema<PeopleGroupSchema>) => {
-		const list = data.peopleGroupList.value;
-		if (list) {
-			data.peopleGroupList.textareaConfig!.description = getTextareaDescription(list.split(',').length);
-		} else {
-			data.peopleGroupList.textareaConfig!.description = getTextareaDescription(0);
-		}
-	},
-];
-
-export const filterSchema: Record<string, FormItem<keyof SearchParams>> = {
+});
+export const filterForm: Record<string, FormItem<keyof SearchParams>> = reactive({
 	usersType: {
 		type: 'select',
 		fieldName: 'usersType',
 		label: '用户类型',
-		options: userTypes,
+		selectConfig: {
+			options: userTypes,
+		},
 	},
 	startTime: {
 		type: 'datePicker',
@@ -178,4 +181,4 @@ export const filterSchema: Record<string, FormItem<keyof SearchParams>> = {
 		fieldName: 'endTime',
 		label: '结束时间',
 	},
-};
+});

@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { DrawerProps } from '@/types/components';
-import { dynamic, getDataFromSchema } from '@/utils/utils';
+import { getDataFromSchema } from '@/utils/utils';
 import { message } from 'ant-design-vue';
-import { ref, reactive, onUnmounted, watch, nextTick } from 'vue';
-import { channelAppLocale, channelAppSchema, channelAppSchemaDeps } from '@/config/channelApp';
+import { ref, reactive, watch, nextTick, onBeforeMount } from 'vue';
+import { channelAppLocale, channelAppForm, setOptionsDispatch } from '@/config/channelApp';
 import { saveChannelApp, updateChannelApp } from '@/api/channelApp';
 type Operation = 'add' | 'edit' | 'more'
 const props = defineProps<{
@@ -37,14 +37,15 @@ watch(props, (newProps) => {
 	newProps.operation === 'more' && initMoreDate();
 })
 
-const { dynamicData: channelAppForm, stop } = dynamic(channelAppSchema, channelAppSchemaDeps)
 const initFormDate = () => {
 	nextTick(() => {
-		channelAppForm.appConfig.depSock = true
 		for (const key in channelAppForm) {
 			if (key === 'appConfig') channelAppForm[key].value = JSON.parse(props.record[key] || "{}")
 			else channelAppForm[key].value = props.record[key]
 		}
+		setOptionsDispatch['channelType']();
+		setOptionsDispatch['channelProviderType']({ channelType: channelAppForm.channelType.value });
+		setOptionsDispatch['messageType']({ channelType: channelAppForm.channelType.value, channelProviderType: channelAppForm.channelProviderType.value });
 	})
 }
 const initMoreDate = () => {
@@ -81,10 +82,9 @@ const handleCancel = () => {
 	drawerState.open = false
 	emit('close')
 }
-onUnmounted(() => {
-	stop()
+onBeforeMount(() => {
+	setOptionsDispatch['channelType']()
 })
-
 </script>
 
 <template>

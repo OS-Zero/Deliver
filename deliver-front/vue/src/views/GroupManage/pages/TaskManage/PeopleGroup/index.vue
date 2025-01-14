@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, onBeforeMount, reactive, h, watch, onUnmounted } from 'vue'
 import { deletePeopleGroup, getExcelTemplateFile, getPeopleGroup } from '@/api/peopleGroup'
-import { filterSchema, peopleGroupColumns } from "@/config/peopleGroup"
+import { filterForm, peopleGroupColumns } from "@/config/peopleGroup"
 import { CopyOutlined, DownOutlined, ExclamationCircleOutlined, FilterOutlined, CloseOutlined } from '@ant-design/icons-vue';
 import { copyToClipboard, getDataFromSchema } from '@/utils/utils';
 import { FormInstance, message, Modal, TableProps } from 'ant-design-vue';
@@ -15,7 +15,6 @@ import { getColor } from '@/utils/table';
 
 type Operation = 'add' | 'edit' | 'delete' | 'more' | 'download'
 const dataSource = ref<PeopleGroup[]>([])
-const filterForm = reactive(filterSchema)
 const searchValue = ref('')
 const handleSearch = async () => {
 	const { records, total } = await getPeopleGroup({ peopleGroupName: searchValue.value, ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })

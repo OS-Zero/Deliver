@@ -1,11 +1,15 @@
 import { FormItem } from '@/types/form';
 import type { ColumnsType } from 'ant-design-vue/es/table/interface';
 import { SelectProps } from 'ant-design-vue';
-import { MessageTemplateForm, SearchParams, TestSendMessage } from '@/types/messageTemplate';
+import { MessageTemplateForm, SearchParams, TestSendMessage, User } from '@/types/messageTemplate';
 import { getChannelType, getChannelProviderType, getMessageType } from '@/api/system';
 import { getAppByChannel } from '@/api/channelApp';
 import { notUndefined } from '@/utils/utils';
 import { getRangeRule, getRequiredRule } from '@/utils/validate';
+import { h, reactive } from 'vue';
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons-vue';
+import { Schema } from '@/types';
+import { Channel, ChannelProvider } from '@/types/channelApp';
 export const messageTemplateLocale = {
 	templateId: '模板 Id',
 	templateDescription: '模板描述',
@@ -86,9 +90,50 @@ const userTypes: SelectProps['options'] = JSON.parse(localStorage.getItem('start
 		label: item.usersTypeName,
 	}),
 );
+const generateDispatch = (form: Schema<any>) => {
+	return {
+		channelType: async (data: { usersType: User['usersType'] }) => {
+			if (notUndefined(data.usersType)) {
+				form.channelType.selectConfig!.options = (await getChannelType(data)).map((item) => ({
+					value: item.channelType,
+					label: item.channelTypeName,
+				}));
+				!form.channelType.selectConfig!.options.some((item) => item.value === form.channelType.value) && (form.channelType.value = undefined);
+			}
+		},
+		channelProviderType: async (data: { channelType: Channel['channelType'] }) => {
+			if (notUndefined(data.channelType)) {
+				form.channelProviderType.selectConfig!.options = (await getChannelProviderType(data)).map((item) => ({
+					value: item.channelProviderType,
+					label: item.channelProviderTypeName,
+				}));
+				!form.channelProviderType.selectConfig!.options.some((item) => item.value === form.channelProviderType.value) &&
+					(form.channelProviderType.value = undefined);
+			}
+		},
+		messageType: async (data: { channelType: Channel['channelType']; channelProviderType: ChannelProvider['channelProviderType'] }) => {
+			if (notUndefined(data.channelType) && notUndefined(data.channelProviderType)) {
+				form.messageType.selectConfig!.options = (await getMessageType(data)).map((item) => ({
+					value: item.messageType,
+					label: item.messageTypeName,
+				}));
+				!form.messageType.selectConfig!.options.some((item) => item.value === form.messageType.value) && (form.messageType.value = undefined);
+			}
+		},
+		appId: async (data: { channelType: Channel['channelType']; channelProviderType: ChannelProvider['channelProviderType'] }) => {
+			if (notUndefined(data.channelType) && notUndefined(data.channelProviderType)) {
+				form.appId.selectConfig!.options = (await getAppByChannel(data)).map((item) => ({
+					value: item.appId,
+					label: item.appName,
+				}));
+				!form.appId.selectConfig!.options.some((item) => item.value === form.appId.value) && (form.appId.value = undefined);
+			}
+		},
+	};
+};
 
 type MessageTemplateSchema = Record<keyof MessageTemplateForm, FormItem<keyof MessageTemplateForm>>;
-export const messageTemplateSchema: MessageTemplateSchema = {
+export const messageTemplateForm = reactive<MessageTemplateSchema>({
 	templateId: {
 		type: 'none',
 		fieldName: 'templateId',
@@ -110,159 +155,121 @@ export const messageTemplateSchema: MessageTemplateSchema = {
 		fieldName: 'usersType',
 		label: '用户类型',
 		rules: [getRequiredRule('请选择用户类型')],
-		options: userTypes,
+		selectConfig: {
+			options: userTypes,
+			onChange: async (value: any) => {
+				setOptionsDispatch['channelType']({ usersType: value });
+			},
+		},
 	},
 	channelType: {
 		type: 'select',
 		fieldName: 'channelType',
 		label: '渠道类型',
 		rules: [getRequiredRule('请选择渠道类型')],
-		options: [],
+		selectConfig: {
+			options: [],
+			onChange: async (value: any) => {
+				setOptionsDispatch['channelProviderType']({ channelType: value });
+				setOptionsDispatch['messageType']({ channelType: value, channelProviderType: messageTemplateForm.channelProviderType.value });
+				setOptionsDispatch['appId']({ channelType: value, channelProviderType: messageTemplateForm.channelProviderType.value });
+			},
+		},
 	},
 	channelProviderType: {
 		type: 'select',
 		fieldName: 'channelProviderType',
 		label: '渠道供应商类型',
 		rules: [getRequiredRule('请选择渠道供应商类型')],
-		options: [],
+		selectConfig: {
+			options: [],
+			onChange: async (value: any) => {
+				setOptionsDispatch['messageType']({ channelType: messageTemplateForm.channelType.value, channelProviderType: value });
+				setOptionsDispatch['appId']({ channelType: messageTemplateForm.channelType.value, channelProviderType: value });
+			},
+		},
 	},
 	messageType: {
 		type: 'select',
 		fieldName: 'messageType',
 		label: '消息类型',
 		rules: [getRequiredRule('请选消息类型')],
-		options: [],
+		selectConfig: {
+			options: [],
+		},
 	},
 	appId: {
 		type: 'select',
 		fieldName: 'appId',
 		label: '关联应用',
 		rules: [getRequiredRule('请选择关联应用')],
-		options: [],
+		selectConfig: {
+			options: [],
+		},
 	},
-};
-
-export const messageTemplateSchemaDeps = [
-	async (data: MessageTemplateSchema) => {
-		try {
-			if (notUndefined(data.usersType.value)) {
-				data.channelType.options = (await getChannelType({ usersType: data.usersType.value })).map((item) => ({
-					value: item.channelType,
-					label: item.channelTypeName,
-				}));
-				!data.channelType.options.some((item) => item.value === data.channelType.value) && (data.channelType.value = undefined);
-			} else {
-				data.channelType.value = undefined;
-				data.channelType.options = [];
-			}
-		} catch (error) {
-			data.channelType.value = undefined;
-			data.channelType.options = [];
-		}
-	},
-	async (data: MessageTemplateSchema) => {
-		try {
-			if (notUndefined(data.channelType.value)) {
-				const channelProviderTypeList = await getChannelProviderType({ channelType: data.channelType.value });
-				data.channelProviderType.options = channelProviderTypeList.map((item) => ({
-					value: item.channelProviderType,
-					label: item.channelProviderTypeName,
-				}));
-				!data.channelProviderType.options.some((item) => item.value === data.channelProviderType.value) &&
-					(data.channelProviderType.value = undefined);
-			} else {
-				data.channelProviderType.value = undefined;
-				data.channelProviderType.options = [];
-			}
-		} catch (error) {
-			data.channelProviderType.value = undefined;
-			data.messageType.value = undefined;
-			data.channelProviderType.options = [];
-			data.messageType.options = [];
-		}
-	},
-	async (data: MessageTemplateSchema) => {
-		try {
-			if (notUndefined(data.channelType.value) && notUndefined(data.channelProviderType.value)) {
-				const messageTypeList = await getMessageType({
-					channelType: data.channelType.value,
-					channelProviderType: data.channelProviderType.value,
-				});
-				data.messageType.options = messageTypeList.map((item) => ({
-					value: item.messageType,
-					label: item.messageTypeName,
-				}));
-				!data.messageType.options.some((item) => item.value === data.messageType.value) && (data.messageType.value = undefined);
-			} else {
-				data.messageType.value = undefined;
-				data.messageType.options = [];
-			}
-		} catch (error) {
-			data.messageType.value = undefined;
-			data.messageType.options = [];
-		}
-	},
-	async (data: MessageTemplateSchema) => {
-		try {
-			if (notUndefined(data.channelType.value) && notUndefined(data.channelProviderType.value)) {
-				const appOptions = await getAppByChannel({
-					channelType: data.channelType.value,
-					channelProviderType: data.channelProviderType.value,
-				});
-				data.appId.options = appOptions.map((item) => ({
-					value: item.appId,
-					label: item.appName,
-				}));
-				!data.appId.options.some((item) => item.value === data.appId.value) && (data.appId.value = undefined);
-			} else {
-				data.appId.value = undefined;
-				data.appId.options = [];
-			}
-		} catch (error) {
-			data.appId.value = undefined;
-			data.appId.options = [];
-		}
-	},
-];
-export const filterSchema: Record<string, FormItem<keyof SearchParams>> = {
+});
+export const setOptionsDispatch = generateDispatch(messageTemplateForm);
+export const filterForm = reactive<Record<string, FormItem<keyof SearchParams>>>({
 	usersType: {
 		type: 'select',
 		fieldName: 'usersType',
 		label: '用户类型',
-		options: userTypes,
+		selectConfig: {
+			options: userTypes,
+			onChange: async (value: any) => {
+				setFilterOptionsDispatch['channelType']({ usersType: value });
+			},
+		},
 	},
 	channelType: {
 		type: 'select',
 		fieldName: 'channelType',
 		label: '渠道类型',
-		options: [],
+		selectConfig: {
+			options: [],
+			onChange: async (value: any) => {
+				setFilterOptionsDispatch['channelProviderType']({ channelType: value });
+				setFilterOptionsDispatch['messageType']({ channelType: value, channelProviderType: messageTemplateForm.channelProviderType.value });
+				setFilterOptionsDispatch['appId']({ channelType: value, channelProviderType: messageTemplateForm.channelProviderType.value });
+			},
+		},
 	},
 	channelProviderType: {
 		type: 'select',
 		fieldName: 'channelProviderType',
 		label: '渠道供应商类型',
-		options: [],
+		selectConfig: {
+			options: [],
+			onChange: async (value: any) => {
+				setFilterOptionsDispatch['messageType']({ channelType: messageTemplateForm.channelType.value, channelProviderType: value });
+				setFilterOptionsDispatch['appId']({ channelType: messageTemplateForm.channelType.value, channelProviderType: value });
+			},
+		},
 	},
 	messageType: {
 		type: 'select',
 		fieldName: 'messageType',
 		label: '消息类型',
-		options: [],
+		selectConfig: {
+			options: [],
+		},
 	},
 	templateStatus: {
 		type: 'select',
 		fieldName: 'templateStatus',
 		label: '模板状态',
-		options: [
-			{
-				value: 0,
-				label: '关闭',
-			},
-			{
-				value: 1,
-				label: '开启',
-			},
-		],
+		selectConfig: {
+			options: [
+				{
+					value: 0,
+					label: '关闭',
+				},
+				{
+					value: 1,
+					label: '开启',
+				},
+			],
+		},
 	},
 	startTime: {
 		type: 'datePicker',
@@ -274,9 +281,9 @@ export const filterSchema: Record<string, FormItem<keyof SearchParams>> = {
 		fieldName: 'endTime',
 		label: '结束时间',
 	},
-};
-export const filterSchemaMaps = messageTemplateSchemaDeps.slice(0, 3);
-export const testMessageSchema: Record<string, FormItem<keyof TestSendMessage>> = {
+});
+export const setFilterOptionsDispatch = generateDispatch(filterForm);
+export const testMessageForm = reactive<Schema<TestSendMessage>>({
 	templateId: {
 		type: 'none',
 		fieldName: 'templateId',
@@ -286,9 +293,32 @@ export const testMessageSchema: Record<string, FormItem<keyof TestSendMessage>> 
 		type: 'list',
 		fieldName: 'users',
 		label: '用户ID列表',
-		placeholder: '请输入用户ID',
 		rules: [getRequiredRule('请输入用户ID')],
-		max: 2,
+		customConfig: {
+			deleteConfig: {
+				icon: h(DeleteOutlined),
+				danger: true,
+				type: 'text',
+				shape: 'circle',
+				click: (id: string) => {
+					const list = testMessageForm.users.value;
+					const index = list.indexOf(id);
+					list.splice(index, 1);
+					testMessageForm.users.customConfig!.addConfig.disabled = false;
+				},
+			},
+			addConfig: {
+				icon: h(PlusOutlined),
+				type: 'dashed',
+				onClick: () => {
+					const list = testMessageForm.users.value;
+					list.push('');
+					if (list.length === 2) {
+						testMessageForm.users.customConfig!.addConfig.disabled = true;
+					}
+				},
+			},
+		},
 	},
 	messageParam: {
 		value: {},
@@ -300,4 +330,4 @@ export const testMessageSchema: Record<string, FormItem<keyof TestSendMessage>> 
 			lang: 'zh',
 		},
 	},
-};
+});
