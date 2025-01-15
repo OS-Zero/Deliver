@@ -38,7 +38,7 @@ import java.util.Objects;
  */
 @Component
 @RequiredArgsConstructor
-@ConditionalOnProperty(value = "mq-type", havingValue = "rocketmq")
+@ConditionalOnProperty(value = MQConstant.MQ_TYPE, havingValue = MQConstant.MQ_TYPE_ROCKETMQ)
 public class RocketMQProducer implements Producer {
     private final RocketMQUtils rocketMQUtils;
 

@@ -28,6 +28,10 @@
             <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.lmax</groupId>
+            <artifactId>disruptor</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.oszero</groupId>
             <artifactId>deliver-business-common</artifactId>
             <version>${project.version}</version>

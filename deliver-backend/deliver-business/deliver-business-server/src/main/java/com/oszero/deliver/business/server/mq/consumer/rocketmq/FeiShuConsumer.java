@@ -33,7 +33,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @RocketMQMessageListener(topic = MQConstant.FEI_SHU_TOPIC, consumerGroup = MQConstant.FEI_SHU_CONSUMER_GROUP)
-@ConditionalOnProperty(value = "mq-type", havingValue = "rocketmq")
+@ConditionalOnProperty(value = MQConstant.MQ_TYPE, havingValue = MQConstant.MQ_TYPE_ROCKETMQ)
 public class FeiShuConsumer implements RocketMQListener<MessageExt> {
 
     private final FeiShuHandler feiShuHandler;

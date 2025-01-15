@@ -18,9 +18,10 @@
 package com.oszero.deliver.business.server.mq.producer.impl;
 
 import com.oszero.deliver.business.common.enums.ChannelTypeEnum;
+import com.oszero.deliver.business.server.constant.MQConstant;
 import com.oszero.deliver.business.server.exception.MessageException;
 import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
-import com.oszero.deliver.business.server.model.event.*;
+import com.oszero.deliver.business.server.model.event.spring.*;
 import com.oszero.deliver.business.server.mq.producer.Producer;
 import com.oszero.deliver.business.server.util.ApplicationEventUtils;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ import java.util.Objects;
  */
 @Component
 @RequiredArgsConstructor
-@ConditionalOnProperty(value = "mq-type", havingValue = "none")
+@ConditionalOnProperty(value = MQConstant.MQ_TYPE, havingValue = MQConstant.MQ_TYPE_NONE)
 public class NoMQProducer implements Producer {
 
     private final ApplicationEventUtils applicationEventUtils;
@@ -48,27 +49,27 @@ public class NoMQProducer implements Producer {
         }
         switch (channelTypeEnum) {
             case CALL -> {
-                CallEvent callEvent = new CallEvent(this, sendTaskDto);
+                CallEventSpring callEvent = new CallEventSpring(this, sendTaskDto);
                 applicationEventUtils.publishCustomEvent(callEvent);
             }
             case SMS -> {
-                SmsEvent smsEvent = new SmsEvent(this, sendTaskDto);
+                SmsEventSpring smsEvent = new SmsEventSpring(this, sendTaskDto);
                 applicationEventUtils.publishCustomEvent(smsEvent);
             }
             case MAIL -> {
-                MailEvent mailEvent = new MailEvent(this, sendTaskDto);
+                MailEventSpring mailEvent = new MailEventSpring(this, sendTaskDto);
                 applicationEventUtils.publishCustomEvent(mailEvent);
             }
             case DING -> {
-                DingEvent dingEvent = new DingEvent(this, sendTaskDto);
+                DingEventSpring dingEvent = new DingEventSpring(this, sendTaskDto);
                 applicationEventUtils.publishCustomEvent(dingEvent);
             }
             case WECHAT -> {
-                WeChatEvent weChatEvent = new WeChatEvent(this, sendTaskDto);
+                WeChatEventSpring weChatEvent = new WeChatEventSpring(this, sendTaskDto);
                 applicationEventUtils.publishCustomEvent(weChatEvent);
             }
             case FEI_SHU -> {
-                FeiShuEvent feiShuEvent = new FeiShuEvent(this, sendTaskDto);
+                FeiShuEventSpring feiShuEvent = new FeiShuEventSpring(this, sendTaskDto);
                 applicationEventUtils.publishCustomEvent(feiShuEvent);
             }
             default -> {

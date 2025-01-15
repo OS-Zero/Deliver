@@ -18,6 +18,7 @@
 package com.oszero.deliver.business.server.mq.consumer.rocketmq;
 
 import cn.hutool.json.JSONUtil;
+import com.oszero.deliver.business.server.constant.MQConstant;
 import com.oszero.deliver.business.server.handler.BaseHandler;
 import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.business.server.mq.consumer.common.MQCommonConsumer;
@@ -35,7 +36,7 @@ import java.nio.charset.StandardCharsets;
  */
 @Component
 @RequiredArgsConstructor
-@ConditionalOnProperty(value = "mq-type", havingValue = "rocketmq")
+@ConditionalOnProperty(value = MQConstant.MQ_TYPE, havingValue = MQConstant.MQ_TYPE_ROCKETMQ)
 public class RocketMQCommonConsumer {
 
     private final Producer producer;

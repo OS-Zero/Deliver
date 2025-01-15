@@ -38,7 +38,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-@ConditionalOnProperty(value = "mq-type", havingValue = "redis")
+@ConditionalOnProperty(value = MQConstant.MQ_TYPE, havingValue = MQConstant.MQ_TYPE_REDIS)
 public class StreamCommonConsumer {
     private final Producer producer;
     private final StringRedisTemplate stringRedisTemplate;

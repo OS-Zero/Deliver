@@ -15,18 +15,23 @@
  * limitations under the License.
  */
 
-package com.oszero.deliver.business.server.model.event;
-
+package com.oszero.deliver.business.server.model.event.spring;
 
 import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
+import lombok.Getter;
+import org.springframework.context.ApplicationEvent;
 
 /**
  * @author oszero
  * @version 1.0.0
  */
-public class FeiShuEvent extends BaseApplicationEvent {
+@Getter
+public abstract class SpringBaseApplicationEvent extends ApplicationEvent {
 
-    public FeiShuEvent(Object source, SendTaskDto sendTaskDto) {
-        super(source, sendTaskDto);
+    private final SendTaskDto sendTaskDto;
+
+    public SpringBaseApplicationEvent(Object source, SendTaskDto sendTaskDto) {
+        super(source);
+        this.sendTaskDto = sendTaskDto;
     }
 }

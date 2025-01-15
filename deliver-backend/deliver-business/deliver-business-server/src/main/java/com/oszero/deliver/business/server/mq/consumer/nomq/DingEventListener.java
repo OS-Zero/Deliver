@@ -17,8 +17,9 @@
 
 package com.oszero.deliver.business.server.mq.consumer.nomq;
 
+import com.oszero.deliver.business.server.constant.MQConstant;
 import com.oszero.deliver.business.server.handler.impl.DingHandler;
-import com.oszero.deliver.business.server.model.event.DingEvent;
+import com.oszero.deliver.business.server.model.event.spring.DingEventSpring;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationListener;
@@ -31,15 +32,15 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-@ConditionalOnProperty(value = "mq-type", havingValue = "none")
-public class DingEventListener implements ApplicationListener<DingEvent> {
+@ConditionalOnProperty(value = MQConstant.MQ_TYPE, havingValue = MQConstant.MQ_TYPE_NONE)
+public class DingEventListener implements ApplicationListener<DingEventSpring> {
 
     private final NoMQCommonListener noMQCommonListener;
     private final DingHandler dingHandler;
 
     @Async("dingAsyncExecutor")
     @Override
-    public void onApplicationEvent(DingEvent event) {
+    public void onApplicationEvent(DingEventSpring event) {
         noMQCommonListener.omMessageAck(event, dingHandler);
     }
 }

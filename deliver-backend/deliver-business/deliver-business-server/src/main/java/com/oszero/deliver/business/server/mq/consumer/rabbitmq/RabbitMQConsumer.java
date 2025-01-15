@@ -38,7 +38,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-@ConditionalOnProperty(value = "mq-type", havingValue = "rabbitmq")
+@ConditionalOnProperty(value = MQConstant.MQ_TYPE, havingValue = MQConstant.MQ_TYPE_RABBITMQ)
 public class RabbitMQConsumer {
 
     private final CallHandler callHandler;

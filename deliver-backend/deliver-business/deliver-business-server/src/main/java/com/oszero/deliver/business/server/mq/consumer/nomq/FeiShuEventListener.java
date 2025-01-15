@@ -17,8 +17,9 @@
 
 package com.oszero.deliver.business.server.mq.consumer.nomq;
 
+import com.oszero.deliver.business.server.constant.MQConstant;
 import com.oszero.deliver.business.server.handler.impl.FeiShuHandler;
-import com.oszero.deliver.business.server.model.event.FeiShuEvent;
+import com.oszero.deliver.business.server.model.event.spring.FeiShuEventSpring;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationListener;
@@ -31,15 +32,15 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-@ConditionalOnProperty(value = "mq-type", havingValue = "none")
-public class FeiShuEventListener implements ApplicationListener<FeiShuEvent> {
+@ConditionalOnProperty(value = MQConstant.MQ_TYPE, havingValue = MQConstant.MQ_TYPE_NONE)
+public class FeiShuEventListener implements ApplicationListener<FeiShuEventSpring> {
 
     private final NoMQCommonListener noMQCommonListener;
     private final FeiShuHandler feiShuHandler;
 
     @Async("feiShuAsyncExecutor")
     @Override
-    public void onApplicationEvent(FeiShuEvent event) {
+    public void onApplicationEvent(FeiShuEventSpring event) {
         noMQCommonListener.omMessageAck(event, feiShuHandler);
     }
 }

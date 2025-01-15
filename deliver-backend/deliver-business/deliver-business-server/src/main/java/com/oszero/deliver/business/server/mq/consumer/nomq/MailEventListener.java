@@ -17,8 +17,9 @@
 
 package com.oszero.deliver.business.server.mq.consumer.nomq;
 
+import com.oszero.deliver.business.server.constant.MQConstant;
 import com.oszero.deliver.business.server.handler.impl.MailHandler;
-import com.oszero.deliver.business.server.model.event.MailEvent;
+import com.oszero.deliver.business.server.model.event.spring.MailEventSpring;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationListener;
@@ -31,15 +32,15 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-@ConditionalOnProperty(value = "mq-type", havingValue = "none")
-public class MailEventListener implements ApplicationListener<MailEvent> {
+@ConditionalOnProperty(value = MQConstant.MQ_TYPE, havingValue = MQConstant.MQ_TYPE_NONE)
+public class MailEventListener implements ApplicationListener<MailEventSpring> {
 
     private final NoMQCommonListener noMQCommonListener;
     private final MailHandler mailHandler;
 
     @Async("mailAsyncExecutor")
     @Override
-    public void onApplicationEvent(MailEvent event) {
+    public void onApplicationEvent(MailEventSpring event) {
         noMQCommonListener.omMessageAck(event, mailHandler);
     }
 }

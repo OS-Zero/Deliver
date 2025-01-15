@@ -37,7 +37,7 @@ import java.util.Objects;
  */
 @Component
 @RequiredArgsConstructor
-@ConditionalOnProperty(value = "mq-type", havingValue = "rabbitmq")
+@ConditionalOnProperty(value = MQConstant.MQ_TYPE, havingValue = MQConstant.MQ_TYPE_RABBITMQ)
 public class RabbitMQProducer implements Producer {
 
     private final RabbitMQUtils rabbitMQUtils;

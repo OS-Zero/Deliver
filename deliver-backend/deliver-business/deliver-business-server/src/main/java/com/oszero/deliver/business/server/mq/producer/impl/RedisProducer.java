@@ -37,7 +37,7 @@ import java.util.Objects;
  */
 @Component
 @RequiredArgsConstructor
-@ConditionalOnProperty(value = "mq-type", havingValue = "redis")
+@ConditionalOnProperty(value = MQConstant.MQ_TYPE, havingValue = MQConstant.MQ_TYPE_REDIS)
 public class RedisProducer implements Producer {
 
     private final RedisUtils redisUtils;

@@ -17,8 +17,9 @@
 
 package com.oszero.deliver.business.server.mq.consumer.nomq;
 
+import com.oszero.deliver.business.server.constant.MQConstant;
 import com.oszero.deliver.business.server.handler.impl.WeChatHandler;
-import com.oszero.deliver.business.server.model.event.WeChatEvent;
+import com.oszero.deliver.business.server.model.event.spring.WeChatEventSpring;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationListener;
@@ -31,15 +32,15 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-@ConditionalOnProperty(value = "mq-type", havingValue = "none")
-public class WeChatEventListener implements ApplicationListener<WeChatEvent> {
+@ConditionalOnProperty(value = MQConstant.MQ_TYPE, havingValue = MQConstant.MQ_TYPE_NONE)
+public class WeChatEventListener implements ApplicationListener<WeChatEventSpring> {
 
     private final NoMQCommonListener noMQCommonListener;
     private final WeChatHandler weChatHandler;
 
     @Async("weChatAsyncExecutor")
     @Override
-    public void onApplicationEvent(WeChatEvent event) {
+    public void onApplicationEvent(WeChatEventSpring event) {
         noMQCommonListener.omMessageAck(event, weChatHandler);
     }
 }

@@ -33,7 +33,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @RocketMQMessageListener(topic = MQConstant.WECHAT_TOPIC, consumerGroup = MQConstant.WECHAT_CONSUMER_GROUP)
-@ConditionalOnProperty(value = "mq-type", havingValue = "rocketmq")
+@ConditionalOnProperty(value = MQConstant.MQ_TYPE, havingValue = MQConstant.MQ_TYPE_ROCKETMQ)
 public class WeChatConsumer implements RocketMQListener<MessageExt> {
 
     private final WeChatHandler weChatHandler;

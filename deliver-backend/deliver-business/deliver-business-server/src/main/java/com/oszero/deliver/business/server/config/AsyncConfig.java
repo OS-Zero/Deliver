@@ -17,6 +17,7 @@
 
 package com.oszero.deliver.business.server.config;
 
+import com.oszero.deliver.business.server.constant.MQConstant;
 import jakarta.annotation.PreDestroy;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -28,7 +29,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
  * @version 1.0.0
  */
 @Configuration
-@ConditionalOnProperty(value = "mq-type", havingValue = "none")
+@ConditionalOnProperty(value = MQConstant.MQ_TYPE, havingValue = MQConstant.MQ_TYPE_NONE)
 public class AsyncConfig {
 
     private ThreadPoolTaskExecutor callAsyncExecutor;
@@ -39,36 +40,42 @@ public class AsyncConfig {
     private ThreadPoolTaskExecutor feiShuAsyncExecutor;
 
     @Bean("callAsyncExecutor")
+    @ConditionalOnProperty(value = MQConstant.MQ_TYPE, havingValue = MQConstant.MQ_TYPE_NONE)
     public ThreadPoolTaskExecutor callAsyncExecutor() {
         callAsyncExecutor = buildThreadPoolTaskExecutor("callAsyncExecutor");
         return callAsyncExecutor;
     }
 
     @Bean("smsAsyncExecutor")
+    @ConditionalOnProperty(value = MQConstant.MQ_TYPE, havingValue = MQConstant.MQ_TYPE_NONE)
     public ThreadPoolTaskExecutor smsAsyncExecutor() {
         smsAsyncExecutor = buildThreadPoolTaskExecutor("smsAsyncExecutor");
         return smsAsyncExecutor;
     }
 
     @Bean("mailAsyncExecutor")
+    @ConditionalOnProperty(value = MQConstant.MQ_TYPE, havingValue = MQConstant.MQ_TYPE_NONE)
     public ThreadPoolTaskExecutor mailAsyncExecutor() {
         mailAsyncExecutor = buildThreadPoolTaskExecutor("mailAsyncExecutor");
         return mailAsyncExecutor;
     }
 
     @Bean("dingAsyncExecutor")
+    @ConditionalOnProperty(value = MQConstant.MQ_TYPE, havingValue = MQConstant.MQ_TYPE_NONE)
     public ThreadPoolTaskExecutor dingAsyncExecutor() {
         dingAsyncExecutor = buildThreadPoolTaskExecutor("dingAsyncExecutor");
         return dingAsyncExecutor;
     }
 
     @Bean("weChatAsyncExecutor")
+    @ConditionalOnProperty(value = MQConstant.MQ_TYPE, havingValue = MQConstant.MQ_TYPE_NONE)
     public ThreadPoolTaskExecutor weChatAsyncExecutor() {
         weChatAsyncExecutor = buildThreadPoolTaskExecutor("weChatAsyncExecutor");
         return weChatAsyncExecutor;
     }
 
     @Bean("feiShuAsyncExecutor")
+    @ConditionalOnProperty(value = MQConstant.MQ_TYPE, havingValue = MQConstant.MQ_TYPE_NONE)
     public ThreadPoolTaskExecutor feiShuAsyncExecutor() {
         feiShuAsyncExecutor = buildThreadPoolTaskExecutor("feiShuAsyncExecutor");
         return feiShuAsyncExecutor;

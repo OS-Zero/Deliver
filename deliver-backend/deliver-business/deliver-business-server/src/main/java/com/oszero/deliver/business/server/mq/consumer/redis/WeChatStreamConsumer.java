@@ -17,6 +17,7 @@
 
 package com.oszero.deliver.business.server.mq.consumer.redis;
 
+import com.oszero.deliver.business.server.constant.MQConstant;
 import com.oszero.deliver.business.server.handler.impl.WeChatHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -30,7 +31,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-@ConditionalOnProperty(value = "mq-type", havingValue = "redis")
+@ConditionalOnProperty(value = MQConstant.MQ_TYPE, havingValue = MQConstant.MQ_TYPE_REDIS)
 public class WeChatStreamConsumer implements StreamListener<String, ObjectRecord<String, String>> {
 
     private final WeChatHandler weChatHandler;

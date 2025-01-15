@@ -17,9 +17,10 @@
 
 package com.oszero.deliver.business.server.mq.consumer.nomq;
 
+import com.oszero.deliver.business.server.constant.MQConstant;
 import com.oszero.deliver.business.server.handler.BaseHandler;
 import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
-import com.oszero.deliver.business.server.model.event.BaseApplicationEvent;
+import com.oszero.deliver.business.server.model.event.spring.SpringBaseApplicationEvent;
 import com.oszero.deliver.business.server.mq.consumer.common.MQCommonConsumer;
 import com.oszero.deliver.business.server.mq.producer.Producer;
 import lombok.RequiredArgsConstructor;
@@ -32,12 +33,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-@ConditionalOnProperty(value = "mq-type", havingValue = "none")
+@ConditionalOnProperty(value = MQConstant.MQ_TYPE, havingValue = MQConstant.MQ_TYPE_NONE)
 public class NoMQCommonListener {
 
     private final Producer producer;
 
-    public void omMessageAck(BaseApplicationEvent event, BaseHandler handler) {
+    public void omMessageAck(SpringBaseApplicationEvent event, BaseHandler handler) {
         SendTaskDto sendTaskDto = event.getSendTaskDto();
         try {
             MQCommonConsumer.tryHandle(sendTaskDto, handler);

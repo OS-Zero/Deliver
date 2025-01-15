@@ -15,23 +15,17 @@
  * limitations under the License.
  */
 
-package com.oszero.deliver.business.server.model.event;
+package com.oszero.deliver.business.server.model.event.spring;
 
 import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
-import lombok.Getter;
-import org.springframework.context.ApplicationEvent;
 
 /**
  * @author oszero
  * @version 1.0.0
  */
-@Getter
-public abstract class BaseApplicationEvent extends ApplicationEvent {
+public class WeChatEventSpring extends SpringBaseApplicationEvent {
 
-    private final SendTaskDto sendTaskDto;
-
-    public BaseApplicationEvent(Object source, SendTaskDto sendTaskDto) {
-        super(source);
-        this.sendTaskDto = sendTaskDto;
+    public WeChatEventSpring(Object source, SendTaskDto sendTaskDto) {
+        super(source, sendTaskDto);
     }
 }

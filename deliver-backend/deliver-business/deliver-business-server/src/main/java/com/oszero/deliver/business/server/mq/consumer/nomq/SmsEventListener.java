@@ -17,8 +17,9 @@
 
 package com.oszero.deliver.business.server.mq.consumer.nomq;
 
+import com.oszero.deliver.business.server.constant.MQConstant;
 import com.oszero.deliver.business.server.handler.impl.SmsHandler;
-import com.oszero.deliver.business.server.model.event.SmsEvent;
+import com.oszero.deliver.business.server.model.event.spring.SmsEventSpring;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationListener;
@@ -31,15 +32,15 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-@ConditionalOnProperty(value = "mq-type", havingValue = "none")
-public class SmsEventListener implements ApplicationListener<SmsEvent> {
+@ConditionalOnProperty(value = MQConstant.MQ_TYPE, havingValue = MQConstant.MQ_TYPE_NONE)
+public class SmsEventListener implements ApplicationListener<SmsEventSpring> {
 
     private final NoMQCommonListener noMQCommonListener;
     private final SmsHandler smsHandler;
 
     @Async("smsAsyncExecutor")
     @Override
-    public void onApplicationEvent(SmsEvent event) {
+    public void onApplicationEvent(SmsEventSpring event) {
         noMQCommonListener.omMessageAck(event, smsHandler);
     }
 }

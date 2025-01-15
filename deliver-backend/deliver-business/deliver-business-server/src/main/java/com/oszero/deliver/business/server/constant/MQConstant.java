@@ -23,6 +23,13 @@ package com.oszero.deliver.business.server.constant;
  */
 public interface MQConstant {
 
+    String MQ_TYPE = "mq-type";
+    String MQ_TYPE_NONE = "none";
+    String MQ_TYPE_DISRUPTOR = "disruptor";
+    String MQ_TYPE_RABBITMQ = "rabbitmq";
+    String MQ_TYPE_ROCKETMQ = "rocketmq";
+    String MQ_TYPE_REDIS = "redis";
+
     /********** RocketMQ **********/
     String CALL_TOPIC = "topic_msg_call";
     String DING_TOPIC = "topic_msg_ding";
@@ -76,4 +83,15 @@ public interface MQConstant {
     String DING_STREAM_CONSUMER_NAME = "stream_consumer_name_msg_ding";
     String WECHAT_STREAM_CONSUMER_NAME = "stream_consumer_name_msg_wechat";
     String FEI_SHU_STREAM_CONSUMER_NAME = "stream_consumer_name_msg_feiShu";
+
+    /********** Disruptor **********/
+    int DISRUPTOR_BUFFER_SIZE = 1024;
+    String DISRUPTOR_THREAD_NAME = "disruptor_thread_name";
+    // Disruptor
+    String CALL_DISRUPTOR = "call_disruptor";
+    String SMS_DISRUPTOR = "sms_disruptor";
+    String MAIL_DISRUPTOR = "mail_disruptor";
+    String DING_DISRUPTOR = "ding_disruptor";
+    String WECHAT_DISRUPTOR = "wechat_disruptor";
+    String FEI_SHU_DISRUPTOR = "feiShu_disruptor";
 }

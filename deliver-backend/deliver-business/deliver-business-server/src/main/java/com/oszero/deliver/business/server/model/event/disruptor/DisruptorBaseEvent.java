@@ -15,18 +15,25 @@
  * limitations under the License.
  */
 
-package com.oszero.deliver.business.server.model.event;
-
+package com.oszero.deliver.business.server.model.event.disruptor;
 
 import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author oszero
  * @version 1.0.0
  */
-public class MailEvent extends BaseApplicationEvent {
+@Getter
+@Setter
+public abstract class DisruptorBaseEvent {
+    private SendTaskDto sendTaskDto;
 
-    public MailEvent(Object source, SendTaskDto sendTaskDto) {
-        super(source, sendTaskDto);
-    }
+    public static class CallEventDisruptor extends DisruptorBaseEvent {}
+    public static class SmsEventDisruptor extends DisruptorBaseEvent {}
+    public static class MailEventDisruptor extends DisruptorBaseEvent {}
+    public static class DingEventDisruptor extends DisruptorBaseEvent {}
+    public static class WeChatEventDisruptor extends DisruptorBaseEvent {}
+    public static class FeiShuEventDisruptor extends DisruptorBaseEvent {}
 }

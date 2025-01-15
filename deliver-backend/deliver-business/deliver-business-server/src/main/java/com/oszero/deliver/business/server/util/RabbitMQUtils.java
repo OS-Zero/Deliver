@@ -21,6 +21,7 @@ import cn.hutool.core.lang.UUID;
 import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.business.common.util.MDCUtils;
 import com.oszero.deliver.business.common.util.TraceIdUtils;
+import com.oszero.deliver.business.server.constant.MQConstant;
 import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
 import org.springframework.amqp.core.ReturnedMessage;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
@@ -35,7 +36,7 @@ import java.util.Objects;
  * @version 1.0.0
  */
 @Component
-@ConditionalOnProperty(value = "mq-type", havingValue = "rabbitmq")
+@ConditionalOnProperty(value = MQConstant.MQ_TYPE, havingValue = MQConstant.MQ_TYPE_RABBITMQ)
 public class RabbitMQUtils {
     private final RabbitTemplate rabbitTemplate;
 

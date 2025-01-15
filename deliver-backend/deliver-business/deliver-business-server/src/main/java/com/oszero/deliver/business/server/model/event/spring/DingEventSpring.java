@@ -15,27 +15,18 @@
  * limitations under the License.
  */
 
-package com.oszero.deliver.business.server.util;
+package com.oszero.deliver.business.server.model.event.spring;
 
-import com.oszero.deliver.business.server.constant.MQConstant;
-import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationEvent;
-import org.springframework.stereotype.Component;
+
+import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
 
 /**
  * @author oszero
  * @version 1.0.0
  */
-@Component
-@RequiredArgsConstructor
-@ConditionalOnProperty(value = MQConstant.MQ_TYPE, havingValue = MQConstant.MQ_TYPE_NONE)
-public class ApplicationEventUtils {
+public class DingEventSpring extends SpringBaseApplicationEvent {
 
-    private final ApplicationContext applicationContext;
-
-    public void publishCustomEvent(ApplicationEvent applicationEvent) {
-        applicationContext.publishEvent(applicationEvent);
+    public DingEventSpring(Object source, SendTaskDto sendTaskDto) {
+        super(source, sendTaskDto);
     }
 }

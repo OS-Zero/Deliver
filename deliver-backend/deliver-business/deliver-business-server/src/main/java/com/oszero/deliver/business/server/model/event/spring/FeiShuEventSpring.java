@@ -15,7 +15,8 @@
  * limitations under the License.
  */
 
-package com.oszero.deliver.business.server.model.event;
+package com.oszero.deliver.business.server.model.event.spring;
+
 
 import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
 
@@ -23,9 +24,9 @@ import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
  * @author oszero
  * @version 1.0.0
  */
-public class WeChatEvent extends BaseApplicationEvent {
+public class FeiShuEventSpring extends SpringBaseApplicationEvent {
 
-    public WeChatEvent(Object source, SendTaskDto sendTaskDto) {
+    public FeiShuEventSpring(Object source, SendTaskDto sendTaskDto) {
         super(source, sendTaskDto);
     }
 }
