@@ -35,5 +35,5 @@ mybatis-plus:
 # 对称加密
 aes:
   key: oszero
-# MQ类型（redis、rocketmq、rabbitmq、none）
+# 队列类型 参考 MQConstant#MQ_TYPE
 mq-type: none
