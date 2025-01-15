@@ -45,7 +45,6 @@ const initFormDate = () => {
 		}
 		setOptionsDispatch['channelType']();
 		setOptionsDispatch['channelProviderType']({ channelType: channelAppForm.channelType.value });
-		setOptionsDispatch['messageType']({ channelType: channelAppForm.channelType.value, channelProviderType: channelAppForm.channelProviderType.value });
 	})
 }
 const initMoreDate = () => {

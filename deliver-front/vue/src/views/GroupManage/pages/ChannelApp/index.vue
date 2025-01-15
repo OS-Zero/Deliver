@@ -181,7 +181,9 @@ onBeforeMount(() => {
 				</template>
 			</a-table>
 			<div class="card-list" v-show="!tableView">
-				<Card v-for="item in dataSource" :key="item.appId" :data="item"></Card>
+				<Card v-for="item in dataSource" :key="item.appId" :data="item" @change-status="changeStatus"
+					@handleActions="handleActions">
+				</Card>
 			</div>
 		</div>
 		<a-card size="small" class="filter-form" :class="{ open: filterState.open }" title="筛选">

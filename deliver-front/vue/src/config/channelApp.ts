@@ -1,6 +1,6 @@
 import type { ColumnsType } from 'ant-design-vue/es/table/interface';
 import { Channel, ChannelAppForm, ChannelProvider, SearchParams } from '@/types/channelApp';
-import { getAppConfig, getChannelProviderType, getChannelType, getMessageType } from '@/api/system';
+import { getAppConfig, getChannelProviderType, getChannelType } from '@/api/system';
 import { notUndefined } from '@/utils/utils';
 import { getRangeRule, getRequiredRule } from '@/utils/validate';
 import { reactive } from 'vue';
@@ -78,15 +78,6 @@ const generateDispatch = (form: Schema<any>) => {
 					(form.channelProviderType.value = undefined);
 			}
 		},
-		messageType: async (data: { channelType: Channel['channelType']; channelProviderType: ChannelProvider['channelProviderType'] }) => {
-			if (notUndefined(data.channelType) && notUndefined(data.channelProviderType)) {
-				form.messageType.selectConfig!.options = (await getMessageType(data)).map((item) => ({
-					value: item.messageType,
-					label: item.messageTypeName,
-				}));
-				!form.messageType.selectConfig!.options.some((item) => item.value === form.messageType.value) && (form.messageType.value = undefined);
-			}
-		},
 		appConfig: async (data: { channelType: Channel['channelType']; channelProviderType: ChannelProvider['channelProviderType'] }) => {
 			if (notUndefined(data.channelType) && notUndefined(data.channelProviderType)) {
 				const appConfig = await getAppConfig(data);
@@ -122,7 +113,6 @@ export const channelAppForm = reactive<Schema<ChannelAppForm>>({
 			options: [],
 			onChange: (value: any) => {
 				setOptionsDispatch['channelProviderType']({ channelType: value });
-				setOptionsDispatch['messageType']({ channelType: value, channelProviderType: channelAppForm.channelProviderType.value });
 				setOptionsDispatch['appConfig']({ channelType: value, channelProviderType: channelAppForm.channelProviderType.value });
 			},
 		},
@@ -135,7 +125,6 @@ export const channelAppForm = reactive<Schema<ChannelAppForm>>({
 		selectConfig: {
 			options: [],
 			onChange: async (value: any) => {
-				setOptionsDispatch['messageType']({ channelType: channelAppForm.channelType.value, channelProviderType: value });
 				setOptionsDispatch['appConfig']({ channelType: channelAppForm.channelType.value, channelProviderType: value });
 			},
 		},

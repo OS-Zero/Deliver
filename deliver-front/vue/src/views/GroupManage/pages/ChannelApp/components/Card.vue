@@ -6,32 +6,30 @@ import { EditOutlined } from '@ant-design/icons-vue';
 defineProps<{
 	data: ChannelApp
 }>()
+const emit = defineEmits(['changeStatus', 'handleActions'])
 </script>
 
 <template>
 	<div class="card">
-		<a-button type="link" :icon="h(EditOutlined)" class="edit_btn"></a-button>
+		<a-button type="link" :icon="h(EditOutlined)" class="edit_btn"
+			@click="emit('handleActions', 'edit', data)"></a-button>
 		<div class="card-header">
 			<img class="card_img" :src="getImg(1).src" alt="">
 			<div class="card_info">
 				<div class="card_title">
 					<h4>飞书消息推送</h4>
-					<span :style="{
-						display: 'inline-block',
-						height: '8px',
-						width: '8px',
-						background: data.appStatus == 1 ? 'rgb(10, 191, 91)' : 'rgb(229, 69, 69)',
-						borderRadius: '7px',
-						verticalAlign: 'middle',
-						marginLeft: '10px',
-						marginBottom: '5px'
-					}"></span>
+					<span class="card_status" :class="data.appStatus == 1 ? 'open' : 'close'"></span>
 				</div>
 				<div class="info_creator">创建者：z</div>
 			</div>
 		</div>
 		<div class="card_btns">
-			<a-button>禁用</a-button>
+			<div class="btn--operation">
+				<a-button v-show="data.appStatus" @click="emit('changeStatus', data)">禁用</a-button>
+				<a-button v-show="!data.appStatus" @click="emit('changeStatus', data)">开启</a-button>
+				<a-button v-show="!data.appStatus" @click="emit('handleActions', 'delete', data)">删除</a-button>
+			</div>
+			<a-button class="btn--more" type="text" @click="emit('handleActions', 'more', data)">更多信息</a-button>
 		</div>
 	</div>
 </template>
@@ -79,10 +77,31 @@ defineProps<{
 
 .card_btns {
 	margin-top: var(-spacing-sm);
+	display: flex;
+	justify-content: space-between;
+	gap: var(--spacing-xs);
+}
+
+.btn--operation {
+	display: flex;
+	gap: var(--spacing-xs);
 }
 
 .card_status {
-	font-size: large;
-	color: green;
+	display: inline-block;
+	height: 8px;
+	width: 8px;
+	border-radius: 7px;
+	vertical-align: middle;
+	margin-left: 10px;
+	margin-top: 5px;
+
+	&.open {
+		background-color: rgb(10, 191, 91);
+	}
+
+	&.close {
+		background-color: rgb(229, 69, 69);
+	}
 }
 </style>
