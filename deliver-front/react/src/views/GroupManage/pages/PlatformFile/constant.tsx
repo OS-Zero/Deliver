@@ -99,7 +99,7 @@ export const platformColumns: ProDescriptionsItemProps<PlatformFileDetail>[] = [
   },
   {
     key: 'text',
-    title: '创建人',
+    title: '创建者',
     dataIndex: 'createUser'
   },
   {

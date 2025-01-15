@@ -6,11 +6,16 @@ import {
   updateMessageTemplate
 } from '@/api/messageTemplate';
 import deleteConfirmModal from '@/components/DeleteConfirmModal';
-import { useCallback } from 'react';
+import { MutableRefObject, useCallback, useEffect } from 'react';
 import { MessageTemplate, SearchMessage } from './type';
 import { transformParams } from '@/utils/omitProperty';
+import { ActionType } from '@ant-design/pro-components';
+import { useNavigate } from 'react-router-dom';
 
-const useTemplateData = () => {
+const useTemplateData = (props: { proTableRef: MutableRefObject<ActionType | undefined> }) => {
+  const { proTableRef } = props;
+  const navigator = useNavigate();
+
   /**
    * 搜索请求表单数据
    * @param data
@@ -29,7 +34,7 @@ const useTemplateData = () => {
    * 新增模版
    * @param data
    */
-  const addTemplate = async (params: MessageTemplate) =>
+  const saveTemplate = async (params: MessageTemplate) =>
     params?.templateId ? await updateMessageTemplate(params) : await saveMessageTemplate(params);
 
   /**
@@ -48,15 +53,21 @@ const useTemplateData = () => {
     deleteConfirmModal({
       onConfirm: () => {
         deleteMessageTemplate({ ids });
-        fetchTemplateData({ currentPage: 1, pageSize: 10 });
+        (proTableRef as MutableRefObject<ActionType>)?.current?.reset?.();
       }
     });
+  }, []);
+
+  useEffect(() => {
+    if (!localStorage.getItem('group_id')) {
+      navigator('/groupManage');
+    }
   }, []);
 
   return {
     fetchTemplateData,
     deleteTemplateData,
-    addTemplate,
+    saveTemplate,
     changeStatus
   };
 };

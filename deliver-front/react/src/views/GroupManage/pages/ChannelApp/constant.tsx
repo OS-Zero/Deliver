@@ -37,7 +37,7 @@ export const appTableSchema: (statusConfig: ProColumns<ChannelApp>) => ProColumn
   statusConfig,
   {
     width: 120,
-    title: '创建人',
+    title: '创建者',
     dataIndex: 'createUser',
     valueType: 'text'
   },
@@ -66,12 +66,12 @@ export const appColumns: ProDescriptionsItemProps<ChannelApp>[] = [
   {
     key: 'textarea',
     title: '应用描述',
-    dataIndex: 'appDescription',
+    dataIndex: 'appDescription'
   },
   {
     key: 'text',
     title: '渠道类型',
-    dataIndex: 'channelTypeName',
+    dataIndex: 'channelTypeName'
   },
   {
     key: 'text',
@@ -95,7 +95,7 @@ export const appColumns: ProDescriptionsItemProps<ChannelApp>[] = [
   },
   {
     key: 'text',
-    title: '创建人',
+    title: '创建者',
     dataIndex: 'createUser'
   },
   {
@@ -103,5 +103,5 @@ export const appColumns: ProDescriptionsItemProps<ChannelApp>[] = [
     key: 'date',
     dataIndex: 'createTime',
     valueType: 'dateTime'
-  },
+  }
 ];

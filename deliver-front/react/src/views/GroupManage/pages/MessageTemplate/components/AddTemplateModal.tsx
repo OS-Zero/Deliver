@@ -11,11 +11,11 @@ const { TextArea } = Input;
 
 interface AddTemplateModalProps {
   onSubmit?: (values: any) => void;
-  onSearch?: (params: any) => void;
+  reFresh?: () => void;
 }
 
 const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
-  const { onSubmit, onSearch } = props;
+  const { onSubmit, reFresh } = props;
   const [open, setOpen] = useState(false);
   const formRef = useRef<FormInstance>(null);
   const { formState, updateFormState } = useFormState();
@@ -106,7 +106,7 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
       onSubmit?.(values);
       message.success('保存成功');
       formRef?.current?.resetFields();
-      onSearch?.({ currentPage: 1, pageSize: 10 });
+      reFresh?.();
     } catch (error) {
       console.error('保存失败:', error);
     } finally {

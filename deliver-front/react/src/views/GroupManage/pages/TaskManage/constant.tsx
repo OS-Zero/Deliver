@@ -51,7 +51,7 @@ export const taskTableSchema: (statusConfig: ProColumns<TaskDetail>) => ProColum
   },
   {
     width: 120,
-    title: '创建人',
+    title: '创建者',
     dataIndex: 'createUser',
     valueType: 'text'
   },
@@ -114,7 +114,7 @@ export const taskColumns: ProDescriptionsItemProps<TaskDetail>[] = [
   },
   {
     key: 'text',
-    title: '创建人',
+    title: '创建者',
     dataIndex: 'createUser'
   },
   {

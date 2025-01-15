@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { ProColumns, ProTable } from '@ant-design/pro-components';
+import React, { MutableRefObject, useRef, useState } from 'react';
+import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
 import { Button, Space, Switch, Dropdown, MenuProps } from 'antd';
 import { DownOutlined, FilterOutlined } from '@ant-design/icons';
 import { MessageTemplate } from './type';
@@ -11,7 +11,6 @@ import AddTemplateModal from './components/AddTemplateModal.tsx';
 import TestSendDrawer from '@/views/GroupManage/pages/MessageTemplate/components/TestSendDrawer/index.tsx';
 import FilterCard from './components/FilterCard.tsx';
 import { proTableConfig } from '@/config/index.tsx';
-import { useNavigate } from 'react-router-dom';
 
 interface AddRef {
   addTemplateModal: () => void;
@@ -30,13 +29,15 @@ const items: MenuProps['items'] = [
 ];
 
 const Template: React.FC = () => {
-  const navigator = useNavigate();
+  const proTableRef = useRef<ActionType>();
   const detailRef = useRef<{ getDetail: (record: MessageTemplate) => void }>();
   const addRef = useRef<AddRef>();
   const testRef = useRef<{ getTestSendDrawer: (record: MessageTemplate) => void }>();
   const [tableParams, setTableParams] = useState({});
   const [filterOpen, setFilterOpen] = useState(false);
-  const { fetchTemplateData, deleteTemplateData, addTemplate, changeStatus } = useTemplateData();
+  const { fetchTemplateData, deleteTemplateData, saveTemplate, changeStatus } = useTemplateData({
+    proTableRef
+  });
 
   const handleMenuClick = (e: any, record: MessageTemplate) => {
     if (e?.key === 'detail') {
@@ -52,14 +53,20 @@ const Template: React.FC = () => {
       title: '模板状态',
       width: 100,
       dataIndex: 'templateStatus',
-      render: (_, record: MessageTemplate) => (
-        <Switch
-          checkedChildren="启用"
-          unCheckedChildren="禁用"
-          checked={Boolean(record?.templateStatus)}
-          onClick={() => changeStatus(record.templateId, record.templateStatus === 0 ? 1 : 0)}
-        />
-      )
+      render: (_, record: MessageTemplate) => {
+        const handleStatusChange = async (checked: boolean) => {
+          await changeStatus(record?.templateId, checked ? 1 : 0);
+          proTableRef?.current?.reload();
+        };
+        return (
+          <Switch
+            checkedChildren="启用"
+            unCheckedChildren="禁用"
+            checked={Boolean(record?.templateStatus)}
+            onChange={handleStatusChange}
+          />
+        );
+      }
     }),
     {
       title: '操作',
@@ -102,15 +109,10 @@ const Template: React.FC = () => {
     setTableParams(filters);
   };
 
-  useEffect(() => {
-    if(!localStorage.getItem('group_id')){
-      navigator('/groupManage');
-    }
-  }, []);
-
   return (
     <div className={styles['template-container']}>
       <ProTable
+        actionRef={proTableRef}
         params={tableParams}
         columns={columns}
         rowSelection={{}}
@@ -142,7 +144,13 @@ const Template: React.FC = () => {
         })}
       />
       <DetailDrawer ref={detailRef} columns={templateColumns} title="模版详情" />
-      <AddTemplateModal ref={addRef} onSubmit={addTemplate} onSearch={fetchTemplateData} />
+      <AddTemplateModal
+        ref={addRef}
+        onSubmit={saveTemplate}
+        reFresh={() => {
+          (proTableRef as MutableRefObject<ActionType>)?.current?.reset?.();
+        }}
+      />
       <TestSendDrawer ref={testRef} />
       {filterOpen && (
         <div className={styles['filter-container']}>

@@ -22,12 +22,6 @@ export const messageTableSchema: (
     dataIndex: 'templateName'
   },
   {
-    title: '消息类型',
-    width: 120,
-    dataIndex: 'messageTypeName',
-    render: (_) => <a>{_}</a>
-  },
-  {
     title: '用户类型',
     width: 120,
     dataIndex: 'usersTypeName',
@@ -45,6 +39,12 @@ export const messageTableSchema: (
     dataIndex: 'channelProviderTypeName',
     render: (_, record) => <Tag color={getColor(record?.channelProviderType)}>{_}</Tag>
   },
+  {
+    title: '消息类型',
+    width: 120,
+    dataIndex: 'messageTypeName',
+    render: (_, record) => <Tag color={getColor(record?.messageType)}>{_}</Tag>
+  },
   statusConfig,
   {
     title: '关联应用',
@@ -54,7 +54,7 @@ export const messageTableSchema: (
   },
   {
     width: 120,
-    title: '创建人',
+    title: '创建者',
     dataIndex: 'createUser',
     valueType: 'text'
   },
@@ -83,7 +83,7 @@ export const templateColumns: ProDescriptionsItemProps<MessageTemplate>[] = [
   {
     title: '模版内容',
     key: 'text',
-    dataIndex: 'templateDescription',
+    dataIndex: 'templateDescription'
   },
   {
     title: '消息类型',
@@ -112,7 +112,7 @@ export const templateColumns: ProDescriptionsItemProps<MessageTemplate>[] = [
   },
   {
     key: 'text',
-    title: '创建人',
+    title: '创建者',
     dataIndex: 'createUser'
   },
   {
