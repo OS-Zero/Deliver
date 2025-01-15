@@ -14,7 +14,7 @@ const emit = defineEmits(['changeStatus', 'handleActions'])
 		<a-button type="link" :icon="h(EditOutlined)" class="edit_btn"
 			@click="emit('handleActions', 'edit', data)"></a-button>
 		<div class="card-header">
-			<img class="card_img" :src="getImg(1).src" alt="">
+			<img class="card_img" :src="getImg(data.channelType).src" alt="">
 			<div class="card_info">
 				<div class="card_title">
 					<h4>{{ data.appName }}</h4>
