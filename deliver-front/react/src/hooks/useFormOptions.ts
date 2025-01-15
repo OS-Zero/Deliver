@@ -30,11 +30,18 @@ export const useFormOptions = (props: UseFormOptionsProps) => {
       case 'channel':
         myRef?.current?.resetFields(['channelProviderType', 'appConfig']);
         try {
-          const response = await getChannelProviderType({ channelType: value });
-          setOptions((prev) => ({
-            ...prev,
-            channelProvidersOptions: response || []
-          }));
+          if (value) {
+            const response = await getChannelProviderType({ channelType: value });
+            setOptions((prev) => ({
+              ...prev,
+              channelProvidersOptions: response || []
+            }));
+          } else {
+            setOptions((prev) => ({
+              ...prev,
+              channelProvidersOptions: []
+            }));
+          }
         } catch (error) {
           console.error('获取渠道供应商失败:', error);
         }

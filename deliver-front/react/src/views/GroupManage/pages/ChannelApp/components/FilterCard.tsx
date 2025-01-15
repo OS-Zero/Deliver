@@ -1,10 +1,9 @@
 import { Form, Select, Button, Card, FormInstance, DatePicker } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import local from 'antd/lib/date-picker/locale/zh_CN.js';
-import { getChannelType, getChannelProviderType } from '@/api/system';
-import { Channel, ChannelProvider } from '../type';
 import { useDebounce } from '@/hooks/useDebounce';
+import { useFormOptions } from '@/hooks/useFormOptions';
 
 interface FilterDrawerProps {
   onFilter: (filters: any) => void;
@@ -15,27 +14,11 @@ const FilterDrawer = (props: FilterDrawerProps) => {
   const { onClose, onFilter } = props;
   const formRef = useRef<FormInstance>(null);
 
-  const [options, setOptions] = useState<{
-    channelTypeOptions: Channel[];
-    channelProvidersOptions: ChannelProvider[];
-  }>({
-    channelTypeOptions: [],
-    channelProvidersOptions: []
+  // 获取change函数以及设置初始获取渠道类型数据
+  const { options, handleChannelTypeChange } = useFormOptions({
+    myRef: formRef,
+    key: 'channel'
   });
-
-  // 渠道类型变更处理
-  const handleChannelTypeChange = async (value: number) => {
-    formRef?.current?.resetFields(['channelProviderType']);
-    try {
-      const response = await getChannelProviderType({ channelType: value });
-      setOptions((prev) => ({
-        ...prev,
-        channelProvidersOptions: response
-      }));
-    } catch (error) {
-      console.error('获取渠道供应商失败:', error);
-    }
-  };
 
   const debouncedFilter = useDebounce(onFilter);
 
@@ -54,18 +37,8 @@ const FilterDrawer = (props: FilterDrawerProps) => {
   const handleReset = () => {
     formRef?.current?.resetFields();
     onClose(false);
+    handleFilter();
   };
-
-  useEffect(() => {
-    if (!options?.channelTypeOptions?.length) {
-      getChannelType({ usersType: -1 }).then((res: Channel[]) => {
-        setOptions((prev) => ({
-          ...prev,
-          channelTypeOptions: res
-        }));
-      });
-    }
-  }, []);
 
   return (
     <Card
@@ -83,6 +56,7 @@ const FilterDrawer = (props: FilterDrawerProps) => {
           <Select
             placeholder="请选择渠道类型"
             onChange={handleChannelTypeChange}
+            allowClear
             options={(options.channelTypeOptions || []).map((d) => ({
               value: d.channelType,
               label: d.channelTypeName
@@ -92,6 +66,7 @@ const FilterDrawer = (props: FilterDrawerProps) => {
         <Form.Item label="渠道供应商类型" name="channelProviderType">
           <Select
             placeholder="请选择渠道供应商类型"
+            allowClear
             options={(options.channelProvidersOptions || []).map((d) => ({
               value: d.channelProviderType,
               label: d.channelProviderTypeName
