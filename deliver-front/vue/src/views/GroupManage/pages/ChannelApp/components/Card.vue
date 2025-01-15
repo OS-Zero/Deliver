@@ -17,10 +17,10 @@ const emit = defineEmits(['changeStatus', 'handleActions'])
 			<img class="card_img" :src="getImg(1).src" alt="">
 			<div class="card_info">
 				<div class="card_title">
-					<h4>飞书消息推送</h4>
+					<h4>{{ data.appName }}</h4>
 					<span class="card_status" :class="data.appStatus == 1 ? 'open' : 'close'"></span>
 				</div>
-				<div class="info_creator">创建者：z</div>
+				<div class="info_creator">创建者：{{ data.createUser }}</div>
 			</div>
 		</div>
 		<div class="card_btns">
