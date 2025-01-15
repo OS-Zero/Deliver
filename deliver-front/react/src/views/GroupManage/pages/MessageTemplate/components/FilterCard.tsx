@@ -1,4 +1,4 @@
-import { Form, Select, Button, message, Card, FormInstance } from 'antd';
+import { Form, Select, Button, Card, FormInstance } from 'antd';
 import { getChannelType, getChannelProviderType } from '@/api/system';
 import { useFormState } from '../../../../../hooks/useFormState';
 import { CloseOutlined } from '@ant-design/icons';

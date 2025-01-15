@@ -69,7 +69,7 @@ export interface SearchParams
 }
 
 export interface Message {
-  messageType: string;
+  messageType: number;
   messageTypeName: string;
 }
 

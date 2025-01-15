@@ -21,39 +21,6 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
     key: 'channel'
   });
 
-  const handleSubmit = async () => {
-    try {
-      const values = await formRef?.current?.validateFields();
-      values.appConfig = JSON.stringify(values.appConfig);
-      await onSubmit?.(values);
-      onClose();
-      message.success('保存成功');
-      reFresh?.();
-    } catch (error) {
-      console.error('保存失败:', error);
-    }
-  };
-
-  const onClose = () => {
-    setOpen(false);
-    formRef?.current?.resetFields();
-  };
-
-  useImperativeHandle(ref, () => ({
-    addChannelDrawer: () => {
-      setOpen(true);
-    },
-    editChannelModal: async (values: any) => {
-      setOpen(true);
-      await handleChannelTypeChange(values.channelType);
-      formRef?.current?.setFieldsValue({
-        ...values,
-        appConfig: JSON.parse(values.appConfig)
-      });
-      setJsonEditorKey((prev) => prev + 1);
-    }
-  }));
-
   const rule = {
     formItemProps: {
       rules: [
@@ -96,7 +63,10 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
           value: d.channelType,
           label: d.channelTypeName
         })),
-        onChange: handleChannelTypeChange
+        onChange: (value: number) => {
+          formRef?.current?.resetFields(['channelProviderType', 'appConfig']);
+          handleChannelTypeChange(value);
+        }
       },
       ...rule
     },
@@ -110,7 +80,7 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
           value: d.channelProviderType,
           label: d.channelProviderTypeName
         })),
-        onChange: handleChannelProviderTypeChange // 添加渠道供应商类型变更处理
+        onChange: handleChannelProviderTypeChange
       },
       ...rule
     },
@@ -124,6 +94,39 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
       }
     }
   ];
+
+  const handleSubmit = async () => {
+    try {
+      const values = await formRef?.current?.validateFields();
+      values.appConfig = JSON.stringify(values.appConfig);
+      await onSubmit?.(values);
+      onClose();
+      message.success('保存成功');
+      reFresh?.();
+    } catch (error) {
+      console.error('保存失败:', error);
+    }
+  };
+
+  const onClose = () => {
+    setOpen(false);
+    formRef?.current?.resetFields();
+  };
+
+  useImperativeHandle(ref, () => ({
+    addChannelDrawer: () => {
+      setOpen(true);
+    },
+    editChannelModal: async (values: any) => {
+      setOpen(true);
+      await handleChannelTypeChange(values.channelType);
+      formRef?.current?.setFieldsValue({
+        ...values,
+        appConfig: JSON.parse(values.appConfig)
+      });
+      setJsonEditorKey((prev) => prev + 1);
+    }
+  }));
 
   return (
     <Drawer
@@ -146,9 +149,6 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
         wrapperCol={{ span: 24 }}
         submitter={false}
         formRef={formRef}
-        onFinish={async (values) => {
-          console.log(values);
-        }}
         columns={columns}
       />
     </Drawer>

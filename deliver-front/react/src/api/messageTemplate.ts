@@ -38,22 +38,6 @@ export async function getMessageTypeByChannelType(data: {
 }
 
 /**
- * 根据渠道类型查询 APP
- * @param data 1-电话、2-短信、3-邮件、4-钉钉、5-企业微信、6-飞书
- * @returns 返回消息类型
- */
-export async function getApp(data: {
-  channelType: number;
-  channelProviderType: number;
-}): Promise<never> {
-  return await request({
-    url: '/channelApp/getAppByChannel',
-    method: 'post',
-    data
-  });
-}
-
-/**
  * 新增模版
  * @param data 新增模板数据
  * @returns

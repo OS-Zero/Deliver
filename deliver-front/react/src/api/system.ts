@@ -52,3 +52,16 @@ export function getFileType(data: { channelType: number }): Promise<PlatFormFile
     data
   });
 }
+
+
+// 根据渠道类型查询 APP
+export async function getApp(data: {
+  channelType: number;
+  channelProviderType: number;
+}): Promise<never> {
+  return await request({
+    url: '/channelApp/getAppByChannel',
+    method: 'post',
+    data
+  });
+}

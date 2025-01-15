@@ -52,3 +52,13 @@ export interface Users {
   usersType: number;
   usersTypeName: string;
 }
+
+export interface Message {
+  messageType: string | number;
+  messageTypeName: string;
+}
+
+export interface App {
+  appId: number;
+  appName: string;
+}

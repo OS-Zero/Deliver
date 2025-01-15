@@ -1,9 +1,7 @@
 import { R, SearchData } from '@/types';
 import {
   App,
-  Channel,
   ChannelApp,
-  ChannelProvider,
   SaveChannelApp,
   SearchParams,
   UpdateChannelApp
@@ -45,17 +43,6 @@ export function updateChannelAppStatus(data: {
 export function deleteChannelApp(data: { ids: App['appId'][] }): Promise<never> {
   return request({
     url: '/channelApp/delete',
-    method: 'post',
-    data
-  });
-}
-
-export function getAppByChannel(data: {
-  channelType: Channel['channelType'];
-  channelProviderType: ChannelProvider['channelProviderType'];
-}): Promise<App[]> {
-  return request({
-    url: '/channelApp/getAppByChannel',
     method: 'post',
     data
   });
