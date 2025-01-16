@@ -1,6 +1,6 @@
-import React, { useRef, useState } from 'react';
-import { ProColumns, ProTable } from '@ant-design/pro-components';
-import { Button } from 'antd';
+import React, { MutableRefObject, useRef, useState } from 'react';
+import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
+import { Button, Switch } from 'antd';
 import { FilterOutlined } from '@ant-design/icons';
 import { PlatformFileDetail } from './type.ts';
 import { platformColumns, platformTableSchema } from './constant.tsx';
@@ -18,13 +18,32 @@ interface AddRef {
 const PlatformFile: React.FC = () => {
   const detailRef = useRef<{ getDetail: (record: PlatformFileDetail) => void }>();
   const addRef = useRef<AddRef>();
+  const proTableRef = useRef<ActionType>();
   const [tableParams, setTableParams] = useState({});
   const [filterOpen, setFilterOpen] = useState(false);
-  const { fetchPlatformData } = useFileData();
+  const { fetchPlatformData, savePlatformData } = useFileData();
 
   // 这两列涉及到状态的改变，于是写在视图层
   const columns: ProColumns<PlatformFileDetail>[] = [
-    ...platformTableSchema,
+    ...platformTableSchema({
+      title: '文件状态',
+      width: 120,
+      dataIndex: 'platformFileStatus',
+      render: (_, record: PlatformFileDetail) => {
+        // const handleStatusChange = async (checked: boolean) => {
+        //   await changeStatus(record.appId, checked ? 1 : 0);
+        //   proTableRef?.current?.reload();
+        // };
+        return (
+          <Switch
+            checkedChildren="启用"
+            unCheckedChildren="禁用"
+            checked={Boolean(record?.platformFileStatus)}
+            // onChange={handleStatusChange}
+          />
+        );
+      }
+    }),
     {
       title: '操作',
       width: 160,
@@ -49,7 +68,8 @@ const PlatformFile: React.FC = () => {
 
   return (
     <div className={styles['file-container']}>
-      <ProTable<PlatformFileDetail>
+      <ProTable
+        actionRef={proTableRef}
         params={tableParams}
         columns={columns}
         request={fetchPlatformData}
@@ -77,8 +97,14 @@ const PlatformFile: React.FC = () => {
           onSearch: setTableParams
         })}
       />
-      <AddFileDrawer ref={addRef} onSubmit={fetchPlatformData} />
-      <DetailDrawer ref={detailRef} columns={platformColumns} />
+      <AddFileDrawer
+        ref={addRef}
+        onSubmit={savePlatformData}
+        reFresh={() => {
+          (proTableRef as MutableRefObject<ActionType>)?.current?.reset?.();
+        }}
+      />
+      <DetailDrawer ref={detailRef} columns={platformColumns} title={'文件详情'} />
       {filterOpen && (
         <div className={styles['filter-container']}>
           <FilterCard onClose={() => setFilterOpen(false)} onFilter={handleFilter} />

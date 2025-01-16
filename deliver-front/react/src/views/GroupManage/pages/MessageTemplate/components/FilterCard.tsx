@@ -57,7 +57,19 @@ const FilterDrawer = (props: FilterDrawerProps) => {
     >
       <Form ref={formRef} layout="vertical" onValuesChange={handleFilter}>
         <Form.Item label="用户类型" name="usersType">
-          <Select placeholder="请选择用户类型" onChange={handleUsersTypeChange} allowClear>
+          <Select
+            placeholder="请选择用户类型"
+            onChange={(value: number) => {
+              formRef?.current?.resetFields([
+                'channelType',
+                'channelProviderType',
+                'messageType',
+                'appId'
+              ]);
+              handleUsersTypeChange(value);
+            }}
+            allowClear
+          >
             {userTypeParams.map((item) => (
               <Option key={item.usersType} value={item.usersType}>
                 {item.usersTypeName}
@@ -66,7 +78,14 @@ const FilterDrawer = (props: FilterDrawerProps) => {
           </Select>
         </Form.Item>
         <Form.Item label="渠道类型" name="channelType">
-          <Select placeholder="请选择渠道类型" onChange={handleChannelTypeChange} allowClear>
+          <Select
+            placeholder="请选择渠道类型"
+            onChange={(value: number) => {
+              formRef?.current?.resetFields(['channelProviderType', 'messageType', 'appId']);
+              handleChannelTypeChange(value);
+            }}
+            allowClear
+          >
             {options.channelTypeOptions.map((channel) => (
               <Option key={channel.channelType} value={channel.channelType}>
                 {channel.channelTypeName}
@@ -77,7 +96,10 @@ const FilterDrawer = (props: FilterDrawerProps) => {
         <Form.Item label="渠道供应商类型" name="channelProviderType">
           <Select
             placeholder="请选择渠道供应商类型"
-            onChange={handleChannelProviderTypeChange}
+            onChange={(value: number) => {
+              formRef?.current?.resetFields(['messageType', 'appId']);
+              handleChannelProviderTypeChange(value);
+            }}
             allowClear
           >
             {options.channelProvidersOptions.map((provider) => (

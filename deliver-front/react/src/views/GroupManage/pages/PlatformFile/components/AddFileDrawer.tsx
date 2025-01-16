@@ -1,5 +1,5 @@
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
-import { Button, Drawer, Space, FormInstance, Upload } from 'antd';
+import { Button, Drawer, Space, FormInstance, Upload, message } from 'antd';
 import { BetaSchemaForm, ProFormColumnsType } from '@ant-design/pro-components';
 import { useFormOptions } from '@/hooks/useFormOptions';
 import { InboxOutlined } from '@ant-design/icons';
@@ -8,10 +8,12 @@ const { Dragger } = Upload;
 
 interface AddFileDrawerProps {
   onSubmit?: (values: any) => void;
+  reFresh?: () => void;
 }
 
 const AddFileDrawer = forwardRef((props: AddFileDrawerProps, ref) => {
-  const { onSubmit } = props;
+  const { onSubmit, reFresh } = props;
+  const [fileList, setFileList] = useState<any[]>([]);
   const [open, setOpen] = useState(false);
   const formRef = useRef<FormInstance>(null);
 
@@ -23,13 +25,32 @@ const AddFileDrawer = forwardRef((props: AddFileDrawerProps, ref) => {
   const handleSubmit = async () => {
     try {
       const values = await formRef?.current?.validateFields();
-      console.log(values);
-      onSubmit?.(values);
+      const formData = new FormData();
+
+      if (fileList.length > 0) {
+        formData.append('file', fileList[0]);
+      }
+
+      const fileObject = {};
+      formData.forEach((value, key) => (fileObject[key] = value));
+
+      const submitData = {
+        ...values,
+        ...fileObject
+      };
+
+      // ['channelType', 'channelProviderType', 'appId'].forEach((key) => {
+      //   if (key in submitData) {
+      //     submitData[key] = Number(submitData[key]);
+      //   }
+      // });
+      console.log('Submit data:', submitData);
+      onSubmit?.(submitData);
       formRef?.current?.resetFields();
+      setFileList([]);
+      setOpen(false);
     } catch (error) {
       console.error('保存失败:', error);
-    } finally {
-      setOpen(false);
     }
   };
 
@@ -56,16 +77,46 @@ const AddFileDrawer = forwardRef((props: AddFileDrawerProps, ref) => {
     {
       title: '文件',
       dataIndex: 'platformFile',
-      ...rule('请输入文件名'),
       width: 'm',
       renderFormItem: () => (
-        <Dragger name="file" maxCount={1}>
+        <Dragger
+          name="file"
+          maxCount={1}
+          fileList={fileList}
+          beforeUpload={(file) => {
+            setFileList([file]);
+            return false;
+          }}
+          onRemove={() => {
+            setFileList([]);
+          }}
+          onChange={(info) => {
+            if (info.file.status === 'removed') {
+              setFileList([]);
+            } else {
+              message.success(`${info.file.name} 文件已选择`);
+            }
+          }}
+        >
           <p className="ant-upload-drag-icon">
             <InboxOutlined />
           </p>
           <p className="ant-upload-text">点击或拖拽上传</p>
         </Dragger>
-      )
+      ),
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            validator: (_, value) => {
+              if (fileList.length === 0) {
+                return Promise.reject('请上传文件');
+              }
+              return Promise.resolve();
+            }
+          }
+        ]
+      }
     },
     {
       title: '文件名',
@@ -116,15 +167,22 @@ const AddFileDrawer = forwardRef((props: AddFileDrawerProps, ref) => {
         options: options.fileTypeOptions.map((d) => ({
           value: d.platformFileType,
           label: d.platformFileTypeName
-        })),
+        }))
       },
       ...rule('文件类型')
     },
     {
       title: '关联应用',
       dataIndex: 'appId',
-      ...rule('关联应用'),
-      width: '100%'
+      valueType: 'select',
+      width: '100%',
+      fieldProps: {
+        options: options.appOptions.map((d) => ({
+          value: d.appId,
+          label: d.appName
+        }))
+      },
+      ...rule('关联应用')
     }
   ];
 

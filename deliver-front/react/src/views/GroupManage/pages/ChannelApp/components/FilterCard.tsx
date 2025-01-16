@@ -55,7 +55,10 @@ const FilterDrawer = (props: FilterDrawerProps) => {
         <Form.Item label="渠道类型" name="channelType">
           <Select
             placeholder="请选择渠道类型"
-            onChange={handleChannelTypeChange}
+            onChange={(value: number) => {
+              formRef?.current?.resetFields(['channelProviderType', 'appConfig']);
+              handleChannelTypeChange(value);
+            }}
             allowClear
             options={(options.channelTypeOptions || []).map((d) => ({
               value: d.channelType,

@@ -6,7 +6,9 @@ import { getColor } from '@/utils/getTagStyle';
 const { Paragraph } = Typography;
 
 // 表格schema配置
-export const platformTableSchema: ProColumns<PlatformFileDetail>[] = [
+export const platformTableSchema: (
+  statusConfig: ProColumns<PlatformFileDetail>
+) => ProColumns<PlatformFileDetail>[] = (statusConfig) => [
   {
     title: '文件 ID',
     width: 80,
@@ -21,27 +23,27 @@ export const platformTableSchema: ProColumns<PlatformFileDetail>[] = [
     valueType: 'text'
   },
   {
-    title: 'APP 类型',
-    width: 120,
-    dataIndex: 'appName',
-    valueType: 'image',
-    render: (_, record) => <Tag color={getColor(record?.appId)}>{_}</Tag>
-  },
-  {
     title: '文件类型',
     width: 120,
     dataIndex: 'platformFileTypeName',
     render: (_, record) => <Tag color={getColor(Number(record?.platformFileType))}>{_}</Tag>
   },
   {
-    title: '文件状态',
+    title: '渠道类型',
     width: 120,
-    dataIndex: 'platformFileStatus',
-    render: (_, record) => (record?.platformFileStatus ? '启用' : '禁用')
+    dataIndex: 'channelTypeName',
+    render: (_, record) => <Tag color={getColor(record?.channelType)}>{_}</Tag>
   },
   {
+    title: '关联应用',
     width: 120,
-    title: '创建用户',
+    dataIndex: 'appName',
+    render: (_, record) => <Tag color={getColor(record?.appId)}>{_}</Tag>
+  },
+  statusConfig,
+  {
+    width: 120,
+    title: '创建者',
     dataIndex: 'createUser',
     valueType: 'text'
   },

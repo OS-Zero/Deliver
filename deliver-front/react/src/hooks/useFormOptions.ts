@@ -100,7 +100,8 @@ export const useFormOptions = (props: UseFormOptionsProps) => {
         }
         break;
       }
-      case 'template': {
+      case 'template':
+      case 'file': {
         const params = {
           channelType: myRef?.current?.getFieldValue('channelType'),
           channelProviderType: value
@@ -146,8 +147,9 @@ export const useFormOptions = (props: UseFormOptionsProps) => {
 
   // 获取渠道类型数据
   useEffect(() => {
+    const usersType = key === 'file' ? -2 : -1;
     if (!options.channelTypeOptions.length) {
-      getChannelType({ usersType: -1 }).then((res: Channel[]) => {
+      getChannelType({ usersType }).then((res: Channel[]) => {
         setOptions((prev) => ({
           ...prev,
           channelTypeOptions: res
