@@ -126,7 +126,7 @@ export const useFormOptions = (props: UseFormOptionsProps) => {
             console.error('获取消息类型和应用失败:', error);
           }
         }
-        if (editValue) {
+        if (editValue?.channelProviderType) {
           try {
             const messageResponse = await getMessageType(editValue);
             const appResponse = await getApp(editValue);

@@ -23,8 +23,8 @@
 
     .filter-container {
       width: 0;
-	    transition: width 120ms;
-	    border: 0;
+      transition: width 120ms;
+      border: 0;
       :global {
         .ant-card-head {
           padding: 0;
@@ -33,6 +33,9 @@
         }
         .ant-card-body {
           padding: 0;
+        }
+        .ant-picker-outlined {
+          width: 100%;
         }
       }
     }

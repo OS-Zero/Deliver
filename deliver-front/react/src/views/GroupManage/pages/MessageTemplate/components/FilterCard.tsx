@@ -1,10 +1,10 @@
-import { Form, Select, Button, Card, FormInstance } from 'antd';
-import { getChannelType, getChannelProviderType } from '@/api/system';
-import { useFormState } from '../../../../../hooks/useFormState';
+import { Form, Select, Button, Card, FormInstance, DatePicker } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 import { useRef } from 'react';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useGlobalContext } from '@/context/GlobalContext';
+import { useFormOptions } from '@/hooks/useFormOptions';
+import local from 'antd/lib/date-picker/locale/zh_CN.js';
 
 const { Option } = Select;
 interface FilterDrawerProps {
@@ -17,40 +17,18 @@ const FilterDrawer = (props: FilterDrawerProps) => {
   const formRef = useRef<FormInstance>(null);
 
   // 使用 useFormState 管理表单状态
-  const { formState, updateFormState } = useFormState();
   const { userTypeParams } = useGlobalContext();
 
-  // 用户类型变更处理
-  const handleUsersTypeChange = async (value: number) => {
-    formRef?.current?.resetFields(['channelType', 'channelProviderType', 'messageType']);
-    // 更新表单状态
-    updateFormState({
-      channelTypes: [],
-      channelProviders: [],
-      messageTypes: []
-    });
-    try {
-      const response = await getChannelType({ usersType: value });
-      updateFormState({ channelTypes: response });
-    } catch (error) {
-      console.error('获取渠道类型失败:', error);
-    }
-  };
-
-  // 渠道类型变更处理
-  const handleChannelTypeChange = async (value: number) => {
-    formRef?.current?.resetFields(['channelProviderType', 'messageType']);
-    updateFormState({ channelProviders: [], messageTypes: [] });
-    try {
-      const response = await getChannelProviderType({ channelType: value });
-      updateFormState({
-        channelProviders: response.channelProviderTypeList,
-        messageTypes: response.messageTypeList
-      });
-    } catch (error) {
-      console.error('获取渠道供应商和消息类型失败:', error);
-    }
-  };
+  // 获取change函数以及设置初始获取渠道类型数据
+  const {
+    options,
+    handleUsersTypeChange,
+    handleChannelTypeChange,
+    handleChannelProviderTypeChange
+  } = useFormOptions({
+    myRef: formRef,
+    key: 'template'
+  });
 
   const debouncedFilter = useDebounce(onFilter);
 
@@ -79,7 +57,7 @@ const FilterDrawer = (props: FilterDrawerProps) => {
     >
       <Form ref={formRef} layout="vertical" onValuesChange={handleFilter}>
         <Form.Item label="用户类型" name="usersType">
-          <Select placeholder="请选择用户类型" onChange={handleUsersTypeChange}>
+          <Select placeholder="请选择用户类型" onChange={handleUsersTypeChange} allowClear>
             {userTypeParams.map((item) => (
               <Option key={item.usersType} value={item.usersType}>
                 {item.usersTypeName}
@@ -88,8 +66,8 @@ const FilterDrawer = (props: FilterDrawerProps) => {
           </Select>
         </Form.Item>
         <Form.Item label="渠道类型" name="channelType">
-          <Select placeholder="请选择渠道类型" onChange={handleChannelTypeChange}>
-            {formState.channelTypes.map((channel) => (
+          <Select placeholder="请选择渠道类型" onChange={handleChannelTypeChange} allowClear>
+            {options.channelTypeOptions.map((channel) => (
               <Option key={channel.channelType} value={channel.channelType}>
                 {channel.channelTypeName}
               </Option>
@@ -97,8 +75,12 @@ const FilterDrawer = (props: FilterDrawerProps) => {
           </Select>
         </Form.Item>
         <Form.Item label="渠道供应商类型" name="channelProviderType">
-          <Select placeholder="请选择渠道供应商类型">
-            {formState.channelProviders.map((provider) => (
+          <Select
+            placeholder="请选择渠道供应商类型"
+            onChange={handleChannelProviderTypeChange}
+            allowClear
+          >
+            {options.channelProvidersOptions.map((provider) => (
               <Option key={provider.channelProviderType} value={provider.channelProviderType}>
                 {provider.channelProviderTypeName}
               </Option>
@@ -106,8 +88,8 @@ const FilterDrawer = (props: FilterDrawerProps) => {
           </Select>
         </Form.Item>
         <Form.Item label="消息类型" name="messageType">
-          <Select placeholder="请选择消息类型">
-            {formState.messageTypes.map((messageType) => (
+          <Select placeholder="请选择消息类型" allowClear>
+            {options.messageTypeOptions.map((messageType) => (
               <Option key={messageType.messageType} value={messageType.messageType}>
                 {messageType.messageTypeName}
               </Option>
@@ -119,6 +101,22 @@ const FilterDrawer = (props: FilterDrawerProps) => {
             <Option value={0}>禁用</Option>
             <Option value={1}>启用</Option>
           </Select>
+        </Form.Item>
+        <Form.Item label="开始时间" name="startTime">
+          <DatePicker
+            showTime
+            format="YYYY-MM-DD HH:mm:ss"
+            placeholder="请选择开始时间"
+            locale={local}
+          />
+        </Form.Item>
+        <Form.Item label="结束时间" name="endTime">
+          <DatePicker
+            showTime
+            format="YYYY-MM-DD HH:mm:ss"
+            placeholder="请选择结束时间"
+            locale={local}
+          />
         </Form.Item>
       </Form>
     </Card>
