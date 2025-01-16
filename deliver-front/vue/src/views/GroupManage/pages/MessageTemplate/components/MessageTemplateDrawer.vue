@@ -45,8 +45,8 @@ watch(props, (newProps) => {
 		extra: props.operation === 'more' ? false : true,
 		okText: props.operation === 'testSend' ? '发送' : '确认',
 	});
-	newProps.operation === 'edit' && newProps.open === true && initFormDate();
-	newProps.operation === 'more' && initMoreDate();
+	newProps.operation === 'edit' && newProps.open && initFormDate();
+	newProps.operation === 'more' && newProps.open && initMoreDate();
 	newProps.operation === 'testSend' && initTestMessageFormDate();
 })
 const initFormDate = () => {
@@ -70,19 +70,35 @@ const initTestMessageFormDate = () => {
 	})
 }
 const initMoreDate = () => {
-	const set = new Set(['usersType', 'channelType', 'channelProviderType', 'messageType', 'appId'])
-	const arr: Array<{ label: string; value: any }> = []
-	for (const key in props.record) {
-		if (!set.has(key)) {
-			arr.push({
-				label: messageTemplateLocale[key],
-				value: props.record[key]
-			})
-		}
+	const obj = {
+		templateInfo: ['templateId', 'templateName', 'templateDescription', 'templateStatus', 'createUser', 'createTime'],
+		typeInfo: ['usersTypeName', 'channelTypeName', 'channelProviderTypeName', 'messageTypeName'],
+		linkInfo: ['appName']
 	}
-	Object.assign(moreInfo, arr)
+	for (const key in obj) {
+		let group: any = {
+			config: {
+				title: ''
+			},
+			data: []
+		}
+		if (key === 'templateInfo') {
+			group.config.title = '模板信息'
+		} else if (key === 'typeInfo') {
+			group.config.title = '类型信息'
+		} else if (key === 'linkInfo') {
+			group.config.title = '关联信息'
+		}
+		obj[key].forEach((name: string) => {
+			group.data.push({
+				label: messageTemplateLocale[name],
+				value: props.record[name]
+			})
+		});
+		groups.push(group)
+	}
 }
-const moreInfo = reactive<Array<{ label: string; value: any }>>([])
+const groups = reactive<any>([])
 const operationDispatch = {
 	add: async () => {
 		await formRef.value?.validate()
@@ -105,6 +121,7 @@ const operationDispatch = {
 const handleCancel = () => {
 	props.operation !== 'more' && formRef.value?.resetFields()
 	drawerState.open = false
+	groups.length = 0
 	emit('close')
 }
 
@@ -115,19 +132,26 @@ const handleCancel = () => {
 		<Form ref="formRef" v-if="operation === 'add' || operation === 'edit'" :form-schema="messageTemplateForm" />
 		<Form ref="formRef" v-else-if="operation === 'testSend'" :form-schema="testMessageForm" />
 		<div v-else-if="operation === 'more'">
-			<Descriptions :data="moreInfo" :config="{ column: 1 }">
-				<template #content="{ item }">
+			<Descriptions :groups="groups">
+				<template #value="{ item }">
 					<template v-if="item.label === '模板 Id'">
 						{{ item.value }}
 						<CopyOutlined v-if="item.label === '模板 Id'" class="id--copy" @click="copyId(item.value)" />
 					</template>
 					<template v-if="item.label === '模板状态'">
-						{{ !!item.value ? '开启' : '关闭' }}
+						{{ item.value ? '开启' : '关闭' }}
+						<Status :success="item.value"></Status>
 					</template>
 				</template>
+
 			</Descriptions>
 		</div>
 	</Drawer>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.id--copy {
+	color: var(--primary-color);
+	margin-left: var(--spacing-xs);
+}
+</style>

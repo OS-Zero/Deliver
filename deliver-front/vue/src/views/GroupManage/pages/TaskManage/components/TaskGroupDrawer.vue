@@ -1,8 +1,11 @@
 <script lang="ts" setup>
+import { searchTemplateByName } from '@/api/messageTemplate';
+import { searchPeopleGroupByName } from '@/api/peopleGroup';
 import { saveTask, updateTask } from '@/api/task';
-import { taskLocale, taskForm } from '@/config/task';
+import { taskLocale, taskForm, validateCronExpression } from '@/config/task';
 import { DrawerProps } from '@/types/components';
 import { getDataFromSchema } from '@/utils/utils';
+import { getRequiredRule } from '@/utils/validate';
 import { FormInstance, message } from 'ant-design-vue';
 import { ref, reactive, watch, nextTick } from 'vue';
 
@@ -34,6 +37,10 @@ watch(props, (newProps) => {
 		placement: newProps.operation === 'more' ? 'left' : 'right',
 		extra: props.operation === 'more' ? false : true,
 	});
+	if (newProps.operation === 'add') {
+		taskForm.taskTimeExpression.type = 'none';
+		taskForm.taskTimeExpression.value = undefined
+	}
 	newProps.operation === 'edit' && newProps.open === true && initFormDate();
 	newProps.operation === 'more' && initMoreDate();
 })
@@ -41,8 +48,31 @@ watch(props, (newProps) => {
 const initFormDate = () => {
 	nextTick(() => {
 		for (const key in taskForm) {
-			if (key === 'taskParam') taskForm[key].value = JSON.parse(props.record[key] || '{}')
+			if (key === 'taskMessageParam') taskForm[key].value = JSON.parse(props.record[key] || '{}')
 			else taskForm[key].value = props.record[key]
+		}
+		searchTemplateByName({ templateName: props.record.templateName }).then((res) => {
+			taskForm.templateId.selectConfig!.options = res.map((item) => ({
+				value: item.templateId,
+				label: item.templateName,
+			}));
+		});
+		searchPeopleGroupByName({ peopleGroupName: props.record.peopleGroupName }).then((res) => {
+			taskForm.peopleGroupId.selectConfig!.options = res.map((item) => ({
+				value: item.peopleGroupId,
+				label: item.peopleGroupName,
+			}));
+		});
+		if (taskForm.taskType.value === 1) {
+			taskForm.taskTimeExpression.type = 'none';
+		} else if (taskForm.taskType.value === 2) {
+			taskForm.taskTimeExpression.type = 'input';
+			taskForm.taskTimeExpression.rules = [{ validator: validateCronExpression }];
+			taskForm.taskTimeExpression.customConfig!.tip =
+				'Cron 表达式格式：秒(0-59) 分钟(0-59) 小时(0-23) 日(1-31) 月(1-12) 星期(0-6或SUN-SAT) 年(可选,1970-2099)。例如：20 3 * * * ? 表示每天 3:20 执行任务；20 3 8 * * ? 表示每月 8 号 3:20 执行任务；* 表示任意值；? 用于表示不指定某个字段的值。';
+		} else if (taskForm.taskType.value === 3) {
+			taskForm.taskTimeExpression.rules = [getRequiredRule('请选择日期')];
+			taskForm.taskTimeExpression.type = 'datePicker';
 		}
 	})
 }

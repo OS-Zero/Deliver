@@ -14,7 +14,7 @@ export const messageTemplateLocale = {
 	templateId: '模板 Id',
 	templateDescription: '模板描述',
 	appId: '关联应用',
-	appName: '应用名',
+	appName: '关联应用',
 	templateName: '模板名',
 	messageTypeName: '消息类型',
 	usersTypeName: '用户类型',
@@ -65,6 +65,7 @@ export const messageTemplateColumns: ColumnsType = [
 		title: '关联应用',
 		dataIndex: 'appName',
 		key: 'appName',
+		width: 150,
 	},
 	{
 		title: '创建者',

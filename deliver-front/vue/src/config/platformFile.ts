@@ -21,11 +21,6 @@ export const platformFileLocale = {
 };
 export const platformFileColumns: ColumnsType = [
 	{
-		title: '文件 Id',
-		dataIndex: 'platformFileId',
-		key: 'platformFileId',
-	},
-	{
 		title: '文件名',
 		dataIndex: 'platformFileName',
 		key: 'platformFileName',

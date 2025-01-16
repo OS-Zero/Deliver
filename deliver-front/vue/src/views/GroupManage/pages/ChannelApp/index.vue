@@ -3,7 +3,7 @@ import { ref, onBeforeMount, reactive, h, watch } from 'vue'
 import { channelAppColumns, filterForm, setFilterOptionsDispatch } from "@/config/channelApp"
 import { CopyOutlined, DownOutlined, ExclamationCircleOutlined, FilterOutlined, CloseOutlined, AppstoreOutlined, MenuOutlined } from '@ant-design/icons-vue';
 import { copyToClipboard, getDataFromSchema } from '@/utils/utils';
-import { FormInstance, message, Modal, TableProps } from 'ant-design-vue';
+import { FormInstance, message, Modal, TableProps, Empty } from 'ant-design-vue';
 import SearchInput from '@/components/SearchInput/index.vue'
 import { debounce } from 'lodash'
 import { usePagination } from '@/hooks/table';
@@ -13,13 +13,22 @@ import { ChannelApp } from '@/types/channelApp';
 import ChannelAppDrawer from './components/ChannelAppDrawer.vue';
 import { getColor } from '@/utils/table';
 import Card from './components/Card.vue'
+const simpleImage = Empty.PRESENTED_IMAGE_SIMPLE;
 type Operation = 'add' | 'edit' | 'delete' | 'more'
 const dataSource = ref<ChannelApp[]>([])
+const loading = ref(false)
 const searchValue = ref('')
 const handleSearch = async () => {
-	const { records, total } = await getChannelApp({ appName: searchValue.value, ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
-	dataSource.value = records
-	pagination.total = total
+	try {
+		loading.value = true
+		const { records, total } = await getChannelApp({ appName: searchValue.value, ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
+		dataSource.value = records
+		pagination.total = total
+		loading.value = false
+	} catch (error) {
+		loading.value = false
+	}
+
 }
 const debounceSearch = debounce(handleSearch, 200)
 const { pagination, resetPagination } = usePagination(handleSearch)
@@ -128,13 +137,15 @@ onBeforeMount(() => {
 							<template #title>
 								<span>表格视图</span>
 							</template>
-							<a-button :icon="h(MenuOutlined)" size="small" type="text" @click="tableView = true"></a-button>
+							<a-button class="toggle_btn" :icon="h(MenuOutlined)" size="small" type="text" @click="tableView = true"
+								:class="{ active: tableView }"></a-button>
 						</a-tooltip>
 						<a-tooltip placement="top">
 							<template #title>
 								<span>卡片视图</span>
 							</template>
-							<a-button :icon="h(AppstoreOutlined)" size="small" type="text" @click="tableView = false"></a-button>
+							<a-button class="toggle_btn" :icon="h(AppstoreOutlined)" size="small" type="text"
+								@click="tableView = false" :class="{ active: !tableView }"></a-button>
 						</a-tooltip>
 					</div>
 					<a-button :icon="h(FilterOutlined)" @click="filterState.open = !filterState.open"></a-button>
@@ -148,7 +159,7 @@ onBeforeMount(() => {
 				</div>
 			</div>
 			<a-table v-show="tableView" row-key="appId" :dataSource="dataSource" :columns="channelAppColumns"
-				:row-selection="rowSelection" :pagination="pagination" :scroll="{ x: 1400, y: 680 }">
+				:row-selection="rowSelection" :pagination="false" :scroll="{ x: 1400, y: 680 }" :loading="loading">
 				<template #bodyCell="{ column, text, record }">
 					<template v-if="column.key === 'appId'">
 						{{ text }}
@@ -158,7 +169,7 @@ onBeforeMount(() => {
 						<a-switch :checked="Boolean(record[column.key])" @change="changeStatus(record)" checked-children="开启"
 							un-checked-children="关闭" />
 					</template>
-					<template v-if="['channelProviderTypeName', 'channelTypeName'].includes(column.key as string)">
+					<template v-else-if="['channelProviderTypeName', 'channelTypeName'].includes(column.key as string)">
 						<a-tag :color="getColor(text)">{{ text }}</a-tag>
 					</template>
 					<template v-else-if="column.key === 'actions'">
@@ -185,6 +196,8 @@ onBeforeMount(() => {
 					@handleActions="handleActions">
 				</Card>
 			</div>
+			<a-empty class="empty" v-if="!dataSource.length" :image="simpleImage" />
+			<a-pagination class="pagination" v-bind="pagination" />
 		</div>
 		<a-card size="small" class="filter-form" :class="{ open: filterState.open }" title="筛选">
 			<template #extra><a-button type="text" :icon="h(CloseOutlined)" @click="handleFilterClose"></a-button></template>
@@ -206,6 +219,7 @@ onBeforeMount(() => {
 }
 
 .container-table {
+	position: relative;
 	width: calc(100% - 300px);
 	flex: 1 auto;
 }
@@ -282,5 +296,15 @@ onBeforeMount(() => {
 	display: grid;
 	gap: var(--spacing-md);
 	grid-template-columns: repeat(6, 250px);
+}
+
+.pagination {
+	margin-top: var(--spacing-md);
+	position: absolute;
+	right: 0;
+}
+
+.toggle_btn.active {
+	color: var(--primary-color);
 }
 </style>

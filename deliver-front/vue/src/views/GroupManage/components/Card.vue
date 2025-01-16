@@ -49,7 +49,7 @@ const handleOperation = (op: Op) => {
 			{{ data?.updateTime }}
 		</div>
 	</div>
-	<div class="card card--empty" v-else>
+	<div class="card card--empty" v-else-if="isEmpty">
 		<slot>
 			<PlusOutlined class="empty_icon" />
 			<div class="empty_desc">添加分组</div>

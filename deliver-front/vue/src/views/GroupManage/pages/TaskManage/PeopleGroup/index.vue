@@ -15,11 +15,19 @@ import { getColor } from '@/utils/table';
 
 type Operation = 'add' | 'edit' | 'delete' | 'more' | 'download'
 const dataSource = ref<PeopleGroup[]>([])
+const loading = ref(false)
 const searchValue = ref('')
 const handleSearch = async () => {
-	const { records, total } = await getPeopleGroup({ peopleGroupName: searchValue.value, ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
-	dataSource.value = records
-	pagination.total = total
+	try {
+		loading.value = true
+		const { records, total } = await getPeopleGroup({ peopleGroupName: searchValue.value, ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
+		dataSource.value = records
+		pagination.total = total
+		loading.value = false
+	} catch (error) {
+		loading.value = false
+	}
+
 }
 const debounceSearch = debounce(handleSearch, 200)
 const { pagination, resetPagination } = usePagination(handleSearch)
@@ -137,16 +145,16 @@ onUnmounted(() => {
 				</div>
 			</div>
 			<a-table row-key="peopleGroupId" :dataSource="dataSource" :columns="peopleGroupColumns"
-				:row-selection="rowSelection" :pagination="pagination" :scroll="{ x: 1400, y: 680 }">
+				:row-selection="rowSelection" :pagination="pagination" :scroll="{ x: 1400, y: 680 }" :loading="loading">
 				<template #bodyCell="{ column, text, record }">
 					<template v-if="column.key === 'peopleGroupId'">
 						{{ text }}
 						<CopyOutlined class="id--copy" @click="copyId(text)" />
 					</template>
-					<template v-if="column.key === 'usersTypeName'">
+					<template v-else-if="column.key === 'usersTypeName'">
 						<a-tag :color="getColor(text)">{{ text }}</a-tag>
 					</template>
-					<template v-if="column.key === 'actions'">
+					<template v-else-if="column.key === 'actions'">
 						<a-button type="link" @click="handleActions('edit', record)">编辑 </a-button>
 						<a-button type="link" danger @click="handleActions('delete', record)">删除</a-button>
 						<a-dropdown placement="bottom">

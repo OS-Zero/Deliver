@@ -18,11 +18,6 @@ export const channelAppLocale = {
 };
 export const channelAppColumns: ColumnsType = [
 	{
-		title: '应用 Id',
-		dataIndex: 'appId',
-		key: 'appId',
-	},
-	{
 		title: '应用名',
 		dataIndex: 'appName',
 		key: 'appName',

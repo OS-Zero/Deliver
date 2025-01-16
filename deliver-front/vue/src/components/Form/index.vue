@@ -101,6 +101,10 @@ defineExpose({
 </template>
 
 <style lang="scss" scoped>
+.ant-form-item {
+	margin-bottom: var(--spacing-md);
+}
+
 .list-item {
 	display: flex;
 	align-items: top;

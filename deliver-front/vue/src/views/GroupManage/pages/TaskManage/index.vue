@@ -14,11 +14,19 @@ import TaskGroupDrawer from './components/TaskGroupDrawer.vue';
 
 type Operation = 'add' | 'edit' | 'delete' | 'more' | 'sendTask'
 const dataSource = ref<Task[]>([])
+const loading = ref(false)
 const searchValue = ref('')
 const handleSearch = async () => {
-	const { records, total } = await getTask({ taskName: searchValue.value, ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
-	dataSource.value = records
-	pagination.total = total
+	try {
+		loading.value = true
+		const { records, total } = await getTask({ taskName: searchValue.value, ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
+		dataSource.value = records
+		pagination.total = total
+		loading.value = false
+	} catch (error) {
+		loading.value = false
+	}
+
 }
 const debounceSearch = debounce(handleSearch, 200)
 const { pagination, resetPagination } = usePagination(handleSearch)
@@ -134,21 +142,27 @@ onBeforeMount(() => {
 				</div>
 			</div>
 			<a-table row-key="taskId" :dataSource="dataSource" :columns="taskColumns" :row-selection="rowSelection"
-				:pagination="pagination" :scroll="{ x: 1400, y: 680 }">
+				:pagination="pagination" :scroll="{ x: 1400, y: 680 }" :loading="loading">
 				<template #bodyCell="{ column, text, record }">
 					<template v-if="column.key === 'taskId'">
 						{{ text }}
 						<CopyOutlined class="id--copy" @click="copyId(text)" />
 					</template>
-					<template v-if="column.key === 'taskStatus'">
+					<template v-else-if="column.key === 'taskStatus'">
 						<a-switch :checked="Boolean(record[column.key])" checked-children="开启" un-checked-children="关闭"
 							@click="changeStatus(record)" />
 					</template>
-					<template v-if="column.key === 'taskType'">
+					<template v-else-if="column.key === 'taskType'">
 						<a-tag v-if="record[column.key] === 1" color="success">实时</a-tag>
 						<a-tag v-else="record[column.key] === 2" color="error">定时</a-tag>
 					</template>
-					<template v-if="column.key === 'actions'">
+					<template v-else-if="column.key === 'peopleGroupName'">
+						<span style="color: var(--primary-color);">{{ text }}</span>
+					</template>
+					<template v-else-if="column.key === 'templateName'">
+						<span style="color: var(--primary-color);">{{ text }}</span>
+					</template>
+					<template v-else-if="column.key === 'actions'">
 						<a-button type="link" @click="handleActions('edit', record)">编辑 </a-button>
 						<a-button type="link" danger @click="handleActions('delete', record)">删除</a-button>
 						<a-dropdown placement="bottom">

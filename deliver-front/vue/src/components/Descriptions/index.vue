@@ -1,20 +1,48 @@
 <script lang="ts" setup>
-import { DescriptionsProps } from 'ant-design-vue';
-
+import { CardProps } from 'ant-design-vue';
+interface Group {
+	config: CardProps
+	data: Array<{ label: string, value: any }>
+}
 defineProps<{
-	data: Array<{ label: string; value: any }>
-	config?: DescriptionsProps
+	groups: Group[]
 }>()
 </script>
 
 <template>
-	<a-descriptions v-bind="config">
-		<a-descriptions-item v-for="item in data" :label="item.label" :key="item.label">
-			<slot name="content" :item="item">
-				{{ item.value }}
-			</slot>
-		</a-descriptions-item>
-	</a-descriptions>
+	<a-card size="small" v-for="item in groups" v-bind="item.config">
+		<div class="item" v-for="_item in item.data">
+			<div class="item--label">
+				<slot name="label" :label="_item.label">
+					{{ _item.label }}
+				</slot>
+			</div>
+			<div class="item--value">
+				<slot name="value" :item="_item">
+					{{ _item.value }}
+				</slot>
+			</div>
+		</div>
+	</a-card>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.ant-card {
+	margin-bottom: var(--spacing-md);
+}
+
+.item {
+	margin-bottom: var(--spacing-md);
+}
+
+.item--label {
+	color: var(--secondary-color);
+	margin-bottom: var(--spacing-xs);
+}
+
+.item--value {
+	display: flex;
+	align-items: center;
+	font-size: var(--font-size-base);
+}
+</style>

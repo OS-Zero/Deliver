@@ -14,6 +14,10 @@ const router = useRouter()
 const state = reactive({
 	mainPage: true,
 	search: '',
+	loading: true,
+	paragraph: {
+		rows: 5,
+	}
 })
 const drawerState = reactive<{
 	open: boolean
@@ -24,19 +28,21 @@ const drawerState = reactive<{
 	operation: 'add',
 	record: {}
 })
+const groupList = reactive<GroupCardList>({
+	topUpGroupList: [],
+	defaultGroupList: []
+})
 const handleSearch = async (groupName: string = state.search) => {
 	const res = await getGroupData({ groupName: groupName })
 	Object.assign(groupList, res)
+	state.loading = false
 }
 const debounceSearch = debounce(handleSearch, 200)
 const handleClose = () => {
 	drawerState.open = false
 	debounceSearch()
 }
-const groupList = reactive<GroupCardList>({
-	topUpGroupList: [],
-	defaultGroupList: []
-})
+
 
 const operationDispatch = {
 	delete: async (record: Record<string, any> = {}) => {
@@ -79,12 +85,14 @@ watch(() => router.currentRoute.value.path, async (to: string) => {
 			<div class="card-top">
 				<h3>置顶分组</h3>
 				<div class="top_cards">
-					<Card is-empty v-if="groupList.topUpGroupList.length === 0">
-						当前置顶分组为空，你可以选择置顶分组方便后续查找分组
-					</Card>
-					<Card v-for="item in groupList.topUpGroupList" :data="item" @on-top="handleActions('top', item)"
-						@on-edit="handleActions('edit', item)" @on-delete="handleActions('delete', item)" :key="item.groupId">
-					</Card>
+					<a-skeleton active :loading="state.loading" :paragraph="state.paragraph">
+						<Card is-empty v-if="groupList.topUpGroupList.length === 0">
+							当前置顶分组为空，你可以选择置顶分组方便后续查找分组
+						</Card>
+						<Card v-for="item in groupList.topUpGroupList" :data="item" @on-top="handleActions('top', item)"
+							@on-edit="handleActions('edit', item)" @on-delete="handleActions('delete', item)" :key="item.groupId">
+						</Card>
+					</a-skeleton>
 				</div>
 			</div>
 			<div class="card-bottom">
@@ -95,9 +103,11 @@ watch(() => router.currentRoute.value.path, async (to: string) => {
 				</div>
 				<div class="bottom_cards">
 					<Card is-empty @click="handleActions('add')"></Card>
-					<Card showAction v-for="item in groupList.defaultGroupList" :data="item" @on-top="handleActions('top', item)"
-						@on-edit="handleActions('edit', item)" @on-delete="handleActions('delete', item)" :key="item.groupId">
-					</Card>
+					<a-skeleton active :loading="state.loading" :paragraph="state.paragraph">
+						<Card v-for="item in groupList.defaultGroupList" :data="item" @on-top="handleActions('top', item)"
+							@on-edit="handleActions('edit', item)" @on-delete="handleActions('delete', item)" :key="item.groupId">
+						</Card>
+					</a-skeleton>
 				</div>
 			</div>
 			<GroupForm v-bind="drawerState" @close="handleClose"></GroupForm>
@@ -144,6 +154,7 @@ watch(() => router.currentRoute.value.path, async (to: string) => {
 	background-color: var(--gray-lightest);
 	padding: var(--spacing-xs);
 	border-radius: var(--border-radius-small);
+	margin-bottom: var(--spacing-md);
 }
 
 .search_input {

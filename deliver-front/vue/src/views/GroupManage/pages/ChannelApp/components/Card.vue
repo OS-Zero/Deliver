@@ -2,7 +2,7 @@
 import { h } from "vue"
 import { ChannelApp } from '@/types/channelApp';
 import { getImg } from '@/utils/table';
-import { EditOutlined } from '@ant-design/icons-vue';
+import { EditOutlined, DownOutlined } from '@ant-design/icons-vue';
 defineProps<{
 	data: ChannelApp
 }>()
@@ -26,10 +26,22 @@ const emit = defineEmits(['changeStatus', 'handleActions'])
 		<div class="card_btns">
 			<div class="btn--operation">
 				<a-button v-show="data.appStatus" @click="emit('changeStatus', data)">禁用</a-button>
-				<a-button v-show="!data.appStatus" @click="emit('changeStatus', data)">开启</a-button>
+				<a-button v-show="!data.appStatus" type="primary" @click="emit('changeStatus', data)">开启</a-button>
 				<a-button v-show="!data.appStatus" @click="emit('handleActions', 'delete', data)">删除</a-button>
 			</div>
-			<a-button class="btn--more" type="text" @click="emit('handleActions', 'more', data)">更多信息</a-button>
+			<a-dropdown placement="bottom">
+				<a-button type="text">
+					更多操作
+					<DownOutlined />
+				</a-button>
+				<template #overlay>
+					<a-menu>
+						<a-menu-item>
+							<div @click="emit('handleActions', 'more', data)">查看更多</div>
+						</a-menu-item>
+					</a-menu>
+				</template>
+			</a-dropdown>
 		</div>
 	</div>
 </template>

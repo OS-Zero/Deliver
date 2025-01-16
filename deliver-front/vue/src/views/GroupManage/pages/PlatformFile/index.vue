@@ -13,11 +13,19 @@ import PlatformFileDrawer from './components/PlatformFileDrawer.vue';
 import { getColor } from '@/utils/table';
 type Operation = 'upload' | 'more'
 const dataSource = ref<PlatformFile[]>([])
+const loading = ref(false)
 const searchValue = ref('')
 const handleSearch = async () => {
-	const { records, total } = await getPlatformFile({ platformFileName: searchValue.value, ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
-	dataSource.value = records
-	pagination.total = total
+	try {
+		loading.value = true
+		const { records, total } = await getPlatformFile({ platformFileName: searchValue.value, ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
+		dataSource.value = records
+		pagination.total = total
+		loading.value = false
+	} catch (error) {
+		loading.value = false
+	}
+
 }
 const debounceSearch = debounce(handleSearch, 200)
 const { pagination, resetPagination } = usePagination(handleSearch)
@@ -46,7 +54,7 @@ const filterState = reactive({
 })
 const formRef = ref<FormInstance>();
 const handleActions = async (operation: Operation, record: Record<string, any> = {}) => {
-	(operation === 'upload' || operation === 'more' || operation === 'more') && (drawerState.operation = operation, drawerState.open = true);
+	(operation === 'upload' || operation === 'more') && (drawerState.operation = operation, drawerState.open = true);
 	(operation === 'more') && (drawerState.record = record);
 }
 const handleFilterClose = () => {
@@ -55,7 +63,7 @@ const handleFilterClose = () => {
 }
 const handleDrawerClose = () => {
 	drawerState.open = false;
-	drawerState.operation === 'upload' && resetPagination() && handleSearch();
+	drawerState.operation === 'upload' && (resetPagination() ,handleSearch());
 }
 onBeforeMount(() => {
 	setFilterOptionsDispatch['channelType']()
@@ -76,18 +84,21 @@ onBeforeMount(() => {
 				</div>
 			</div>
 			<a-table row-key="platformFileId" :dataSource="dataSource" :columns="platformFileColumns" :pagination="pagination"
-				:scroll="{ x: 1400, y: 680 }">
+				:scroll="{ x: 1400, y: 680 }" :loading="loading">
 				<template #bodyCell="{ column, text, record }">
 					<template v-if="column.key === 'platformFileId'">
 						{{ text }}
 						<CopyOutlined class="id--copy" @click="copyId(text)" />
 					</template>
-					<template v-if="column.key === 'platformFileStatus'">
+					<template v-else-if="column.key === 'platformFileStatus'">
 						<a-tag v-if="record[column.key]" color="success">生效中</a-tag>
 						<a-tag v-else="record[column.key]" color="error">已过期</a-tag>
 					</template>
-					<template v-if="['platformFileTypeName', 'channelTypeName'].includes(column.key as string)">
+					<template v-else-if="['platformFileTypeName', 'channelTypeName'].includes(column.key as string)">
 						<a-tag :color="getColor(text)">{{ text }}</a-tag>
+					</template>
+					<template v-else-if="column.key === 'appName'">
+						<span style="color: var(--primary-color);">{{ text }}</span>
 					</template>
 					<template v-else-if="column.key === 'actions'">
 						<a-dropdown placement="bottom">

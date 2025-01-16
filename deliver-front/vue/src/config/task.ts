@@ -23,11 +23,6 @@ export const taskLocale = {
 };
 export const taskColumns: ColumnsType = [
 	{
-		title: '任务 Id',
-		dataIndex: 'taskId',
-		key: 'taskId',
-	},
-	{
 		title: '任务名',
 		dataIndex: 'taskName',
 		key: 'taskName',
@@ -70,7 +65,7 @@ export const taskColumns: ColumnsType = [
 		width: 270,
 	},
 ];
-const validateCronExpression = (_rule: any, value: any) => {
+export const validateCronExpression = (_rule: any, value: any) => {
 	const isValidate = isValidCron(value, {
 		seconds: true,
 		alias: true,
