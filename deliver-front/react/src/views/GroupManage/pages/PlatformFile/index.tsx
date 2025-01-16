@@ -21,7 +21,7 @@ const PlatformFile: React.FC = () => {
   const proTableRef = useRef<ActionType>();
   const [tableParams, setTableParams] = useState({});
   const [filterOpen, setFilterOpen] = useState(false);
-  const { fetchPlatformData, savePlatformData } = useFileData();
+  const { fetchPlatformData, savePlatform } = useFileData();
 
   // 这两列涉及到状态的改变，于是写在视图层
   const columns: ProColumns<PlatformFileDetail>[] = [
@@ -99,7 +99,7 @@ const PlatformFile: React.FC = () => {
       />
       <AddFileDrawer
         ref={addRef}
-        onSubmit={savePlatformData}
+        onSubmit={savePlatform}
         reFresh={() => {
           (proTableRef as MutableRefObject<ActionType>)?.current?.reset?.();
         }}

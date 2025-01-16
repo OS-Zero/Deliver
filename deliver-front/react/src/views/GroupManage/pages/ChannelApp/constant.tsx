@@ -1,21 +1,12 @@
 import type { ProColumns, ProDescriptionsItemProps } from '@ant-design/pro-components';
 import { ChannelApp } from './type';
-import { Tag, Typography } from 'antd';
+import { Tag } from 'antd';
 import { getColor } from '@/utils/getTagStyle';
-
-const { Paragraph } = Typography;
 
 // 表格schema配置
 export const appTableSchema: (statusConfig: ProColumns<ChannelApp>) => ProColumns<ChannelApp>[] = (
   statusConfig
 ) => [
-  {
-    title: '应用 ID',
-    width: 80,
-    dataIndex: 'appId',
-    fixed: 'left',
-    render: (_, record) => <Paragraph copyable>{record?.appId}</Paragraph>
-  },
   {
     title: '应用名',
     width: 120,

@@ -1,4 +1,4 @@
-import { getPlatformPages } from '@/api/platform';
+import { getPlatformPages, savePlatformData } from '@/api/platform';
 import { PlatformFileSearchParams, PlatformFileUploadParams } from './type';
 import { transformParams } from '@/utils/omitProperty';
 
@@ -21,14 +21,13 @@ const useTemplateData = () => {
    * 新增模版
    * @param data
    */
-  const savePlatformData = async (params: PlatformFileUploadParams) => {
-    console.log(params);
+  const savePlatform = async (params: PlatformFileUploadParams) => {
     await savePlatformData(params);
   };
 
   return {
     fetchPlatformData,
-    savePlatformData
+    savePlatform
   };
 };
 

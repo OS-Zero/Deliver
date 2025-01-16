@@ -50,7 +50,7 @@ export const messageTableSchema: (
     title: '关联应用',
     width: 120,
     dataIndex: 'appName',
-    render: (_, record) => <Tag color={getColor(record?.appId)}>{_}</Tag>
+    render: (_, record) => <a color={getColor(record?.appId)}>{_}</a>
   },
   {
     width: 120,

@@ -36,19 +36,17 @@ const AddFileDrawer = forwardRef((props: AddFileDrawerProps, ref) => {
 
       const submitData = {
         ...values,
-        ...fileObject
+        platformFile: fileObject?.file
       };
 
-      // ['channelType', 'channelProviderType', 'appId'].forEach((key) => {
-      //   if (key in submitData) {
-      //     submitData[key] = Number(submitData[key]);
-      //   }
-      // });
+      const { channelProviderType, ...rest } = submitData;
+
       console.log('Submit data:', submitData);
-      onSubmit?.(submitData);
+      await onSubmit?.(rest);
       formRef?.current?.resetFields();
       setFileList([]);
       setOpen(false);
+      reFresh?.();
     } catch (error) {
       console.error('保存失败:', error);
     }
@@ -120,13 +118,13 @@ const AddFileDrawer = forwardRef((props: AddFileDrawerProps, ref) => {
     },
     {
       title: '文件名',
-      dataIndex: 'fileName',
+      dataIndex: 'platformFileName',
       ...rule('文件名'),
       width: '100%'
     },
     {
       title: '文件描述',
-      dataIndex: 'fileDescription',
+      dataIndex: 'platformFileDescription',
       ...rule('文件描述'),
       width: '100%'
     },

@@ -1,21 +1,12 @@
 import type { ProColumns, ProDescriptionsItemProps } from '@ant-design/pro-components';
 import { PlatformFileDetail } from './type';
-import { Tag, Typography } from 'antd';
+import { Tag } from 'antd';
 import { getColor } from '@/utils/getTagStyle';
-
-const { Paragraph } = Typography;
 
 // 表格schema配置
 export const platformTableSchema: (
   statusConfig: ProColumns<PlatformFileDetail>
 ) => ProColumns<PlatformFileDetail>[] = (statusConfig) => [
-  {
-    title: '文件 ID',
-    width: 80,
-    dataIndex: 'platformFileId',
-    fixed: 'left',
-    render: (_, record) => <Paragraph copyable>{record?.platformFileId}</Paragraph>
-  },
   {
     title: '文件名',
     width: 120,
@@ -38,7 +29,7 @@ export const platformTableSchema: (
     title: '关联应用',
     width: 120,
     dataIndex: 'appName',
-    render: (_, record) => <Tag color={getColor(record?.appId)}>{_}</Tag>
+    render: (_, record) => <a color={getColor(record?.appId)}>{_}</a>
   },
   statusConfig,
   {
