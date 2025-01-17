@@ -30,7 +30,7 @@ const emit = defineEmits(['changeStatus', 'handleActions'])
 				<a-button v-show="!data.appStatus" @click="emit('handleActions', 'delete', data)">删除</a-button>
 			</div>
 			<a-dropdown placement="bottom">
-				<a-button type="text">
+				<a-button type="link">
 					更多操作
 					<DownOutlined />
 				</a-button>

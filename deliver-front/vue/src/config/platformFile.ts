@@ -14,7 +14,7 @@ export const platformFileLocale = {
 	platformFileTypeName: '文件类型',
 	platformFileKey: '文件 Key',
 	platformFileStatus: '文件状态',
-	channelType: '渠道类型',
+	channelTypeName: '渠道类型',
 	appName: '应用名',
 	createUser: '创建者',
 	createTime: '创建时间',

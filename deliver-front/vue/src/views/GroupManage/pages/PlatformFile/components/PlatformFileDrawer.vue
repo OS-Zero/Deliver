@@ -32,23 +32,38 @@ watch(props, (newProps) => {
 		placement: newProps.operation === 'more' ? 'left' : 'right',
 		extra: props.operation === 'more' ? false : true,
 	});
-	newProps.operation === 'more' && initMoreDate();
+	newProps.operation === 'more' && newProps.open && initMoreDate();
 })
-
+const groups = reactive<any>([])
 const initMoreDate = () => {
-	const set = new Set(['channelType', 'appId', 'platformFileType'])
-	const arr: Array<{ label: string; value: any }> = []
-	for (const key in props.record) {
-		if (!set.has(key)) {
-			arr.push({
-				label: platformFileLocale[key],
-				value: props.record[key]
-			})
-		}
+	const obj = {
+		platformFileInfo: ['platformFileName', 'platformFileDescription', 'platformFileTypeName', 'platformFileKey', 'platformFileStatus', 'createUser', 'createTime'],
+		typeInfo: ['channelTypeName'],
+		linkInfo: ['appName']
 	}
-	Object.assign(moreInfo, arr)
+	for (const key in obj) {
+		let group: any = {
+			config: {
+				title: ''
+			},
+			data: []
+		}
+		if (key === 'platformFileInfo') {
+			group.config.title = '文件信息'
+		} else if (key === 'typeInfo') {
+			group.config.title = '类型信息'
+		} else if (key === 'linkInfo') {
+			group.config.title = '关联信息'
+		}
+		obj[key].forEach((name: string) => {
+			group.data.push({
+				label: platformFileLocale[name],
+				value: props.record[name]
+			})
+		});
+		groups.push(group)
+	}
 }
-const moreInfo = reactive<Array<{ label: string; value: any }>>([])
 const operationDispatch = {
 	upload: async () => {
 		await formRef.value.validate()
@@ -72,7 +87,13 @@ onBeforeMount(() => {
 	<Drawer v-bind="drawerState" @ok="operationDispatch[operation]" @close="handleCancel">
 		<Form ref="formRef" v-if="operation === 'upload'" :form-schema="platformFileForm" />
 		<div v-else-if="operation === 'more'">
-			<Descriptions :data="moreInfo" :config="{ column: 1 }">
+			<Descriptions :groups="groups">
+				<template #value="{ item }">
+					<template v-if="item.label === '文件状态'">
+						{{ item.value ? '开启' : '关闭' }}
+						<Status :success="item.value"></Status>
+					</template>
+				</template>
 			</Descriptions>
 		</div>
 	</Drawer>

@@ -2,7 +2,7 @@
 import { CardProps } from 'ant-design-vue';
 interface Group {
 	config: CardProps
-	data: Array<{ label: string, value: any }>
+	data: Array<{ label: string, value: any, extra?: Record<string, any> }>
 }
 defineProps<{
 	groups: Group[]
@@ -13,7 +13,7 @@ defineProps<{
 	<a-card size="small" v-for="item in groups" v-bind="item.config">
 		<div class="item" v-for="_item in item.data">
 			<div class="item--label">
-				<slot name="label" :label="_item.label">
+				<slot name="label" :item="_item">
 					{{ _item.label }}
 				</slot>
 			</div>
@@ -38,11 +38,16 @@ defineProps<{
 .item--label {
 	color: var(--secondary-color);
 	margin-bottom: var(--spacing-xs);
+	width: 100%;
 }
 
 .item--value {
 	display: flex;
 	align-items: center;
 	font-size: var(--font-size-base);
+	width: 100%;
+	word-wrap: break-word;
+	word-break: break-all;
+
 }
 </style>

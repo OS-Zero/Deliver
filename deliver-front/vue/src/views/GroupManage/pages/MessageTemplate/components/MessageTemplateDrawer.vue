@@ -143,7 +143,6 @@ const handleCancel = () => {
 						<Status :success="item.value"></Status>
 					</template>
 				</template>
-
 			</Descriptions>
 		</div>
 	</Drawer>

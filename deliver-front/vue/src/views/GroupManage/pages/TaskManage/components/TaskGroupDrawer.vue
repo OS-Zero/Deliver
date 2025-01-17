@@ -76,20 +76,43 @@ const initFormDate = () => {
 		}
 	})
 }
+const groups = reactive<any>([])
 const initMoreDate = () => {
-	const set = new Set(['taskId', 'taskType'])
-	const arr: Array<{ label: string; value: any }> = []
-	for (const key in props.record) {
-		if (!set.has(key)) {
-			arr.push({
-				label: taskLocale[key],
-				value: props.record[key]
-			})
-		}
+	const obj = {
+		taskInfo: ['taskName', 'taskDescription', 'taskType', 'taskTimeExpression', 'taskMessageParam', 'taskStatus', 'createUser', 'createTime'],
+		linkInfo: ['templateName', 'peopleGroupName']
 	}
-	Object.assign(moreInfo, arr)
+	for (const key in obj) {
+		let group: any = {
+			config: {
+				title: ''
+			},
+			data: []
+		}
+		if (key === 'taskInfo') {
+			group.config.title = '任务信息'
+		} else if (key === 'linkInfo') {
+			group.config.title = '关联信息'
+		}
+		obj[key].forEach((name: string) => {
+			if (name === 'taskMessageParam') {
+				group.data.push({
+					label: taskLocale[name],
+					value: props.record[name],
+					extra: {
+						close: false
+					}
+				})
+			} else {
+				group.data.push({
+					label: taskLocale[name],
+					value: props.record[name]
+				})
+			}
+		});
+		groups.push(group)
+	}
 }
-const moreInfo = reactive<Array<{ label: string; value: any }>>([])
 const operationDispatch = {
 	add: async () => {
 		await formRef.value?.validate()
@@ -108,6 +131,7 @@ const operationDispatch = {
 const handleCancel = () => {
 	props.operation !== 'more' && formRef.value?.resetFields()
 	drawerState.open = false
+	groups.length = 0
 	emit('close')
 }
 
@@ -120,13 +144,19 @@ watch(() => taskForm.taskTimeExpression.type, () => {
 	<Drawer v-bind="drawerState" @ok="operationDispatch[operation]" @close="handleCancel">
 		<Form ref="formRef" v-if="operation === 'add' || operation === 'edit'" :form-schema="taskForm" />
 		<div v-else-if="operation === 'more'">
-			<Descriptions :data="moreInfo" :config="{ column: 1 }">
-				<template #content="{ item }">
+			<Descriptions :groups="groups">
+				<template #value="{ item }">
 					<template v-if="item.label === '任务类型'">
-						{{ item.value === 1 ? '实时' : '定时' }}
+						{{ item.value === 1 ? '实时任务' : (item.value === 2 ? '定时循环任务' : '定时单次任务') }}
 					</template>
 					<template v-else-if="item.label === '任务状态'">
-						{{ !!item.value ? '开启' : '关闭' }}
+						{{ item.value ? '开启' : '关闭' }}
+						<Status :success="item.value"></Status>
+					</template>
+					<template v-else-if="item.label === '任务消息参数'">
+						<highlightjs class="highlightjs" lang="json"
+							:code="item.extra!.close ? '***********' : JSON.stringify(JSON.parse(item.value), null, 2)">
+						</highlightjs>
 					</template>
 				</template>
 			</Descriptions>
@@ -134,4 +164,8 @@ watch(() => taskForm.taskTimeExpression.type, () => {
 	</Drawer>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.highlightjs {
+	width: 100%;
+}
+</style>

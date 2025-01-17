@@ -196,7 +196,7 @@ onBeforeMount(() => {
 					@handleActions="handleActions">
 				</Card>
 			</div>
-			<a-empty class="empty" v-if="!dataSource.length" :image="simpleImage" />
+			<a-empty v-show="!tableView" class="empty" v-if="!dataSource.length" :image="simpleImage" />
 			<a-pagination class="pagination" v-bind="pagination" />
 		</div>
 		<a-card size="small" class="filter-form" :class="{ open: filterState.open }" title="筛选">

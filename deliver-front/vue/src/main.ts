@@ -7,7 +7,11 @@ import './permisson.ts';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';
 dayjs.locale('zh-cn');
-
+import 'highlight.js/styles/stackoverflow-light.css';
+import hljs from 'highlight.js/lib/core';
+import hljsVuePlugin from '@highlightjs/vue-plugin';
+import json from 'highlight.js/lib/languages/json';
+hljs.registerLanguage('json', json);
 const pinia = createPinia();
 
-createApp(App).use(router).use(pinia).mount('#app');
+createApp(App).use(router).use(pinia).use(hljsVuePlugin).mount('#app');

@@ -48,20 +48,34 @@ const initFormDate = () => {
 		setPeopleGroupListTip(peopleGroupForm.peopleGroupList.value)
 	})
 }
+const groups = reactive<any>([])
 const initMoreDate = () => {
-	const set = new Set(['peopleGroupId', 'usersType'])
-	const arr: Array<{ label: string; value: any }> = []
-	for (const key in props.record) {
-		if (!set.has(key)) {
-			arr.push({
-				label: peopleGroupLocale[key],
-				value: props.record[key]
-			})
-		}
+	const obj = {
+		peopleGroupInfo: ['peopleGroupName', 'peopleGroupDescription', 'peopleGroupList', 'createUser', 'createTime'],
+		typeInfo: ['usersTypeName'],
 	}
-	Object.assign(moreInfo, arr)
+	for (const key in obj) {
+		let group: any = {
+			config: {
+				title: ''
+			},
+			data: []
+		}
+		if (key === 'peopleGroupInfo') {
+			group.config.title = '人群信息'
+		} else if (key === 'typeInfo') {
+			group.config.title = '类型信息'
+		}
+		obj[key].forEach((name: string) => {
+			group.data.push({
+				label: peopleGroupLocale[name],
+				value: props.record[name]
+			})
+		});
+		groups.push(group)
+	}
 }
-const moreInfo = reactive<Array<{ label: string; value: any }>>([])
+
 const operationDispatch = {
 	add: async () => {
 		await formRef.value.validate()
@@ -80,6 +94,7 @@ const operationDispatch = {
 const handleCancel = () => {
 	props.operation !== 'more' && formRef.value.resetFields()
 	drawerState.open = false
+	groups.length = 0
 	emit('close')
 }
 
@@ -90,8 +105,8 @@ const handleCancel = () => {
 		<Form ref="formRef" v-if="operation === 'add' || operation === 'edit'" :label-col="{ span: 4 }"
 			:form-schema="peopleGroupForm" />
 		<div v-else-if="operation === 'more'">
-			<Descriptions :data="moreInfo" :config="{ column: 1 }">
-				<template #content="{ item }">
+			<Descriptions :groups="groups">
+				<template #value="{ item }">
 					<template v-if="item.label === '人群类型'">
 						{{ item.value === 1 ? '实时' : '定时' }}
 					</template>
