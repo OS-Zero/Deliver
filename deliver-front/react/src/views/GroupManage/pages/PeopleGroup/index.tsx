@@ -92,7 +92,7 @@ const People: React.FC = () => {
         columns={columns}
         rowSelection={{}}
         request={fetchPeopleData}
-        rowKey="appId"
+        rowKey="peopleGroupId"
         scroll={{ x: 1200 }}
         toolBarRender={() => [
           <>

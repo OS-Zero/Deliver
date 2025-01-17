@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { Button, Drawer, Space, FormInstance, message, Upload } from 'antd';
 import { BetaSchemaForm, ProFormColumnsType } from '@ant-design/pro-components';
 import { useGlobalContext } from '@/context/GlobalContext';
@@ -23,33 +23,7 @@ const AddPeopleDrawer = forwardRef((props: AddPeopleDrawerProps, ref) => {
   const [inputMethod, setInputMethod] = useState('upload');
   const [userCount, setUserCount] = useState(0);
 
-  const handleUserListChange = (value: string) => {
-    const users = value.split(',').filter((user) => user.trim() !== '');
-    setUserCount(users.length);
-
-    // 验证逻辑
-    const regExp = /^([^,\s]{1,30})(,[^,\s]{1,30})*$/;
-    if (!value) {
-      setUserListError('请输入人群列表');
-    } else if (!regExp.test(value)) {
-      setUserListError('人群列表格式错误');
-    } else if (value.includes('，')) {
-      setUserListError('请使用英文逗号分隔用户');
-    } else {
-      setUserListError('');
-    }
-  };
-
-  const handleFileUpload = async (file: File) => {
-    try {
-      const result = await analysisExcelTemplateFile({ file });
-      formRef.current?.setFieldsValue({ peopleGroupList: result });
-      handleUserListChange(result);
-      message.success('文件解析成功');
-    } catch (error) {
-      message.error('文件解析失败');
-    }
-  };
+  const [editValues, setEditValues] = useState<any>(null);
 
   const rule = {
     formItemProps: {
@@ -163,6 +137,34 @@ const AddPeopleDrawer = forwardRef((props: AddPeopleDrawerProps, ref) => {
     }
   ];
 
+  const handleUserListChange = (value: string) => {
+    const users = value.split(',').filter((user) => user.trim() !== '');
+    setUserCount(users.length);
+
+    // 验证逻辑
+    const regExp = /^([^,\s]{1,30})(,[^,\s]{1,30})*$/;
+    if (!value) {
+      setUserListError('请输入人群列表');
+    } else if (!regExp.test(value)) {
+      setUserListError('人群列表格式错误');
+    } else if (value.includes('，')) {
+      setUserListError('请使用英文逗号分隔用户');
+    } else {
+      setUserListError('');
+    }
+  };
+
+  const handleFileUpload = async (file: File) => {
+    try {
+      const result = await analysisExcelTemplateFile({ file });
+      formRef.current?.setFieldsValue({ peopleGroupList: result });
+      handleUserListChange(result);
+      message.success('文件解析成功');
+    } catch {
+      message.error('文件解析失败');
+    }
+  };
+
   const handleSubmit = async () => {
     try {
       if (!formRef?.current?.getFieldValue('peopleGroupList')) {
@@ -186,23 +188,26 @@ const AddPeopleDrawer = forwardRef((props: AddPeopleDrawerProps, ref) => {
     setUserCount(0);
   };
 
+  useEffect(() => {
+    if (open && editValues) {
+      formRef.current?.setFieldsValue(editValues);
+      setEditValues(null);
+    }
+  }, [open, editValues]);
+
   useImperativeHandle(ref, () => ({
     addPeopleDrawer: () => {
       setOpen(true);
     },
-    editChannelModal: async (values: any) => {
+    editChannelModal: (values: any) => {
+      setEditValues(values);
       setOpen(true);
-      await handleChannelTypeChange(values.channelType);
-      formRef?.current?.setFieldsValue({
-        ...values,
-        appConfig: JSON.parse(values.appConfig)
-      });
     }
   }));
 
   return (
     <Drawer
-      title={formRef?.current?.getFieldValue('appId') ? '编辑人群' : '新增人群'}
+      title={formRef?.current?.getFieldValue('peopleGroupId') ? '编辑人群' : '新增人群'}
       open={open}
       onClose={onClose}
       width={500}

@@ -1,25 +1,22 @@
-import { Form, Select, Button, Card, FormInstance, DatePicker } from 'antd';
+import { Form, Select, Button, Card, FormInstance, DatePicker, Input } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 import { useRef } from 'react';
 import local from 'antd/lib/date-picker/locale/zh_CN.js';
 import { useDebounce } from '@/hooks/useDebounce';
-import { useFormOptions } from '@/hooks/useFormOptions';
+import { useGlobalContext } from '@/context/GlobalContext';
 
 interface FilterDrawerProps {
   onFilter: (filters: any) => void;
   onClose: (open: boolean) => void;
 }
 
+const { Option } = Select;
+
 const FilterDrawer = (props: FilterDrawerProps) => {
   const { onClose, onFilter } = props;
   const formRef = useRef<FormInstance>(null);
 
-  // 获取change函数以及设置初始获取渠道类型数据
-  const { options, handleChannelTypeChange } = useFormOptions({
-    myRef: formRef,
-    key: 'channel'
-  });
-
+  const { userTypeParams } = useGlobalContext();
   const debouncedFilter = useDebounce(onFilter);
 
   // 确认筛选
@@ -52,29 +49,17 @@ const FilterDrawer = (props: FilterDrawerProps) => {
       }}
     >
       <Form ref={formRef} layout="vertical" onValuesChange={handleFilter}>
-        <Form.Item label="渠道类型" name="channelType">
-          <Select
-            placeholder="请选择渠道类型"
-            onChange={(value: number) => {
-              formRef?.current?.resetFields(['channelProviderType', 'appConfig']);
-              handleChannelTypeChange(value);
-            }}
-            allowClear
-            options={(options.channelTypeOptions || []).map((d) => ({
-              value: d.channelType,
-              label: d.channelTypeName
-            }))}
-          />
+        <Form.Item label="人群名称" name="peopleGroupName">
+          <Input placeholder="请输入人群名称" allowClear/>
         </Form.Item>
-        <Form.Item label="渠道供应商类型" name="channelProviderType">
-          <Select
-            placeholder="请选择渠道供应商类型"
-            allowClear
-            options={(options.channelProvidersOptions || []).map((d) => ({
-              value: d.channelProviderType,
-              label: d.channelProviderTypeName
-            }))}
-          />
+        <Form.Item label="用户类型" name="usersType">
+          <Select placeholder="请选择用户类型" allowClear>
+            {userTypeParams.map((item) => (
+              <Option key={item.usersType} value={item.usersType}>
+                {item.usersTypeName}
+              </Option>
+            ))}
+          </Select>
         </Form.Item>
         <Form.Item label="开始时间" name="startTime">
           <DatePicker
