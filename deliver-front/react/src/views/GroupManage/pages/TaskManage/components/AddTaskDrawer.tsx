@@ -90,10 +90,10 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
       }
     },
     {
-      title: '人群 ID',
+      title: '关联人群',
       dataIndex: 'peopleGroupId',
       valueType: 'text',
-      ...rule('人群 ID'),
+      ...rule('关联人群'),
       width: '100%'
     },
     {

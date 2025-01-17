@@ -20,13 +20,6 @@ export const taskTableSchema: (statusConfig: ProColumns<TaskDetail>) => ProColum
   statusConfig
 ) => [
   {
-    title: '任务 ID',
-    width: 80,
-    dataIndex: 'taskId',
-    fixed: 'left',
-    render: (_, record) => <Paragraph copyable>{record?.taskId}</Paragraph>
-  },
-  {
     title: '任务名',
     width: 120,
     dataIndex: 'taskName',
@@ -45,9 +38,17 @@ export const taskTableSchema: (statusConfig: ProColumns<TaskDetail>) => ProColum
   statusConfig,
   {
     width: 120,
+    title: '关联模版',
+    dataIndex: 'templateName',
+    valueType: 'text',
+    render: (_) => <a>{_}</a>
+  },
+  {
+    width: 120,
     title: '关联人群',
     dataIndex: 'peopleGroupName',
-    valueType: 'text'
+    valueType: 'text',
+    render: (_) => <a>{_}</a>
   },
   {
     width: 120,

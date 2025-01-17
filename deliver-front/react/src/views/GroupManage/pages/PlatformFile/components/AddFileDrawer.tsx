@@ -39,10 +39,10 @@ const AddFileDrawer = forwardRef((props: AddFileDrawerProps, ref) => {
         platformFile: fileObject?.file
       };
 
-      const { channelProviderType, ...rest } = submitData;
+      // const { channelProviderType, ...rest } = submitData;
 
       console.log('Submit data:', submitData);
-      await onSubmit?.(rest);
+      await onSubmit?.(submitData);
       formRef?.current?.resetFields();
       setFileList([]);
       setOpen(false);

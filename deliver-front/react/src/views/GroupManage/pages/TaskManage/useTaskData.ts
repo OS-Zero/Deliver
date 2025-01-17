@@ -1,21 +1,23 @@
 import { saveTask, deleteTask, getTaskPages, updateTask, updateTaskStatus } from '@/api/task';
 import deleteConfirmModal from '@/components/DeleteConfirmModal';
-import { useCallback, useState } from 'react';
+import { MutableRefObject, useCallback } from 'react';
 import { TaskForm, TaskParams } from './type';
+import { ActionType } from '@ant-design/pro-components';
+import { transformParams } from '@/utils/omitProperty';
 
-const useTemplateData = () => {
-  const [currentParams, setCurrentParams] = useState({ currentPage: 1, pageSize: 10 });
+const useTaskData = (props: { proTableRef: MutableRefObject<ActionType | undefined> }) => {
+  const { proTableRef } = props;
   /**
    * 搜索请求表单数据
    * @param data
    */
-  const fetchTaskData = async (params: TaskParams) => {
-    setCurrentParams(params);
+  const fetchTaskData = async (filter: TaskParams) => {
+    const params = transformParams(filter);
     const res = await getTaskPages(params);
     return {
-      data: res?.data?.records,
+      data: res?.records,
       success: true,
-      total: res?.data?.total
+      total: res?.total
     };
   };
 
@@ -42,7 +44,7 @@ const useTemplateData = () => {
     deleteConfirmModal({
       onConfirm: () => {
         deleteTask({ ids });
-        fetchTaskData(currentParams);
+        (proTableRef as MutableRefObject<ActionType>)?.current?.reset?.();
       }
     });
   }, []);
@@ -55,4 +57,4 @@ const useTemplateData = () => {
   };
 };
 
-export default useTemplateData;
+export default useTaskData;

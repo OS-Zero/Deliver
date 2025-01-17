@@ -19,6 +19,9 @@ export async function getPlatformPages(
 
 export function savePlatformData(data): Promise<never> {
   return request({
+    headers: {
+			'Content-Type': 'multipart/form-data',
+		},
     url: '/platformFile/uploadFile',
     method: 'post',
     data

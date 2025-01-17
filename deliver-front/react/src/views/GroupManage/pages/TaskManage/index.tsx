@@ -1,16 +1,15 @@
-import React, { useRef, useState } from 'react';
-import { ProColumns, ProTable } from '@ant-design/pro-components';
+import React, { MutableRefObject, useRef, useState } from 'react';
+import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
 import { Button, Space, Switch, Dropdown, MenuProps } from 'antd';
 import { DownOutlined, FilterOutlined } from '@ant-design/icons';
 import { TaskDetail } from './type.ts';
 import { taskColumns, taskTableSchema } from './constant.tsx';
-import useChannelData from './useTaskData.ts';
 import styles from './index.module.scss';
 import DetailDrawer from '@/components/DetailDrawer/index.tsx';
-// import FilterCard from './components/FilterCard.tsx';
 import AddTaskDrawer from './components/AddTaskDrawer.tsx';
 import { proTableConfig } from '@/config/index.tsx';
 import FilterCard from './components/FilterCard.tsx';
+import useTaskData from './useTaskData.ts';
 
 interface AddRef {
   addTaskDrawer: () => void;
@@ -25,17 +24,18 @@ const items: MenuProps['items'] = [
 ];
 
 const TaskManage: React.FC = () => {
+  const proTableRef = useRef<ActionType>();
   const detailRef = useRef<{ getDetail: (record: TaskDetail) => void }>();
   const addRef = useRef<AddRef>();
   const [tableParams, setTableParams] = useState({});
   const [filterOpen, setFilterOpen] = useState(false);
-  const { fetchTaskData, deleteTaskData, saveTaskData, changeStatus } = useChannelData();
+  const { fetchTaskData, deleteTaskData, saveTaskData, changeStatus } = useTaskData({
+    proTableRef
+  });
 
   const handleMenuClick = (e: any, record: TaskDetail) => {
     if (e?.key === 'detail') {
       detailRef.current?.getDetail(record);
-    } else {
-      // testRef.current?.getTestSendDrawer();
     }
   };
 
@@ -45,14 +45,20 @@ const TaskManage: React.FC = () => {
       title: '任务状态',
       width: 120,
       dataIndex: 'taskStatus',
-      render: (_, record: TaskDetail) => (
-        <Switch
-          checkedChildren="启用"
-          unCheckedChildren="禁用"
-          checked={Boolean(record?.taskStatus)}
-          onClick={() => changeStatus(record.taskId, record.taskStatus === 0 ? 1 : 0)}
-        />
-      )
+      render: (_, record: TaskDetail) => {
+        const handleStatusChange = async (checked: boolean) => {
+          await changeStatus(record.taskId, checked ? 1 : 0);
+          proTableRef?.current?.reload();
+        };
+        return (
+          <Switch
+            checkedChildren="启用"
+            unCheckedChildren="禁用"
+            checked={Boolean(record?.taskStatus)}
+            onChange={handleStatusChange}
+          />
+        );
+      }
     }),
     {
       title: '操作',
@@ -98,10 +104,10 @@ const TaskManage: React.FC = () => {
   return (
     <div className={styles['task-container']}>
       <ProTable
+        actionRef={proTableRef}
         params={tableParams}
         columns={columns}
         rowSelection={{}}
-        // TODO: 这里到底传什么？入参为currentPage，反参是current？
         request={fetchTaskData}
         rowKey="taskId"
         toolBarRender={() => [
@@ -124,11 +130,18 @@ const TaskManage: React.FC = () => {
         {...proTableConfig({
           filterOpen,
           deleteData: deleteTaskData,
-          name: '任务名'
+          name: '任务名',
+          onSearch: setTableParams
         })}
       />
-      <DetailDrawer ref={detailRef} columns={taskColumns} />
-      <AddTaskDrawer ref={addRef} onSubmit={saveTaskData} />
+      <DetailDrawer ref={detailRef} columns={taskColumns} title={'任务详情'} />
+      <AddTaskDrawer
+        ref={addRef}
+        onSubmit={saveTaskData}
+        reFresh={() => {
+          (proTableRef as MutableRefObject<ActionType>)?.current?.reset?.();
+        }}
+      />
       {filterOpen && (
         <div className={styles['filter-container']}>
           <FilterCard onClose={() => setFilterOpen(false)} onFilter={handleFilter} />
