@@ -1,4 +1,11 @@
-import { saveTask, deleteTask, getTaskPages, updateTask, updateTaskStatus } from '@/api/task';
+import {
+  saveTask,
+  deleteTask,
+  getTaskPages,
+  updateTask,
+  updateTaskStatus,
+  sendRealTimeMessage
+} from '@/api/task';
 import deleteConfirmModal from '@/components/DeleteConfirmModal';
 import { MutableRefObject, useCallback } from 'react';
 import { TaskForm, TaskParams } from './type';
@@ -37,6 +44,14 @@ const useTaskData = (props: { proTableRef: MutableRefObject<ActionType | undefin
   };
 
   /**
+   * 发送群发任务
+   * @param data
+   */
+  const sendTask = async (taskId: number) => {
+    await sendRealTimeMessage({ taskId });
+  };
+
+  /**
    * 删除数据
    * @param id
    */
@@ -53,7 +68,8 @@ const useTaskData = (props: { proTableRef: MutableRefObject<ActionType | undefin
     fetchTaskData,
     deleteTaskData,
     saveTaskData,
-    changeStatus
+    changeStatus,
+    sendTask
   };
 };
 

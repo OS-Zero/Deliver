@@ -16,26 +16,36 @@ interface AddRef {
   editTaskModal: (record: TaskDetail) => void;
 }
 
-const items: MenuProps['items'] = [
-  {
-    label: '查看详情',
-    key: 'detail'
-  }
-];
-
 const TaskManage: React.FC = () => {
   const proTableRef = useRef<ActionType>();
   const detailRef = useRef<{ getDetail: (record: TaskDetail) => void }>();
   const addRef = useRef<AddRef>();
   const [tableParams, setTableParams] = useState({});
   const [filterOpen, setFilterOpen] = useState(false);
-  const { fetchTaskData, deleteTaskData, saveTaskData, changeStatus } = useTaskData({
+  const { fetchTaskData, deleteTaskData, saveTaskData, changeStatus, sendTask } = useTaskData({
     proTableRef
   });
 
+  const getMenuItems = (record: TaskDetail): MenuProps['items'] => {
+    const baseItems = [
+      {
+        label: '查看详情',
+        key: 'detail'
+      }
+    ];
+    if (record.taskType === 1) {
+      baseItems.push({
+        label: '发送群发任务',
+        key: 'send'
+      });
+    }
+    return baseItems;
+  };
   const handleMenuClick = (e: any, record: TaskDetail) => {
     if (e?.key === 'detail') {
       detailRef.current?.getDetail(record);
+    } else {
+      sendTask(record?.taskId);
     }
   };
 
@@ -81,7 +91,10 @@ const TaskManage: React.FC = () => {
           删除
         </a>,
         <Dropdown
-          menu={{ items, onClick: (e) => handleMenuClick(e, record) }}
+          menu={{
+            items: getMenuItems(record),
+            onClick: (e) => handleMenuClick(e, record)
+          }}
           key="more"
           placement="bottom"
         >

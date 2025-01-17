@@ -53,7 +53,6 @@ export function getFileType(data: { channelType: number }): Promise<PlatFormFile
   });
 }
 
-
 // 根据渠道类型查询 APP
 export async function getApp(data: {
   channelType: number;
@@ -61,6 +60,24 @@ export async function getApp(data: {
 }): Promise<never> {
   return await request({
     url: '/channelApp/getAppByChannel',
+    method: 'post',
+    data
+  });
+}
+
+// 根据名称搜索模版
+export async function getTemplate(data: { templateName: string }): Promise<never> {
+  return await request({
+    url: '/messageTemplate/searchByName',
+    method: 'post',
+    data
+  });
+}
+
+// 根据名称搜索人群
+export async function getPeopleGroup(data: { peopleGroupName: string }): Promise<never> {
+  return await request({
+    url: '/peopleGroup/searchByName',
     method: 'post',
     data
   });

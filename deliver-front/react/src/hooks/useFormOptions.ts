@@ -4,9 +4,11 @@ import {
   getFileType,
   getChannelProviderType,
   getMessageType,
-  getApp
+  getApp,
+  getTemplate,
+  getPeopleGroup
 } from '@/api/system';
-import { Channel, ChannelProvider, Message, PlatFormFile, App } from '@/types';
+import { Channel, ChannelProvider, Message, PlatFormFile, App, Template, People } from '@/types';
 import { useEffect, useState } from 'react';
 
 interface UseFormOptionsProps {
@@ -23,12 +25,16 @@ export const useFormOptions = (props: UseFormOptionsProps) => {
     fileTypeOptions: PlatFormFile[];
     messageTypeOptions: Message[];
     appOptions: App[];
+    templateOptions: Template[];
+    peopleGroupOptions: People[];
   }>({
     channelTypeOptions: [],
     channelProvidersOptions: [],
     fileTypeOptions: [],
     messageTypeOptions: [],
-    appOptions: []
+    appOptions: [],
+    templateOptions: [],
+    peopleGroupOptions: []
   });
 
   // 用户类型变更处理
@@ -145,6 +151,36 @@ export const useFormOptions = (props: UseFormOptionsProps) => {
     }
   };
 
+  // 关联模版搜索
+  const handleTemplateSearch = async (value: string) => {
+    if (value) {
+      try {
+        const response = await getTemplate({ templateName: value });
+        setOptions((prev) => ({
+          ...prev,
+          templateOptions: response || []
+        }));
+      } catch (error) {
+        console.error('获取模版失败:', error);
+      }
+    }
+  };
+
+  // 关联人群搜索
+  const handlePeopleGroupSearch = async (value: string) => {
+    if (value) {
+      try {
+        const response = await getPeopleGroup({ peopleGroupName: value });
+        setOptions((prev) => ({
+          ...prev,
+          peopleGroupOptions: response || []
+        }));
+      } catch (error) {
+        console.error('获取人群失败:', error);
+      }
+    }
+  };
+
   // 获取渠道类型数据
   useEffect(() => {
     const usersType = key === 'file' ? -2 : -1;
@@ -162,6 +198,8 @@ export const useFormOptions = (props: UseFormOptionsProps) => {
     options,
     handleUsersTypeChange,
     handleChannelTypeChange,
-    handleChannelProviderTypeChange
+    handleChannelProviderTypeChange,
+    handleTemplateSearch,
+    handlePeopleGroupSearch
   };
 };

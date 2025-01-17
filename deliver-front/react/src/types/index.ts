@@ -62,3 +62,13 @@ export interface App {
   appId: number;
   appName: string;
 }
+
+export interface Template {
+  templateId: number;
+  templateName: string;
+}
+
+export interface People {
+  peopleGroupId: number;
+  peopleGroupName: string;
+}
