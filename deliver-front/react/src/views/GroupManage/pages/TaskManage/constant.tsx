@@ -1,9 +1,7 @@
 import type { ProColumns, ProDescriptionsItemProps } from '@ant-design/pro-components';
 import { TaskDetail } from './type';
-import { Tag, Typography } from 'antd';
+import { Tag } from 'antd';
 import { getColor } from '@/utils/getTagStyle';
-
-const { Paragraph } = Typography;
 
 export const taskTypeOption = [
   { label: '实时', value: 1 },

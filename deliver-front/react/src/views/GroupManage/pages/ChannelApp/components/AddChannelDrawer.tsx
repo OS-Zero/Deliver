@@ -133,6 +133,7 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
       title={formRef?.current?.getFieldValue('appId') ? '编辑应用' : '新增应用'}
       open={open}
       onClose={onClose}
+      forceRender
       width={500}
       extra={
         <Space>

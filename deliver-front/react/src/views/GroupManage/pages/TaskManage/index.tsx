@@ -1,6 +1,6 @@
 import React, { MutableRefObject, useRef, useState } from 'react';
 import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
-import { Button, Space, Switch, Dropdown, MenuProps } from 'antd';
+import { Button, Space, Switch, Dropdown, MenuProps, message } from 'antd';
 import { DownOutlined, FilterOutlined } from '@ant-design/icons';
 import { TaskDetail } from './type.ts';
 import { taskColumns, taskTableSchema } from './constant.tsx';
@@ -41,11 +41,16 @@ const TaskManage: React.FC = () => {
     }
     return baseItems;
   };
-  const handleMenuClick = (e: any, record: TaskDetail) => {
+  const handleMenuClick = async (e: any, record: TaskDetail) => {
     if (e?.key === 'detail') {
       detailRef.current?.getDetail(record);
     } else {
-      sendTask(record?.taskId);
+      try {
+        await sendTask(record?.taskId);
+        message.success('发送成功');
+      } catch {
+        message.error('发送失败');
+      }
     }
   };
 

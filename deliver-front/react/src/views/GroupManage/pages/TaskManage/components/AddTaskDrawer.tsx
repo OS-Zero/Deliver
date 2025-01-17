@@ -1,9 +1,10 @@
-import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { Button, Drawer, Space, FormInstance, Select, message } from 'antd';
 import { JsonEditor } from 'jsoneditor-react';
 import { BetaSchemaForm, ProFormColumnsType } from '@ant-design/pro-components';
 import { useFormOptions } from '@/hooks/useFormOptions';
 import { useDebounce } from '@/hooks/useDebounce';
+
 interface AddChannelDrawerProps {
   onSubmit?: (values: any) => void;
   reFresh?: () => void;
@@ -23,20 +24,21 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
   const debouncedHandleTemplateSearch = useDebounce(handleTemplateSearch, 300);
   const debouncedHandlePeopleGroupSearch = useDebounce(handlePeopleGroupSearch, 300);
 
-  const rule = (label: string) => {
-    return {
-      formItemProps: {
-        rules: [
-          {
-            required: true,
-            message: `${label}不可为空`
-          }
-        ]
-      }
-    };
-  };
+  const rule = (label: string) => ({
+    formItemProps: {
+      rules: [{ required: true, message: `${label}不可为空` }]
+    }
+  });
 
   const columns: ProFormColumnsType[] = [
+    {
+      title: '任务ID',
+      dataIndex: 'taskId',
+      valueType: 'text',
+      formItemProps: {
+        hidden: true
+      }
+    },
     {
       title: '任务名',
       dataIndex: 'taskName',
@@ -58,18 +60,9 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
       initialValue: 1,
       fieldProps: {
         options: [
-          {
-            value: 1,
-            label: '实时任务'
-          },
-          {
-            value: 2,
-            label: '定时循环任务'
-          },
-          {
-            value: 3,
-            label: '定时单次任务'
-          }
+          { value: 1, label: '实时任务' },
+          { value: 2, label: '定时循环任务' },
+          { value: 3, label: '定时单次任务' }
         ]
       }
     },
@@ -123,20 +116,7 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
       title: '任务消息参数',
       key: 'taskMessageParam',
       dataIndex: 'taskMessageParam',
-      initialValue: {
-        title: 'oszero每天起床',
-        content: '兄弟们该起床啦，6点啦，太阳晒屁股了',
-        htmlFlag: true
-      },
-      renderFormItem: () => {
-        return (
-          <JsonEditor
-            key={jsonEditorKey}
-            mode="code"
-            onChange={(e: object) => formRef.current?.setFieldsValue({ taskMessageParam: e })}
-          />
-        );
-      }
+      renderFormItem: () => <JsonEditor key={jsonEditorKey} mode="code" />
     }
   ];
 
@@ -159,12 +139,17 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
   };
 
   useImperativeHandle(ref, () => ({
-    addTaskDrawer: () => {
+    addTaskDrawer: async () => {
       setOpen(true);
+      formRef?.current?.setFieldsValue({
+        taskMessageParam: { templateId: 1, messageParam: {}, cronExpression: '0 0 6 * * ?' }
+      });
+      setJsonEditorKey(jsonEditorKey + 1);
     },
     editTaskModal: async (values: any) => {
       setOpen(true);
-      await debouncedHandleTemplateSearch(values.templateId)
+      await debouncedHandleTemplateSearch(values.templateName);
+      await debouncedHandlePeopleGroupSearch(values.peopleGroupName);
       formRef?.current?.setFieldsValue({
         ...values,
         taskMessageParam: JSON.parse(values.taskMessageParam)
@@ -177,6 +162,7 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
     <Drawer
       title={formRef?.current?.getFieldValue('taskId') ? '编辑任务' : '新增任务'}
       open={open}
+      forceRender
       onClose={onClose}
       width={500}
       extra={
