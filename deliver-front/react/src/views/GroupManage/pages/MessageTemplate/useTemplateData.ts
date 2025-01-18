@@ -6,15 +6,13 @@ import {
   updateMessageTemplate
 } from '@/api/messageTemplate';
 import deleteConfirmModal from '@/components/DeleteConfirmModal';
-import { MutableRefObject, useCallback, useEffect } from 'react';
+import { MutableRefObject, useCallback } from 'react';
 import { MessageTemplate, SearchMessage } from './type';
 import { transformParams } from '@/utils/omitProperty';
 import { ActionType } from '@ant-design/pro-components';
-import { useNavigate } from 'react-router-dom';
 
 const useTemplateData = (props: { proTableRef: MutableRefObject<ActionType | undefined> }) => {
   const { proTableRef } = props;
-  const navigator = useNavigate();
 
   /**
    * 搜索请求表单数据
@@ -56,12 +54,6 @@ const useTemplateData = (props: { proTableRef: MutableRefObject<ActionType | und
         (proTableRef as MutableRefObject<ActionType>)?.current?.reset?.();
       }
     });
-  }, []);
-
-  useEffect(() => {
-    if (!localStorage.getItem('group_id')) {
-      navigator('/groupManage');
-    }
   }, []);
 
   return {

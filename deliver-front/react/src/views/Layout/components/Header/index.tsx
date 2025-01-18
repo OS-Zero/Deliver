@@ -63,7 +63,11 @@ const Header: React.FC = () => {
   const onClick: MenuProps['onClick'] = (e) => {
     switch (e.key) {
       case 'groupManage':
-        navigate('/groupManage/template');
+        if (!localStorage.getItem('group_id')) {
+          navigate('/groupManage');
+        } else {
+          navigate('/groupManage/template');
+        }
         break;
       case 'systemManage':
         navigate('/systemManage');
