@@ -142,6 +142,7 @@ const GroupManage: React.FC = () => {
               prefix={<SearchOutlined />}
               onChange={(e) => setState({ ...state, search: e.target.value })}
               onBlur={() => fetchCardData(state.search)}
+              onPressEnter={() => fetchCardData(state.search)}
             />
           </div>
         </div>
