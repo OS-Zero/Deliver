@@ -84,7 +84,7 @@ const Card: React.FC<CardProps> = ({
   }
 
   return (
-    <div className={styles['card']} onDoubleClick={handleJumpLink}>
+    <div className={styles['card']} onClick={handleJumpLink}>
       <div className={styles['card-more']}>
         <Dropdown menu={menuProps} placement="bottom">
           <EllipsisOutlined />

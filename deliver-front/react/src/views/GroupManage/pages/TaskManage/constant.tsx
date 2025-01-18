@@ -3,13 +3,6 @@ import { TaskDetail } from './type';
 import { Tag } from 'antd';
 import { getColor } from '@/utils/getTagStyle';
 
-export const handleColor = (status: number) => {
-  if (status === 1) {
-    return getColor(status);
-  }
-  return getColor(2);
-};
-
 export const handleTaskTypeName = (type: number) => {
   switch (type) {
     case 1:
@@ -36,7 +29,7 @@ export const taskTableSchema: (statusConfig: ProColumns<TaskDetail>) => ProColum
     width: 120,
     dataIndex: 'taskType',
     render: (_, record) => (
-      <Tag color={handleColor(record?.taskType)}>
+      <Tag color={getColor(record?.taskType)}>
         {handleTaskTypeName(record?.taskType)}
       </Tag>
     )

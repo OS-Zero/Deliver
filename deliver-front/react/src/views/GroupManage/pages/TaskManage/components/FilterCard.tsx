@@ -47,9 +47,6 @@ const FilterDrawer = (props: FilterDrawerProps) => {
       }}
     >
       <Form ref={formRef} layout="vertical" onValuesChange={handleFilter}>
-        <Form.Item label="任务名" name="taskName">
-          <Input placeholder="请输入任务名" allowClear/>
-        </Form.Item>
         <Form.Item name="taskType" label="任务类型">
           <Select placeholder="请选择任务类型" allowClear>
             <Option value={1}>实时</Option>
