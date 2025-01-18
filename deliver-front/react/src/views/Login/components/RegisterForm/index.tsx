@@ -82,30 +82,30 @@ const RegisterForm = (props: RegisterFormProps) => {
         }
       }}
     >
-      <Form.Item name="userEmail" rules={[emailValidationRule]} validateTrigger={['onBlur']}>
+      <Form.Item name="userEmail" rules={[emailValidationRule]} validateTrigger={['onChange']}>
         <Input value={registerData.userEmail} placeholder="请输入邮箱" />
       </Form.Item>
-      <Form.Item name="userPassword" rules={[passwordValidationRule]} validateTrigger={['onBlur']}>
+      <Form.Item name="userPassword" rules={[passwordValidationRule]} validateTrigger={['onChange']}>
         <Input.Password maxLength={16} value={registerData.userPassword} placeholder="请输入密码" />
       </Form.Item>
       <Form.Item
         name="confirmPwd"
         rules={[{ validator: validatePwd }]}
-        validateTrigger={['onBlur']}
+        validateTrigger={['onChange']}
       >
         <Input.Password maxLength={16} value={registerData.confirmPwd} placeholder="请确认密码" />
       </Form.Item>
       <Form.Item
         name="userRealName"
         rules={[{ required: true, message: '请输入真实姓名' }]}
-        validateTrigger={['onBlur']}
+        validateTrigger={['onChange']}
       >
         <Input value={registerData.userRealName} placeholder="请输入真实姓名" />
       </Form.Item>
       <Form.Item
         name="verificationCode"
         rules={[verificationCodeValidationRule]}
-        validateTrigger={['onBlur']}
+        validateTrigger={['onChange']}
       >
         <div className={styles.verify}>
           <Input

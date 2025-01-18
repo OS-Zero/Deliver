@@ -16,7 +16,7 @@ const Banner: React.FC = () => {
           Gitee
         </a>
         ，你的支持将是我们前行的动力，项目正在积极开发，欢迎大家提交 PR 提供建设、共建社区生态。👏🏻
-        <Tooltip title="关闭">
+        <Tooltip>
           <i className={styles['iconClose']} onClick={() => setClosed(true)}>
             <CloseOutlined />
           </i>

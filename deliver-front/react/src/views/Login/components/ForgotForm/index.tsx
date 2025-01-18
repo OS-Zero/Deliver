@@ -73,23 +73,23 @@ const ForgotForm: React.FC<{ onOk: () => void }> = ({ onOk }) => {
         }
       }}
     >
-      <Form.Item name="userEmail" rules={[emailValidationRule]} validateTrigger={['onBlur']}>
+      <Form.Item name="userEmail" rules={[emailValidationRule]} validateTrigger={['onChange']}>
         <Input value={forgotData.userEmail} placeholder="请输入邮箱" />
       </Form.Item>
-      <Form.Item name="userPassword" rules={[passwordValidationRule]} validateTrigger={['onBlur']}>
+      <Form.Item name="userPassword" rules={[passwordValidationRule]} validateTrigger={['onChange']}>
         <Input.Password maxLength={16} value={forgotData.userPassword} placeholder="请输入密码" />
       </Form.Item>
       <Form.Item
         name="confirmPwd"
         rules={[{ validator: validatePwd }]}
-        validateTrigger={['onBlur']}
+        validateTrigger={['onChange']}
       >
         <Input.Password maxLength={16} value={forgotData.confirmPwd} placeholder="请确认密码" />
       </Form.Item>
       <Form.Item
         name="verificationCode"
         rules={[verificationCodeValidationRule]}
-        validateTrigger={['onBlur']}
+        validateTrigger={['onChange']}
       >
         <div className={styles.verify}>
           <Input maxLength={6} value={forgotData.verificationCode} placeholder="请输入6位验证码" />
