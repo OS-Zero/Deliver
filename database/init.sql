@@ -9,7 +9,7 @@ create table if not exists deliver.user_info
     user_id        bigint auto_increment comment '用户id' primary key,
     user_email     varchar(20)                           not null comment '用户邮箱',
     user_password  varchar(50)                           not null comment '用户密码加密',
-    user_real_name varchar(10)                           not null comment '用户真实姓名',
+    user_real_name varchar(50)                           not null comment '用户真实姓名',
     user_role      varchar(10) default 'ordinary'        not null comment '用户角色（管理员admin、普通用户ordinary）',
     create_user    varchar(10)                           null comment '创建者',
     update_user    varchar(10)                           null comment '更新者',

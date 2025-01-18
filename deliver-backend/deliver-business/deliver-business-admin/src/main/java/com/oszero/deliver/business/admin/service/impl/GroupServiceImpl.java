@@ -98,7 +98,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupInfo>
                         groupInfo.setTopUp(userGroup.getTopUp());
                         return groupInfo;
                     })
-                    .sorted(Comparator.comparing(GroupInfo::getUpdateTime))
+                    .sorted((o1, o2) -> o2.getUpdateTime().compareTo(o1.getUpdateTime()))
                     .map(this::buildGroupItemFromGroup)
                     .toList());
             defaultGroupList.addAll(userGroups.stream()
@@ -107,7 +107,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupInfo>
                         groupInfo.setTopUp(userGroup.getTopUp());
                         return groupInfo;
                     })
-                    .sorted(Comparator.comparing(GroupInfo::getUpdateTime))
+                    .sorted((o1, o2) -> o2.getUpdateTime().compareTo(o1.getUpdateTime()))
                     .map(this::buildGroupItemFromGroup)
                     .toList());
         }

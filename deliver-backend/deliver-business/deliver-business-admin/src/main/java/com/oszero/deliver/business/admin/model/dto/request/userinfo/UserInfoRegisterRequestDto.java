@@ -42,7 +42,7 @@ public class UserInfoRegisterRequestDto {
     private String userPassword;
 
     @NotBlank
-    @Length(min = 1, max = 10, message = "真实姓名长度必须在1到10个字符之间")
+    @Length(min = 1, max = 50, message = "真实姓名长度必须在1到50个字符之间")
     private String userRealName;
 
     @Length(min = 6, max = 6, message = "验证码长度必须为6位")

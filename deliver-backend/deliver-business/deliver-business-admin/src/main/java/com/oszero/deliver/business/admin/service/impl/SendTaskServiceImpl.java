@@ -43,6 +43,7 @@ import com.oszero.deliver.business.common.constant.CommonConstant;
 import com.oszero.deliver.business.common.mapper.MessageTemplateMapper;
 import com.oszero.deliver.business.common.model.entity.MessageTemplate;
 import com.oszero.deliver.business.common.util.DataBaseUtils;
+import com.oszero.deliver.business.common.util.DoubleStatusUtils;
 import lombok.RequiredArgsConstructor;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
@@ -179,6 +180,9 @@ public class SendTaskServiceImpl extends ServiceImpl<SendTaskMapper, SendTask>
 
     private void sendMessage(Long taskId) {
         SendTask sendTask = sendTaskMapper.selectById(taskId);
+        if (DoubleStatusUtils.disable(sendTask.getTaskStatus())) {
+            throw new BusinessException("任务已禁用，请开启任务再发送消息");
+        }
         Long templateId = sendTask.getTemplateId();
         Long peopleGroupId = sendTask.getPeopleGroupId();
         String taskMessageParam = sendTask.getTaskMessageParam();
