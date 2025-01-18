@@ -5,22 +5,21 @@ import { omitProperty } from '@/utils/omitProperty';
 import { useVerify } from '@/hooks/useVerify';
 import styles from './index.module.scss';
 import { passwordValidationRule, verificationCodeValidationRule } from '@/views/Login/constant';
+import { useGlobalContext } from '@/context/GlobalContext';
 
 const MyAccount: React.FC = () => {
   const myAccountRef = useRef<any>(null);
   const [open, setOpen] = useState(false);
-  const userInfo = JSON.parse(localStorage.getItem('userInfo') as string);
-  const userEmail = userInfo?.userEmail || '1957214211@qq.com';
+  const { userInfo } = useGlobalContext();
 
   const [editorData, setEditorData] = useState({
     userPassword: '',
     confirmPwd: '',
     verificationCode: '',
-    userEmail
   });
 
   const { verifyContent, verifyDisabled, handleVerify } = useVerify({
-    email: localStorage.getItem('user_email') || '1957214211@qq.com'
+    email: userInfo?.userEmail as string,
   });
 
   const validatePwd = (_: any, value: string) => {
@@ -78,21 +77,21 @@ const MyAccount: React.FC = () => {
           <Form.Item
             name="userPassword"
             rules={[passwordValidationRule]}
-            validateTrigger={['onBlur']}
+            validateTrigger={['onChange']}
           >
             <Input.Password placeholder="请输入密码" maxLength={16} />
           </Form.Item>
           <Form.Item
             name="confirmPwd"
             rules={[{ validator: validatePwd }]}
-            validateTrigger={['onBlur']}
+            validateTrigger={['onChange']}
           >
             <Input.Password placeholder="请确认密码" maxLength={16} />
           </Form.Item>
           <Form.Item
             name="verificationCode"
             rules={[verificationCodeValidationRule]}
-            validateTrigger={['onBlur']}
+            validateTrigger={['onChange']}
           >
             <div className={styles['verify']}>
               <Input placeholder="请输入6位验证码" maxLength={6} />
