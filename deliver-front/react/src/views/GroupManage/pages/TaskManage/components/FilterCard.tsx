@@ -20,13 +20,19 @@ const FilterDrawer = (props: FilterDrawerProps) => {
   // 确认筛选
   const handleFilter = () => {
     const filters = formRef?.current?.getFieldsValue();
-    debouncedFilter(filters);
+    const { startTime, endTime, ...rest } = filters;
+    debouncedFilter({
+      startTime: startTime?.format('YYYY-MM-DD HH:mm:ss'),
+      endTime: endTime?.format('YYYY-MM-DD HH:mm:ss'),
+      ...rest
+    });
   };
 
   // 关闭筛选
   const handleReset = () => {
     formRef?.current?.resetFields();
     onClose(false);
+    handleFilter();
   };
 
   return (
@@ -42,16 +48,17 @@ const FilterDrawer = (props: FilterDrawerProps) => {
     >
       <Form ref={formRef} layout="vertical" onValuesChange={handleFilter}>
         <Form.Item label="任务名" name="taskName">
-          <Input placeholder="请输入任务名" />
+          <Input placeholder="请输入任务名" allowClear/>
         </Form.Item>
-        <Form.Item name="templateStatus" label="任务类型">
-          <Select placeholder="请选择任务类型">
+        <Form.Item name="taskType" label="任务类型">
+          <Select placeholder="请选择任务类型" allowClear>
             <Option value={1}>实时</Option>
-            <Option value={2}>定时</Option>
+            <Option value={2}>定时循环</Option>
+            <Option value={3}>定时单次</Option>
           </Select>
         </Form.Item>
         <Form.Item name="taskStatus" label="任务状态">
-          <Select placeholder="请选择任务状态">
+          <Select placeholder="请选择任务状态" allowClear>
             <Option value={0}>禁用</Option>
             <Option value={1}>启用</Option>
           </Select>

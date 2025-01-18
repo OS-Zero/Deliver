@@ -3,15 +3,23 @@ import { TaskDetail } from './type';
 import { Tag } from 'antd';
 import { getColor } from '@/utils/getTagStyle';
 
-export const taskTypeOption = [
-  { label: '实时', value: 1 },
-  { label: '定时', value: 2 }
-];
+export const handleColor = (status: number) => {
+  if (status === 1) {
+    return getColor(status);
+  }
+  return getColor(2);
+};
 
-export const statusOption = [
-  { label: '启用', value: 1 },
-  { label: '禁用', value: 0 }
-];
+export const handleTaskTypeName = (type: number) => {
+  switch (type) {
+    case 1:
+      return '实时';
+    case 2:
+      return '定时循环';
+    default:
+      return '定时单次';
+  }
+};
 
 // 表格schema配置
 export const taskTableSchema: (statusConfig: ProColumns<TaskDetail>) => ProColumns<TaskDetail>[] = (
@@ -28,8 +36,8 @@ export const taskTableSchema: (statusConfig: ProColumns<TaskDetail>) => ProColum
     width: 120,
     dataIndex: 'taskType',
     render: (_, record) => (
-      <Tag color={getColor(record?.taskType)}>
-        {Number(record?.taskType) === 1 ? '实时' : '定时'}
+      <Tag color={handleColor(record?.taskType)}>
+        {handleTaskTypeName(record?.taskType)}
       </Tag>
     )
   },
