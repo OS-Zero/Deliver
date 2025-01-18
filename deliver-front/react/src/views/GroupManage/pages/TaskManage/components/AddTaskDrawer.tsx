@@ -196,7 +196,7 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
       if (values.taskType === 3 && values.taskTimeExpression) {
         values.taskTimeExpression = dayjs(values.taskTimeExpression).format('YYYY-MM-DD HH:mm:ss');
       }
-      onSubmit?.(values);
+      await onSubmit?.(values);
       onClose();
       message.success('保存成功');
       reFresh?.();

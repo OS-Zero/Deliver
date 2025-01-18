@@ -3,7 +3,8 @@ import { Button, Drawer, Form, FormInstance, Input, Space } from 'antd';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { JsonEditor } from 'jsoneditor-react';
 import styles from './index.module.scss';
-import { getMessageParamByMessageType } from '@/api/messageTemplate';
+import { getMessageParamByMessageType, testSendMessage } from '@/api/messageTemplate';
+import { MessageTemplate } from '../../type';
 
 const TestSendDrawer = forwardRef((_, ref) => {
   const [open, setOpen] = useState(false);
@@ -18,14 +19,15 @@ const TestSendDrawer = forwardRef((_, ref) => {
     setOpen(false);
   };
 
-  // 渠道供应商类型变更处理
-  const handleParams = async (values: any) => {
-    const { messageType } = values;
-    if (messageType) {
+  const handleParams = async (values: MessageTemplate) => {
+    const { templateId } = values;
+    if (templateId) {
       try {
-        const response = await getMessageParamByMessageType({ messageType });
-        formRef?.current?.setFieldsValue({ messageParam: response });
-        setJsonEditorKey((prev) => prev + 1); // 渲染视图，处理变更
+        const response = await getMessageParamByMessageType({ templateId });
+        formRef?.current?.setFieldsValue({
+          messageParam: JSON.parse(response),
+          templateId
+        });
       } catch (error) {
         console.error('获取应用配置失败:', error);
       }
@@ -33,17 +35,17 @@ const TestSendDrawer = forwardRef((_, ref) => {
   };
 
   useImperativeHandle(ref, () => ({
-    getTestSendDrawer: async (values: any) => {
+    getTestSendDrawer: async (values: MessageTemplate) => {
       showDrawer();
       await handleParams(values);
+      setJsonEditorKey((prev) => prev + 1); // 渲染视图，处理变更
     }
   }));
 
   const onSubmit = async () => {
     try {
       await formRef?.current?.validateFields();
-      const values = formRef?.current?.getFieldsValue();
-      console.log('values', values);
+      await testSendMessage(formRef?.current?.getFieldsValue());
       onClose();
     } catch (error) {
       console.error('保存失败:', error);
@@ -63,6 +65,7 @@ const TestSendDrawer = forwardRef((_, ref) => {
       onClose={onClose}
       open={open}
       width={500}
+      forceRender
       bodyStyle={{ padding: '24px' }}
       extra={
         <Space>
@@ -137,7 +140,7 @@ const TestSendDrawer = forwardRef((_, ref) => {
           )}
         </Form.List>
         <Form.Item
-          key="messageParam"
+          name="messageParam"
           label="发送参数"
           labelCol={{ span: 24 }}
           wrapperCol={{ span: 24 }}
@@ -145,8 +148,11 @@ const TestSendDrawer = forwardRef((_, ref) => {
           <JsonEditor
             key={jsonEditorKey}
             mode="code"
-            onChange={(e: object) => formRef.current?.setFieldsValue({ appConfig: e })}
+            // onChange={(e: object) => formRef.current?.setFieldsValue({ messageParam: e })}
           />
+        </Form.Item>
+        <Form.Item name="templateId" label="模版ID" hidden labelCol={{ span: 24 }}>
+          <Input type="text" />
         </Form.Item>
       </Form>
     </Drawer>

@@ -110,10 +110,10 @@ export async function testSendMessage(data: TestSendMessage): Promise<never> {
  * @returns
  */
 export async function getMessageParamByMessageType(data: {
-  messageType: number;
+  templateId: number;
 }): Promise<any> {
   return await request({
-    url: '/template/getMessageParamByMessageType',
+    url: '/messageTemplate/getMessageParam',
     method: 'post',
     data
   });
