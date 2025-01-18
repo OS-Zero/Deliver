@@ -44,10 +44,10 @@ const LoginForm: React.FC = () => {
         setLoginData((prev) => ({ ...prev, ...changedValues }));
       }}
     >
-      <Form.Item name="userEmail" rules={[emailValidationRule]} validateTrigger={['onBlur']}>
+      <Form.Item name="userEmail" rules={[emailValidationRule]} validateTrigger={['onChange']}>
         <Input value={loginData.userEmail} placeholder="请输入邮箱" />
       </Form.Item>
-      <Form.Item name="userPassword" rules={[passwordValidationRule]} validateTrigger={['onBlur']}>
+      <Form.Item name="userPassword" rules={[passwordValidationRule]} validateTrigger={['onChange']}>
         <Input.Password maxLength={16} value={loginData.userPassword} placeholder="请输入密码" />
       </Form.Item>
       <Form.Item>

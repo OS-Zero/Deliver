@@ -97,7 +97,7 @@ const RegisterForm = (props: RegisterFormProps) => {
       </Form.Item>
       <Form.Item
         name="userRealName"
-        rules={[{ required: true, message: '请输入真实姓名' }]}
+        rules={[{ required: true, message: '请输入真实姓名', maxLength: 50 }]}
         validateTrigger={['onChange']}
       >
         <Input value={registerData.userRealName} placeholder="请输入真实姓名" />
