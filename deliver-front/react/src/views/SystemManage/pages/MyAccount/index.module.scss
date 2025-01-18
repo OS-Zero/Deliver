@@ -3,11 +3,21 @@
     width: 500px;
 
     .card_content {
-      text-align: center;
+      text-align: left;
+      .btn {
+        margin-top: 5px;
+      }
     }
 
     p {
       margin: var(--spacing-md) 0;
+    }
+
+    :global {
+      .ant-card,
+      .ant-card-body {
+        padding-top: 10px;
+      }
     }
   }
 

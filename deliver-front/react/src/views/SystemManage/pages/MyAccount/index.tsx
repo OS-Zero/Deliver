@@ -44,10 +44,10 @@ const MyAccount: React.FC = () => {
   return (
     <Card title="基础信息" className={styles['ant_card']}>
       <div className={styles['card_content']}>
-        <p>邮箱: {userInfo?.userEmail}</p>
-        <p>姓名: {userInfo?.userRealName}</p>
-        <p>用户类型: {userInfo?.userRole}</p>
-        <Button onClick={() => setOpen(true)}>修改密码</Button>
+        <p>用户邮箱: &nbsp;&nbsp;&nbsp;{userInfo?.userEmail}</p>
+        <p>用户姓名: &nbsp;&nbsp;&nbsp;{userInfo?.userRealName}</p>
+        <p>用户类型: &nbsp;&nbsp;&nbsp;{userInfo?.userRole}</p>
+        <Button className={styles['btn']} onClick={() => setOpen(true)}>修改密码</Button>
       </div>
       <Drawer
         title="修改密码"
