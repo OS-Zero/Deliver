@@ -14,7 +14,7 @@ const FilterDrawer = (props: FilterDrawerProps) => {
   const { onClose, onFilter } = props;
   const formRef = useRef<FormInstance>(null);
 
-  const { options, handleChannelTypeChange } = useFormOptions({
+  const { options, handleChannelTypeChange, handleChannelProviderTypeChange } = useFormOptions({
     myRef: formRef,
     key: 'file'
   });
@@ -36,6 +36,7 @@ const FilterDrawer = (props: FilterDrawerProps) => {
   const handleReset = () => {
     formRef?.current?.resetFields();
     onClose(false);
+    handleFilter();
   };
 
   return (
@@ -51,10 +52,11 @@ const FilterDrawer = (props: FilterDrawerProps) => {
     >
       <Form ref={formRef} layout="vertical" onValuesChange={handleFilter}>
         <Form.Item label="文件 Key" name="platformFileKey">
-          <Input placeholder="请输入文件 Key" />
+          <Input placeholder="请输入文件 Key" allowClear />
         </Form.Item>
         <Form.Item label="渠道类型" name="channelType">
           <Select
+            allowClear
             placeholder="请选择渠道类型"
             onChange={handleChannelTypeChange}
             options={(options.channelTypeOptions || []).map((d) => ({
@@ -65,15 +67,18 @@ const FilterDrawer = (props: FilterDrawerProps) => {
         </Form.Item>
         <Form.Item label="渠道供应商类型" name="channelProviderType">
           <Select
+            allowClear
             placeholder="请选择渠道供应商类型"
             options={(options.channelProvidersOptions || []).map((d) => ({
               value: d.channelProviderType,
               label: d.channelProviderTypeName
             }))}
+            onChange={handleChannelProviderTypeChange}
           />
         </Form.Item>
-        <Form.Item label="文件类型" name="fileType">
+        <Form.Item label="文件类型" name="platformFileType">
           <Select
+            allowClear
             placeholder="请选择文件类型"
             options={(options.fileTypeOptions || []).map((d) => ({
               value: d.platformFileType,
@@ -82,7 +87,14 @@ const FilterDrawer = (props: FilterDrawerProps) => {
           />
         </Form.Item>
         <Form.Item label="关联应用" name="appId">
-          <Input placeholder="请输入关联应用" />
+          <Select
+            allowClear
+            placeholder="请输入关联应用"
+            options={(options.appOptions || []).map((d) => ({
+              value: d.appId,
+              label: d.appName
+            }))}
+          />
         </Form.Item>
         <Form.Item label="开始时间" name="startTime">
           <DatePicker

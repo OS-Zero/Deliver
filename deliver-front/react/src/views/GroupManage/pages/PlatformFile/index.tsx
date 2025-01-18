@@ -1,6 +1,6 @@
 import React, { MutableRefObject, useRef, useState } from 'react';
 import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
-import { Button, Switch } from 'antd';
+import { Button } from 'antd';
 import { FilterOutlined } from '@ant-design/icons';
 import { PlatformFileDetail } from './type.ts';
 import { platformColumns, platformTableSchema } from './constant.tsx';
@@ -25,25 +25,7 @@ const PlatformFile: React.FC = () => {
 
   // 这两列涉及到状态的改变，于是写在视图层
   const columns: ProColumns<PlatformFileDetail>[] = [
-    ...platformTableSchema({
-      title: '文件状态',
-      width: 120,
-      dataIndex: 'platformFileStatus',
-      render: (_, record: PlatformFileDetail) => {
-        // const handleStatusChange = async (checked: boolean) => {
-        //   await changeStatus(record.appId, checked ? 1 : 0);
-        //   proTableRef?.current?.reload();
-        // };
-        return (
-          <Switch
-            checkedChildren="启用"
-            unCheckedChildren="禁用"
-            checked={Boolean(record?.platformFileStatus)}
-            // onChange={handleStatusChange}
-          />
-        );
-      }
-    }),
+    ...platformTableSchema,
     {
       title: '操作',
       width: 160,

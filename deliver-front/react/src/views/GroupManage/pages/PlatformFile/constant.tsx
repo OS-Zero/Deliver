@@ -4,9 +4,7 @@ import { Tag } from 'antd';
 import { getColor } from '@/utils/getTagStyle';
 
 // 表格schema配置
-export const platformTableSchema: (
-  statusConfig: ProColumns<PlatformFileDetail>
-) => ProColumns<PlatformFileDetail>[] = (statusConfig) => [
+export const platformTableSchema: ProColumns<PlatformFileDetail>[] = [
   {
     title: '文件名',
     width: 120,
@@ -31,7 +29,12 @@ export const platformTableSchema: (
     dataIndex: 'appName',
     render: (_, record) => <a color={getColor(record?.appId)}>{_}</a>
   },
-  statusConfig,
+  {
+    title: '文件状态',
+    width: 120,
+    dataIndex: 'platformFileStatus',
+    render: () => <Tag color='green'>生效中</Tag>
+  },
   {
     width: 120,
     title: '创建者',

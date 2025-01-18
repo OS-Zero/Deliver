@@ -77,7 +77,7 @@ const AddPeopleDrawer = forwardRef((props: AddPeopleDrawerProps, ref) => {
           { label: '上传文件解析人群列表', value: 'upload' },
           { label: '手动输入人群列表', value: 'manual' }
         ],
-        onChange: (e) => setInputMethod(e.target.value)
+        onChange: (e: any) => setInputMethod(e.target.value)
       },
       initialValue: 'upload'
     },
@@ -86,7 +86,7 @@ const AddPeopleDrawer = forwardRef((props: AddPeopleDrawerProps, ref) => {
       dataIndex: 'peopleGroupList',
       valueType: 'textarea',
       fieldProps: {
-        onChange: (e) => handleUserListChange(e.target.value)
+        onChange: (e: any) => handleUserListChange(e.target.value)
       },
       formItemProps: {
         validateStatus: userListError ? 'error' : undefined,
@@ -118,7 +118,7 @@ const AddPeopleDrawer = forwardRef((props: AddPeopleDrawerProps, ref) => {
         <Dragger
           maxCount={1}
           accept=".csv,.xlsx"
-          beforeUpload={(file) => {
+          beforeUpload={(file: File) => {
             handleFileUpload(file);
             return false;
           }}

@@ -47,6 +47,7 @@ const FilterDrawer = (props: FilterDrawerProps) => {
   const handleReset = () => {
     formRef?.current?.resetFields();
     onClose(false);
+    handleFilter();
   };
 
   return (
@@ -124,7 +125,7 @@ const FilterDrawer = (props: FilterDrawerProps) => {
           </Select>
         </Form.Item>
         <Form.Item name="templateStatus" label="模板状态">
-          <Select placeholder="请选择模板状态">
+          <Select placeholder="请选择模板状态" allowClear>
             <Option value={0}>禁用</Option>
             <Option value={1}>启用</Option>
           </Select>

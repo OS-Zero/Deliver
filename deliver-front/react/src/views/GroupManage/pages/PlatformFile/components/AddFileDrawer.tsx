@@ -39,9 +39,6 @@ const AddFileDrawer = forwardRef((props: AddFileDrawerProps, ref) => {
         platformFile: fileObject?.file
       };
 
-      // const { channelProviderType, ...rest } = submitData;
-
-      console.log('Submit data:', submitData);
       await onSubmit?.(submitData);
       formRef?.current?.resetFields();
       setFileList([]);
@@ -81,14 +78,14 @@ const AddFileDrawer = forwardRef((props: AddFileDrawerProps, ref) => {
           name="file"
           maxCount={1}
           fileList={fileList}
-          beforeUpload={(file) => {
+          beforeUpload={(file: File) => {
             setFileList([file]);
             return false;
           }}
           onRemove={() => {
             setFileList([]);
           }}
-          onChange={(info) => {
+          onChange={(info: any) => {
             if (info.file.status === 'removed') {
               setFileList([]);
             } else {
@@ -106,7 +103,7 @@ const AddFileDrawer = forwardRef((props: AddFileDrawerProps, ref) => {
         rules: [
           {
             required: true,
-            validator: (_, value) => {
+            validator: () => {
               if (fileList.length === 0) {
                 return Promise.reject('请上传文件');
               }

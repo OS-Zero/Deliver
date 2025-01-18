@@ -81,7 +81,7 @@ const Channel: React.FC = () => {
           删除
         </a>,
         <Dropdown
-          menu={{ items, onClick: (e) => handleMenuClick(e, record) }}
+          menu={{ items, onClick: (e: any) => handleMenuClick(e, record) }}
           key="more"
           placement="bottom"
         >

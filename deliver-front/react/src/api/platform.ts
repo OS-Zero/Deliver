@@ -17,7 +17,7 @@ export async function getPlatformPages(
   });
 }
 
-export function savePlatformData(data): Promise<never> {
+export function savePlatformData(data:any): Promise<never> {
   return request({
     headers: {
 			'Content-Type': 'multipart/form-data',
