@@ -82,7 +82,7 @@ const handleOperation = (op: Op) => {
 	right: var(--spacing-md);
 	left: var(--spacing-md);
 	border-top: 1px solid var(--gray-light);
-	text-align: center;
+	text-align: left;
 	padding: var(--spacing-xs) 0;
 	color: var(--gray-medium-dark);
 }
