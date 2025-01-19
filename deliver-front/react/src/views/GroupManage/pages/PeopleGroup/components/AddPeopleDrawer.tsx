@@ -25,17 +25,6 @@ const AddPeopleDrawer = forwardRef((props: AddPeopleDrawerProps, ref) => {
 
   const [editValues, setEditValues] = useState<any>(null);
 
-  const rule = {
-    formItemProps: {
-      rules: [
-        {
-          required: true,
-          message: '人群描述不可为空'
-        }
-      ]
-    }
-  };
-
   const columns: ProFormColumnsType[] = [
     {
       title: '人群ID',
@@ -48,14 +37,28 @@ const AddPeopleDrawer = forwardRef((props: AddPeopleDrawerProps, ref) => {
     {
       title: '人群名称',
       dataIndex: 'peopleGroupName',
-      ...rule,
-      width: '100%'
+      width: '100%',
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '请输入人群名称'
+          }
+        ]
+      }
     },
     {
       title: '人群描述',
       dataIndex: 'peopleGroupDescription',
-      ...rule,
-      width: '100%'
+      width: '100%',
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '请输入人群描述'
+          }
+        ]
+      }
     },
     {
       title: '用户类型',
@@ -66,6 +69,14 @@ const AddPeopleDrawer = forwardRef((props: AddPeopleDrawerProps, ref) => {
           value: d.usersType,
           label: d.usersTypeName
         }))
+      },
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '请选择用户类型'
+          }
+        ]
       }
     },
     {
@@ -102,7 +113,7 @@ const AddPeopleDrawer = forwardRef((props: AddPeopleDrawerProps, ref) => {
         rules: [
           {
             required: true,
-            message: '人群列表不可为空'
+            message: '请输入人群列表'
           }
         ],
         hidden: inputMethod === 'upload'

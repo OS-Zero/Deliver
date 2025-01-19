@@ -47,15 +47,19 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
     {
       title: '任务名',
       dataIndex: 'taskName',
-      ...rule('任务名'),
-      width: '100%'
+      width: '100%',
+      formItemProps: {
+        rules: [{ required: true, message: '请输入任务名' }]
+      }
     },
     {
       title: '任务描述',
       dataIndex: 'taskDescription',
       valueType: 'textarea',
-      ...rule('任务描述'),
-      width: '100%'
+      width: '100%',
+      formItemProps: {
+        rules: [{ required: true, message: '请输入任务描述' }]
+      }
     },
     {
       title: '任务类型',
@@ -72,6 +76,9 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
         onChange: () => {
           formRef?.current?.resetFields(['taskTimeExpression']);
         }
+      },
+      formItemProps: {
+        rules: [{ required: true, message: '请选择任务类型' }]
       }
     },
     {
@@ -159,6 +166,9 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
             }))}
           />
         );
+      },
+      formItemProps: {
+        rules: [{ required: true, message: '请选择关联模版' }]
       }
     },
     {
@@ -182,13 +192,19 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
             }))}
           />
         );
+      },
+      formItemProps: {
+        rules: [{ required: true, message: '请选择关联人群' }]
       }
     },
     {
       title: '任务消息参数',
       key: 'taskMessageParam',
       dataIndex: 'taskMessageParam',
-      renderFormItem: () => <JsonEditor key={jsonEditorKey} mode="code" />
+      renderFormItem: () => <JsonEditor key={jsonEditorKey} mode="code" />,
+      formItemProps: {
+        rules: [{ required: true, message: '请输入任务消息参数' }]
+      }
     }
   ];
 

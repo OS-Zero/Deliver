@@ -55,19 +55,6 @@ const AddFileDrawer = forwardRef((props: AddFileDrawerProps, ref) => {
     }
   }));
 
-  const rule = (title: string) => {
-    return {
-      formItemProps: {
-        rules: [
-          {
-            required: true,
-            message: `${title}不可为空`
-          }
-        ]
-      }
-    };
-  };
-
   const columns: ProFormColumnsType[] = [
     {
       title: '文件',
@@ -116,14 +103,28 @@ const AddFileDrawer = forwardRef((props: AddFileDrawerProps, ref) => {
     {
       title: '文件名',
       dataIndex: 'platformFileName',
-      ...rule('文件名'),
-      width: '100%'
+      width: '100%',
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '请输入文件名'
+          }
+        ]
+      }
     },
     {
       title: '文件描述',
       dataIndex: 'platformFileDescription',
-      ...rule('文件描述'),
-      width: '100%'
+      width: '100%',
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '请输入文件描述'
+          }
+        ]
+      }
     },
     {
       title: '渠道类型',
@@ -140,7 +141,14 @@ const AddFileDrawer = forwardRef((props: AddFileDrawerProps, ref) => {
           handleChannelTypeChange(value);
         }
       },
-      ...rule('请选择渠道类型')
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '请选择渠道类型'
+          }
+        ]
+      }
     },
     {
       title: '渠道供应商类型',
@@ -157,7 +165,14 @@ const AddFileDrawer = forwardRef((props: AddFileDrawerProps, ref) => {
           handleChannelProviderTypeChange(value);
         }
       },
-      ...rule('请选择渠道供应商类型')
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '请选择渠道供应商类型'
+          }
+        ]
+      }
     },
     {
       title: '文件类型',
@@ -170,7 +185,14 @@ const AddFileDrawer = forwardRef((props: AddFileDrawerProps, ref) => {
           label: d.platformFileTypeName
         }))
       },
-      ...rule('文件类型')
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '请选择文件类型'
+          }
+        ]
+      }
     },
     {
       title: '关联应用',
@@ -183,19 +205,31 @@ const AddFileDrawer = forwardRef((props: AddFileDrawerProps, ref) => {
           label: d.appName
         }))
       },
-      ...rule('关联应用')
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '请选择关联应用'
+          }
+        ]
+      }
     }
   ];
+
+  const onClose = () => {
+    setOpen(false);
+    formRef?.current?.resetFields();
+  };
 
   return (
     <Drawer
       title="上传文件"
       open={open}
-      onClose={() => setOpen(false)}
+      onClose={onClose}
       width={500}
       extra={
         <Space>
-          <Button onClick={() => setOpen(false)}>取消</Button>
+          <Button onClick={onClose}>取消</Button>
           <Button type="primary" onClick={handleSubmit}>
             确定
           </Button>

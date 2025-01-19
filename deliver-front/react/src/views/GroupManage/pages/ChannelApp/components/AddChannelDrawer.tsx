@@ -21,17 +21,6 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
     key: 'channel'
   });
 
-  const rule = {
-    formItemProps: {
-      rules: [
-        {
-          required: true,
-          message: '应用描述不可为空'
-        }
-      ]
-    }
-  };
-
   const columns: ProFormColumnsType[] = [
     {
       title: '应用ID',
@@ -44,14 +33,28 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
     {
       title: '应用名',
       dataIndex: 'appName',
-      ...rule,
-      width: '100%'
+      width: '100%',
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '请输入应用名'
+          }
+        ]
+      }
     },
     {
       title: '应用描述',
       dataIndex: 'appDescription',
-      ...rule,
-      width: '100%'
+      width: '100%',
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '请输入应用描述'
+          }
+        ]
+      }
     },
     {
       title: '渠道类型',
@@ -68,7 +71,14 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
           handleChannelTypeChange(value);
         }
       },
-      ...rule
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '请选择渠道类型'
+          }
+        ]
+      }
     },
     {
       title: '渠道供应商类型',
@@ -82,7 +92,14 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
         })),
         onChange: handleChannelProviderTypeChange
       },
-      ...rule
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '请选择渠道供应商类型'
+          }
+        ]
+      }
     },
     {
       title: '应用配置',

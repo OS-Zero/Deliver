@@ -25,17 +25,6 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
     key: 'template'
   });
 
-  const rule = {
-    formItemProps: {
-      rules: [
-        {
-          required: true,
-          message: '应用描述不可为空'
-        }
-      ]
-    }
-  };
-
   const columns: ProFormColumnsType[] = [
     {
       title: '模板 ID',
@@ -48,14 +37,28 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
     {
       title: '模板名',
       dataIndex: 'templateName',
-      ...rule,
-      width: '100%'
+      width: '100%',
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '请输入模板名'
+          }
+        ]
+      }
     },
     {
       title: '模板描述',
       dataIndex: 'templateDescription',
-      ...rule,
-      width: '100%'
+      width: '100%',
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '请输入模板描述'
+          }
+        ]
+      }
     },
     {
       title: '用户类型',
@@ -77,7 +80,14 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
           handleUsersTypeChange(value);
         }
       },
-      ...rule
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '请选择用户类型'
+          }
+        ]
+      }
     },
     {
       title: '渠道类型',
@@ -94,7 +104,14 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
           handleChannelTypeChange(value);
         }
       },
-      ...rule
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '请选择渠道类型'
+          }
+        ]
+      }
     },
     {
       title: '渠道供应商类型',
@@ -111,7 +128,14 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
           handleChannelProviderTypeChange(value);
         }
       },
-      ...rule
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '请选择渠道供应商类型'
+          }
+        ]
+      }
     },
     {
       title: '消息类型',
@@ -124,7 +148,14 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
           label: d.messageTypeName
         }))
       },
-      ...rule
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '请选择消息类型'
+          }
+        ]
+      }
     },
     {
       title: '关联应用',
@@ -137,7 +168,14 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
           label: d.appName
         }))
       },
-      ...rule
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '请选择关联应用'
+          }
+        ]
+      }
     }
   ];
 
@@ -150,8 +188,6 @@ const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
       reFresh?.();
     } catch (error) {
       console.error('保存失败:', error);
-    } finally {
-      setOpen(false);
     }
   };
 
