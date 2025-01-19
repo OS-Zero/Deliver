@@ -12,7 +12,10 @@ const Login: React.FC = () => {
   const [showForgot, setShowForgot] = useState(false);
 
   const registerOk = () => setActiveKey('login');
-  const forgotOk = () => setShowForgot(false);
+  const forgotOk = () => {
+    setShowForgot(false);
+    setActiveKey('login');
+  }
 
   return (
     <div className={styles.login}>
