@@ -4,6 +4,7 @@ import { memo, useRef } from 'react';
 import local from 'antd/lib/date-picker/locale/zh_CN.js';
 import { useFormOptions } from '@/hooks/useFormOptions';
 import { useDebounce } from '@/hooks/useDebounce';
+// import { handleValueChange } from '@/utils/handleFieldValue';
 
 interface FilterDrawerProps {
   onFilter: (filters: any) => void;
@@ -42,6 +43,7 @@ const FilterDrawer = (props: FilterDrawerProps) => {
   return (
     <Card
       title="筛选"
+      forceRender
       extra={<Button type="text" icon={<CloseOutlined />} onClick={handleReset} />}
       style={{
         width: 300,
@@ -58,7 +60,16 @@ const FilterDrawer = (props: FilterDrawerProps) => {
           <Select
             allowClear
             placeholder="请选择渠道类型"
-            onChange={handleChannelTypeChange}
+            onChange={async (value: number) => {
+              console.log(1);
+              await formRef?.current?.resetFields([
+                'channelProviderType',
+                'platformFileType',
+                'appId'
+              ]);
+              await handleChannelTypeChange(value);
+              console.log(2);
+            }}
             options={(options.channelTypeOptions || []).map((d) => ({
               value: d.channelType,
               label: d.channelTypeName
@@ -73,7 +84,10 @@ const FilterDrawer = (props: FilterDrawerProps) => {
               value: d.channelProviderType,
               label: d.channelProviderTypeName
             }))}
-            onChange={handleChannelProviderTypeChange}
+            onChange={(value: number) => {
+              formRef?.current?.resetFields(['platformFileType', 'appId']);
+              handleChannelProviderTypeChange(value);
+            }}
           />
         </Form.Item>
         <Form.Item label="文件类型" name="platformFileType">

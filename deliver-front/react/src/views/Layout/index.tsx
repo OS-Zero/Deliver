@@ -36,7 +36,7 @@ const AppLayout: React.FC = () => {
   }, [location.pathname]);
 
   return (
-    <div style={{ height: '100vh' }}>
+    <div style={{ height: '100%' }}>
       <Layout>
         <Banner />
         <Layout>
@@ -44,10 +44,10 @@ const AppLayout: React.FC = () => {
           <Layout>
             {menuItems.length > 0 && <SideBar items={menuItems} />}
             <Layout className={styles['layout-section']}>
-              <div className={styles['section_breadcrumb']}>
-                <Breadcrumb />
-              </div>
-              <Content style={{ paddingBottom: '20px' }}>
+              <Content style={{ paddingBottom: '20px', overflow: 'auto' }}>
+                <div className={styles['section_breadcrumb']}>
+                  <Breadcrumb />
+                </div>
                 <Outlet />
               </Content>
               <Footer style={{ textAlign: 'center', background: 'var(--gray-lightest)' }}>

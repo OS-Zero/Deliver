@@ -83,8 +83,8 @@ const GroupManage: React.FC = () => {
   );
 
   // 渲染分组卡片
-  const renderGroupCards = (groupList: GroupCard[], isTopGroup = false) => (
-    <div className={styles[isTopGroup ? 'top-cards' : 'bottom-cards']}>
+  const renderGroupCards = (groupList: GroupCard[]) => (
+    <>
       {groupList.map((item) => (
         <Card
           key={item.groupId}
@@ -99,7 +99,7 @@ const GroupManage: React.FC = () => {
           onDelete={() => handleOperation('delete', item)}
         />
       ))}
-    </div>
+    </>
   );
 
   // 检查主页状态
@@ -120,15 +120,17 @@ const GroupManage: React.FC = () => {
     <div>
       <div className={styles['card-top']}>
         <h3>置顶分组</h3>
-        {!groupList.topUpGroupList.length && (
-          <Card
-            isEmpty
-            isTop
-            setOpen={() => setState((prev) => ({ ...prev, operation: 'add', open: true }))}
-            onTop={() => setState((prev) => ({ ...prev, operation: 'add', open: true }))}
-          />
-        )}
-        {renderGroupCards(groupList.topUpGroupList, true)}
+        <div className={styles['top-cards']}>
+          {!groupList.topUpGroupList.length && (
+            <Card
+              isEmpty
+              isTop
+              setOpen={() => setState((prev) => ({ ...prev, operation: 'add', open: true }))}
+              onTop={() => setState((prev) => ({ ...prev, operation: 'add', open: true }))}
+            />
+          )}
+          {renderGroupCards(groupList.topUpGroupList, true)}
+        </div>
       </div>
       <div className={styles['card-bottom']}>
         <div className={styles['bottom-section']}>

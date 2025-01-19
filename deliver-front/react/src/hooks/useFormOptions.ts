@@ -56,15 +56,23 @@ export const useFormOptions = (props: UseFormOptionsProps) => {
   const handleChannelTypeChange = async (value: number) => {
     switch (key) {
       case 'file':
-        myRef?.current?.resetFields(['channelProviderType']);
+        myRef?.current?.resetFields(['channelProviderType', 'platformFileType', 'appId']);
         try {
-          const res1 = await getChannelProviderType({ channelType: value });
-          const res2: PlatFormFile[] = await getFileType({ channelType: value });
-          setOptions((prev) => ({
-            ...prev,
-            channelProvidersOptions: res1 || [],
-            fileTypeOptions: res2 || []
-          }));
+          if (value) {
+            const res1 = await getChannelProviderType({ channelType: value });
+            const res2: PlatFormFile[] = await getFileType({ channelType: value });
+            setOptions((prev) => ({
+              ...prev,
+              channelProvidersOptions: res1 || [],
+              fileTypeOptions: res2 || []
+            }));
+          } else {
+            setOptions((prev) => ({
+              ...prev,
+              channelProvidersOptions: [],
+              fileTypeOptions: []
+            }));
+          }
         } catch (error) {
           console.error('获取渠道供应商失败:', error);
         }
@@ -133,19 +141,19 @@ export const useFormOptions = (props: UseFormOptionsProps) => {
             console.error('获取消息类型和应用失败:', error);
           }
         }
-        if (editValue?.channelProviderType) {
-          try {
-            const messageResponse = await getMessageType(editValue);
-            const appResponse = await getApp(editValue);
-            setOptions((prev) => ({
-              ...prev,
-              messageTypeOptions: messageResponse || [],
-              appOptions: appResponse || []
-            }));
-          } catch (error) {
-            console.error('获取消息类型和应用失败:', error);
-          }
-        }
+        // if (editValue?.channelProviderType) {
+        //   try {
+        //     const messageResponse = await getMessageType(editValue);
+        //     const appResponse = await getApp(editValue);
+        //     setOptions((prev) => ({
+        //       ...prev,
+        //       messageTypeOptions: messageResponse || [],
+        //       appOptions: appResponse || []
+        //     }));
+        //   } catch (error) {
+        //     console.error('获取消息类型和应用失败:', error);
+        //   }
+        // }
         break;
       }
     }

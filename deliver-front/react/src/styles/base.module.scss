@@ -87,6 +87,44 @@ table {
 }
 html,
 body,
-#app {
+#root {
   height: 100%;
+  overflow: hidden;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #a1a1a1 #dfe9eb;
+}
+
+/* Chrome, Edge and Safari */
+*::-webkit-scrollbar {
+  width: 1px;
+  width: 1px;
+}
+*::-webkit-scrollbar-track {
+  border-radius: 1px;
+  background-color: #dfe9eb;
+}
+
+*::-webkit-scrollbar-track:hover {
+  background-color: #b8c0c2;
+}
+
+*::-webkit-scrollbar-track:active {
+  background-color: #b8c0c2;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 1px;
+  background-color: #a1a1a1;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #808080;
+}
+
+*::-webkit-scrollbar-thumb:active {
+  background-color: #a3a3a3;
 }

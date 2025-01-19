@@ -10,3 +10,12 @@ export const handleFieldValue = (
   }
   return value;
 };
+
+// 处理重置的表单变化
+export const handleValueChange = (key, ref) => {
+  if (!key?.channelType) {
+    ref?.current?.resetFields(['channelProviderType', 'platformFileType', 'appId']);
+  } else if (!key?.channelProviderType) {
+    ref?.current?.resetFields(['platformFileType', 'appId']);
+  }
+};

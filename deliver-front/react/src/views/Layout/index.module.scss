@@ -1,5 +1,6 @@
 :local .layout-section {
   padding: var(--spacing-md);
+  overflow: auto;
 
   .section_breadcrumb {
     margin-bottom: var(--spacing-md);

@@ -1,14 +1,11 @@
 :local {
-  .top-cards,
-  .bottom-cards {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--spacing-md);
+  .top-cards {
+    display: grid;
+    gap: var(--spacing-xs);
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   }
 
   .card-top {
-    margin-bottom: var(--spacing-md);
-
     h3 {
       margin-bottom: var(--spacing-md);
     }
@@ -23,6 +20,12 @@
     h3 {
       margin-right: var(--spacing-md);
     }
+  }
+
+  .bottom-cards {
+    display: grid;
+    gap: var(--spacing-xs);
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   }
 
   .search-box {
@@ -44,6 +47,7 @@
     line-height: 40px;
     width: 0;
     transition: 0.4s;
+    margin-right: 10px;
   }
 
   .search-btn {
