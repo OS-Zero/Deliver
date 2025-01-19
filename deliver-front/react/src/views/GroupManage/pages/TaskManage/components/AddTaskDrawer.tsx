@@ -233,11 +233,7 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
     addTaskDrawer: async () => {
       setOpen(true);
       formRef?.current?.setFieldsValue({
-        taskMessageParam: {
-          title: 'oszero每天起床',
-          content: '兄弟们该起床啦，6点啦，太阳晒屁股了',
-          htmlFlag: true
-        }
+        taskMessageParam: {}
       });
       setJsonEditorKey(jsonEditorKey + 1);
     },
