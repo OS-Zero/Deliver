@@ -1,13 +1,10 @@
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import { useGlobalContext } from '@/context/GlobalContext';
 
 const PrivateRoute = () => {
   useGlobalContext();
 
-  const location = useLocation();
-
   const isAuthenticated = !!localStorage.getItem('access_token');
-  const hasGroupId = !!localStorage.getItem('groupId');
 
   // 如果没有 token，重定向到登录
   if (!isAuthenticated) {

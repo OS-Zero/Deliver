@@ -31,21 +31,24 @@ const AddFileDrawer = forwardRef((props: AddFileDrawerProps, ref) => {
         formData.append('file', fileList[0]);
       }
 
-      const fileObject = {};
-      formData.forEach((value, key) => (fileObject[key] = value));
+      const fileObject: Record<string, any> = {};
+      formData.forEach((value, key) => {
+        fileObject[key] = value;
+      });
 
       const submitData = {
         ...values,
-        platformFile: fileObject?.file
+        platformFile: fileObject['file']
       };
 
       await onSubmit?.(submitData);
       formRef?.current?.resetFields();
       setFileList([]);
-      setOpen(false);
+      onClose();
+      message.success('上传成功');
       reFresh?.();
     } catch (error) {
-      console.error('保存失败:', error);
+      console.error('上传失败:', error);
     }
   };
 

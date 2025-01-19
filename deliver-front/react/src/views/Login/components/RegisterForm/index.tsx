@@ -85,7 +85,11 @@ const RegisterForm = (props: RegisterFormProps) => {
       <Form.Item name="userEmail" rules={[emailValidationRule]} validateTrigger={['onChange']}>
         <Input value={registerData.userEmail} placeholder="请输入邮箱" />
       </Form.Item>
-      <Form.Item name="userPassword" rules={[passwordValidationRule]} validateTrigger={['onChange']}>
+      <Form.Item
+        name="userPassword"
+        rules={[passwordValidationRule]}
+        validateTrigger={['onChange']}
+      >
         <Input.Password maxLength={16} value={registerData.userPassword} placeholder="请输入密码" />
       </Form.Item>
       <Form.Item
@@ -97,10 +101,10 @@ const RegisterForm = (props: RegisterFormProps) => {
       </Form.Item>
       <Form.Item
         name="userRealName"
-        rules={[{ required: true, message: '请输入真实姓名', maxLength: 50 }]}
+        rules={[{ required: true, message: '请输入真实姓名' }]}
         validateTrigger={['onChange']}
       >
-        <Input value={registerData.userRealName} placeholder="请输入真实姓名" />
+        <Input value={registerData.userRealName} placeholder="请输入真实姓名" maxLength={50} />
       </Form.Item>
       <Form.Item
         name="verificationCode"

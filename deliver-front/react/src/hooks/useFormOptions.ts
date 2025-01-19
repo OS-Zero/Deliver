@@ -142,19 +142,19 @@ export const useFormOptions = (props: UseFormOptionsProps) => {
             console.error('获取消息类型和应用失败:', error);
           }
         }
-        // if (editValue?.channelProviderType) {
-        //   try {
-        //     const messageResponse = await getMessageType(editValue);
-        //     const appResponse = await getApp(editValue);
-        //     setOptions((prev) => ({
-        //       ...prev,
-        //       messageTypeOptions: messageResponse || [],
-        //       appOptions: appResponse || []
-        //     }));
-        //   } catch (error) {
-        //     console.error('获取消息类型和应用失败:', error);
-        //   }
-        // }
+        if (editValue?.channelProviderType) {
+          try {
+            const messageResponse = await getMessageType(editValue);
+            const appResponse = await getApp(editValue);
+            setOptions((prev) => ({
+              ...prev,
+              messageTypeOptions: messageResponse || [],
+              appOptions: appResponse || []
+            }));
+          } catch (error) {
+            console.error('获取消息类型和应用失败:', error);
+          }
+        }
         break;
       }
     }

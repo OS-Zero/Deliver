@@ -43,7 +43,6 @@ const FilterDrawer = (props: FilterDrawerProps) => {
   return (
     <Card
       title="筛选"
-      forceRender
       extra={<Button type="text" icon={<CloseOutlined />} onClick={handleReset} />}
       style={{
         width: 300,
@@ -61,14 +60,12 @@ const FilterDrawer = (props: FilterDrawerProps) => {
             allowClear
             placeholder="请选择渠道类型"
             onChange={async (value: number) => {
-              console.log(1);
               await formRef?.current?.resetFields([
                 'channelProviderType',
                 'platformFileType',
                 'appId'
               ]);
               await handleChannelTypeChange(value);
-              console.log(2);
             }}
             options={(options.channelTypeOptions || []).map((d) => ({
               value: d.channelType,

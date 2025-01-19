@@ -57,7 +57,7 @@ export function getVerificationCode(data: { userEmail: string }): Promise<never>
   });
 }
 
-export function startUp(): Promise<never> {
+export function startUp(): Promise<any> {
   return request({
     url: '/startup',
     method: 'post'

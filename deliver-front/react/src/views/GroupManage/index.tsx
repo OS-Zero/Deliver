@@ -129,7 +129,7 @@ const GroupManage: React.FC = () => {
               onTop={() => setState((prev) => ({ ...prev, operation: 'add', open: true }))}
             />
           )}
-          {renderGroupCards(groupList.topUpGroupList, true)}
+          {renderGroupCards(groupList.topUpGroupList)}
         </div>
       </div>
       <div className={styles['card-bottom']}>
