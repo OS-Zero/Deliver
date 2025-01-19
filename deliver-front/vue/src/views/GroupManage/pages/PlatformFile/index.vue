@@ -30,6 +30,7 @@ const handleSearch = async () => {
 const debounceSearch = debounce(handleSearch, 200)
 const { pagination, resetPagination } = usePagination(handleSearch)
 watch(filterForm, () => {
+	resetPagination()
 	debounceSearch()
 })
 const copyId = async (text: string) => {
@@ -61,9 +62,9 @@ const handleFilterClose = () => {
 	filterState.open = false
 	formRef.value?.resetFields()
 }
-const handleDrawerClose = () => {
+const handleDrawerClose = (flash: boolean = false) => {
 	drawerState.open = false;
-	drawerState.operation === 'upload' && (resetPagination() ,handleSearch());
+	flash && (resetPagination(), handleSearch());
 }
 onBeforeMount(() => {
 	setFilterOptionsDispatch['channelType']()
@@ -79,12 +80,11 @@ onBeforeMount(() => {
 				</SearchInput>
 				<div class="operation">
 					<a-button class="btn--add" @click="handleActions('upload')" type="primary">上传</a-button>
-					<a-button :icon="h(FilterOutlined)" shape="circle" type="text"
-						@click="filterState.open = !filterState.open"></a-button>
+					<a-button :icon="h(FilterOutlined)" @click="filterState.open = !filterState.open"></a-button>
 				</div>
 			</div>
 			<a-table row-key="platformFileId" :dataSource="dataSource" :columns="platformFileColumns" :pagination="pagination"
-				:scroll="{ x: 1400, y: 680 }" :loading="loading">
+				:scroll="{ x: 1400 }" :loading="loading">
 				<template #bodyCell="{ column, text, record }">
 					<template v-if="column.key === 'platformFileId'">
 						{{ text }}
@@ -153,15 +153,16 @@ onBeforeMount(() => {
 }
 
 .filter-form {
-	height: 100%;
 	overflow: hidden;
 	transition: width 120ms;
 	border: none;
 	width: 0;
+	height: 0;
 
 	&.open {
 		border-left: 1px solid var(--gray-lighter);
-		width: 300px
+		width: 300px;
+		height: 100%;
 	}
 }
 

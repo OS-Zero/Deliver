@@ -119,14 +119,11 @@ watch(() => router.currentRoute.value.path, async (to: string) => {
 </template>
 
 <style lang="scss" scoped>
-.groupManage {
-	height: 100%;
-}
-
 .top_cards,
 .bottom_cards {
-	display: flex;
+	display: grid;
 	gap: var(--spacing-md);
+	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 }
 
 .card-top {

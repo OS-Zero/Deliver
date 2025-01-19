@@ -4,7 +4,7 @@ import { RegisterInfo } from '../../../types/user';
 import { getRangeRule, getRequiredRule } from '@/utils/validate';
 import { getVerificationCode, register } from '@/api/user';
 import { message } from 'ant-design-vue'
-import { getDataFromSchema, omitProperty } from "@/utils/utils"
+import { getDataFromSchema, notUndefined, omitProperty } from "@/utils/utils"
 import { Schema } from '@/types';
 
 interface RegisterForm extends RegisterInfo {
@@ -45,33 +45,39 @@ const registerForm = reactive<Schema<RegisterForm>>({
 		fieldName: 'userPassword',
 		inputConfig: {
 			placeholder: '请输入用户密码',
-
+			maxlength: 16,
+			onChange: () => {
+				notUndefined(registerForm.confirmPwd.value) && formRef.value?.validateFields([['confirmPwd', 'value']])
+			}
 		},
-		rules: [getRequiredRule('请输入用户密码'), ...getRangeRule(6, 16, '密码长度范围为6-16位')],
+		rules: [getRequiredRule('请输入用户密码', 'change'), ...getRangeRule(6, 16, '密码长度范围为6-16位', 'change')],
 	},
 	confirmPwd: {
 		type: 'inputPassword',
 		fieldName: 'confirmPwd',
 		inputConfig: {
 			placeholder: '请确认用户密码',
+			maxlength: 16
 		},
-		rules: [{ validator: validatePwd }],
+		rules: [{ validator: validatePwd, trigger: 'change' }],
 	},
 	userRealName: {
 		type: 'input',
 		fieldName: 'userRealName',
 		inputConfig: {
 			placeholder: '请输入用户真实姓名',
+			maxlength: 50
 		},
-		rules: [getRequiredRule('请输入用户真实姓名')],
+		rules: [getRequiredRule('请输入用户真实姓名'), ...getRangeRule(1, 50, '用户真实姓名长度为1-50位', 'change')],
 	},
 	verificationCode: {
 		type: 'verificationCode',
 		fieldName: 'verificationCode',
 		inputConfig: {
 			placeholder: '请输入验证码',
+			maxlength: 6
 		},
-		rules: [getRequiredRule('请输入验证码'), ...getRangeRule(6, 6, '验证码长度为6位')],
+		rules: [getRequiredRule('请输入验证码'), ...getRangeRule(6, 6, '验证码长度为6位', 'change')],
 		buttonConfig: {
 			disabled: verificationBtnDisabled,
 			onClick: () => {

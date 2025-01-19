@@ -3,14 +3,14 @@ import { ref, reactive } from 'vue';
 import { ForgotInfo } from '../../../types/user';
 import { getRangeRule, getRequiredRule } from '@/utils/validate';
 import { forgotPwd, getVerificationCode } from '@/api/user';
-import { getDataFromSchema, omitProperty } from '@/utils/utils';
-import { message } from 'ant-design-vue';
+import { getDataFromSchema, notUndefined, omitProperty } from '@/utils/utils';
+import { FormInstance, message } from 'ant-design-vue';
 import { Schema } from '@/types';
 interface RegisterForm extends ForgotInfo {
 	$forgot: string
 }
 const emit = defineEmits(['ok'])
-const formRef = ref()
+const formRef = ref<FormInstance>()
 const verificationBtnDisabled = ref(true)
 const validateEmail = () => {
 	const regExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -42,25 +42,30 @@ const forgotForm = reactive<Schema<RegisterForm>>({
 		fieldName: 'userPassword',
 		inputConfig: {
 			placeholder: '请输入用户密码',
+			maxlength: 16,
+			onChange: () => {
+				notUndefined(forgotForm.confirmPwd.value) && formRef.value?.validateFields([['confirmPwd', 'value']])
+			}
 		},
-		rules: [getRequiredRule('请输入用户密码'), ...getRangeRule(6, 16, '密码长度范围为6-16位')],
+		rules: [getRequiredRule('请输入用户密码', 'change'), ...getRangeRule(6, 16, '密码长度范围为6-16位', 'change'),],
 	},
 	confirmPwd: {
 		type: 'inputPassword',
 		fieldName: 'confirmPwd',
 		inputConfig: {
 			placeholder: '请确认用户密码',
+			maxlength: 16
 		},
-		rules: [getRequiredRule('请确认用户密码'), { validator: validatePwd }],
+		rules: [{ validator: validatePwd, trigger: 'change', required: true }],
 	},
 	verificationCode: {
 		type: 'verificationCode',
 		fieldName: 'verificationCode',
 		inputConfig: {
 			placeholder: '请输入验证码',
-
+			maxlength: 6
 		},
-		rules: [getRequiredRule('请输入验证码'), ...getRangeRule(6, 6, '验证码长度为6位')],
+		rules: [getRequiredRule('请输入验证码'), ...getRangeRule(6, 6, '验证码长度为6位', 'change')],
 		buttonConfig: {
 			onClick: () => {
 				getVerificationCode({ userEmail: forgotForm.userEmail.value })
@@ -75,7 +80,7 @@ const forgotForm = reactive<Schema<RegisterForm>>({
 			name: '确认',
 			style: { width: '100%' },
 			onClick: async () => {
-				await formRef.value.validate()
+				await formRef.value?.validate()
 				await forgotPwd(omitProperty(getDataFromSchema(forgotForm), 'confirmPwd'))
 				message.success('重置成功')
 				emit("ok")

@@ -77,6 +77,8 @@ const generateDispatch = (form: Schema<any>) => {
 			if (notUndefined(data.channelType) && notUndefined(data.channelProviderType)) {
 				const appConfig = await getAppConfig(data);
 				form.appConfig.value = JSON.parse(appConfig || '{}');
+			} else {
+				form.appConfig.value = JSON.parse('{}');
 			}
 		},
 	};
@@ -106,9 +108,9 @@ export const channelAppForm = reactive<Schema<ChannelAppForm>>({
 		rules: [getRequiredRule('请选择渠道类型')],
 		selectConfig: {
 			options: [],
-			onChange: (value: any) => {
-				setOptionsDispatch['channelProviderType']({ channelType: value });
-				setOptionsDispatch['appConfig']({ channelType: value, channelProviderType: channelAppForm.channelProviderType.value });
+			onChange: async (value: any) => {
+				await setOptionsDispatch['channelProviderType']({ channelType: value });
+				await setOptionsDispatch['appConfig']({ channelType: value, channelProviderType: channelAppForm.channelProviderType.value });
 			},
 		},
 	},
@@ -125,6 +127,7 @@ export const channelAppForm = reactive<Schema<ChannelAppForm>>({
 		},
 	},
 	appConfig: {
+		value: {},
 		type: 'jsonEditor',
 		fieldName: 'appConfig',
 		label: '应用配置',

@@ -201,8 +201,8 @@ export const filterForm: Schema<SearchParams> = reactive({
 			onChange: (value: any) => {
 				setFilterOptionsDispatch['channelProviderType']({ channelType: value });
 				setFilterOptionsDispatch['platformFileType']({ channelType: value });
-				setFilterOptionsDispatch['messageType']({ channelType: value, channelProviderType: platformFileForm.channelProviderType.value });
-				setFilterOptionsDispatch['appId']({ channelType: value, channelProviderType: platformFileForm.channelProviderType.value });
+				setFilterOptionsDispatch['messageType']({ channelType: value, channelProviderType: filterForm.channelProviderType.value });
+				setFilterOptionsDispatch['appId']({ channelType: value, channelProviderType: filterForm.channelProviderType.value });
 			},
 		},
 	},
@@ -213,8 +213,8 @@ export const filterForm: Schema<SearchParams> = reactive({
 		selectConfig: {
 			options: [],
 			onChange: (value: any) => {
-				setFilterOptionsDispatch['messageType']({ channelType: platformFileForm.channelType.value, channelProviderType: value });
-				setFilterOptionsDispatch['appId']({ channelType: platformFileForm.channelType.value, channelProviderType: value });
+				setFilterOptionsDispatch['messageType']({ channelType: filterForm.channelType.value, channelProviderType: value });
+				setFilterOptionsDispatch['appId']({ channelType: filterForm.channelType.value, channelProviderType: value });
 			},
 		},
 	},

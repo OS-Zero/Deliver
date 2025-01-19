@@ -19,18 +19,9 @@ const routes: RouteRecordRaw[] = [
 				name: '分组管理',
 				component: () => import('@/views/GroupManage/index.vue'),
 				meta: {
-					title: 'Deliver 分组管理',
+					title: '分组管理 - Deliver 企业消息推送平台',
 				},
 				children: [
-					// {
-					// 	path: 'dashboard',
-					// 	name: '控制面板',
-					// 	component: async () => await import('@/views/Dashboard/index.vue'),
-					// 	meta: {
-					// 		parent: '首页',
-					// 		title: '控制面板 - Deliver 企业消息推送平台',
-					// 	},
-					// },
 					{
 						path: 'template',
 						name: '消息模板配置',
@@ -41,10 +32,10 @@ const routes: RouteRecordRaw[] = [
 					},
 					{
 						path: 'app',
-						name: '应用配置',
+						name: '渠道应用配置',
 						component: () => import('@/views/GroupManage/pages/ChannelApp/index.vue'),
 						meta: {
-							title: '应用配置 - Deliver 企业消息推送平台',
+							title: '渠道应用配置 - Deliver 企业消息推送平台',
 						},
 					},
 					{
@@ -60,7 +51,7 @@ const routes: RouteRecordRaw[] = [
 						name: '群发任务配置',
 						component: () => import('@/views/GroupManage/pages/TaskManage/index.vue'),
 						meta: {
-							name: '群发任务配置 - Deliver 企业消息推送平台',
+							title: '群发任务配置 - Deliver 企业消息推送平台',
 						},
 					},
 					{
@@ -68,7 +59,7 @@ const routes: RouteRecordRaw[] = [
 						name: '人群模板配置',
 						component: () => import('@/views/GroupManage/pages/TaskManage/PeopleGroup/index.vue'),
 						meta: {
-							name: '人群模板配置 - Deliver 企业消息推送平台',
+							title: '人群模板配置 - Deliver 企业消息推送平台',
 						},
 					},
 				],
@@ -78,7 +69,7 @@ const routes: RouteRecordRaw[] = [
 				name: '系统管理',
 				component: () => import('@/views/SystemManage/index.vue'),
 				meta: {
-					title: 'Deliver 系统管理',
+					title: '系统管理 - Deliver 企业消息推送平台',
 				},
 				redirect: '/systemManage/myAccount',
 				children: [
@@ -107,7 +98,7 @@ const routes: RouteRecordRaw[] = [
 		name: '404',
 		component: () => import('@/views/404.vue'),
 		meta: {
-			title: 'Deliver 企业消息推送平台',
+			title: 'Not Found - Deliver 企业消息推送平台',
 		},
 	},
 ];

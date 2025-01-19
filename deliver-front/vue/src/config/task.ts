@@ -195,11 +195,6 @@ export const taskForm: Schema<TaskForm> = reactive({
 	},
 });
 export const filterForm: Record<string, FormItem<keyof SearchParams>> = reactive({
-	taskName: {
-		type: 'input',
-		fieldName: 'taskName',
-		label: '任务名',
-	},
 	taskType: {
 		type: 'select',
 		fieldName: 'taskType',
@@ -207,12 +202,16 @@ export const filterForm: Record<string, FormItem<keyof SearchParams>> = reactive
 		selectConfig: {
 			options: [
 				{
-					key: 1,
-					value: '实时',
+					value: 1,
+					label: '实时任务',
 				},
 				{
-					key: 2,
-					value: '定时',
+					value: 2,
+					label: '定时循环任务',
+				},
+				{
+					value: 3,
+					label: '定时单次任务',
 				},
 			],
 		},

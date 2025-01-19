@@ -69,14 +69,14 @@ const operationDispatch = {
 		await formRef.value.validate()
 		await uploadPlatformFile(getDataFromSchema(platformFileForm))
 		message.success('上传成功')
-		handleCancel()
+		handleCancel(true)
 	},
 }
 
-const handleCancel = () => {
+const handleCancel = (flash: boolean = false) => {
 	props.operation !== 'more' && formRef.value.resetFields()
 	drawerState.open = false
-	emit('close')
+	emit('close', flash)
 }
 onBeforeMount(() => {
 	setOptionsDispatch['channelType']()

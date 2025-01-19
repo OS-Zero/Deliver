@@ -30,10 +30,10 @@ const emit = defineEmits(['changeStatus', 'handleActions'])
 				<a-button v-show="!data.appStatus" @click="emit('handleActions', 'delete', data)">删除</a-button>
 			</div>
 			<a-dropdown placement="bottom">
-				<a-button type="link">
+				<div class="more_btn">
 					更多操作
 					<DownOutlined />
-				</a-button>
+				</div>
 				<template #overlay>
 					<a-menu>
 						<a-menu-item>
@@ -115,5 +115,11 @@ const emit = defineEmits(['changeStatus', 'handleActions'])
 	&.close {
 		background-color: rgb(229, 69, 69);
 	}
+}
+
+.more_btn {
+	display: flex;
+	align-items: center;
+	color: var(--primary-color);
 }
 </style>

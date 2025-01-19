@@ -74,7 +74,7 @@ const initMoreDate = () => {
 					label: channelAppLocale[name],
 					value: props.record[name],
 					extra: {
-						close: false
+						close: true
 					}
 				})
 			} else {
@@ -92,21 +92,21 @@ const operationDispatch = {
 		await formRef.value.validate()
 		await saveChannelApp(getDataFromSchema(channelAppForm))
 		message.success('新增成功')
-		handleCancel()
+		handleCancel(true)
 	},
 	edit: async () => {
 		await formRef.value.validate()
 		await updateChannelApp(getDataFromSchema(channelAppForm))
 		message.success('编辑成功')
-		handleCancel()
+		handleCancel(true)
 	},
 }
 
-const handleCancel = () => {
+const handleCancel = (flash: boolean = false) => {
 	props.operation !== 'more' && formRef.value.resetFields()
 	drawerState.open = false
 	groups.length = 0
-	emit('close')
+	emit('close', flash)
 }
 onBeforeMount(() => {
 	setOptionsDispatch['channelType']()

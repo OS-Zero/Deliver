@@ -19,6 +19,8 @@ const searchValue = ref('')
 const handleSearch = async () => {
 	try {
 		loading.value = true
+		console.log(searchValue.value);
+
 		const { records, total } = await getTask({ taskName: searchValue.value, ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
 		dataSource.value = records
 		pagination.total = total
@@ -31,6 +33,7 @@ const handleSearch = async () => {
 const debounceSearch = debounce(handleSearch, 200)
 const { pagination, resetPagination } = usePagination(handleSearch)
 watch(filterForm, () => {
+	resetPagination()
 	debounceSearch()
 })
 const copyId = async (text: string) => {
@@ -112,10 +115,9 @@ const handleFilterClose = () => {
 	filterState.open = false
 	formRef.value?.resetFields()
 }
-const handleDrawerClose = () => {
+const handleDrawerClose = (flash: boolean = false) => {
 	drawerState.open = false;
-	drawerState.operation === 'add' && resetPagination();
-	(drawerState.operation === 'add' || drawerState.operation === 'edit') && handleSearch();
+	flash && (resetPagination(), handleSearch());
 }
 onBeforeMount(() => {
 	handleSearch()
@@ -130,8 +132,7 @@ onBeforeMount(() => {
 				</SearchInput>
 				<div class="operation">
 					<a-button class="btn--add" @click="handleActions('add')" type="primary">新增</a-button>
-					<a-button :icon="h(FilterOutlined)" shape="circle" type="text"
-						@click="filterState.open = !filterState.open"></a-button>
+					<a-button :icon="h(FilterOutlined)" @click="filterState.open = !filterState.open"></a-button>
 				</div>
 			</div>
 			<div class="selections--delete" v-show="rowSelection.selectedRowKeys?.length">
@@ -142,7 +143,7 @@ onBeforeMount(() => {
 				</div>
 			</div>
 			<a-table row-key="taskId" :dataSource="dataSource" :columns="taskColumns" :row-selection="rowSelection"
-				:pagination="pagination" :scroll="{ x: 1400, y: 680 }" :loading="loading">
+				:pagination="pagination" :scroll="{ x: 1400 }" :loading="loading">
 				<template #bodyCell="{ column, text, record }">
 					<template v-if="column.key === 'taskId'">
 						{{ text }}
@@ -220,15 +221,16 @@ onBeforeMount(() => {
 }
 
 .filter-form {
-	height: 100%;
 	overflow: hidden;
 	transition: width 120ms;
 	border: none;
 	width: 0;
+	height: 0;
 
 	&.open {
 		border-left: 1px solid var(--gray-lighter);
-		width: 300px
+		width: 300px;
+		height: 100%;
 	}
 }
 

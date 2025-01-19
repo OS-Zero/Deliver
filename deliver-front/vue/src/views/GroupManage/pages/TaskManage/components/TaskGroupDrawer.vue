@@ -118,21 +118,21 @@ const operationDispatch = {
 		await formRef.value?.validate()
 		await saveTask(getDataFromSchema(taskForm))
 		message.success('新增成功')
-		handleCancel()
+		handleCancel(true)
 	},
 	edit: async () => {
 		await formRef.value?.validate()
 		await updateTask(getDataFromSchema(taskForm))
 		message.success('编辑成功')
-		handleCancel()
+		handleCancel(true)
 	}
 }
 
-const handleCancel = () => {
+const handleCancel = (flash: boolean = false) => {
 	props.operation !== 'more' && formRef.value?.resetFields()
 	drawerState.open = false
 	groups.length = 0
-	emit('close')
+	emit('close', flash)
 }
 
 watch(() => taskForm.taskTimeExpression.type, () => {

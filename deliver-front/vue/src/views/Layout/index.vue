@@ -33,21 +33,35 @@ watch(() => router.currentRoute.value.path, (to: string) => {
 onUnmounted(() => {
 	emitter.off("card", onCardSelected)
 })
+import type { CSSProperties } from 'vue';
+const headerStyle: CSSProperties = {
+	paddingInline: 0,
+	backgroundColor: '#fff',
+	height: 'auto'
+};
 
+const contentStyle: CSSProperties = {
+	backgroundColor: '#fff',
+	padding: 'var(--spacing-md)',
+	overflow: 'auto',
+	display: 'flex',
+	flexDirection: 'column',
+	gap: 'var(--font-size-base)'
+};
 </script>
 
 <template>
-	<a-layout>
-		<div>
+	<a-layout style="height: 100%;">
+		<a-layout-header :style="headerStyle">
 			<Banner class="header_banner" />
 			<Header></Header>
-		</div>
+		</a-layout-header>
 		<a-layout>
 			<SideBar v-if="items !== null" :items="items"></SideBar>
-			<a-layout class="layout-section">
-				<Breadcrumb v-if="showBreadcrumb" class="section_breadcrumb" />
-				<a-layout-content class="layout-content">
-					<RouterView></RouterView>
+			<a-layout>
+				<a-layout-content :style="contentStyle">
+					<Breadcrumb v-if="showBreadcrumb" />
+					<RouterView style="flex:1"></RouterView>
 				</a-layout-content>
 				<a-layout-footer>
 					<div class="footer_organization">
@@ -64,34 +78,18 @@ onUnmounted(() => {
 	</a-layout>
 </template>
 <style scoped lang="scss">
-.ant-layout {
-	height: 100%;
-
-	.layout-section {
-		padding: var(--spacing-md);
-
-		.section_breadcrumb {
-			margin-bottom: var(--spacing-md)
-		}
-
-		.ant-layout-footer {
-			text-align: center;
-			background-color: var(--gray-lightest);
-			color: var(--gray-dark);
-		}
-
-		.footer_organization {
-			margin-bottom: var(--spacing-sm)
-		}
-
-		.organization_link {
-			color: var(--gray-dark);
-			font-size: var(--spacing-md);
-		}
-	}
+.ant-layout-footer {
+	text-align: center;
+	background-color: var(--gray-lightest);
+	color: var(--gray-dark);
 }
 
-.ant-layout {
-	background-color: var(--white-color);
+.footer_organization {
+	margin-bottom: var(--spacing-sm)
+}
+
+.organization_link {
+	color: var(--gray-dark);
+	font-size: var(--spacing-md);
 }
 </style>

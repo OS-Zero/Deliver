@@ -38,6 +38,7 @@ watch(() => router.currentRoute.value.path, (to: string) => {
 
 <style lang="scss" scoped>
 .ant-layout-sider {
+	height: 100%;
 	position: relative;
 	border-right: 1px solid var(--gray-lighter);
 

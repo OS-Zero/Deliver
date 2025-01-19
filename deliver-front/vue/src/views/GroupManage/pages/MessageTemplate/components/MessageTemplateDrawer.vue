@@ -104,13 +104,13 @@ const operationDispatch = {
 		await formRef.value?.validate()
 		await addMessageTemplate(getDataFromSchema(messageTemplateForm))
 		message.success('新增成功')
-		handleCancel()
+		handleCancel(true)
 	},
 	edit: async () => {
 		await formRef.value?.validate()
 		await updateMessageTemplate(getDataFromSchema(messageTemplateForm))
 		message.success('编辑成功')
-		handleCancel()
+		handleCancel(true)
 	},
 	testSend: async () => {
 		await formRef.value?.validate()
@@ -118,11 +118,11 @@ const operationDispatch = {
 	}
 }
 
-const handleCancel = () => {
+const handleCancel = (flash: boolean = false) => {
 	props.operation !== 'more' && formRef.value?.resetFields()
 	drawerState.open = false
 	groups.length = 0
-	emit('close')
+	emit('close', flash)
 }
 
 </script>

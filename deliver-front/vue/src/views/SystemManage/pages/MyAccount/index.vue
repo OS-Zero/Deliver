@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, reactive, onBeforeMount } from 'vue';
 import { getVerificationCode, updatePwd } from '@/api/user';
-import { getDataFromSchema, omitProperty } from '@/utils/utils';
+import { getDataFromSchema, notUndefined, omitProperty } from '@/utils/utils';
 import { message } from 'ant-design-vue';
 import { UserInfo } from '@/types/user';
 import { Schema } from '@/types';
@@ -26,24 +26,30 @@ const editorForm = reactive<Schema<EditorForm>>({
 		fieldName: 'userPassword',
 		inputConfig: {
 			placeholder: '请输入用户密码',
+			maxlength: 16,
+			onChange: () => {
+				notUndefined(editorForm.confirmPwd.value) && formRef.value?.validateFields([['confirmPwd', 'value']])
+			}
 		},
-		rules: [getRequiredRule('请输入用户密码'), ...getRangeRule(6, 16, '密码长度范围为6-16位')],
+		rules: [getRequiredRule('请输入用户密码', 'change'), ...getRangeRule(6, 16, '密码长度范围为6-16位', 'change')],
 	},
 	confirmPwd: {
 		type: 'input',
 		fieldName: 'confirmPwd',
 		inputConfig: {
+			maxlength: 16,
 			placeholder: '请确认用户密码',
 		},
-		rules: [getRequiredRule('请确认用户密码'), { validator: validatePwd }],
+		rules: [getRequiredRule('请确认用户密码', 'change'), { validator: validatePwd, trigger: 'change' }],
 	},
 	verificationCode: {
 		type: 'verificationCode',
 		fieldName: 'verificationCode',
 		inputConfig: {
+			maxlength: 6,
 			placeholder: '请输入验证码',
 		},
-		rules: [getRequiredRule('请输入验证码'), ...getRangeRule(6, 6, '验证码长度为6位')],
+		rules: [getRequiredRule('请输入验证码', 'change'), ...getRangeRule(6, 6, '验证码长度为6位', 'change')],
 		buttonConfig: {
 			onClick: () => {
 				getVerificationCode({ userEmail: userInfo.userEmail })
@@ -75,9 +81,9 @@ onBeforeMount(async () => {
 <template>
 	<a-card title="基础信息">
 		<div class="card_content">
-			<p>邮箱: {{ userInfo.userEmail }}</p>
-			<p>姓名: {{ userInfo.userRealName }}</p>
-			<p>用户类型: {{ userInfo.userRole }}</p>
+			<p>用户邮箱:&nbsp;&nbsp;&nbsp; {{ userInfo.userEmail }}</p>
+			<p>用户姓名:&nbsp;&nbsp;&nbsp; {{ userInfo.userRealName }}</p>
+			<p>用户类型: &nbsp;&nbsp;&nbsp;{{ userInfo.userRole }}</p>
 			<a-button @click="showDrawer">修改密码</a-button>
 		</div>
 		<a-drawer title="修改密码" :open="open" placement="right" @close="onClose">
@@ -93,10 +99,6 @@ onBeforeMount(async () => {
 <style lang="scss" scoped>
 .ant-card {
 	width: 500px;
-
-	.card_content {
-		text-align: center;
-	}
 
 	p {
 		margin: var(--spacing-md) 0;

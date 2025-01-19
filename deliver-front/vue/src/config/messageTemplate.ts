@@ -29,6 +29,7 @@ export const messageTemplateColumns: ColumnsType = [
 		title: '模板 Id',
 		dataIndex: 'templateId',
 		key: 'templateId',
+		fixed: 'left',
 	},
 	{
 		title: '模板名',
@@ -230,8 +231,7 @@ export const filterForm = reactive<Record<string, FormItem<keyof SearchParams>>>
 			options: [],
 			onChange: async (value: any) => {
 				setFilterOptionsDispatch['channelProviderType']({ channelType: value });
-				setFilterOptionsDispatch['messageType']({ channelType: value, channelProviderType: messageTemplateForm.channelProviderType.value });
-				setFilterOptionsDispatch['appId']({ channelType: value, channelProviderType: messageTemplateForm.channelProviderType.value });
+				setFilterOptionsDispatch['messageType']({ channelType: value, channelProviderType: filterForm.channelProviderType.value });
 			},
 		},
 	},
@@ -242,8 +242,7 @@ export const filterForm = reactive<Record<string, FormItem<keyof SearchParams>>>
 		selectConfig: {
 			options: [],
 			onChange: async (value: any) => {
-				setFilterOptionsDispatch['messageType']({ channelType: messageTemplateForm.channelType.value, channelProviderType: value });
-				setFilterOptionsDispatch['appId']({ channelType: messageTemplateForm.channelType.value, channelProviderType: value });
+				setFilterOptionsDispatch['messageType']({ channelType: filterForm.channelType.value, channelProviderType: value });
 			},
 		},
 	},

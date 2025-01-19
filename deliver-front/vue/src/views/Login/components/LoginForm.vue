@@ -29,15 +29,16 @@ const loginForm = reactive<Schema<LoginForm>>({
 		inputConfig: {
 			placeholder: '请输入邮箱',
 		},
-		rules: [{ validator: validateEmail, trigger: 'blur' }]
+		rules: [{ validator: validateEmail, trigger: 'change' }]
 	},
 	userPassword: {
 		type: 'input',
 		fieldName: 'userPassword',
 		inputConfig: {
 			placeholder: '请输入用户密码',
+			maxlength: 16
 		},
-		rules: [getRequiredRule('请输入用户密码'), ...getRangeRule(6, 16, '密码长度范围为6-16位')],
+		rules: [getRequiredRule('请输入用户密码'), ...getRangeRule(6, 16, '密码长度范围为6-16位', 'change')],
 	},
 	$login: {
 		type: 'button',
