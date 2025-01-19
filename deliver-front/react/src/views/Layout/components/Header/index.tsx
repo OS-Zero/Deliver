@@ -70,6 +70,9 @@ const Header: React.FC = () => {
         }
         break;
       case 'systemManage':
+        if (window.location.pathname === '/systemManage/myAccount') {
+          break;
+        }
         navigate('/systemManage');
         break;
       default:
