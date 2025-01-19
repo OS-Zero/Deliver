@@ -13,8 +13,8 @@ interface ProTableConfigProps {
 const nameMap = {
   taskName: '任务名',
   appName: '应用名',
-  templateName: '模板名',
-  platformFileName: '平台文件名',
+  templateName: '模版名',
+  platformFileName: '文件名',
   peopleGroupName: '人群名'
 };
 
