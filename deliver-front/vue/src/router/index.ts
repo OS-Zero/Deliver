@@ -78,7 +78,7 @@ const routes: RouteRecordRaw[] = [
 						name: '我的账户',
 						component: () => import('@/views/SystemManage/pages/MyAccount/index.vue'),
 						meta: {
-							name: '我的账户 - Deliver 企业消息推送平台',
+							title: '我的账户 - Deliver 企业消息推送平台',
 						},
 					},
 				],
