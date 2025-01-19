@@ -15,7 +15,7 @@ export const platformTableSchema: ProColumns<PlatformFileDetail>[] = [
     title: '文件类型',
     width: 120,
     dataIndex: 'platformFileTypeName',
-    render: (_, record) => <Tag color={getColor(Number(record?.platformFileType))}>{_}</Tag>
+    render: (_, record) => <Tag color={getColor(record?.platformFileType)}>{_}</Tag>
   },
   {
     title: '渠道类型',
