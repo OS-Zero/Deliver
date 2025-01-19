@@ -71,7 +71,9 @@ const Card: React.FC<CardProps> = ({
     if (isTop) {
       return (
         <div className={`${styles['card']} ${styles['top-card-empty']}`} onClick={setOpen}>
-          <div className={styles['empty-desc']}>当前置顶分组为空，你可以选择置顶分组方便后续查找分组</div>
+          <div className={styles['empty-desc']}>
+            当前置顶分组为空，你可以选择置顶分组方便后续查找分组
+          </div>
         </div>
       );
     }
@@ -94,8 +96,10 @@ const Card: React.FC<CardProps> = ({
       <h4 className={styles['card-title']}>{data?.groupName}</h4>
       <div className={styles['card-content']}>{data?.groupDescription}</div>
       <div className={styles['card-time']}>
-        <FieldTimeOutlined />
-        {data?.updateTime}
+        <span className={styles['time-icon']}>
+          <FieldTimeOutlined />
+        </span>
+        <span className={styles['time-text']}>{data?.updateTime}</span>
       </div>
     </div>
   );
