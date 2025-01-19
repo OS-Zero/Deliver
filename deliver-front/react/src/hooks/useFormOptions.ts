@@ -1,3 +1,4 @@
+import { getMessageParamByMessageType } from '@/api/messageTemplate';
 import {
   getAppConfig,
   getChannelType,
@@ -174,6 +175,19 @@ export const useFormOptions = (props: UseFormOptionsProps) => {
     }
   };
 
+  // 关联模版参数
+  const handleTemplateChange = async (value: number) => {
+    if (value) {
+      try {
+        const response = await getMessageParamByMessageType({ templateId: value });
+        myRef?.current?.setFieldValue('taskMessageParam', JSON.parse(response));
+        setJsonEditorKey?.((prev: number) => prev + 1);
+      } catch (error) {
+        console.error('获取模版失败:', error);
+      }
+    }
+  };
+
   // 关联人群搜索
   const handlePeopleGroupSearch = async (value: string) => {
     if (value) {
@@ -208,6 +222,7 @@ export const useFormOptions = (props: UseFormOptionsProps) => {
     handleChannelTypeChange,
     handleChannelProviderTypeChange,
     handleTemplateSearch,
-    handlePeopleGroupSearch
+    handlePeopleGroupSearch,
+    handleTemplateChange
   };
 };

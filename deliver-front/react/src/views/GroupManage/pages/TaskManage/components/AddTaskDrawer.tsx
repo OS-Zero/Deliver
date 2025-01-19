@@ -19,10 +19,12 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
   const formRef = useRef<FormInstance>(null);
   const [jsonEditorKey, setJsonEditorKey] = useState(0);
 
-  const { options, handleTemplateSearch, handlePeopleGroupSearch } = useFormOptions({
-    myRef: formRef,
-    key: 'task'
-  });
+  const { options, handleTemplateSearch, handlePeopleGroupSearch, handleTemplateChange } =
+    useFormOptions({
+      myRef: formRef,
+      key: 'task',
+      setJsonEditorKey
+    });
 
   const debouncedHandleTemplateSearch = useDebounce(handleTemplateSearch, 300);
   const debouncedHandlePeopleGroupSearch = useDebounce(handlePeopleGroupSearch, 300);
@@ -149,6 +151,7 @@ const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
             onSearch={(value) => debouncedHandleTemplateSearch(value)}
             onChange={(value) => {
               formRef?.current?.setFieldsValue({ templateId: value });
+              handleTemplateChange(value);
             }}
             options={options.templateOptions?.map((item: any) => ({
               label: item.templateName,
