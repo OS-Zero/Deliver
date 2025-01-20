@@ -37,7 +37,7 @@ const PlatformFile: React.FC = () => {
           key="detail"
           onClick={() => detailRef.current?.getDetail(record)}
         >
-          查看详情
+          查看更多
         </a>
       ]
     }

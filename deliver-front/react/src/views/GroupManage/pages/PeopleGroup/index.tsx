@@ -19,7 +19,7 @@ interface AddRef {
 
 const items: MenuProps['items'] = [
   {
-    label: '查看详情',
+    label: '查看更多',
     key: 'detail'
   }
 ];
@@ -96,11 +96,7 @@ const People: React.FC = () => {
         scroll={{ x: 1200 }}
         toolBarRender={() => [
           <>
-            <Button
-              key="add"
-              style={{ marginRight: '5px' }}
-              onClick={getExcelTemplateFile}
-            >
+            <Button key="add" style={{ marginRight: '5px' }} onClick={getExcelTemplateFile}>
               下载人群模版文件
             </Button>
             <Button

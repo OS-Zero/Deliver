@@ -29,7 +29,7 @@ const TaskManage: React.FC = () => {
   const getMenuItems = (record: TaskDetail): MenuProps['items'] => {
     const baseItems = [
       {
-        label: '查看详情',
+        label: '查看更多',
         key: 'detail'
       }
     ];

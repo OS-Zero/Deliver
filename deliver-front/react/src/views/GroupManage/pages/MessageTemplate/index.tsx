@@ -23,7 +23,7 @@ const items: MenuProps['items'] = [
     key: 'test'
   },
   {
-    label: '查看详情',
+    label: '查看更多',
     key: 'detail'
   }
 ];

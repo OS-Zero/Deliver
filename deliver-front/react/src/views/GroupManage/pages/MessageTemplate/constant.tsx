@@ -67,63 +67,79 @@ export const messageTableSchema: (
 ];
 
 // 详情schema配置
-export const templateColumns: ProDescriptionsItemProps<MessageTemplate>[] = [
+export const templateColumns: {
+  title: string;
+  key: string;
+  children: ProDescriptionsItemProps<MessageTemplate>[];
+}[] = [
   {
-    title: '模版 ID',
-    key: 'text',
-    dataIndex: 'templateId',
-    ellipsis: true,
-    copyable: true
+    title: '模板信息',
+    key: 'templateInfo',
+    children: [
+      {
+        title: '模版 ID',
+        dataIndex: 'templateId',
+        ellipsis: true,
+        copyable: true
+      },
+      {
+        title: '模版名',
+        dataIndex: 'templateName'
+      },
+      {
+        title: '模版描述',
+        dataIndex: 'templateDescription'
+      },
+      {
+        title: '模版状态',
+        dataIndex: 'templateStatus',
+        valueType: 'select',
+        valueEnum: {
+          0: { text: '禁用', status: 'Default' },
+          1: { text: '启用', status: 'Success' }
+        }
+      },
+      {
+        title: '创建者',
+        dataIndex: 'createUser'
+      },
+      {
+        title: '创建时间',
+        dataIndex: 'createTime',
+        valueType: 'dateTime'
+      }
+    ]
   },
   {
-    title: '模版名',
-    key: 'text',
-    dataIndex: 'templateName'
+    title: '类型信息',
+    key: 'typeInfo',
+    children: [
+      {
+        title: '用户类型',
+        dataIndex: 'usersTypeName'
+      },
+      {
+        title: '渠道类型',
+        dataIndex: 'channelTypeName'
+      },
+      {
+        title: '渠道供应商类型',
+        dataIndex: 'channelProviderTypeName'
+      },
+      {
+        title: '消息类型',
+        dataIndex: 'messageTypeName'
+      }
+    ]
   },
   {
-    title: '模版内容',
-    key: 'text',
-    dataIndex: 'templateDescription'
-  },
-  {
-    title: '消息类型',
-    dataIndex: 'messageTypeName',
-    render: (_) => <a>{_}</a>
-  },
-  {
-    key: 'text',
-    title: '用户类型',
-    dataIndex: 'usersTypeName'
-  },
-  {
-    key: 'text',
-    title: '渠道类型',
-    dataIndex: 'channelTypeName'
-  },
-  {
-    title: '模版状态',
-    key: 'state',
-    dataIndex: 'templateStatus',
-    valueType: 'select',
-    valueEnum: {
-      0: { text: '禁用', status: 'Default' },
-      1: { text: '启用', status: 'Success' }
-    }
-  },
-  {
-    key: 'text',
-    title: '创建者',
-    dataIndex: 'createUser'
-  },
-  {
-    title: '创建时间',
-    key: 'date',
-    dataIndex: 'createTime',
-    valueType: 'dateTime'
-  },
-  {
-    key: 'text',
-    title: '应用名',
-    dataIndex: 'appName'
+    title: '关联信息',
+    key: 'relatedInfo',
+    children: [
+      {
+        title: '关联应用',
+        dataIndex: 'appName'
+      }
+    ]
   }
 ];

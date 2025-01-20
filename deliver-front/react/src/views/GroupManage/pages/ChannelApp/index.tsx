@@ -18,7 +18,7 @@ interface AddRef {
 
 const items: MenuProps['items'] = [
   {
-    label: '查看详情',
+    label: '查看更多',
     key: 'detail'
   }
 ];
