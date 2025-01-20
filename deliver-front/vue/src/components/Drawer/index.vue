@@ -150,9 +150,9 @@ const submit = () => {
 						<a-input-number v-model:value="drawerModel[item.field]" :min="0" :max="3" />
 					</a-form-item>
 					<a-form-item :label="item.label" :name="item.field" class="center-item" v-else-if="item.type === 'radio'">
-						<a-radio-group v-model:value="drawerModel[item.field]" button-style="solid">
+						<a-radio-groupInfo v-model:value="drawerModel[item.field]" button-style="solid">
 							<a-radio-button :value="radio.value" v-for="radio in item.options" :key="radio.value">{{ item.label }}</a-radio-button>
-						</a-radio-group>
+						</a-radio-groupInfo>
 					</a-form-item>
 					<a-form-item :label="item.label" :name="item.field" class="center-item" v-else-if="item.type === 'select'">
 						<a-select

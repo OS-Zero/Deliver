@@ -1,0 +1,71 @@
+server:
+  port: 9090
+  servlet:
+    context-path: /backend
+spring:
+  profiles:
+    active: dev
+  application:
+    name: deliver-combine
+  servlet:
+    multipart:
+      max-file-size: 30MB
+      max-request-size: 40MB
+  data:
+    redis:
+      port: 6379
+      host: localhost
+      password: 123456
+      database: 0
+      timeout: 5s
+      lettuce:
+        pool:
+          max-active: 20
+          max-idle: 30
+          min-idle: 5
+          max-wait: 10s
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://localhost:3306/deliver?serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  quartz:
+    job-store-type: jdbc
+    # 默认为false， 用于设定是否等待任务执行完毕后容器才会关闭。
+    wait-for-jobs-to-complete-on-shutdown: false
+    # 默认为false， 配置的JOB是否覆盖已经存在的JOB信息
+    overwrite-existing-jobs: false
+    #相关属性配置
+    properties:
+      org:
+        quartz:
+          scheduler:
+            # 集群名，区分同一系统的不同实例，若使用集群功能，则每一个实例都要使用相同的名字
+            instanceName: Deliver
+            # 若是集群下，每个instanceId必须唯一
+            instanceId: AUTO
+          threadPool:
+            #一般使用这个便可
+            class: org.quartz.simpl.SimpleThreadPool
+            #线程数量，不会动态增加
+            threadCount: 20
+            threadPriority: 5
+            threadsInheritContextClassLoaderOfInitializingThread: true
+          jobStore:
+            tablePrefix: qrtz_
+            useProperties: false
+            isClustered: true
+            clusterCheckinInterval: 15000
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #开启 sql 日志
+    map-underscore-to-camel-case: true
+# 对称加密
+aes:
+  key: oszero
+# 队列类型 参考 MQConstant#MQ_TYPE
+mq-type: none
+# 服务端发送接口地址
+deliver-server:
+  url: http://localhost:9090/backend/open/sendMessage
