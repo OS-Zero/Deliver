@@ -11,6 +11,7 @@ import { usePagination } from '@/hooks/table';
 import { Key } from 'ant-design-vue/lib/_util/type';
 import { Task } from '@/types/task';
 import TaskGroupDrawer from './components/TaskGroupDrawer.vue';
+import { getColor } from '@/utils/table';
 
 type Operation = 'add' | 'edit' | 'delete' | 'more' | 'sendTask'
 const dataSource = ref<Task[]>([])
@@ -154,8 +155,10 @@ onBeforeMount(() => {
 							@click="changeStatus(record)" />
 					</template>
 					<template v-else-if="column.key === 'taskType'">
-						<a-tag v-if="record[column.key] === 1" color="success">实时</a-tag>
-						<a-tag v-else="record[column.key] === 2" color="error">定时</a-tag>
+						<a-tag v-if="text === 1" :color="getColor(1)">实时任务</a-tag>
+						<a-tag v-else-if="text === 2" :color="getColor(2)">定时循环任务
+						</a-tag>
+						<a-tag v-else-if="text === 3" :color="getColor(3)">定时单次任务</a-tag>
 					</template>
 					<template v-else-if="column.key === 'peopleGroupName'">
 						<span style="color: var(--primary-color);">{{ text }}</span>

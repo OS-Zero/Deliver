@@ -32,7 +32,7 @@ const loginForm = reactive<Schema<LoginForm>>({
 		rules: [{ validator: validateEmail, trigger: 'change' }]
 	},
 	userPassword: {
-		type: 'input',
+		type: 'inputPassword',
 		fieldName: 'userPassword',
 		inputConfig: {
 			placeholder: '请输入用户密码',

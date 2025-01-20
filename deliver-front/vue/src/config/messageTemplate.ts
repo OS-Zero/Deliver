@@ -6,7 +6,7 @@ import { getChannelType, getChannelProviderType, getMessageType } from '@/api/sy
 import { getAppByChannel } from '@/api/channelApp';
 import { notUndefined } from '@/utils/utils';
 import { getRangeRule, getRequiredRule } from '@/utils/validate';
-import { h, reactive } from 'vue';
+import { computed, h, reactive, ref } from 'vue';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons-vue';
 import { Schema } from '@/types';
 import { Channel, ChannelProvider } from '@/types/channelApp';
@@ -304,7 +304,6 @@ export const testMessageForm = reactive<Schema<TestSendMessage>>({
 					const list = testMessageForm.users.value;
 					const index = list.indexOf(id);
 					list.splice(index, 1);
-					testMessageForm.users.customConfig!.addConfig.disabled = false;
 				},
 			},
 			addConfig: {
@@ -313,9 +312,6 @@ export const testMessageForm = reactive<Schema<TestSendMessage>>({
 				onClick: () => {
 					const list = testMessageForm.users.value;
 					list.push('');
-					if (list.length === 2) {
-						testMessageForm.users.customConfig!.addConfig.disabled = true;
-					}
 				},
 			},
 		},
@@ -331,3 +327,4 @@ export const testMessageForm = reactive<Schema<TestSendMessage>>({
 		},
 	},
 });
+testMessageForm.users.customConfig!.addConfig.disabled = computed(() => testMessageForm.users.value.length >= 2);

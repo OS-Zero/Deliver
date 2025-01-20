@@ -82,8 +82,8 @@ export const peopleGroupForm: Schema<PeopleGroupSchema> = reactive({
 	peopleGroupName: {
 		type: 'input',
 		fieldName: 'peopleGroupName',
-		label: '关联人群',
-		rules: [getRequiredRule('请输入关联人群'), ...getRangeRule(3, 20, '字符长度限制在3-20')],
+		label: '人群名',
+		rules: [getRequiredRule('请输入人群名'), ...getRangeRule(3, 20, '字符长度限制在3-20')],
 	},
 	peopleGroupDescription: {
 		type: 'textarea',
