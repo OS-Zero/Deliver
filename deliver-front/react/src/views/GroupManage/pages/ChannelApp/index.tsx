@@ -1,7 +1,14 @@
-import React, { MutableRefObject, useRef, useState } from 'react';
+import React, { MutableRefObject, useRef, useState, useEffect } from 'react';
 import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
-import { Button, Space, Switch, Dropdown, MenuProps } from 'antd';
-import { DownOutlined, FilterOutlined } from '@ant-design/icons';
+import { Button, Space, Switch, Dropdown, MenuProps, Card, Row, Col, Tooltip } from 'antd';
+import {
+  DownOutlined,
+  FilterOutlined,
+  MenuOutlined,
+  AppstoreOutlined,
+  EditOutlined,
+  DeleteOutlined
+} from '@ant-design/icons';
 import { ChannelApp } from './type.ts';
 import { appColumns, appTableSchema } from './constant.tsx';
 import useChannelData from './useChannelData.ts';
@@ -29,17 +36,26 @@ const Channel: React.FC = () => {
   const addRef = useRef<AddRef>();
   const [tableParams, setTableParams] = useState({});
   const [filterOpen, setFilterOpen] = useState(false);
+  const [isTableView, setIsTableView] = useState(true);
+  const [channelData, setChannelData] = useState<ChannelApp[]>([]);
+
   const { fetchChannelData, deleteChannelData, saveChannelData, changeStatus } = useChannelData({
     proTableRef
   });
 
-  const handleMenuClick = (e: any, record: ChannelApp) => {
-    if (e?.key === 'detail') {
-      detailRef.current?.getDetail(record);
-    }
-  };
+  // 获取卡片数据
+  useEffect(() => {
+    const loadChannelData = async () => {
+      const response = await fetchChannelData({
+        currentPage: 1,
+        pageSize: 100,
+        ...tableParams
+      });
+      setChannelData(response.data || []);
+    };
+    loadChannelData();
+  }, [tableParams]);
 
-  // 这两列涉及到状态的改变，于是写在视图层
   const columns: ProColumns<ChannelApp>[] = [
     ...appTableSchema({
       title: '应用状态',
@@ -81,7 +97,10 @@ const Channel: React.FC = () => {
           删除
         </a>,
         <Dropdown
-          menu={{ items, onClick: (e: any) => handleMenuClick(e, record) }}
+          menu={{
+            items,
+            onClick: (e) => e.key === 'detail' && detailRef.current?.getDetail(record)
+          }}
           key="more"
           placement="bottom"
         >
@@ -103,38 +122,88 @@ const Channel: React.FC = () => {
 
   return (
     <div className={styles['app-container']}>
-      <ProTable
-        actionRef={proTableRef}
-        params={tableParams}
-        columns={columns}
-        rowSelection={{}}
-        request={fetchChannelData}
-        rowKey="appId"
-        scroll={{ x: 1200 }}
-        toolBarRender={() => [
-          <>
-            <Button
-              key="add"
-              type="primary"
-              style={{ marginRight: '5px' }}
-              onClick={() => addRef?.current?.addChannelDrawer()}
-            >
-              新增
-            </Button>
-            <Button
-              shape="circle"
-              icon={<FilterOutlined />}
-              onClick={() => setFilterOpen((pre) => !pre)}
-            />
-          </>
-        ]}
-        {...proTableConfig({
-          filterOpen,
-          deleteData: deleteChannelData,
-          name: '应用名',
-          onSearch: setTableParams
-        })}
-      />
+      {isTableView && (
+        <ProTable
+          actionRef={proTableRef}
+          params={tableParams}
+          columns={columns}
+          rowSelection={{}}
+          request={fetchChannelData}
+          rowKey="appId"
+          scroll={{ x: 1200 }}
+          toolBarRender={() => [
+            <>
+              <Button
+                key="add"
+                type="primary"
+                style={{ marginRight: '5px' }}
+                onClick={() => addRef?.current?.addChannelDrawer()}
+              >
+                新增
+              </Button>
+              <div style={{ marginLeft: '10px', display: 'inline-block' }}>
+                <Tooltip title="表格视图">
+                  <Button
+                    icon={<MenuOutlined />}
+                    size="small"
+                    type={isTableView ? 'primary' : 'text'}
+                    onClick={() => setIsTableView(true)}
+                    style={{ marginRight: '5px' }}
+                  />
+                </Tooltip>
+                <Tooltip title="卡片视图">
+                  <Button
+                    icon={<AppstoreOutlined />}
+                    size="small"
+                    type={!isTableView ? 'primary' : 'text'}
+                    onClick={() => setIsTableView(false)}
+                  />
+                </Tooltip>
+              </div>
+              <Button
+                shape="circle"
+                icon={<FilterOutlined />}
+                onClick={() => setFilterOpen((pre) => !pre)}
+              />
+            </>
+          ]}
+          {...proTableConfig({
+            filterOpen,
+            deleteData: deleteChannelData,
+            name: '应用名',
+            onSearch: setTableParams
+          })}
+        />
+      )}
+      {!isTableView && (
+        <Row gutter={[16, 16]} style={{ padding: '16px' }}>
+          {channelData.map((record) => (
+            <Col key={record.appId} xs={24} sm={12} md={8} lg={6}>
+              <Card
+                title={record.appName}
+                extra={
+                  <Switch
+                    checkedChildren="启用"
+                    unCheckedChildren="禁用"
+                    checked={Boolean(record?.appStatus)}
+                    onChange={(checked) => changeStatus(record.appId, checked ? 1 : 0)}
+                  />
+                }
+                actions={[
+                  <EditOutlined
+                    key="edit"
+                    onClick={() => addRef?.current?.editChannelModal(record)}
+                  />,
+                  <DeleteOutlined key="delete" onClick={() => deleteChannelData([record?.appId])} />
+                ]}
+              >
+                <p>应用ID: {record.appId}</p>
+                <p>描述: {record.appDescription}</p>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      )}
       <DetailDrawer ref={detailRef} columns={appColumns} title={'应用详情'} />
       <AddChannelDrawer
         ref={addRef}
