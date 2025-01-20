@@ -1,0 +1,31 @@
+:local {
+  .ant_card {
+    width: 500px;
+
+    .card_content {
+      text-align: left;
+      .btn {
+        margin-top: 5px;
+      }
+    }
+
+    p {
+      margin: var(--spacing-md) 0;
+    }
+
+    :global {
+      .ant-card,
+      .ant-card-body {
+        padding-top: 10px;
+      }
+    }
+  }
+
+  .verify {
+    display: flex;
+
+    .verify_btn {
+      margin-left: var(--spacing-sm);
+    }
+  }
+}

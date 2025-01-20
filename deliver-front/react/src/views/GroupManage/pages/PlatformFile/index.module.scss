@@ -1,0 +1,43 @@
+:local {
+  .file-container {
+    display: flex;
+    :global {
+      .ant-typography {
+        margin-bottom: 0;
+      }
+    }
+
+    .link-button {
+      display: block;
+      margin-right: 10px;
+
+      &-delete {
+        margin-right: 10px;
+        color: red;
+      }
+    }
+
+    .more-button {
+      font-size: 16px;
+    }
+
+    .filter-container {
+      width: 0;
+      transition: width 120ms;
+      border: 0;
+      :global {
+        .ant-card-head {
+          padding: 0;
+          border: 0;
+          font-size: large;
+        }
+        .ant-card-body {
+          padding: 0;
+        }
+        .ant-picker-outlined {
+          width: 100%;
+        }
+      }
+    }
+  }
+}

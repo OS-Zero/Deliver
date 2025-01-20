@@ -1,0 +1,13 @@
+:local {
+  .verify {
+    display: flex;
+
+    .verifyBtn {
+      margin-left: var(--spacing-sm);
+    }
+  }
+
+  .submitBtn {
+    width: 100%;
+  }
+}

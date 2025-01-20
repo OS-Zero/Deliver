@@ -1,0 +1,164 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC  "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
+        "http://checkstyle.sourceforge.net/dtds/configuration_1_3.dtd">
+
+<module name="Checker">
+    <property name="charset" value="UTF-8"/>
+    <property name="fileExtensions" value="java"/>
+    <!-- 文件长度不超过1500行 -->
+    <module name="FileLength">
+        <property name="max" value="1500"/>
+    </module>
+    <!-- TreeWalker Checks -->
+    <module name="TreeWalker">
+        <module name="SuppressWarningsHolder"/>
+        <!--避免转义unicode字符-->
+        <module name="AvoidEscapedUnicodeCharacters">
+            <property name="allowEscapesForControlCharacters" value="true"/>
+            <property name="allowByTailComment" value="true"/>
+            <property name="allowNonPrintableEscapes" value="true"/>
+        </module>
+        <module name="NoLineWrap"/>
+        <module name="OuterTypeFilename"/>
+        <!-- import检查-->
+        <!-- 检查是否从非法的包中导入了类 -->
+        <module name="IllegalImport"/>
+        <!-- 检查是否导入了多余的包 -->
+        <module name="RedundantImport"/>
+        <!-- 没用的import检查，比如：1.没有被用到2.重复的3.import java.lang的4.import 与该类在同一个package的 -->
+        <module name="UnusedImports"/>
+        <!-- 注释检查 -->
+        <!-- 检查方法和构造函数的javadoc -->
+        <module name="JavadocType">
+            <property name="allowUnknownTags" value="true"/>
+            <message key="javadoc.missing" value="类注释：缺少Javadoc注释。"/>
+        </module>
+        <!-- 检查方法的javadoc -->
+        <module name="JavadocMethod">
+            <property name="allowedAnnotations" value="Override, Test"/>
+            <property name="tokens" value="METHOD_DEF, ANNOTATION_FIELD_DEF "/>
+            <message key="javadoc.missing" value="方法注释：缺少Javadoc注释。"/>
+        </module>
+        <!-- 检查方法的javadoc是否缺失-->
+        <module name="MissingJavadocMethod">
+            <property name="tokens" value="METHOD_DEF, ANNOTATION_FIELD_DEF "/>
+        </module>
+        <!-- 检查类型的javadoc是否缺失-->
+        <module name="MissingJavadocType"/>
+        <module name="RequireEmptyLineBeforeBlockTagGroup"/>
+        <module name="AtclauseOrder">
+            <property name="tagOrder" value="@param, @return, @throws, @deprecated"/>
+            <property name="target"
+                      value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, METHOD_DEF, CTOR_DEF, VARIABLE_DEF"/>
+        </module>
+
+        <!-- 方法名的检查 -->
+        <module name="MethodName">
+            <property name="format" value="^[a-z][a-z0-9][a-zA-Z0-9_]*$"/>
+            <message key="name.invalidPattern"
+                     value="Method name ''{0}'' must match pattern ''{1}''."/>
+        </module>
+        <!-- 方法的参数名 -->
+        <module name="ParameterName"/>
+        <!-- 常量名的检查（只允许大写），默认^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$ -->
+        <module name="ConstantName"/>
+        <!-- 检查long型定义是否有大写的“L” -->
+        <module name="UpperEll"/>
+        <!-- 检查switch语句是否有default -->
+        <module name="MissingSwitchDefault"/>
+        <!-- 语法 -->
+        <!-- String的比较不能用!= 和 == -->
+        <module name="StringLiteralEquality"/>
+        <!-- 禁止使用System.out.println -->
+        <module name="Regexp">
+            <property name="format" value="System\.out\.println"/>
+            <property name="illegalPattern" value="true"/>
+        </module>
+
+        <!--重载方法申明顺序-->
+        <module name="OverloadMethodsDeclarationOrder"/>
+        <!--变量声明和第一次使用之间的距离-->
+        <module name="VariableDeclarationUsageDistance"/>
+
+        <!--方法参数之间的空格-->
+        <module name="MethodParamPad">
+            <property name="tokens"
+                      value="CTOR_DEF, LITERAL_NEW, METHOD_CALL, METHOD_DEF,
+                    SUPER_CTOR_CALL, ENUM_CONSTANT_DEF, RECORD_DEF"/>
+        </module>
+        <!--符号面前不允许空格-->
+        <module name="NoWhitespaceBefore">
+            <property name="tokens"
+                      value="COMMA, SEMI, POST_INC, POST_DEC, DOT,
+                    LABELED_STAT, METHOD_REF"/>
+            <property name="allowLineBreaks" value="true"/>
+        </module>
+        <!--括号填充的空格-->
+        <module name="ParenPad">
+            <property name="tokens"
+                      value="ANNOTATION, ANNOTATION_FIELD_DEF, CTOR_CALL, CTOR_DEF, DOT, ENUM_CONSTANT_DEF,
+                    EXPR, LITERAL_CATCH, LITERAL_DO, LITERAL_FOR, LITERAL_IF, LITERAL_NEW,
+                    LITERAL_SWITCH, LITERAL_SYNCHRONIZED, LITERAL_WHILE, METHOD_CALL,
+                    METHOD_DEF, QUESTION, RESOURCE_SPECIFICATION, SUPER_CTOR_CALL, LAMBDA,
+                    RECORD_DEF"/>
+        </module>
+
+        <!--运算符前的空格-->
+        <module name="OperatorWrap">
+            <property name="option" value="NL"/>
+            <property name="tokens"
+                      value="BAND, BOR, BSR, BXOR, DIV, EQUAL, GE, GT, LAND, LE, LITERAL_INSTANCEOF, LOR,
+                    LT, MINUS, MOD, NOT_EQUAL, QUESTION, SL, SR, STAR, METHOD_REF,
+                    TYPE_EXTENSION_AND "/>
+        </module>
+
+        <!--注解位置-->
+        <module name="AnnotationLocation">
+            <property name="id" value="AnnotationLocationMostCases"/>
+            <property name="tokens"
+                      value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, METHOD_DEF, CTOR_DEF,
+                      RECORD_DEF, COMPACT_CTOR_DEF"/>
+        </module>
+
+        <!--注解位置-->
+        <module name="AnnotationLocation">
+            <property name="id" value="AnnotationLocationVariables"/>
+            <property name="tokens" value="VARIABLE_DEF"/>
+            <property name="allowSamelineMultipleAnnotations" value="true"/>
+        </module>
+
+        <!--        -->
+        <module name="NonEmptyAtclauseDescription"/>
+
+        <module name="InvalidJavadocPosition"/>
+
+        <module name="JavadocTagContinuationIndentation"/>
+
+        <!--命名校验-->
+        <module name="AbbreviationAsWordInName">
+            <property name="ignoreStatic" value="false"/>
+            <property name="allowedAbbreviationLength" value="1"/>
+            <property name="allowedAbbreviations" value="XML,URL,TRS,VO,DTO,PKI,MAC,IMEI,IMSI"/>
+        </module>
+        <module name="LocalVariableName">
+            <property name="format"
+                      value="^[a-z][a-z0-9]*([A-Z][a-z0-9]+)*(DO|DTO|VO|DAO|BO|DOList|DTOList|VOList|DAOList|BOList|X|Y|Z|UDF|UDAF|[A-Z])?$"/>
+            <property name="allowOneCharVarInForLoop" value="true"/>
+            <message key="name.invalidPattern" value="局部变量命名 ''{0}'' 不满足lowerCaseCamel命名规范"/>
+        </module>
+        <module name="MemberName">
+            <property name="format"
+                      value="^[a-z][a-z0-9]*([A-Z][a-z0-9]+)*(DO|DTO|VO|DAO|BO|DOList|DTOList|VOList|DAOList|BOList|X|Y|Z|UDF|UDAF|[A-Z])?$"/>
+            <message key="name.invalidPattern" value="成员变量命名 ''{0}'' 不满足lowerCaseCamel命名规范"/>
+        </module>
+        <module name="MethodName">
+            <message key="name.invalidPattern" value="方法命名 ''{0}'' 不满足lowerCaseCamel命名规范"/>
+        </module>
+        <module name="PackageName">
+            <message key="name.invalidPattern" value="包命名 ''{0}'' 不满足命名规范"/>
+        </module>
+        <module name="ParameterName">
+            <message key="name.invalidPattern" value="方法传参命名 ''{0}'' 不满足lowerCaseCamel命名规范"/>
+        </module>
+    </module>
+</module>

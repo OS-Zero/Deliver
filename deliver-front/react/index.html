@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/logo.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Deliver 企业消息推送平台</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      (function () {
+        const routeTitles = {
+          '/': '首页',
+          '/welcome': '欢迎',
+          '/groupManage': '分组管理',
+          '/groupManage/template': '消息模版配置',
+          '/groupManage/app': '渠道应用配置',
+          '/groupManage/file': '平台文件管理',
+          '/groupManage/task': '群发任务配置',
+          '/groupManage/peopleGroup': '人群模版配置',
+          '/systemManage': '我的账户', // 为了不让他重定向时闪一下，所以就先都改为我的账户
+          '/systemManage/myAccount': '我的账户'
+        };
+
+        function updateTitle() {
+          const path = window.location.pathname;
+          const title = routeTitles[path] || 'Deliver 企业消息推送平台';
+          document.title = title + ' - Deliver 企业消息推送平台';
+        }
+
+        // 使用 MutationObserver 监听 DOM 变化
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.type === 'childList') {
+              updateTitle();
+            }
+          });
+        });
+
+        observer.observe(document.body, {
+          childList: true,
+          subtree: true
+        });
+
+        // 仍然保留对 popstate 事件的监听
+        window.addEventListener('popstate', updateTitle);
+
+        // 初始更新标题
+        updateTitle();
+      })();
+    </script>
+  </body>
+</html>

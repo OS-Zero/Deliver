@@ -1,0 +1,32 @@
+:local .layout-section {
+  padding: var(--spacing-md);
+  overflow: auto;
+
+  .section_breadcrumb {
+    margin-bottom: var(--spacing-md);
+  }
+
+  .ant-layout-footer {
+    text-align: center;
+    background-color: var(--gray-lightest);
+    color: var(--gray-dark);
+  }
+
+  .footer_organization {
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .organization_link {
+    color: var(--gray-dark);
+    font-size: var(--spacing-md);
+  }
+}
+
+:global .ant-layout {
+  height: 100%;
+  background-color: var(--white-color);
+
+  .ant-layout-sider-children {
+    border-right: 1px solid var(--gray-lighter);
+  }
+}
