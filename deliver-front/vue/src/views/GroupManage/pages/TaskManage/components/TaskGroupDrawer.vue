@@ -41,8 +41,8 @@ watch(props, (newProps) => {
 		taskForm.taskTimeExpression.type = 'none';
 		taskForm.taskTimeExpression.value = undefined
 	}
-	newProps.operation === 'edit' && newProps.open === true && initFormDate();
-	newProps.operation === 'more' && initMoreDate();
+	newProps.operation === 'edit' && newProps.open && initFormDate();
+	newProps.operation === 'more' && newProps.open && initMoreDate();
 })
 
 const initFormDate = () => {

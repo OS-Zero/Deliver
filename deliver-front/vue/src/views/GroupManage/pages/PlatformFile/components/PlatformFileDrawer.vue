@@ -76,6 +76,7 @@ const operationDispatch = {
 const handleCancel = (flash: boolean = false) => {
 	props.operation !== 'more' && formRef.value.resetFields()
 	drawerState.open = false
+	groups.length = 0
 	emit('close', flash)
 }
 onBeforeMount(() => {

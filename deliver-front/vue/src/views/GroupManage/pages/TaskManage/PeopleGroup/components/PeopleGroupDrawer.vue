@@ -34,8 +34,8 @@ watch(props, (newProps) => {
 		placement: newProps.operation === 'more' ? 'left' : 'right',
 		extra: props.operation === 'more' ? false : true,
 	});
-	newProps.operation === 'edit' && newProps.open === true && initFormDate();
-	newProps.operation === 'more' && initMoreDate();
+	newProps.operation === 'edit' && newProps.open && initFormDate();
+	newProps.operation === 'more' && newProps.open && initMoreDate();
 })
 const initFormDate = () => {
 	nextTick(() => {
