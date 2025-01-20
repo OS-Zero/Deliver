@@ -1,7 +1,6 @@
-import { Space, Input, InputRef } from 'antd';
+import { Space, Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { ProTableProps } from '@ant-design/pro-components';
-import { useRef } from 'react';
 
 interface ProTableConfigProps {
   filterOpen?: boolean;
@@ -28,13 +27,11 @@ export const proTableConfig = ({
   name = '名称',
   onSearch
 }: ProTableConfigProps): Partial<ProTableProps<any, any>> => {
-  const ref = useRef<InputRef>(null);
 
-  const handleSearch = () => {
-    const searchValue = ref.current?.input?.value;
+  const handleSearch = (e: any) => {
     onSearch?.((prev: any) => ({
       ...prev,
-      [findKeyByValue(name) as string]: searchValue
+      [findKeyByValue(name) as string]: e?.target?.value
     }));
   };
 
@@ -61,7 +58,6 @@ export const proTableConfig = ({
     headerTitle: (
       <div style={{ width: '200px' }}>
         <Input
-          ref={ref}
           placeholder={`请输入${name}进行查询`}
           style={{ borderRadius: '50px' }}
           prefix={<SearchOutlined />}

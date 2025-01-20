@@ -36,12 +36,14 @@ const Channel: React.FC = () => {
   const addRef = useRef<AddRef>();
   const [tableParams, setTableParams] = useState({});
   const [filterOpen, setFilterOpen] = useState(false);
-  const [isTableView, setIsTableView] = useState(true);
+  const [isTableView, setIsTableView] = useState(false);
   const [channelData, setChannelData] = useState<ChannelApp[]>([]);
 
   const { fetchChannelData, deleteChannelData, saveChannelData, changeStatus } = useChannelData({
     proTableRef
   });
+
+  const [keys, setKeys] = useState<number>(0);
 
   // 获取卡片数据
   useEffect(() => {
@@ -64,10 +66,12 @@ const Channel: React.FC = () => {
       render: (_, record: ChannelApp) => {
         const handleStatusChange = async (checked: boolean) => {
           await changeStatus(record.appId, checked ? 1 : 0);
-          proTableRef?.current?.reload();
+          record.appStatus = checked ? 1 : 0;
+          setKeys((prev) => prev + 1);
         };
         return (
           <Switch
+            key={keys}
             checkedChildren="启用"
             unCheckedChildren="禁用"
             checked={Boolean(record?.appStatus)}
