@@ -14,7 +14,7 @@ import { getExcelTemplateFile } from '@/api/peopleGroup.ts';
 
 interface AddRef {
   addPeopleDrawer: () => void;
-  editChannelModal: (record: PeopleGroup) => void;
+  editPeopleDrawer: (record: PeopleGroup) => void;
 }
 
 const items: MenuProps['items'] = [
@@ -52,7 +52,7 @@ const People: React.FC = () => {
         <a
           className={styles['link-button']}
           key="edit"
-          onClick={() => addRef?.current?.editChannelModal(record)}
+          onClick={() => addRef?.current?.editPeopleDrawer(record)}
         >
           编辑
         </a>,

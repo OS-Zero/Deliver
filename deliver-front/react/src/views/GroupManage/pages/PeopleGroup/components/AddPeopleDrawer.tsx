@@ -202,6 +202,9 @@ const AddPeopleDrawer = forwardRef((props: AddPeopleDrawerProps, ref) => {
   useEffect(() => {
     if (open && editValues) {
       formRef.current?.setFieldsValue(editValues);
+      formRef.current?.setFieldValue('inputMethod', 'manual');
+      setInputMethod('manual');
+      handleUserListChange(editValues.peopleGroupList);
       setEditValues(null);
     }
   }, [open, editValues]);
@@ -210,7 +213,7 @@ const AddPeopleDrawer = forwardRef((props: AddPeopleDrawerProps, ref) => {
     addPeopleDrawer: () => {
       setOpen(true);
     },
-    editChannelModal: (values: any) => {
+    editPeopleDrawer: (values: any) => {
       setEditValues(values);
       setOpen(true);
     }
@@ -220,6 +223,7 @@ const AddPeopleDrawer = forwardRef((props: AddPeopleDrawerProps, ref) => {
     <Drawer
       title={formRef?.current?.getFieldValue('peopleGroupId') ? '编辑人群' : '新增人群'}
       open={open}
+      forceRender
       onClose={onClose}
       width={500}
       extra={
