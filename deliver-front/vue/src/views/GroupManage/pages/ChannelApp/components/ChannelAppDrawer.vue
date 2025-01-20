@@ -51,7 +51,7 @@ const initFormDate = () => {
 const groups = reactive<any>([])
 const initMoreDate = () => {
 	const obj = {
-		templateInfo: ['appName', 'appDescription', 'appConfig', 'appStatus', 'createUser', 'createTime'],
+		appInfo: ['appName', 'appDescription', 'appConfig', 'appStatus', 'createUser', 'createTime'],
 		typeInfo: ['channelTypeName', 'channelProviderTypeName'],
 	}
 	for (const key in obj) {
@@ -65,8 +65,6 @@ const initMoreDate = () => {
 			group.config.title = '应用信息'
 		} else if (key === 'typeInfo') {
 			group.config.title = '类型信息'
-		} else if (key === 'linkInfo') {
-			group.config.title = '关联信息'
 		}
 		obj[key].forEach((name: string) => {
 			if (name === 'appConfig') {
