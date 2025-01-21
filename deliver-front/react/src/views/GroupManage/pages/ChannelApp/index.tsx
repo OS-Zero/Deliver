@@ -1,14 +1,7 @@
 import React, { MutableRefObject, useRef, useState, useEffect } from 'react';
 import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
-import { Button, Space, Switch, Dropdown, MenuProps, Card, Row, Col, Tooltip } from 'antd';
-import {
-  DownOutlined,
-  FilterOutlined,
-  MenuOutlined,
-  AppstoreOutlined,
-  EditOutlined,
-  DeleteOutlined
-} from '@ant-design/icons';
+import { Button, Space, Switch, Dropdown, MenuProps, Tooltip } from 'antd';
+import { DownOutlined, FilterOutlined, MenuOutlined, AppstoreOutlined } from '@ant-design/icons';
 import { ChannelApp } from './type.ts';
 import { appColumns, appTableSchema } from './constant.tsx';
 import useChannelData from './useChannelData.ts';
@@ -17,6 +10,7 @@ import DetailDrawer from '@/components/DetailDrawer/index.tsx';
 import FilterCard from './components/FilterCard.tsx';
 import AddChannelDrawer from './components/AddChannelDrawer.tsx';
 import { proTableConfig } from '@/config/index.tsx';
+import ChannelCardView from './components/ChannelCardView.tsx';
 
 interface AddRef {
   addChannelDrawer: () => void;
@@ -36,26 +30,21 @@ const Channel: React.FC = () => {
   const addRef = useRef<AddRef>();
   const [tableParams, setTableParams] = useState({});
   const [filterOpen, setFilterOpen] = useState(false);
-  const [isTableView, setIsTableView] = useState(false);
-  const [channelData, setChannelData] = useState<ChannelApp[]>([]);
+  const [isTableView, setIsTableView] = useState(true);
   const [keys, setKeys] = useState<number>(0);
 
   const { fetchChannelData, deleteChannelData, saveChannelData, changeStatus } = useChannelData({
     proTableRef
   });
 
-  // 获取卡片数据
-  useEffect(() => {
-    const loadChannelData = async () => {
-      const response = await fetchChannelData({
-        currentPage: 1,
-        pageSize: 100,
-        ...tableParams
-      });
-      setChannelData(response.data || []);
-    };
-    loadChannelData();
-  }, [tableParams]);
+  // 新增状态用于存储和共享数据
+  const [channelData, setChannelData] = useState<{
+    records: ChannelApp[];
+    total: number;
+  }>({
+    records: [],
+    total: 0
+  });
 
   const columns: ProColumns<ChannelApp>[] = [
     ...appTableSchema({
@@ -123,15 +112,36 @@ const Channel: React.FC = () => {
     setTableParams(filters);
   };
 
+  const handleSearch = (e: any) => {
+    setTableParams?.((prev: any) => ({
+      ...prev,
+      appName: e?.target?.value
+    }));
+  };
+
+  // 卡片视图获取数据
+  const handleFetchData = async (params: any) => {
+    const data = await fetchChannelData(params);
+    setChannelData({
+      records: data.data as ChannelApp[],
+      total: data.total as number
+    });
+    return data;
+  };
+
+  useEffect(() => {
+    handleFetchData(tableParams);
+  }, [tableParams, isTableView]);
+
   return (
     <div className={styles['app-container']}>
-      {isTableView && (
+      {isTableView ? (
         <ProTable
           actionRef={proTableRef}
           params={tableParams}
           columns={columns}
           rowSelection={{}}
-          request={fetchChannelData}
+          request={handleFetchData}
           rowKey="appId"
           scroll={{ x: 1200 }}
           toolBarRender={() => [
@@ -177,35 +187,30 @@ const Channel: React.FC = () => {
             onSearch: setTableParams
           })}
         />
-      )}
-      {!isTableView && (
-        <Row gutter={[16, 16]} style={{ padding: '16px' }}>
-          {channelData.map((record) => (
-            <Col key={record.appId} xs={24} sm={12} md={8} lg={6}>
-              <Card
-                title={record.appName}
-                extra={
-                  <Switch
-                    checkedChildren="启用"
-                    unCheckedChildren="禁用"
-                    checked={Boolean(record?.appStatus)}
-                    onChange={(checked) => changeStatus(record.appId, checked ? 1 : 0)}
-                  />
-                }
-                actions={[
-                  <EditOutlined
-                    key="edit"
-                    onClick={() => addRef?.current?.editChannelModal(record)}
-                  />,
-                  <DeleteOutlined key="delete" onClick={() => deleteChannelData([record?.appId])} />
-                ]}
-              >
-                <p>应用ID: {record.appId}</p>
-                <p>描述: {record.appDescription}</p>
-              </Card>
-            </Col>
-          ))}
-        </Row>
+      ) : (
+        <ChannelCardView
+          dataSource={channelData.records}
+          filterOpen={filterOpen}
+          setFilterOpen={setFilterOpen}
+          addRef={addRef}
+          isTableView={isTableView}
+          setIsTableView={setIsTableView}
+          onChangeStatus={changeStatus}
+          handleSearch={handleSearch}
+          onHandleActions={(action, data) => {
+            switch (action) {
+              case 'edit':
+                addRef.current?.editChannelModal(data);
+                break;
+              case 'delete':
+                deleteChannelData([data.appId]);
+                break;
+              case 'more':
+                detailRef.current?.getDetail(data);
+                break;
+            }
+          }}
+        />
       )}
       <DetailDrawer ref={detailRef} columns={appColumns} title={'应用详情'} />
       <AddChannelDrawer
