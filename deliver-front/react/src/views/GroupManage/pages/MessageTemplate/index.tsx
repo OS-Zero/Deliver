@@ -135,7 +135,10 @@ const Template: React.FC = () => {
             <Button
               shape="circle"
               icon={<FilterOutlined />}
-              onClick={() => setFilterOpen((pre) => !pre)}
+              onClick={() => {
+                setFilterOpen((pre) => !pre);
+                handleFilter({});
+              }}
             />
           </>
         ]}
