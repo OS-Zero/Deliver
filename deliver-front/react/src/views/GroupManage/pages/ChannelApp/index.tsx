@@ -38,12 +38,11 @@ const Channel: React.FC = () => {
   const [filterOpen, setFilterOpen] = useState(false);
   const [isTableView, setIsTableView] = useState(false);
   const [channelData, setChannelData] = useState<ChannelApp[]>([]);
+  const [keys, setKeys] = useState<number>(0);
 
   const { fetchChannelData, deleteChannelData, saveChannelData, changeStatus } = useChannelData({
     proTableRef
   });
-
-  const [keys, setKeys] = useState<number>(0);
 
   // 获取卡片数据
   useEffect(() => {

@@ -35,6 +35,7 @@ const Template: React.FC = () => {
   const testRef = useRef<{ getTestSendDrawer: (record: MessageTemplate) => void }>();
   const [tableParams, setTableParams] = useState({});
   const [filterOpen, setFilterOpen] = useState(false);
+  const [keys, setKeys] = useState<number>(0);
   const { fetchTemplateData, deleteTemplateData, saveTemplate, changeStatus } = useTemplateData({
     proTableRef
   });
@@ -56,10 +57,12 @@ const Template: React.FC = () => {
       render: (_, record: MessageTemplate) => {
         const handleStatusChange = async (checked: boolean) => {
           await changeStatus(record?.templateId, checked ? 1 : 0);
-          proTableRef?.current?.reload();
+          record.templateStatus = checked ? 1 : 0;
+          setKeys((prev) => prev + 1);
         };
         return (
           <Switch
+            key={keys}
             checkedChildren="启用"
             unCheckedChildren="禁用"
             checked={Boolean(record?.templateStatus)}
