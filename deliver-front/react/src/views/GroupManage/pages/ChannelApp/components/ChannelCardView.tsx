@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { List, Button, Dropdown, Menu, Card, Tooltip, Input } from 'antd';
 import {
   EditOutlined,
@@ -16,26 +16,26 @@ interface ChannelCardViewProps {
   dataSource: ChannelApp[];
   filterOpen: boolean;
   isTableView: boolean;
+  addRef: React.MutableRefObject<{ addChannelDrawer: () => void } | undefined>;
   setIsTableView: (value: boolean) => void;
   setFilterOpen: (value: boolean) => void;
-  onChangeStatus: (data: ChannelApp) => void;
-  onHandleActions: (action: string, data: ChannelApp) => void;
-  handleSearch: (value: any) => void;
-  addRef: React.MutableRefObject<{ addChannelDrawer: () => void } | undefined>;
+  onChangeStatus: (appId: number, appStatus: number) => void;
+  onHandleActions: (action: string, data: any) => void;
 }
 
 const ChannelCardView: React.FC<ChannelCardViewProps> = ({
   dataSource,
   filterOpen,
-  setFilterOpen,
   addRef,
   isTableView,
+  setFilterOpen,
   setIsTableView,
   onChangeStatus,
-  onHandleActions,
-  handleSearch
+  onHandleActions
 }) => {
   const ChannelCard: React.FC<{ data: ChannelApp }> = ({ data }) => {
+    const [keys, setKeys] = useState<number>(0);
+
     const menu = (
       <Menu>
         <Menu.Item key="more" onClick={() => onHandleActions('more', data)}>
@@ -43,6 +43,12 @@ const ChannelCardView: React.FC<ChannelCardViewProps> = ({
         </Menu.Item>
       </Menu>
     );
+
+    const handleChangeStatus = async () => {
+      await onChangeStatus(data?.appId, data?.appStatus ? 0 : 1);
+      data.appStatus = data?.appStatus ? 0 : 1;
+      setKeys((prev) => prev + 1);
+    };
 
     return (
       <Card className={styles.card}>
@@ -60,6 +66,7 @@ const ChannelCardView: React.FC<ChannelCardViewProps> = ({
             <div className={styles.card_title}>
               <h4>{data.appName}</h4>
               <span
+                key={keys}
                 className={`${styles.card_status} ${data.appStatus === 1 ? styles.open : styles.close}`}
               />
             </div>
@@ -69,10 +76,10 @@ const ChannelCardView: React.FC<ChannelCardViewProps> = ({
         <div className={styles.card_btns}>
           <div className={styles.btn_operation}>
             {data.appStatus ? (
-              <Button onClick={() => onChangeStatus(data)}>禁用</Button>
+              <Button onClick={() => handleChangeStatus()}>禁用</Button>
             ) : (
               <>
-                <Button type="primary" onClick={() => onChangeStatus(data)}>
+                <Button type="primary" onClick={() => handleChangeStatus()}>
                   开启
                 </Button>
                 <Button onClick={() => onHandleActions('delete', data)}>删除</Button>
@@ -99,8 +106,8 @@ const ChannelCardView: React.FC<ChannelCardViewProps> = ({
             placeholder="请输入应用名进行查询"
             style={{ borderRadius: '50px' }}
             prefix={<SearchOutlined />}
-            onBlur={handleSearch}
-            onPressEnter={handleSearch}
+            onBlur={(e) => onHandleActions('search', e)}
+            onPressEnter={(e) => onHandleActions('search', e)}
           />
         </div>
         <Button
@@ -133,7 +140,10 @@ const ChannelCardView: React.FC<ChannelCardViewProps> = ({
         <Button
           shape="circle"
           icon={<FilterOutlined />}
-          onClick={() => setFilterOpen(!filterOpen)}
+          onClick={() => {
+            setFilterOpen(!filterOpen);
+            onHandleActions('filter', {});
+          }}
           style={{ marginLeft: '11px' }}
         />
       </>

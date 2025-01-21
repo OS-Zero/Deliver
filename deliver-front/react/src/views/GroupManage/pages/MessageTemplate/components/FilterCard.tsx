@@ -16,7 +16,6 @@ const FilterDrawer = (props: FilterDrawerProps) => {
   const { onClose, onFilter } = props;
   const formRef = useRef<FormInstance>(null);
 
-  // 使用 useFormState 管理表单状态
   const { userTypeParams } = useGlobalContext();
 
   // 获取change函数以及设置初始获取渠道类型数据

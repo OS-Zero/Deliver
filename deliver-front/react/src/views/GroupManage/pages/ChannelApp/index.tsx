@@ -211,6 +211,12 @@ const Channel: React.FC = () => {
               case 'more':
                 detailRef.current?.getDetail(data);
                 break;
+              case 'search':
+                handleSearch(data);
+                break;
+              case 'filter':
+                handleFilter({});
+                break;
             }
           }}
         />
