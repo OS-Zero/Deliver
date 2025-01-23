@@ -1,37 +1,30 @@
 import React, { useState } from 'react';
-import { List, Button, Dropdown, Menu, Card, Tooltip, Input } from 'antd';
-import {
-  EditOutlined,
-  DownOutlined,
-  AppstoreOutlined,
-  FilterOutlined,
-  MenuOutlined,
-  SearchOutlined
-} from '@ant-design/icons';
+import { List, Button, Dropdown, Menu, Card, Tooltip, ConfigProvider } from 'antd';
+import { EditOutlined, DownOutlined } from '@ant-design/icons';
 import styles from '../index.module.scss';
 import { getImg } from '@/utils/getTagStyle';
 import { ChannelApp } from '../type';
+import zh_CN from 'antd/es/locale/zh_CN';
 
 interface ChannelCardViewProps {
-  dataSource: ChannelApp[];
+  dataSource: {
+    records: ChannelApp[];
+    total: number;
+  };
   filterOpen: boolean;
-  isTableView: boolean;
-  addRef: React.MutableRefObject<{ addChannelDrawer: () => void } | undefined>;
-  setIsTableView: (value: boolean) => void;
-  setFilterOpen: (value: boolean) => void;
   onChangeStatus: (appId: number, appStatus: number) => void;
   onHandleActions: (action: string, data: any) => void;
+  renderCardButtons: () => React.ReactNode;
+  renderCardPagination: any;
 }
 
 const ChannelCardView: React.FC<ChannelCardViewProps> = ({
   dataSource,
   filterOpen,
-  addRef,
-  isTableView,
-  setFilterOpen,
-  setIsTableView,
   onChangeStatus,
-  onHandleActions
+  onHandleActions,
+  renderCardButtons,
+  renderCardPagination
 }) => {
   const ChannelCard: React.FC<{ data: ChannelApp }> = ({ data }) => {
     const [keys, setKeys] = useState<number>(0);
@@ -97,59 +90,6 @@ const ChannelCardView: React.FC<ChannelCardViewProps> = ({
     );
   };
 
-  const btn = () => {
-    return (
-      <>
-        <div style={{ marginRight: 'auto', width: '200px' }}>
-          <Input
-            width={300}
-            placeholder="请输入应用名进行查询"
-            style={{ borderRadius: '50px' }}
-            prefix={<SearchOutlined />}
-            onBlur={(e) => onHandleActions('search', e)}
-            onPressEnter={(e) => onHandleActions('search', e)}
-          />
-        </div>
-        <Button
-          key="add"
-          type="primary"
-          style={{ marginRight: '5px' }}
-          onClick={() => addRef?.current?.addChannelDrawer()}
-        >
-          新增
-        </Button>
-        <div style={{ marginLeft: '15px', display: 'inline-block' }}>
-          <Tooltip title="表格视图">
-            <Button
-              icon={<MenuOutlined />}
-              size="small"
-              type={isTableView ? 'primary' : 'text'}
-              onClick={() => setIsTableView(true)}
-              style={{ marginRight: '5px' }}
-            />
-          </Tooltip>
-          <Tooltip title="卡片视图">
-            <Button
-              icon={<AppstoreOutlined />}
-              size="small"
-              type={!isTableView ? 'primary' : 'text'}
-              onClick={() => setIsTableView(false)}
-            />
-          </Tooltip>
-        </div>
-        <Button
-          shape="circle"
-          icon={<FilterOutlined />}
-          onClick={() => {
-            setFilterOpen(!filterOpen);
-            onHandleActions('filter', {});
-          }}
-          style={{ marginLeft: '11px' }}
-        />
-      </>
-    );
-  };
-
   return (
     <div
       className={styles['card-container']}
@@ -158,7 +98,7 @@ const ChannelCardView: React.FC<ChannelCardViewProps> = ({
         transition: 'width 0.3s ease-in-out'
       }}
     >
-      <div className={styles['card-btns']}>{btn()}</div>
+      <div className={styles['card-btns']}>{renderCardButtons()}</div>
       <List
         grid={{
           gutter: 16,
@@ -169,13 +109,14 @@ const ChannelCardView: React.FC<ChannelCardViewProps> = ({
           xl: 4,
           xxl: 5
         }}
-        dataSource={dataSource}
+        dataSource={dataSource?.records || []}
         renderItem={(item) => (
           <List.Item>
             <ChannelCard data={item} />
           </List.Item>
         )}
       />
+      <ConfigProvider locale={zh_CN}>{renderCardPagination()}</ConfigProvider>
     </div>
   );
 };

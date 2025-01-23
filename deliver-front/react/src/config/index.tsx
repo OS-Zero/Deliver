@@ -27,7 +27,6 @@ export const proTableConfig = ({
   name = '名称',
   onSearch
 }: ProTableConfigProps): Partial<ProTableProps<any, any>> => {
-
   const handleSearch = (e: any) => {
     onSearch?.((prev: any) => ({
       ...prev,
@@ -68,7 +67,7 @@ export const proTableConfig = ({
     ),
     options: false,
     search: false,
-    pagination: {
+    pagination: name === '应用名' ? false : {
       defaultCurrent: 1,
       defaultPageSize: 10,
       showSizeChanger: true,

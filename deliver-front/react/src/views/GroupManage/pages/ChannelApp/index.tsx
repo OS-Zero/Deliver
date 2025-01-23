@@ -1,7 +1,7 @@
-import React, { MutableRefObject, useRef, useState, useEffect } from 'react';
+import React, { MutableRefObject, useEffect, useRef, useState } from 'react';
 import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
-import { Button, Space, Switch, Dropdown, MenuProps, Tooltip } from 'antd';
-import { DownOutlined, FilterOutlined, MenuOutlined, AppstoreOutlined } from '@ant-design/icons';
+import { Space, Switch, Dropdown, MenuProps, Pagination } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
 import { ChannelApp } from './type.ts';
 import { appColumns, appTableSchema } from './constant.tsx';
 import useChannelData from './useChannelData.ts';
@@ -11,6 +11,7 @@ import FilterCard from './components/FilterCard.tsx';
 import AddChannelDrawer from './components/AddChannelDrawer.tsx';
 import { proTableConfig } from '@/config/index.tsx';
 import ChannelCardView from './components/ChannelCardView.tsx';
+import { useButtons } from './hooks/useButton.tsx';
 
 interface AddRef {
   addChannelDrawer: () => void;
@@ -28,7 +29,7 @@ const Channel: React.FC = () => {
   const detailRef = useRef<{ getDetail: (record: ChannelApp) => void }>();
   const proTableRef = useRef<ActionType>();
   const addRef = useRef<AddRef>();
-  const [tableParams, setTableParams] = useState({});
+  const [tableParams, setTableParams] = useState<any>({});
   const [filterOpen, setFilterOpen] = useState(false);
   const [isTableView, setIsTableView] = useState(true);
   const [keys, setKeys] = useState<number>(0);
@@ -107,18 +108,6 @@ const Channel: React.FC = () => {
     }
   ];
 
-  // 筛选处理函数
-  const handleFilter = (filters: any) => {
-    setTableParams(filters);
-  };
-
-  const handleSearch = (e: any) => {
-    setTableParams?.((prev: any) => ({
-      ...prev,
-      appName: e?.target?.value
-    }));
-  };
-
   // 卡片视图获取数据
   const handleFetchData = async (params: any) => {
     const data = await fetchChannelData(params);
@@ -129,77 +118,93 @@ const Channel: React.FC = () => {
     return data;
   };
 
+  // Input搜索处理函数
+  const handleSearch = (e: any) => {
+    setTableParams?.((prev: any) => ({
+      ...prev,
+      appName: e?.target?.value
+    }));
+  };
+
+  // 筛选处理函数
+  const handleFilter = (filters: any) => {
+    setTableParams(filters);
+  };
+
+  // 处理分页
+  const handlePageChange = (params: { current: number; pageSize: number }) => {
+    setTableParams((prev: any) => ({
+      ...prev,
+      current: params.current,
+      pageSize: params.pageSize
+    }));
+  };
+
+  // 表格上方按钮hook
+  const { renderTableButtons, renderCardButtons } = useButtons({
+    addRef,
+    filterOpen,
+    isTableView,
+    setIsTableView,
+    setFilterOpen,
+    handleFilter,
+    handleSearch
+  });
+
+  // 分页组件
+  const SharedPagination = () => (
+    <Pagination
+      align="end"
+      showSizeChanger
+      showTotal={(total: number) => `共 ${total} 条`}
+      total={channelData?.total}
+      current={tableParams?.current || 1}
+      pageSize={tableParams?.pageSize || 10}
+      onChange={(page, pageSize) => handlePageChange({ current: page, pageSize })}
+    />
+  );
+
   useEffect(() => {
-    handleFetchData(tableParams);
-  }, [tableParams, isTableView]);
+    if (!isTableView) {
+      handleFetchData(tableParams);
+    }
+  }, [tableParams]);
 
   return (
     <div className={styles['app-container']}>
       {isTableView ? (
-        <ProTable
-          actionRef={proTableRef}
-          params={tableParams}
-          columns={columns}
-          rowSelection={{}}
-          request={handleFetchData}
-          rowKey="appId"
-          scroll={{ x: 1200 }}
-          toolBarRender={() => [
-            <>
-              <Button
-                key="add"
-                type="primary"
-                style={{ marginRight: '5px' }}
-                onClick={() => addRef?.current?.addChannelDrawer()}
-              >
-                新增
-              </Button>
-              <div style={{ marginLeft: '10px', display: 'inline-block' }}>
-                <Tooltip title="表格视图">
-                  <Button
-                    icon={<MenuOutlined />}
-                    size="small"
-                    type={isTableView ? 'primary' : 'text'}
-                    onClick={() => setIsTableView(true)}
-                    style={{ marginRight: '5px' }}
-                  />
-                </Tooltip>
-                <Tooltip title="卡片视图">
-                  <Button
-                    icon={<AppstoreOutlined />}
-                    size="small"
-                    type={!isTableView ? 'primary' : 'text'}
-                    onClick={() => setIsTableView(false)}
-                  />
-                </Tooltip>
+        <>
+          <ProTable
+            key={keys}
+            actionRef={proTableRef}
+            params={tableParams}
+            columns={columns}
+            rowSelection={{}}
+            request={handleFetchData}
+            rowKey="appId"
+            scroll={{ x: 1200 }}
+            toolBarRender={() => [renderTableButtons()]}
+            {...proTableConfig({
+              filterOpen,
+              deleteData: deleteChannelData,
+              name: '应用名',
+              onSearch: setTableParams
+            })}
+            pagination={false}
+            tableRender={(_, dom) => (
+              <div>
+                {dom}
+                <div style={{ paddingRight: 24 }}>{SharedPagination()}</div>
               </div>
-              <Button
-                shape="circle"
-                icon={<FilterOutlined />}
-                onClick={() => {
-                  setFilterOpen((pre) => !pre);
-                  handleFilter({});
-                }}
-              />
-            </>
-          ]}
-          {...proTableConfig({
-            filterOpen,
-            deleteData: deleteChannelData,
-            name: '应用名',
-            onSearch: setTableParams
-          })}
-        />
+            )}
+          />
+        </>
       ) : (
         <ChannelCardView
-          dataSource={channelData.records}
+          dataSource={channelData}
           filterOpen={filterOpen}
-          setFilterOpen={setFilterOpen}
-          addRef={addRef}
-          isTableView={isTableView}
-          setIsTableView={setIsTableView}
           onChangeStatus={changeStatus}
-          handleSearch={handleSearch}
+          renderCardButtons={renderCardButtons}
           onHandleActions={(action, data) => {
             switch (action) {
               case 'edit':
@@ -215,10 +220,11 @@ const Channel: React.FC = () => {
                 handleSearch(data);
                 break;
               case 'filter':
-                handleFilter({});
+                handleFilter(data);
                 break;
             }
           }}
+          renderCardPagination={SharedPagination}
         />
       )}
       <DetailDrawer ref={detailRef} columns={appColumns} title={'应用详情'} />
