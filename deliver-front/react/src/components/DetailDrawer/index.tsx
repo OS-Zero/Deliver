@@ -2,7 +2,6 @@ import { forwardRef, useImperativeHandle, useState } from 'react';
 import { Card, Drawer, Space } from 'antd';
 import { ProDescriptions, ProDescriptionsItemProps } from '@ant-design/pro-components';
 import { MessageTemplate } from '@/views/GroupManage/pages/MessageTemplate/type';
-import styles from './index.module.scss';
 
 // 因为需要复用所以要兼容其他属性，这里因为ProDescriptionsItemProps的限制不得不写成any
 const DetailDrawer = forwardRef(
