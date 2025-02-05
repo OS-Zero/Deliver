@@ -4,7 +4,7 @@ import { ProTableProps } from '@ant-design/pro-components';
 
 interface ProTableConfigProps {
   filterOpen?: boolean;
-  deleteData?: (ids: number[]) => void;
+  deleteData?: (ids: number[], isBatchDelete: boolean) => void;
   name?: string;
   onSearch?: (value: any) => void;
 }
@@ -51,7 +51,9 @@ export const proTableConfig = ({
     ),
     tableAlertOptionRender: ({ selectedRowKeys }) => (
       <Space size={16}>
-        <a onClick={() => deleteData?.(selectedRowKeys as number[])}>批量删除</a>
+        <a style={{ color: 'red' }} onClick={() => deleteData?.(selectedRowKeys as number[], true)}>
+          批量删除
+        </a>
       </Space>
     ),
     headerTitle: (
@@ -67,12 +69,15 @@ export const proTableConfig = ({
     ),
     options: false,
     search: false,
-    pagination: name === '应用名' ? false : {
-      defaultCurrent: 1,
-      defaultPageSize: 10,
-      showSizeChanger: true,
-      showTotal: (total: number) => `共 ${total} 条`,
-      size: 'default'
-    }
+    pagination:
+      name === '应用名'
+        ? false
+        : {
+            defaultCurrent: 1,
+            defaultPageSize: 10,
+            showSizeChanger: true,
+            showTotal: (total: number) => `共 ${total} 条`,
+            size: 'default'
+          }
   };
 };

@@ -47,11 +47,17 @@ const useTemplateData = (props: { proTableRef: MutableRefObject<ActionType | und
    * 删除数据
    * @param id
    */
-  const deleteTemplateData = useCallback((ids: number[]) => {
+  const resetProTable = () => {
+    (proTableRef as MutableRefObject<ActionType>)?.current?.reset?.();
+  };
+
+  const deleteTemplateData = useCallback((ids: number[], isBatchDelete: boolean = false) => {
+    const confirmContent = isBatchDelete ? '确认批量删除模版?' : '确认删除该模版?';
     deleteConfirmModal({
+      title: confirmContent,
       onConfirm: () => {
         deleteMessageTemplate({ ids });
-        (proTableRef as MutableRefObject<ActionType>)?.current?.reset?.();
+        resetProTable();
       }
     });
   }, []);

@@ -34,7 +34,7 @@ const Breadcrumb: React.FC = () => {
       localStorage.removeItem('group_name');
     }
 
-    navigate(route.path);
+    navigate(route.path, { replace: true });
   };
 
   const breadcrumbRoutes = generateBreadcrumbs(matchedRoutes);

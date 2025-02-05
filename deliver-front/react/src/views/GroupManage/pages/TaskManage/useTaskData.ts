@@ -55,11 +55,17 @@ const useTaskData = (props: { proTableRef: MutableRefObject<ActionType | undefin
    * 删除数据
    * @param id
    */
-  const deleteTaskData = useCallback((ids: number[]) => {
+  const resetProTable = () => {
+    (proTableRef as MutableRefObject<ActionType>)?.current?.reset?.();
+  };
+
+  const deleteTaskData = useCallback((ids: number[], isBatchDelete: boolean = false) => {
+    const confirmContent = isBatchDelete ? '确认批量删除任务?' : '确认删除该任务?';
     deleteConfirmModal({
+      title: confirmContent,
       onConfirm: () => {
         deleteTask({ ids });
-        (proTableRef as MutableRefObject<ActionType>)?.current?.reset?.();
+        resetProTable();
       }
     });
   }, []);

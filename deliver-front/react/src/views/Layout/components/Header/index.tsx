@@ -37,12 +37,12 @@ const Header: React.FC = () => {
   const handleAction = async (key: string) => {
     switch (key) {
       case 'account':
-        navigate('/systemManage');
+        navigate('/systemManage', { replace: true });
         break;
       case 'logout':
         await logout();
         localStorage.clear();
-        navigate('/login');
+        navigate('/login', { replace: true });
         break;
       default:
         break;
@@ -64,16 +64,16 @@ const Header: React.FC = () => {
     switch (e.key) {
       case 'groupManage':
         if (!localStorage.getItem('group_id')) {
-          navigate('/groupManage');
+          navigate('/groupManage', { replace: true });
         } else {
-          navigate('/groupManage/template');
+          navigate('/groupManage/template', { replace: true });
         }
         break;
       case 'systemManage':
         if (window.location.pathname === '/systemManage/myAccount') {
           break;
         }
-        navigate('/systemManage');
+        navigate('/systemManage', { replace: true });
         break;
       default:
         break;

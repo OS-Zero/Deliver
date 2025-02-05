@@ -51,6 +51,7 @@ const GroupManage: React.FC = () => {
           edit: () => updateGroup({ groupId, ...cardRefValue }),
           delete: () =>
             deleteConfirmModal({
+              title: '确认删除该分组?',
               onConfirm: () => {
                 deleteGroup({ ids: [Number(data?.groupId)] });
                 fetchCardData();

@@ -10,15 +10,13 @@ interface DeleteConfirmModalProps {
 }
 
 const deleteConfirmModal = ({
-  title = '确认框',
-  content = '确定要删除此项吗？',
+  title = '确认删除吗？',
   onConfirm,
   onCancel,
   modalProps = {}
 }: DeleteConfirmModalProps) => {
   Modal.confirm({
     title,
-    content,
     icon: <ExclamationCircleOutlined />,
     okText: '确认',
     cancelText: '取消',
