@@ -3,7 +3,6 @@ import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 interface DeleteConfirmModalProps {
   title?: string;
-  content?: string;
   onConfirm: () => any;
   onCancel?: () => void;
   modalProps?: Partial<ModalFuncProps>;

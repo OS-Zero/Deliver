@@ -3,13 +3,9 @@ import { Button, Drawer, Space, message, FormInstance } from 'antd';
 import { useGlobalContext } from '@/context/GlobalContext';
 import { BetaSchemaForm, ProFormColumnsType } from '@ant-design/pro-components';
 import { useFormOptions } from '@/hooks/useFormOptions';
+import { AddDrawerProps } from '@/types';
 
-interface AddTemplateModalProps {
-  onSubmit?: (values: any) => void;
-  reFresh?: () => void;
-}
-
-const AddTemplateModal = forwardRef((props: AddTemplateModalProps, ref) => {
+const AddTemplateModal = forwardRef((props: AddDrawerProps, ref) => {
   const { onSubmit, reFresh } = props;
   const [open, setOpen] = useState(false);
   const formRef = useRef<FormInstance>(null);

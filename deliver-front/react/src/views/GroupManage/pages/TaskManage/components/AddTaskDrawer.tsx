@@ -1,19 +1,15 @@
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { Button, Drawer, Space, FormInstance, Select, message } from 'antd';
 import { JsonEditor } from 'jsoneditor-react';
-import dayjs from 'dayjs';
-import local from 'antd/lib/date-picker/locale/zh_CN.js';
 import { BetaSchemaForm, ProFormColumnsType } from '@ant-design/pro-components';
 import { useFormOptions } from '@/hooks/useFormOptions';
 import { useDebounce } from '@/hooks/useDebounce';
 import { isValidCron } from 'cron-validator';
+import { AddDrawerProps } from '@/types';
+import dayjs from 'dayjs';
+import local from 'antd/lib/date-picker/locale/zh_CN.js';
 
-interface AddChannelDrawerProps {
-  onSubmit?: (values: any) => void;
-  reFresh?: () => void;
-}
-
-const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
+const AddChannelDrawer = forwardRef((props: AddDrawerProps, ref) => {
   const { onSubmit, reFresh } = props;
   const [open, setOpen] = useState(false);
   const formRef = useRef<FormInstance>(null);
