@@ -20,12 +20,36 @@ const Header: React.FC = () => {
   const [showAbout, setShowAbout] = useState(false);
 
   const { userInfo } = useGlobalContext();
+  const hasGroupId = localStorage.getItem('group_id');
 
   const items = [
     {
-      label: '分组管理',
-      key: 'groupManage',
-      icon: <AppstoreOutlined />
+      icon: <AppstoreOutlined />,
+      label: hasGroupId ? (
+        <Dropdown
+          menu={{
+            items: [
+              {
+                key: 'exitGroup',
+                label: '退出分组',
+                onClick: () => {
+                  localStorage.removeItem('group_id');
+                  navigate('/groupManage', { replace: true });
+                }
+              }
+            ]
+          }}
+          placement="bottom"
+          autoAdjustOverflow
+          arrow
+          dropdownRender={(menu) => <div style={{ marginLeft: '-20px', marginTop: '-1px' }}>{menu}</div>}
+        >
+          <span>分组管理</span>
+        </Dropdown>
+      ) : (
+        '分组管理'
+      ),
+      key: 'groupManage'
     },
     {
       label: '系统管理',
