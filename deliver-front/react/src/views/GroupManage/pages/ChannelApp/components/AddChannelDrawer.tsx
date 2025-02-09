@@ -3,13 +3,9 @@ import { Button, Drawer, Space, FormInstance, message } from 'antd';
 import { JsonEditor } from 'jsoneditor-react';
 import { BetaSchemaForm, ProFormColumnsType } from '@ant-design/pro-components';
 import { useFormOptions } from '@/hooks/useFormOptions';
+import { AddDrawerProps } from '@/types';
 
-interface AddChannelDrawerProps {
-  onSubmit?: (values: any) => void;
-  reFresh?: () => void;
-}
-
-const AddChannelDrawer = forwardRef((props: AddChannelDrawerProps, ref) => {
+const AddChannelDrawer = forwardRef((props: AddDrawerProps, ref) => {
   const { onSubmit, reFresh } = props;
   const [open, setOpen] = useState(false);
   const formRef = useRef<FormInstance>(null);

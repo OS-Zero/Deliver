@@ -3,15 +3,11 @@ import { Button, Drawer, Space, FormInstance, Upload, message } from 'antd';
 import { BetaSchemaForm, ProFormColumnsType } from '@ant-design/pro-components';
 import { useFormOptions } from '@/hooks/useFormOptions';
 import { InboxOutlined } from '@ant-design/icons';
+import { AddDrawerProps } from '@/types';
 
 const { Dragger } = Upload;
 
-interface AddFileDrawerProps {
-  onSubmit?: (values: any) => void;
-  reFresh?: () => void;
-}
-
-const AddFileDrawer = forwardRef((props: AddFileDrawerProps, ref) => {
+const AddFileDrawer = forwardRef((props: AddDrawerProps, ref) => {
   const { onSubmit, reFresh } = props;
   const [fileList, setFileList] = useState<any[]>([]);
   const [open, setOpen] = useState(false);

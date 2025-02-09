@@ -30,6 +30,7 @@ const People: React.FC = () => {
   const addRef = useRef<AddRef>();
   const [tableParams, setTableParams] = useState({});
   const [filterOpen, setFilterOpen] = useState(false);
+
   const { fetchPeopleData, deletePeopleData, savePeopleData } = useChannelData({
     proTableRef
   });
@@ -110,7 +111,10 @@ const People: React.FC = () => {
             <Button
               shape="circle"
               icon={<FilterOutlined />}
-              onClick={() => setFilterOpen((pre) => !pre)}
+              onClick={() => {
+                setFilterOpen((pre) => !pre);
+                handleFilter({});
+              }}
             />
           </>
         ]}

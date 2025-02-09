@@ -31,7 +31,8 @@ const useChannelData = (props: { proTableRef: MutableRefObject<ActionType | unde
    * 新增模版
    * @param data
    */
-  const saveChannelData = async (params: ChannelApp) => params?.appId ? await updateChannelApp(params) : await saveChannelApp(params);
+  const saveChannelData = async (params: ChannelApp) =>
+    params?.appId ? await updateChannelApp(params) : await saveChannelApp(params);
 
   /**
    * 更新模板状态
@@ -45,11 +46,17 @@ const useChannelData = (props: { proTableRef: MutableRefObject<ActionType | unde
    * 删除数据
    * @param id
    */
-  const deleteChannelData = useCallback((ids: number[]) => {
+  const resetProTable = () => {
+    (proTableRef as MutableRefObject<ActionType>)?.current?.reset?.();
+  };
+
+  const deleteChannelData = useCallback((ids: number[], isBatchDelete: boolean = false) => {
+    const confirmContent = isBatchDelete ? '确认批量删除应用?' : '确认删除该应用?';
     deleteConfirmModal({
+      title: confirmContent,
       onConfirm: () => {
         deleteChannelApp({ ids });
-        (proTableRef as MutableRefObject<ActionType>)?.current?.reset?.();
+        resetProTable();
       }
     });
   }, []);

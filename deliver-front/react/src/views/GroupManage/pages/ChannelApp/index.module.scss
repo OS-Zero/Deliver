@@ -23,8 +23,9 @@
 
     .filter-container {
       width: 0;
-	    transition: width 120ms;
-	    border: 0;
+      transition: width 120ms;
+      border: 0;
+
       :global {
         .ant-card-head {
           padding: 0;
@@ -36,6 +37,97 @@
         }
         .ant-picker-outlined {
           width: 100%;
+        }
+      }
+    }
+
+    .card-container {
+      padding: 0 24px 16px;
+
+      .card-btns {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        padding: 16px 0;
+      }
+      .card-item {
+        padding: 16px 0;
+        margin: 0 auto;
+      }
+
+      .card {
+        position: relative;
+        width: 100%;
+        border: 1px solid var(--gray-lighter);
+        border-radius: var(--border-radius-small);
+
+        .card_img {
+          width: 40px;
+          height: 40px;
+        }
+
+        .card_header {
+          display: flex;
+          padding-bottom: var(--spacing-sm);
+          border-bottom: 1px solid var(--gray-lighter);
+          margin-bottom: var(--spacing-sm);
+        }
+
+        .card_title {
+          display: flex;
+          margin-bottom: var(--spacing-xs);
+        }
+
+        .card_info {
+          margin-left: var(--spacing-sm);
+        }
+
+        .edit_btn {
+          position: absolute;
+          right: var(--spacing-md);
+          top: var(--spacing-md);
+        }
+
+        .info_creator {
+          font-size: var(--font-size-small);
+          color: var(--gray-medium-dark);
+        }
+
+        .card_btns {
+          margin-top: var(--spacing-sm);
+          display: flex;
+          justify-content: space-between;
+          gap: var(--spacing-xs);
+        }
+
+        .btn_operation {
+          display: flex;
+          gap: var(--spacing-xs);
+        }
+
+        .card_status {
+          display: inline-block;
+          height: 8px;
+          width: 8px;
+          border-radius: 7px;
+          vertical-align: middle;
+          margin-left: 10px;
+          margin-top: 5px;
+
+          &.open {
+            background-color: rgb(10, 191, 91);
+          }
+
+          &.close {
+            background-color: rgb(229, 69, 69);
+          }
+        }
+
+        .more_btn {
+          display: flex;
+          align-items: center;
+          color: var(--primary-color);
+          cursor: pointer;
         }
       }
     }

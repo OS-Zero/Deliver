@@ -31,10 +31,9 @@ const Breadcrumb: React.FC = () => {
     if (route.path.includes('/groupManage')) {
       // 清除 group 相关信息
       localStorage.removeItem('group_id');
-      localStorage.removeItem('group_name');
     }
 
-    navigate(route.path);
+    navigate(route.path, { replace: true });
   };
 
   const breadcrumbRoutes = generateBreadcrumbs(matchedRoutes);

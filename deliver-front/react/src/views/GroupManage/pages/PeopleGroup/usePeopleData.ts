@@ -2,7 +2,7 @@ import {
   getPeopleGroup,
   savePeopleGroup,
   updatePeopleGroup,
-  deletePeopleGroup,
+  deletePeopleGroup
 } from '@/api/peopleGroup';
 import deleteConfirmModal from '@/components/DeleteConfirmModal';
 import { MutableRefObject, useCallback } from 'react';
@@ -37,11 +37,17 @@ const usePeopleData = (props: { proTableRef: MutableRefObject<ActionType | undef
    * 删除
    * @param id
    */
-  const deletePeopleData = useCallback((ids: number[]) => {
+  const resetProTable = () => {
+    (proTableRef as MutableRefObject<ActionType>)?.current?.reset?.();
+  };
+
+  const deletePeopleData = useCallback((ids: number[], isBatchDelete: boolean = false) => {
+    const confirmContent = isBatchDelete ? '确认批量删除人群?' : '确认删除该人群?';
     deleteConfirmModal({
+      title: confirmContent,
       onConfirm: () => {
         deletePeopleGroup({ ids });
-        (proTableRef as MutableRefObject<ActionType>)?.current?.reset?.();
+        resetProTable();
       }
     });
   }, []);
@@ -49,7 +55,7 @@ const usePeopleData = (props: { proTableRef: MutableRefObject<ActionType | undef
   return {
     fetchPeopleData,
     deletePeopleData,
-    savePeopleData,
+    savePeopleData
   };
 };
 

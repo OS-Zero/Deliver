@@ -4,11 +4,7 @@ import { useRef } from 'react';
 import local from 'antd/lib/date-picker/locale/zh_CN.js';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useFormOptions } from '@/hooks/useFormOptions';
-
-interface FilterDrawerProps {
-  onFilter: (filters: any) => void;
-  onClose: (open: boolean) => void;
-}
+import { FilterDrawerProps } from '@/types';
 
 const FilterDrawer = (props: FilterDrawerProps) => {
   const { onClose, onFilter } = props;

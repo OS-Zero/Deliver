@@ -28,12 +28,11 @@ const Card: React.FC<CardProps> = ({
   const handleJumpLink = () => {
     if (data?.groupId) {
       localStorage.setItem('group_id', data.groupId.toString());
-      navigate('/groupManage/template');
+      navigate('/groupManage/template', { replace: true });
     }
   };
 
   const handleOperation = (key: string) => {
-    console.log(data);
     switch (key) {
       case 'top':
         onTop?.(data);
@@ -87,7 +86,7 @@ const Card: React.FC<CardProps> = ({
 
   return (
     <div className={styles['card']} onClick={handleJumpLink}>
-      <div className={styles['card-more']}>
+      <div className={styles['card-more']} onClick={(e) => e.stopPropagation()}>
         <Dropdown menu={menuProps} placement="bottom">
           <EllipsisOutlined />
         </Dropdown>

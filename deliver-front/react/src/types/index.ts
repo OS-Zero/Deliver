@@ -33,6 +33,22 @@ export interface Pagination {
   pageSize: number; // 页面大小
 }
 
+/**
+ * 新增数据通用接口
+ */
+export interface AddDrawerProps {
+  onSubmit?: (values: any) => void;
+  reFresh?: () => void;
+}
+
+/**
+ * FilterCard通用接口
+ */
+export interface FilterDrawerProps {
+  onFilter: (filters: any) => void;
+  onClose: (open: boolean) => void;
+}
+
 export interface Channel {
   channelType: number;
   channelTypeName: string;

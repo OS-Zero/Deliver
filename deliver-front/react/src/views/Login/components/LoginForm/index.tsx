@@ -43,12 +43,13 @@ const LoginForm: React.FC = () => {
       onValuesChange={(changedValues) => {
         setLoginData((prev) => ({ ...prev, ...changedValues }));
       }}
+      onFinish={handleLogin}
     >
       <Form.Item name="userEmail" rules={[emailValidationRule]} validateTrigger={['onChange']}>
-        <Input value={loginData.userEmail} placeholder="请输入邮箱" />
+        <Input value={loginData.userEmail} placeholder="请输入邮箱" onPressEnter={handleLogin}/>
       </Form.Item>
       <Form.Item name="userPassword" rules={[passwordValidationRule]} validateTrigger={['onChange']}>
-        <Input.Password maxLength={16} value={loginData.userPassword} placeholder="请输入密码" />
+        <Input.Password maxLength={16} value={loginData.userPassword} placeholder="请输入密码" onPressEnter={handleLogin} />
       </Form.Item>
       <Form.Item>
         <Button style={{ width: '100%' }} type="primary" onClick={handleLogin}>

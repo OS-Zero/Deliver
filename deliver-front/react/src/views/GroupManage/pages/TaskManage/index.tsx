@@ -22,6 +22,8 @@ const TaskManage: React.FC = () => {
   const addRef = useRef<AddRef>();
   const [tableParams, setTableParams] = useState({});
   const [filterOpen, setFilterOpen] = useState(false);
+  const [keys, setKeys] = useState<number>(0);
+
   const { fetchTaskData, deleteTaskData, saveTaskData, changeStatus, sendTask } = useTaskData({
     proTableRef
   });
@@ -41,6 +43,7 @@ const TaskManage: React.FC = () => {
     }
     return baseItems;
   };
+
   const handleMenuClick = async (e: any, record: TaskDetail) => {
     if (e?.key === 'detail') {
       detailRef.current?.getDetail(record);
@@ -63,10 +66,12 @@ const TaskManage: React.FC = () => {
       render: (_, record: TaskDetail) => {
         const handleStatusChange = async (checked: boolean) => {
           await changeStatus(record.taskId, checked ? 1 : 0);
-          proTableRef?.current?.reload();
+          record.taskStatus = checked ? 1 : 0;
+          setKeys((prev) => prev + 1);
         };
         return (
           <Switch
+            key={keys}
             checkedChildren="启用"
             unCheckedChildren="禁用"
             checked={Boolean(record?.taskStatus)}
@@ -141,7 +146,10 @@ const TaskManage: React.FC = () => {
             <Button
               shape="circle"
               icon={<FilterOutlined />}
-              onClick={() => setFilterOpen((pre) => !pre)}
+              onClick={() => {
+                setFilterOpen((pre) => !pre);
+                handleFilter({});
+              }}
             />
           </>
         ]}

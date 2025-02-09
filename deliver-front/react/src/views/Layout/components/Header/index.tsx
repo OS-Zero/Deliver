@@ -20,12 +20,36 @@ const Header: React.FC = () => {
   const [showAbout, setShowAbout] = useState(false);
 
   const { userInfo } = useGlobalContext();
+  const hasGroupId = localStorage.getItem('group_id');
 
   const items = [
     {
-      label: '分组管理',
-      key: 'groupManage',
-      icon: <AppstoreOutlined />
+      icon: <AppstoreOutlined />,
+      label: hasGroupId ? (
+        <Dropdown
+          menu={{
+            items: [
+              {
+                key: 'exitGroup',
+                label: '退出分组',
+                onClick: () => {
+                  localStorage.removeItem('group_id');
+                  navigate('/groupManage', { replace: true });
+                }
+              }
+            ]
+          }}
+          placement="bottom"
+          autoAdjustOverflow
+          arrow
+          dropdownRender={(menu) => <div style={{ marginLeft: '-20px', marginTop: '-1px' }}>{menu}</div>}
+        >
+          <span>分组管理</span>
+        </Dropdown>
+      ) : (
+        '分组管理'
+      ),
+      key: 'groupManage'
     },
     {
       label: '系统管理',
@@ -37,12 +61,12 @@ const Header: React.FC = () => {
   const handleAction = async (key: string) => {
     switch (key) {
       case 'account':
-        navigate('/systemManage');
+        navigate('/systemManage', { replace: true });
         break;
       case 'logout':
         await logout();
         localStorage.clear();
-        navigate('/login');
+        navigate('/login', { replace: true });
         break;
       default:
         break;
@@ -64,16 +88,16 @@ const Header: React.FC = () => {
     switch (e.key) {
       case 'groupManage':
         if (!localStorage.getItem('group_id')) {
-          navigate('/groupManage');
+          navigate('/groupManage', { replace: true });
         } else {
-          navigate('/groupManage/template');
+          navigate('/groupManage/template', { replace: true });
         }
         break;
       case 'systemManage':
         if (window.location.pathname === '/systemManage/myAccount') {
           break;
         }
-        navigate('/systemManage');
+        navigate('/systemManage', { replace: true });
         break;
       default:
         break;

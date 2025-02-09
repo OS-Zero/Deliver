@@ -5,18 +5,14 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { useGlobalContext } from '@/context/GlobalContext';
 import { useFormOptions } from '@/hooks/useFormOptions';
 import local from 'antd/lib/date-picker/locale/zh_CN.js';
+import { FilterDrawerProps } from '@/types';
 
 const { Option } = Select;
-interface FilterDrawerProps {
-  onFilter: (filters: any) => void;
-  onClose: (open: boolean) => void;
-}
 
 const FilterDrawer = (props: FilterDrawerProps) => {
   const { onClose, onFilter } = props;
   const formRef = useRef<FormInstance>(null);
 
-  // 使用 useFormState 管理表单状态
   const { userTypeParams } = useGlobalContext();
 
   // 获取change函数以及设置初始获取渠道类型数据

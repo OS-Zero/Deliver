@@ -1,11 +1,10 @@
-import { Space, Input, InputRef } from 'antd';
+import { Space, Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { ProTableProps } from '@ant-design/pro-components';
-import { useRef } from 'react';
 
 interface ProTableConfigProps {
   filterOpen?: boolean;
-  deleteData?: (ids: number[]) => void;
+  deleteData?: (ids: number[], isBatchDelete: boolean) => void;
   name?: string;
   onSearch?: (value: any) => void;
 }
@@ -28,13 +27,10 @@ export const proTableConfig = ({
   name = '名称',
   onSearch
 }: ProTableConfigProps): Partial<ProTableProps<any, any>> => {
-  const ref = useRef<InputRef>(null);
-
-  const handleSearch = () => {
-    const searchValue = ref.current?.input?.value;
+  const handleSearch = (e: any) => {
     onSearch?.((prev: any) => ({
       ...prev,
-      [findKeyByValue(name) as string]: searchValue
+      [findKeyByValue(name) as string]: e?.target?.value
     }));
   };
 
@@ -55,13 +51,14 @@ export const proTableConfig = ({
     ),
     tableAlertOptionRender: ({ selectedRowKeys }) => (
       <Space size={16}>
-        <a onClick={() => deleteData?.(selectedRowKeys as number[])}>批量删除</a>
+        <a style={{ color: 'red' }} onClick={() => deleteData?.(selectedRowKeys as number[], true)}>
+          批量删除
+        </a>
       </Space>
     ),
     headerTitle: (
       <div style={{ width: '200px' }}>
         <Input
-          ref={ref}
           placeholder={`请输入${name}进行查询`}
           style={{ borderRadius: '50px' }}
           prefix={<SearchOutlined />}
@@ -72,12 +69,15 @@ export const proTableConfig = ({
     ),
     options: false,
     search: false,
-    pagination: {
-      defaultCurrent: 1,
-      defaultPageSize: 10,
-      showSizeChanger: true,
-      showTotal: (total: number) => `共 ${total} 条`,
-      size: 'default'
-    }
+    pagination:
+      name === '应用名'
+        ? false
+        : {
+            defaultCurrent: 1,
+            defaultPageSize: 10,
+            showSizeChanger: true,
+            showTotal: (total: number) => `共 ${total} 条`,
+            size: 'default'
+          }
   };
 };

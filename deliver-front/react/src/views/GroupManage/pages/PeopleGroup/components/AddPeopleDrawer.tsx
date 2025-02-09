@@ -5,15 +5,11 @@ import { useGlobalContext } from '@/context/GlobalContext';
 import { InboxOutlined } from '@ant-design/icons';
 import { analysisExcelTemplateFile } from '@/api/peopleGroup';
 import { omitProperties } from '@/utils/omitProperty';
-
-interface AddPeopleDrawerProps {
-  onSubmit?: (values: any) => void;
-  reFresh?: () => void;
-}
+import { AddDrawerProps } from '@/types';
 
 const { Dragger } = Upload;
 
-const AddPeopleDrawer = forwardRef((props: AddPeopleDrawerProps, ref) => {
+const AddPeopleDrawer = forwardRef((props: AddDrawerProps, ref) => {
   const { onSubmit, reFresh } = props;
   const [open, setOpen] = useState(false);
   const formRef = useRef<FormInstance>(null);

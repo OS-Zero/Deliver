@@ -3,11 +3,7 @@ import { CloseOutlined } from '@ant-design/icons';
 import { useRef } from 'react';
 import local from 'antd/lib/date-picker/locale/zh_CN.js';
 import { useDebounce } from '@/hooks/useDebounce';
-
-interface FilterDrawerProps {
-  onFilter: (filters: any) => void;
-  onClose: (open: boolean) => void;
-}
+import { FilterDrawerProps } from '@/types';
 
 const { Option } = Select;
 

@@ -3,22 +3,19 @@ import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 interface DeleteConfirmModalProps {
   title?: string;
-  content?: string;
   onConfirm: () => any;
   onCancel?: () => void;
   modalProps?: Partial<ModalFuncProps>;
 }
 
 const deleteConfirmModal = ({
-  title = '确认框',
-  content = '确定要删除此项吗？',
+  title = '确认删除吗？',
   onConfirm,
   onCancel,
   modalProps = {}
 }: DeleteConfirmModalProps) => {
   Modal.confirm({
     title,
-    content,
     icon: <ExclamationCircleOutlined />,
     okText: '确认',
     cancelText: '取消',
