@@ -28,6 +28,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class DeliverAdminApplication {
 
     public static void main(String[] args) {
+        // 启动
         SpringApplication.run(DeliverAdminApplication.class, args);
     }
 }
