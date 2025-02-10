@@ -21,7 +21,8 @@ public enum PushSubjectEnum {
     WECHAT_APP_TO_GROUP(newIndex(), "企微应用消息到群聊会话"),
     WECHAT_SCHOOL(newIndex(), "企微家校消息"),
     WECHAT_GROUP_ROBOT(newIndex(), "企微群机器人消息"),
-    FEI_SHU(newIndex(), "飞书消息")
+    FEI_SHU(newIndex(), "飞书消息"),
+    OFFICIAL_ACCOUNT_TEMPLATE(newIndex(), "微信公众号模板消息")
     ;
     private static int index = 0;
 
@@ -29,7 +30,7 @@ public enum PushSubjectEnum {
     private final String name;
 
     public static final int MIN_INDEX = CommonConstant.MIN_INDEX;
-    public static final int MAX_INDEX = 9;
+    public static final int MAX_INDEX = 11;
 
     public static PushSubjectEnum getInstanceByCode(Integer code) {
         for (PushSubjectEnum value : values()) {

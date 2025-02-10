@@ -15,26 +15,22 @@
  * limitations under the License.
  */
 
-package com.oszero.deliver.business.admin.model.dto.request.platformfile;
+package com.oszero.deliver.platformclient.model.app;
 
-import com.oszero.deliver.business.admin.model.dto.request.common.PageRequest;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
-import java.time.LocalDateTime;
+import lombok.*;
 
 /**
+ * 企业微信 APP 配置
+ *
  * @author oszero
  * @version 1.0.0
  */
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class PlatformFileSearchRequestDto extends PageRequest {
-    private String platformFileName;
-    private String platformFileType;
-    private String platformFileKey;
-    private Integer channelType;
-    private Integer channelProviderType;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+public class OfficialAccountApp extends AppConfig {
+    private String appid;
+    private String secret;
 }

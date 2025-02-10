@@ -15,26 +15,32 @@
  * limitations under the License.
  */
 
-package com.oszero.deliver.business.admin.model.dto.request.platformfile;
+package com.oszero.deliver.business.server.pretreatment.link.send;
 
-import com.oszero.deliver.business.admin.model.dto.request.common.PageRequest;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
-import java.time.LocalDateTime;
+import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
+import com.oszero.deliver.business.server.mq.producer.Producer;
+import com.oszero.deliver.business.server.pretreatment.common.LinkContext;
+import com.oszero.deliver.business.server.pretreatment.common.MessageLink;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 /**
  * @author oszero
  * @version 1.0.0
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
-public class PlatformFileSearchRequestDto extends PageRequest {
-    private String platformFileName;
-    private String platformFileType;
-    private String platformFileKey;
-    private Integer channelType;
-    private Integer channelProviderType;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+@Service
+@RequiredArgsConstructor
+public class OfficialAccountSend extends CommonSend implements MessageLink<SendTaskDto> {
+
+    private final Producer producer;
+
+    @Override
+    public void process(LinkContext<SendTaskDto> context) {
+        sendToMq(context.getProcessModel());
+    }
+
+    @Override
+    void send(SendTaskDto sendTaskDto) {
+        producer.sendMessage(sendTaskDto);
+    }
 }

@@ -36,4 +36,5 @@ public abstract class DisruptorBaseEvent {
     public static class DingEventDisruptor extends DisruptorBaseEvent {}
     public static class WeChatEventDisruptor extends DisruptorBaseEvent {}
     public static class FeiShuEventDisruptor extends DisruptorBaseEvent {}
+    public static class OfficialAccountEventDisruptor extends DisruptorBaseEvent {}
 }

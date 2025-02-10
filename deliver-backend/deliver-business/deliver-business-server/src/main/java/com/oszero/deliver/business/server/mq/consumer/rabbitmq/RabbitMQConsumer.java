@@ -47,6 +47,7 @@ public class RabbitMQConsumer {
     private final DingHandler dingHandler;
     private final WeChatHandler weChatHandler;
     private final FeiShuHandler feiShuHandler;
+    private final OfficialAccountHandler officialAccountHandler;
 
     private final Producer producer;
 
@@ -84,6 +85,12 @@ public class RabbitMQConsumer {
     public void onFeiShuMessage(String message,
                                 @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel channel) throws Exception {
         onMessageAck(deliveryTag, channel, message, feiShuHandler);
+    }
+
+    @RabbitListener(queues = MQConstant.OFFICIAL_ACCOUNT_QUEUE, ackMode = "MANUAL")
+    public void onOfficialAccountMessage(String message,
+                                @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel channel) throws Exception {
+        onMessageAck(deliveryTag, channel, message, officialAccountHandler);
     }
 
     private void onMessageAck(long deliveryTag, Channel channel, String message, BaseHandler handler) throws Exception {

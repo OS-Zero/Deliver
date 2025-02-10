@@ -57,6 +57,7 @@ public class RedisProducer implements Producer {
             case DING -> recordId = redisUtils.sendMessage(MQConstant.DING_STREAM, message);
             case WECHAT -> recordId = redisUtils.sendMessage(MQConstant.WECHAT_STREAM, message);
             case FEI_SHU -> recordId = redisUtils.sendMessage(MQConstant.FEI_SHU_STREAM, message);
+            case OFFICIAL_ACCOUNT -> recordId = redisUtils.sendMessage(MQConstant.OFFICIAL_ACCOUNT_STREAM, message);
             default -> {
             }
         }
