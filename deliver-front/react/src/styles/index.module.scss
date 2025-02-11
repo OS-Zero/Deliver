@@ -1,9 +1,0 @@
-@use './variable.module.scss' as *;
-@use './base.module.scss' as *;
-
-:global {
-  #root {
-    height: 100%;
-    overflow: hidden;
-  }
-}

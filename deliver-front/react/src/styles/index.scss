@@ -1,0 +1,9 @@
+@use './variable.scss' as var;
+@use './base.scss' as base;
+
+:global {
+  #root {
+    height: 100%;
+    overflow: hidden;
+  }
+}
