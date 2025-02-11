@@ -1,5 +1,5 @@
-@use './variable.module.scss';
-@use './base.module.scss';
+@use './variable.module.scss' as *;
+@use './base.module.scss' as *;
 
 :global {
   #root {
