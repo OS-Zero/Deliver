@@ -44,30 +44,30 @@ const ChannelCardView: React.FC<ChannelCardViewProps> = ({
     };
 
     return (
-      <Card className={styles.card}>
-        <div className={styles.card_header}>
+      <Card className={styles['card']}>
+        <div className={styles['card_header']}>
           <Tooltip title="编辑">
             <Button
               type="link"
               icon={<EditOutlined />}
-              className={styles.edit_btn}
+              className={styles['edit_btn']}
               onClick={() => onHandleActions('edit', data)}
             />
           </Tooltip>
-          <img className={styles.card_img} src={getImg(data.channelType).src} alt="" />
-          <div className={styles.card_info}>
-            <div className={styles.card_title}>
+          <img className={styles['card_img']} src={getImg(data.channelType).src} alt="卡片logo" />
+          <div className={styles['card_info']}>
+            <div className={styles['card_title']}>
               <h4>{data.appName}</h4>
               <span
                 key={keys}
-                className={`${styles.card_status} ${data.appStatus === 1 ? styles.open : styles.close}`}
+                className={`${styles['card_status']} ${data.appStatus === 1 ? styles['open'] : styles['close']}`}
               />
             </div>
-            <div className={styles.info_creator}>创建者：{data.createUser}</div>
+            <div className={styles['info_creator']}>创建者：{data.createUser}</div>
           </div>
         </div>
-        <div className={styles.card_btns}>
-          <div className={styles.btn_operation}>
+        <div className={styles['card_btns']}>
+          <div className={styles['btn_operation']}>
             {data.appStatus ? (
               <Button onClick={() => handleChangeStatus()}>禁用</Button>
             ) : (
@@ -80,7 +80,7 @@ const ChannelCardView: React.FC<ChannelCardViewProps> = ({
             )}
           </div>
           <Dropdown overlay={menu} placement="bottomRight">
-            <div className={styles.more_btn}>
+            <div className={styles['more_btn']}>
               更多操作
               <DownOutlined />
             </div>
