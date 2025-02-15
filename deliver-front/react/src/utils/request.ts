@@ -75,7 +75,7 @@ service.interceptors.response.use(
       localStorage.clear()
       window.location.href = '/login';
     }
-    message.error("服务端错误");
+    console.log(err);
     return Promise.reject(err);
   }
 );
