@@ -11,32 +11,32 @@ const cards = ref<Card[]>([
 	{
 		title: '社区官网',
 		desc: '欢迎访问 OSZero 官方网站，Open Source Zero（零号开源）由一群充满技术热情的开发者创建。加入我们，一同探索开源世界！',
-		link: 'https://os-zero.gitee.io/deliver-website/',
+		link: 'https://oszero.cn',
+	},
+	{
+		title: '了解Deliver',
+		desc: '快速了解Deliver企业消息推送平台，了解我们的产品特点和功能',
+		link: 'https://oszero.cn',
 	},
 	{
 		title: '快速开始',
 		desc: '立即启动 Deliver 企业消息推送平台，发送属于您的首条消息~',
-		link: 'https://os-zero.gitee.io/deliver-website/pages/1a1a14/',
-	},
-	{
-		title: '开发者文档',
-		desc: '探索开发者专属的设计和二次开发文档，创建您独一无二的企业消息推送平台！',
-		link: 'https://os-zero.gitee.io/deliver-website/pages/1a1a16/',
+		link: 'https://oszero.cn',
 	},
 	{
 		title: '用户指南',
 		desc: '在这里，您将学会如何创建消息模板、配置必要信息以及发送各种类型的消息。现在就开始吧~',
-		link: 'https://os-zero.gitee.io/deliver-website/pages/1a1a15/',
+		link: 'https://oszero.cn',
 	},
 	{
 		title: '运维部署',
 		desc: '支持多种部署方式（本地、Docker、Linux Shell），简单快捷的部署方式，让我们开始搭建吧！',
-		link: 'https://os-zero.gitee.io/deliver-website/pages/1a1a13/',
+		link: 'https://oszero.cn',
 	},
 	{
 		title: '交流讨论',
 		desc: '欢迎加入我们的社区官方交流讨论群，快速获得答疑解惑，赶紧一起加入吧~',
-		link: 'https://os-zero.gitee.io/deliver-website/pages/3a3a11/',
+		link: 'https://oszero.cn',
 	},
 ])
 </script>
