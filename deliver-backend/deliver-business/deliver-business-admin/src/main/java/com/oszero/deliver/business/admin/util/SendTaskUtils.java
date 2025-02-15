@@ -84,6 +84,9 @@ public class SendTaskUtils {
         } else if (isSingleJob(sendTask)) {
             SimpleDateFormat sdf = new SimpleDateFormat(AdminConstant.DATE_FORMAT);
             Date date = sdf.parse(taskTimeExpression);
+            if (date.before(new Date(System.currentTimeMillis()))) {
+                throw new BusinessException("定时时间不能小于当前时间");
+            }
             QuartzJobUtils.addSingleExecutionJob(scheduler, sendTask.getTaskName(), JobConstant.JOB_GROUP_NAME,
                     date, jobDataMap, SendTaskServiceImpl.class);
         }

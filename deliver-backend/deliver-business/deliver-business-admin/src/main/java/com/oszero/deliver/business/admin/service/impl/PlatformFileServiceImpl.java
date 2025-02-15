@@ -78,6 +78,7 @@ public class PlatformFileServiceImpl extends ServiceImpl<PlatformFileMapper, Pla
         wrapper.like(StrUtil.isNotBlank(dto.getPlatformFileName()), PlatformFile::getPlatformFileName, dto.getPlatformFileName())
                 .eq(!Objects.isNull(dto.getChannelType()), PlatformFile::getChannelType, dto.getChannelType())
                 .eq(StrUtil.isNotBlank(dto.getPlatformFileType()), PlatformFile::getPlatformFileType, dto.getPlatformFileType())
+                .eq(!Objects.isNull(dto.getAppId()), PlatformFile::getAppId, dto.getAppId())
                 .like(StrUtil.isNotBlank(dto.getPlatformFileKey()), PlatformFile::getPlatformFileKey, dto.getPlatformFileKey())
                 .ge(!Objects.isNull(dto.getStartTime()), PlatformFile::getCreateTime, dto.getStartTime())
                 .le(!Objects.isNull(dto.getEndTime()), PlatformFile::getCreateTime, dto.getStartTime())
