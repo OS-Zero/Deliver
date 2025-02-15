@@ -59,7 +59,7 @@ public class UserInterceptor implements HandlerInterceptor {
         String token = request.getHeader(AdminConstant.AUTH_HEARD_NAME);
         CacheUserInfo userInfo = adminCacheManager.getLoginUser(token);
         if (Objects.isNull(userInfo) ) {
-            response.sendRedirect(request.getContextPath() + AdminPathConstant.USER_LOGIN);
+            response.setStatus(401);
             return false;
         }
         UserUtils.saveCurrentLoginUserInfo(userInfo);

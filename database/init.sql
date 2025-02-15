@@ -158,6 +158,6 @@ create table if not exists deliver.people_group
     deleted                  tinyint  default 0                 not null comment '是否删除（0-不删除、1-删除）'
 ) comment '人群表';
 
--- 初始化创建一个管理员用户
+-- 初始化创建一个管理员用户 密码为123456
 insert into deliver.user_info(user_email, user_password, user_real_name, user_role, create_user, update_user)
     value ('oszero@qq.com', 'e10adc3949ba59abbe56e057f20f883e', 'deliver', 'admin', 'oszero', 'oszero')

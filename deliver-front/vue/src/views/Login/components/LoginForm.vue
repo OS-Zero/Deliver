@@ -46,7 +46,6 @@ const loginForm = reactive<Schema<LoginForm>>({
 		buttonConfig: {
 			type: 'primary',
 			name: '登录',
-			style: { width: '100%' },
 			onClick: async () => {
 				await formRef.value.validate()
 				let res: any = await login(getDataFromSchema(loginForm))

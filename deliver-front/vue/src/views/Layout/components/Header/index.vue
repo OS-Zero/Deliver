@@ -91,13 +91,12 @@ const userName = ref(JSON.parse(localStorage.getItem("user_info") || '{}').userR
 						<div style="margin-left: 60px">
 							<p>产品：Deliver 企业消息推送平台</p>
 							<p>版本：v1.0.0</p>
-							<a target="_blank"
-								href="https://os-zero.gitee.io/deliver-website">https://os-zero.gitee.io/deliver-website</a>
+							<a target="_blank" href="https://oszero.cn">https://oszero.cn</a>
 						</div>
 					</div>
 				</a-modal>
 				<a-tooltip title="疑问">
-					<a target="_blank" href="https://os-zero.gitee.io/deliver-website">
+					<a target="_blank" href="https://oszero.cn">
 						<QuestionCircleOutlined />
 					</a>
 				</a-tooltip>

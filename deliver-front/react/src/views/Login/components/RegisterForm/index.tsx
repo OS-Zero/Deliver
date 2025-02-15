@@ -111,7 +111,7 @@ const RegisterForm = (props: RegisterFormProps) => {
         rules={[verificationCodeValidationRule]}
         validateTrigger={['onChange']}
       >
-        <div className={styles.verify}>
+        <div className={styles['verify']}>
           <Input
             maxLength={6}
             value={registerData.verificationCode}
@@ -119,7 +119,7 @@ const RegisterForm = (props: RegisterFormProps) => {
           />
           <Tooltip title={verifyDisabled ? handleBtnTips() : ''}>
             <Button
-              className={styles.verifyBtn}
+              className={styles['verifyBtn']}
               disabled={verifyDisabled}
               onClick={() => handleVerify()}
             >
@@ -129,7 +129,7 @@ const RegisterForm = (props: RegisterFormProps) => {
         </div>
       </Form.Item>
       <Form.Item>
-        <Button className={styles.submitBtn} type="primary" onClick={handleRegister}>
+        <Button className={styles['submitBtn']} type="primary" onClick={handleRegister}>
           注册
         </Button>
       </Form.Item>

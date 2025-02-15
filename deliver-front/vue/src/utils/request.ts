@@ -38,7 +38,7 @@ service.interceptors.response.use(
 			if (contentType && contentType.includes('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
 				// 如果是 Excel 文件（application/vnd.openxmlformats-officedocument.spreadsheetml.sheet），启动下载
 				// 尝试从 Content-Disposition 中提取文件名
-				let fileName = 'downloaded-file.xlsx';  // 默认文件名
+				let fileName = 'downloaded-file.xlsx'; // 默认文件名
 				// 创建 Blob 对象并下载
 				const blob = new Blob([_res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
 				const link = document.createElement('a');
@@ -56,6 +56,10 @@ service.interceptors.response.use(
 		return Promise.reject('服务端错误');
 	},
 	(err) => {
+		if (err.response.status === 401) {
+			localStorage.clear();
+			window.location.href = '/login';
+		}
 		return Promise.reject(err);
 	},
 );

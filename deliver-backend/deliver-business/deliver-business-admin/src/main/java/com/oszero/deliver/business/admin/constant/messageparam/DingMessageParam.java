@@ -1,3 +1,20 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.oszero.deliver.business.admin.constant.messageparam;
 
 /**
@@ -8,7 +25,6 @@ public interface DingMessageParam {
     // 工作通知
     String WORK_NOTICE_TEXT_PARAM = """
             {
-              "pushSubject": "workNotice",
               "userIdType": "userid_list 或者 dept_id_list 或者 to_all_user",
               "msg": {
                 "text": {
@@ -19,7 +35,6 @@ public interface DingMessageParam {
             """;
     String WORK_NOTICE_IMAGE_PARAM = """
             {
-              "pushSubject": "workNotice",
               "userIdType": "userid_list 或者 dept_id_list 或者 to_all_user",
               "msg": {
                 "image": {
@@ -30,7 +45,6 @@ public interface DingMessageParam {
             """;
     String WORK_NOTICE_VOICE_PARAM = """
             {
-              "pushSubject": "workNotice",
               "userIdType": "userid_list 或者 dept_id_list 或者 to_all_user",
               "msg": {
                 "voice": {
@@ -42,7 +56,6 @@ public interface DingMessageParam {
             """;
     String WORK_NOTICE_FILE_PARAM = """
             {
-              "pushSubject": "workNotice",
               "userIdType": "userid_list 或者 dept_id_list 或者 to_all_user",
               "msg": {
                 "file": {
@@ -53,7 +66,6 @@ public interface DingMessageParam {
             """;
     String WORK_NOTICE_LINK_PARAM = """
             {
-              "pushSubject": "workNotice",
               "userIdType": "userid_list 或者 dept_id_list 或者 to_all_user",
               "msg": {
                 "link": {
@@ -67,7 +79,6 @@ public interface DingMessageParam {
             """;
     String WORK_NOTICE_OA_PARAM = """
             {
-              "pushSubject": "workNotice",
               "userIdType": "userid_list 或者 dept_id_list 或者 to_all_user",
               "msg": {
                 "oa": {
@@ -119,7 +130,6 @@ public interface DingMessageParam {
             """;
     String WORK_NOTICE_MARKDOWN_PARAM = """
             {
-              "pushSubject": "workNotice",
               "userIdType": "userid_list 或者 dept_id_list 或者 to_all_user",
               "msg": {
                 "markdown": {
@@ -131,7 +141,6 @@ public interface DingMessageParam {
             """;
     String WORK_NOTICE_CARD_PARAM = """
             {
-              "pushSubject": "workNotice",
               "userIdType": "userid_list 或者 dept_id_list 或者 to_all_user",
               "msg": {
                 "action_card": {
@@ -146,7 +155,6 @@ public interface DingMessageParam {
     // 机器人消息
     String ROBOT_TEXT_PARAM = """
             {
-              "pushSubject": "robot",
               "userIdType": "userIds 或者 openConversationId",
               "msgParam": {
                 "content": "xxxx"
@@ -155,7 +163,6 @@ public interface DingMessageParam {
             """;
     String ROBOT_MARKDOWN_PARAM = """
             {
-              "pushSubject": "robot",
               "userIdType": "userIds 或者 openConversationId",
               "msgParam": {
                 "title": "xxxx",
@@ -165,7 +172,6 @@ public interface DingMessageParam {
             """;
     String ROBOT_IMAGE_MSG_PARAM = """
             {
-              "pushSubject": "robot",
               "userIdType": "userIds 或者 openConversationId",
               "msgParam": {
                 "photoURL": "xxxx"
@@ -174,7 +180,6 @@ public interface DingMessageParam {
             """;
     String ROBOT_LINK_PARAM = """
             {
-              "pushSubject": "robot",
               "userIdType": "userIds 或者 openConversationId",
               "msgParam": {
                 "text": "消息内容测试",
@@ -186,7 +191,6 @@ public interface DingMessageParam {
             """;
     String ROBOT_ACTION_CARD_PARAM = """
             {
-              "pushSubject": "robot",
               "userIdType": "userIds 或者 openConversationId",
               "msgParam": {
                 "title": "测试标题",
@@ -198,7 +202,6 @@ public interface DingMessageParam {
             """;
     String ROBOT_ACTION_CARD_2_PARAM = """
             {
-              "pushSubject": "robot",
               "userIdType": "userIds 或者 openConversationId",
               "msgParam": {
                 "title": "消息标题测试",
@@ -212,7 +215,6 @@ public interface DingMessageParam {
             """;
     String ROBOT_ACTION_CARD_3_PARAM = """
             {
-              "pushSubject": "robot",
               "userIdType": "userIds 或者 openConversationId",
               "msgParam": {
                 "title": "消息标题测试",
@@ -228,7 +230,6 @@ public interface DingMessageParam {
             """;
     String ROBOT_ACTION_CARD_4_PARAM = """
             {
-              "pushSubject": "robot",
               "userIdType": "userIds 或者 openConversationId",
               "msgParam": {
                 "title":"消息标题测试",
@@ -246,7 +247,6 @@ public interface DingMessageParam {
             """;
     String ROBOT_ACTION_CARD_5_PARAM = """
             {
-              "pushSubject": "robot",
               "userIdType": "userIds 或者 openConversationId",
               "msgParam": {
                 "title":"消息标题测试",
@@ -266,7 +266,6 @@ public interface DingMessageParam {
             """;
     String ROBOT_ACTION_CARD_6_PARAM = """
             {
-              "pushSubject": "robot",
               "userIdType": "userIds 或者 openConversationId",
               "msgParam": {
                 "title": "xxxx",
@@ -280,7 +279,6 @@ public interface DingMessageParam {
             """;
     String ROBOT_AUDIO_PARAM = """
             {
-              "pushSubject": "robot",
               "userIdType": "userIds 或者 openConversationId",
               "msgParam": {
                 "mediaId": "@IR_P********nFkfhsisbf4A",
@@ -290,7 +288,6 @@ public interface DingMessageParam {
             """;
     String ROBOT_FILE_PARAM = """
             {
-              "pushSubject": "robot",
               "userIdType": "userIds 或者 openConversationId",
               "msgParam": {
                 "mediaId":"@lAz*********shRs5m2pRL",
@@ -301,7 +298,6 @@ public interface DingMessageParam {
             """;
     String ROBOT_VIDEO_PARAM = """
             {
-              "pushSubject": "robot",
               "userIdType": "userIds 或者 openConversationId",
               "msgParam": {
                 "duration":"999",

@@ -15,19 +15,19 @@ const Login: React.FC = () => {
   const forgotOk = () => {
     setShowForgot(false);
     setActiveKey('login');
-  }
+  };
 
   return (
-    <div className={styles.login}>
-      <div className={`${styles.loginCard} ${showForgot ? styles.forgot : ''}`}>
+    <div className={styles['login']}>
+      <div className={`${styles['loginCard']} ${showForgot ? styles['forgot'] : ''}`}>
         {!showForgot ? (
           <>
             <header>
-              <div className={styles.headerLogo}>
-                <img className={styles.logo} src="../../../logo.png" alt="Logo" />
+              <div className={styles['headerLogo']}>
+                <img className={styles['logo']} src="../../../logo.png" alt="Logo" />
                 <span>Deliver</span>
               </div>
-              <div className={styles.headerDesc}>开源的企业消息推送平台</div>
+              <div className={styles['headerDesc']}>开源的企业消息推送平台</div>
             </header>
             <section>
               <Tabs
@@ -47,7 +47,7 @@ const Login: React.FC = () => {
                   }
                 ]}
               />
-              <div className={styles.loginAuto}>
+              <div className={styles['loginAuto']}>
                 <Checkbox checked={autoLogin} onChange={(e) => setAutoLogin(e.target.checked)}>
                   自动登录
                 </Checkbox>
@@ -58,11 +58,15 @@ const Login: React.FC = () => {
             </section>
           </>
         ) : (
-          <div className={styles.forgot}>
-            <Button type="text" className={styles.forgotBack} onClick={() => setShowForgot(false)}>
+          <div className={styles['forgot']}>
+            <Button
+              type="text"
+              className={styles['forgotBack']}
+              onClick={() => setShowForgot(false)}
+            >
               <LeftOutlined /> <span>返回</span>
             </Button>
-            <h1 className={styles.forgotTitle}>重置密码</h1>
+            <h1 className={styles['forgotTitle']}>重置密码</h1>
             <ForgotForm onOk={forgotOk} />
           </div>
         )}
