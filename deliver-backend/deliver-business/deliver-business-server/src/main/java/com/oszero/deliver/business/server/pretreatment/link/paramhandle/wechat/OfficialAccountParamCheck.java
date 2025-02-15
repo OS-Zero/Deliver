@@ -18,55 +18,43 @@
 package com.oszero.deliver.business.server.pretreatment.link.paramhandle.wechat;
 
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.business.common.enums.MessageTypeEnum;
 import com.oszero.deliver.business.common.enums.PushSubjectEnum;
-import com.oszero.deliver.business.common.util.AppConfigUtils;
 import com.oszero.deliver.business.server.exception.MessageException;
 import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.business.server.pretreatment.common.LinkContext;
 import com.oszero.deliver.business.server.pretreatment.common.MessageLink;
 import com.oszero.deliver.platformclient.common.ClientConstant;
-import com.oszero.deliver.platformclient.model.app.WeChatApp;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author oszero
  * @version 1.0.0
  */
 @Service
-@RequiredArgsConstructor
-public class WeChatParamSetting implements MessageLink<SendTaskDto> {
+public class OfficialAccountParamCheck implements MessageLink<SendTaskDto> {
 
-    private final AppConfigUtils appConfigUtils;
+    private static final Set<String> OFFICIAL_ACCOUNT_USER_ID_TYPE_SET = new HashSet<>(List.of(
+            ClientConstant.OFFICIAL_ACCOUNT_USER_ID
+    ));
 
     @Override
     public void process(LinkContext<SendTaskDto> context) {
         SendTaskDto sendTaskDto = context.getProcessModel();
-        String appConfig = appConfigUtils.decryptAppConfig(sendTaskDto.getAppConfig());
-        WeChatApp weChatApp = JSONUtil.toBean(appConfig, WeChatApp.class);
         String messageType = sendTaskDto.getMessageType();
         MessageTypeEnum messageTypeEnum = MessageTypeEnum.getInstanceByCode(messageType);
         if (Objects.isNull(messageTypeEnum)) {
             throw new MessageException("消息类型非法");
         }
         Map<String, Object> messageParam = sendTaskDto.getMessageParam();
+        String userIdType = messageParam.get(ClientConstant.USER_ID_TYPE).toString();
         String pushSubject = messageTypeEnum.getPushSubject();
-        String wechatUserIdType = messageParam.get(ClientConstant.USER_ID_TYPE).toString();
-        List<String> users = sendTaskDto.getUsers();
-        if (StrUtil.equals(pushSubject, PushSubjectEnum.WECHAT_APP.getCode())) {
-            messageParam.put(ClientConstant.WECHAT_AGENT_ID, weChatApp.getAgentid());
-            messageParam.put(wechatUserIdType, String.join(ClientConstant.WECHAT_SPILT, users));
-        } else if (StrUtil.equals(pushSubject, PushSubjectEnum.WECHAT_APP_TO_GROUP.getCode())) {
-            messageParam.put(wechatUserIdType, users.get(0));
-        } else if (StrUtil.equals(pushSubject, PushSubjectEnum.WECHAT_SCHOOL.getCode())) {
-            messageParam.put(wechatUserIdType, users);
+        if (StrUtil.equals(pushSubject, PushSubjectEnum.OFFICIAL_ACCOUNT_TEMPLATE.getCode())) {
+            if (!OFFICIAL_ACCOUNT_USER_ID_TYPE_SET.contains(userIdType)) {
+                throw new MessageException("用户ID类型非法，必须为touser");
+            }
         }
-        messageParam.put(ClientConstant.WECHAT_MSG_TYPE, messageTypeEnum.getMsgType());
     }
 }

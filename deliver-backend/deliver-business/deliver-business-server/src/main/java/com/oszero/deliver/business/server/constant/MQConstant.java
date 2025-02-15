@@ -37,6 +37,7 @@ public interface MQConstant {
     String MAIL_TOPIC = "topic_msg_mail";
     String SMS_TOPIC = "topic_msg_sms";
     String WECHAT_TOPIC = "topic_msg_wechat";
+    String OFFICIAL_ACCOUNT_TOPIC = "topic_msg_official_account";
 
     String CALL_CONSUMER_GROUP = "consumer_group_msg_call";
     String DING_CONSUMER_GROUP = "consumer_group_msg_ding";
@@ -44,6 +45,7 @@ public interface MQConstant {
     String MAIL_CONSUMER_GROUP = "consumer_group_msg_mail";
     String SMS_CONSUMER_GROUP = "consumer_group_msg_sms";
     String WECHAT_CONSUMER_GROUP = "consumer_group_msg_wechat";
+    String OFFICIAL_ACCOUNT_CONSUMER_GROUP = "consumer_group_msg_officialAccount";
 
     /********** RabbitMQ **********/
     String DELIVER_EXCHANGE = "deliver_exchange";
@@ -54,6 +56,7 @@ public interface MQConstant {
     String MAIL_QUEUE = "queue_msg_mail";
     String SMS_QUEUE = "queue_msg_sms";
     String WECHAT_QUEUE = "queue_msg_wechat";
+    String OFFICIAL_ACCOUNT_QUEUE = "queue_msg_officialAccount";
 
     String CALL_KEY_NAME = "key_msg_call";
     String DING_KEY_NAME = "key_msg_ding";
@@ -61,6 +64,7 @@ public interface MQConstant {
     String MAIL_KEY_NAME = "key_msg_mail";
     String SMS_KEY_NAME = "key_msg_sms";
     String WECHAT_KEY_NAME = "key_msg_wechat";
+    String OFFICIAL_ACCOUNT_KEY_NAME = "key_msg_officialAccount";
 
     /********** Redis Stream **********/
     String CALL_STREAM = "call_stream";
@@ -69,6 +73,7 @@ public interface MQConstant {
     String DING_STREAM = "ding_stream";
     String WECHAT_STREAM = "wechat_stream";
     String FEI_SHU_STREAM = "feiShu_stream";
+    String OFFICIAL_ACCOUNT_STREAM = "officialAccount_stream";
 
     String CALL_STREAM_CONSUMER_GROUP = "stream_consumer_group_msg_call";
     String SMS_STREAM_CONSUMER_GROUP = "stream_consumer_group_msg_sms";
@@ -94,4 +99,5 @@ public interface MQConstant {
     String DING_DISRUPTOR = "ding_disruptor";
     String WECHAT_DISRUPTOR = "wechat_disruptor";
     String FEI_SHU_DISRUPTOR = "feiShu_disruptor";
+    String OFFICIAL_ACCOUNT_DISRUPTOR = "officialAccount_disruptor";
 }

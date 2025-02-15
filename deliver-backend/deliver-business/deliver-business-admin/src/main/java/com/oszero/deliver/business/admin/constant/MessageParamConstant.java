@@ -118,6 +118,8 @@ public class MessageParamConstant {
         MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.FEI_SHU_MEDIA), FeiShuMessageParam.MEDIA_PARAM);
         MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.FEI_SHU_FILE), FeiShuMessageParam.FILE_PARAM);
         MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.FEI_SHU_STICKER), FeiShuMessageParam.STICKER_PARAM);
+        /*********** 微信公众号消息参数 **********/
+        MESSAGE_PARAM_MAP.put(getKeyByCode(MessageTypeEnum.OFFICIAL_ACCOUNT_TEMPLATE), WechatMessageParam.OFFICIAL_ACCOUNT_TEMPLATE_PARAM);
     }
 
     private static String getKeyByCode(MessageTypeEnum messageTypeEnum) {

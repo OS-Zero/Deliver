@@ -29,6 +29,7 @@ public interface ClientConstant {
     /********** 渠道通用相关常量 **********/
     String SPILT = ",";
     String USER_ID_TYPE = "userIdType";
+    String TEMPLATE_ID = "templateId";
     /********** 电话相关常量 **********/
     /********** 短信相关常量 **********/
     /********** 邮件相关常量 **********/
@@ -70,4 +71,6 @@ public interface ClientConstant {
     String FEI_SHU_USER_IDS = "user_ids";
     String FEI_SHU_DEPT_IDS = "department_ids";
     String FEI_SHU_MSG_TYPE = "msg_type";
+    /********** 微信公众号相关常量 **********/
+    String OFFICIAL_ACCOUNT_USER_ID = "touser";
 }

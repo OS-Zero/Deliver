@@ -613,4 +613,26 @@ public interface WechatMessageParam {
               }
             }
             """;
+    String OFFICIAL_ACCOUNT_TEMPLATE_PARAM = """
+            {
+                "userIdType": "touser",
+                "template_id":"template_id",
+                "url":"https://oszero.cn/",
+                "topcolor":"#FF0000",
+                "data":{
+                    "first": {
+                        "value":"OSzero开源社区",
+                        "color":"#173177"
+                    },
+                    "keyword1":{
+                        "value":"这是一个微信公众号模板消息",
+                        "color":"#173177"
+                    },
+                    "remark":{
+                        "value":"更多详情信息请点击查看",
+                        "color":"#173177"
+                    }
+                }
+            }
+            """;
 }

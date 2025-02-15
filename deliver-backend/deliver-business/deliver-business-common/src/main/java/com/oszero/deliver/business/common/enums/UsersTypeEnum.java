@@ -36,7 +36,10 @@ public enum UsersTypeEnum {
     EMAIL(newIndex(), "邮箱"),
     DING_USER_ID(newIndex(), "钉钉用户ID"),
     WECHAT_USER_ID(newIndex(), "企业微信用户ID"),
-    FEI_SHU_USER_ID(newIndex(), "飞书用户ID");
+    FEI_SHU_USER_ID(newIndex(), "飞书用户ID"),
+    OFFICIAL_ACCOUNT_USER_ID(newIndex(), "微信公众号ID")
+    ;
+
 
     private static int index = 0;
 
@@ -48,7 +51,7 @@ public enum UsersTypeEnum {
     private final String name;
 
     public static final int MIN_INDEX = CommonConstant.MIN_INDEX;
-    public static final int MAX_INDEX = 5;
+    public static final int MAX_INDEX = 6;
 
     public static UsersTypeEnum getInstanceByCode(Integer code) {
         for (UsersTypeEnum typeEnum : values()) {

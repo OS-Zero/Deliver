@@ -89,4 +89,12 @@ public interface AppConfigConstant {
             }
             """;
 
+    /**********微信公众号配置**********/
+    String OFFICIAL_ACCOUNT_CONFIG = """
+            {
+              "appid": "",
+              "secret": ""
+            }
+            """;
+
 }
