@@ -69,7 +69,8 @@ defineExpose({
 					</a-form-item>
 				</template>
 				<template v-else-if="field.type === 'jsonEditor'">
-					<JsonEditor v-model="formSchema[field.fieldName].value" v-bind="formSchema[field.fieldName].editorConfig">
+					<JsonEditor style="height: 400px;" v-model="formSchema[field.fieldName].value"
+						v-bind="formSchema[field.fieldName].editorConfig">
 					</JsonEditor>
 				</template>
 				<template v-else-if="field.type === 'datePicker'">
@@ -94,7 +95,7 @@ defineExpose({
 					<div class="verify">
 						<a-input v-model:value.trim="formSchema[field.fieldName].value" v-bind="field.inputConfig" />
 						<a-button class="verify_btn" :disabled="state.loading || field.buttonConfig?.disabled"
-							@click="handleVarify(field.buttonConfig?.onClick)">
+							@click="handleVarify(field.buttonConfig?.onClick as Function)">
 							{{ state.verifyContent }}
 						</a-button>
 					</div>

@@ -76,7 +76,11 @@ const ForgotForm: React.FC<{ onOk: () => void }> = ({ onOk }) => {
       <Form.Item name="userEmail" rules={[emailValidationRule]} validateTrigger={['onChange']}>
         <Input value={forgotData.userEmail} placeholder="请输入邮箱" />
       </Form.Item>
-      <Form.Item name="userPassword" rules={[passwordValidationRule]} validateTrigger={['onChange']}>
+      <Form.Item
+        name="userPassword"
+        rules={[passwordValidationRule]}
+        validateTrigger={['onChange']}
+      >
         <Input.Password maxLength={16} value={forgotData.userPassword} placeholder="请输入密码" />
       </Form.Item>
       <Form.Item
@@ -91,11 +95,11 @@ const ForgotForm: React.FC<{ onOk: () => void }> = ({ onOk }) => {
         rules={[verificationCodeValidationRule]}
         validateTrigger={['onChange']}
       >
-        <div className={styles.verify}>
+        <div className={styles['verify']}>
           <Input maxLength={6} value={forgotData.verificationCode} placeholder="请输入6位验证码" />
           <Tooltip title={verifyDisabled ? handleBtnTips() : ''}>
             <Button
-              className={styles.verifyBtn}
+              className={styles['verifyBtn']}
               disabled={verifyDisabled}
               onClick={() => handleVerify()}
             >
@@ -105,7 +109,7 @@ const ForgotForm: React.FC<{ onOk: () => void }> = ({ onOk }) => {
         </div>
       </Form.Item>
       <Form.Item>
-        <Button className={styles.submitBtn} type="primary" onClick={handleForgot}>
+        <Button className={styles['submitBtn']} type="primary" onClick={handleForgot}>
           确认
         </Button>
       </Form.Item>

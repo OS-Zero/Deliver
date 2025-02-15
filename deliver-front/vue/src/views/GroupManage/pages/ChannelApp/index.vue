@@ -28,7 +28,6 @@ const handleSearch = async () => {
 	} catch (error) {
 		loading.value = false
 	}
-
 }
 const debounceSearch = debounce(handleSearch, 200)
 const { pagination, resetPagination } = usePagination(handleSearch)

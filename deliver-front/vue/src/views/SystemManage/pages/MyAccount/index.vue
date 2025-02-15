@@ -79,21 +79,24 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-	<a-card title="基础信息">
-		<div class="card_content">
-			<p>用户邮箱:&nbsp;&nbsp;&nbsp; {{ userInfo.userEmail }}</p>
-			<p>用户姓名:&nbsp;&nbsp;&nbsp; {{ userInfo.userRealName }}</p>
-			<p>用户类型: &nbsp;&nbsp;&nbsp;{{ userInfo.userRole }}</p>
-			<a-button @click="showDrawer">修改密码</a-button>
-		</div>
-		<a-drawer title="修改密码" :open="open" placement="right" @close="onClose">
-			<Form ref="formRef" :form-schema="editorForm"></Form>
-			<template #extra>
-				<a-button style="margin-right: 8px" @click="onClose">取消</a-button>
-				<a-button type="primary" @click="onSubmit">确认</a-button>
-			</template>
-		</a-drawer>
-	</a-card>
+	<div>
+		<a-card title="基础信息">
+			<div class="card_content">
+				<p>用户邮箱:&nbsp;&nbsp;&nbsp; {{ userInfo.userEmail }}</p>
+				<p>用户姓名:&nbsp;&nbsp;&nbsp; {{ userInfo.userRealName }}</p>
+				<p>用户类型: &nbsp;&nbsp;&nbsp;{{ userInfo.userRole }}</p>
+				<a-button @click="showDrawer">修改密码</a-button>
+			</div>
+			<a-drawer title="修改密码" :open="open" placement="right" @close="onClose">
+				<Form ref="formRef" :form-schema="editorForm"></Form>
+				<template #extra>
+					<a-button style="margin-right: 8px" @click="onClose">取消</a-button>
+					<a-button type="primary" @click="onSubmit">确认</a-button>
+				</template>
+			</a-drawer>
+		</a-card>
+	</div>
+
 </template>
 
 <style lang="scss" scoped>

@@ -18,7 +18,7 @@ const useTemplateData = () => {
   };
 
   /**
-   * 新增模版
+   * 新增
    * @param data
    */
   const savePlatform = async (params: PlatformFileUploadParams) => {
