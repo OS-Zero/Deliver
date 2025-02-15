@@ -134,8 +134,8 @@ const Header: React.FC = () => {
               <div style={{ marginLeft: '60px' }}>
                 <p>产品：Deliver 企业消息推送平台</p>
                 <p>版本：v1.0.0</p>
-                <a target="_blank" href="https://os-zero.gitee.io/deliver-website" rel="noreferrer">
-                  https://os-zero.gitee.io/deliver-website
+                <a target="_blank" href="https://oszero.cn" rel="noreferrer">
+                  https://oszero.cn
                 </a>
               </div>
             </div>
@@ -146,7 +146,7 @@ const Header: React.FC = () => {
             </a>
           </Tooltip>
           <Tooltip title="疑问">
-            <a target="_blank" rel="noreferrer" href="https://os-zero.gitee.io/deliver-website">
+            <a target="_blank" rel="noreferrer" href="https://oszero.cn">
               <QuestionCircleOutlined />
             </a>
           </Tooltip>
