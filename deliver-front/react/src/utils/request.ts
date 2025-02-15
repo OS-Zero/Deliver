@@ -64,7 +64,11 @@ service.interceptors.response.use(
     return Promise.reject('服务端错误');
   },
   (err) => {
-    message.error(err);
+    if (err.response.status === 401) {
+      localStorage.clear()
+      window.location.href = '/login';
+    }
+    message.error("服务端错误");
     return Promise.reject(err);
   }
 );
