@@ -86,7 +86,7 @@ const GroupManage: React.FC = () => {
   // 渲染分组卡片
   const renderGroupCards = (groupList: GroupCard[]) => (
     <>
-      {groupList.map((item) => (
+      {(groupList || []).map((item) => (
         <Card
           key={item.groupId}
           data={item}
@@ -122,7 +122,7 @@ const GroupManage: React.FC = () => {
       <div className={styles['card-top']}>
         <h3>置顶分组</h3>
         <div className={styles['top-cards']}>
-          {!groupList.topUpGroupList.length && (
+          {!(groupList.topUpGroupList || []).length && (
             <Card
               isEmpty
               isTop

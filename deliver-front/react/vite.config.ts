@@ -8,14 +8,6 @@ export default defineConfig({
   server: {
 	host: 'localhost',
 	port: 8080, // 端口
-	proxy: {
-		'/backend': {
-			// 请求接口中要替换的标识
-			target: 'http://localhost:9090', // 代理地址
-			changeOrigin: true, // 是否允许跨域
-			secure: false
-		}
-	}
   },
   resolve: {
 	alias: {

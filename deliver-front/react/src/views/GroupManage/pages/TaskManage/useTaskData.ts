@@ -29,14 +29,14 @@ const useTaskData = (props: { proTableRef: MutableRefObject<ActionType | undefin
   };
 
   /**
-   * 新增模版
+   * 新增
    * @param data
    */
   const saveTaskData = async (params: TaskForm) =>
     params.taskId ? await updateTask(params) : await saveTask(params);
 
   /**
-   * 更新模板状态
+   * 更新状态
    * @param data
    */
   const changeStatus = async (taskId: number, taskStatus: number) => {
