@@ -11,6 +11,9 @@ import 'highlight.js/styles/stackoverflow-light.css';
 import hljs from 'highlight.js/lib/core';
 import hljsVuePlugin from '@highlightjs/vue-plugin';
 import json from 'highlight.js/lib/languages/json';
+if (import.meta.env.MODE === 'test') {
+	import('./mock/index.ts');
+}
 hljs.registerLanguage('json', json);
 const pinia = createPinia();
 

@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { message } from 'ant-design-vue';
 const authorizationBlackList = ['/user/login', '/user/register', '/user/forgetPassword'];
+const api_rul = import.meta.env.VITE_APP_API_URL;
 const service = axios.create({
-	baseURL: '/backend',
+	baseURL: api_rul,
 	timeout: 20000,
 });
 
@@ -25,6 +26,9 @@ service.interceptors.response.use(
 		if (res.status === 200) {
 			const contentType = res.headers['content-type']; // 获取返回的 Content-Type
 			const _res = res.data;
+			if (import.meta.env.MODE === 'test') {
+				return _res.data;
+			}
 			if (contentType && contentType.includes('application/json')) {
 				// 如果是 JSON 响应，按照 code 进行处理
 				if (_res.code === 0) return _res.data;

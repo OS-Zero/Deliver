@@ -67,6 +67,7 @@ const forgotForm = reactive<Schema<RegisterForm>>({
 		},
 		rules: [getRequiredRule('请输入验证码'), ...getRangeRule(6, 6, '验证码长度为6位', 'change')],
 		buttonConfig: {
+			disabled: verificationBtnDisabled.value,
 			onClick: () => {
 				getVerificationCode({ userEmail: forgotForm.userEmail.value })
 			}
@@ -78,7 +79,6 @@ const forgotForm = reactive<Schema<RegisterForm>>({
 		buttonConfig: {
 			type: 'primary',
 			name: '确认',
-			style: { width: '100%' },
 			onClick: async () => {
 				await formRef.value?.validate()
 				await forgotPwd(omitProperty(getDataFromSchema(forgotForm), 'confirmPwd'))

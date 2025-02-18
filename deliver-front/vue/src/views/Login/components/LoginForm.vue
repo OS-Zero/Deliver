@@ -22,8 +22,10 @@ const validateEmail = () => {
 	}
 	return Promise.reject('邮箱格式错误')
 }
+const isTest = import.meta.env.MODE === 'test'
 const loginForm = reactive<Schema<LoginForm>>({
 	userEmail: {
+		value: isTest && 'oszero@qq.com',
 		type: 'input',
 		fieldName: 'userEmail',
 		inputConfig: {
@@ -32,6 +34,7 @@ const loginForm = reactive<Schema<LoginForm>>({
 		rules: [{ validator: validateEmail, trigger: 'change' }]
 	},
 	userPassword: {
+		value: isTest && 'oszero',
 		type: 'inputPassword',
 		fieldName: 'userPassword',
 		inputConfig: {
@@ -47,24 +50,43 @@ const loginForm = reactive<Schema<LoginForm>>({
 			type: 'primary',
 			name: '登录',
 			onClick: async () => {
-				await formRef.value.validate()
-				let res: any = await login(getDataFromSchema(loginForm))
-				localStorage.setItem('access_token', res)
-				message.success('登录成功')
-				res = await startup()
-				localStorage.setItem('startup', JSON.stringify(res))
-				res = await getCurrentLoginUserInfo()
-				localStorage.setItem('user_info', JSON.stringify(res))
-				router.push('/')
+				if (import.meta.env.MODE === 'test' && localStorage.getItem('qrcode') !== 'oszero666') {
+					open.value = true
+				} else {
+					await formRef.value.validate()
+					let res: any = await login(getDataFromSchema(loginForm))
+					localStorage.setItem('access_token', res)
+					message.success('登录成功')
+					res = await startup()
+					localStorage.setItem('startup', JSON.stringify(res))
+					res = await getCurrentLoginUserInfo()
+					localStorage.setItem('user_info', JSON.stringify(res))
+					router.push('/')
+				}
 			}
 		}
 	},
 })
-
+const open = ref(false)
+const code = ref('')
+const handleValidate = () => {
+	if (code.value === 'oszero666') {
+		localStorage.setItem('qrcode', 'oszero666')
+		open.value = false
+		if (typeof loginForm.$login.buttonConfig?.onClick === 'function') loginForm.$login.buttonConfig.onClick(new MouseEvent('click'))
+	} else {
+		message.error('验证码错误')
+	}
+}
 </script>
 
 <template>
 	<Form ref="formRef" :form-schema="loginForm"></Form>
+	<a-modal width="600px" class="modal" v-model:open="open" title="人机验证" centered @ok="handleValidate">
+		<p>扫描下方二维码，关注后回复：deliver，获取Deliver企业消息推送平台人机验证码</p>
+		<img style="width: 100%;margin: 12px 0;" src="../../../../public/qrcode.jpg" alt="" srcset="">
+		<a-input v-model:value="code" placeholder="请输入验证码" />
+	</a-modal>
 </template>
 
 <style lang="scss" scoped>

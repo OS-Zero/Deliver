@@ -1,7 +1,7 @@
 import { ButtonProps, InputProps, RadioGroupProps, SelectProps, TextAreaProps, UploadProps } from 'ant-design-vue';
 import { Rule } from 'ant-design-vue/es/form';
 interface ExtendButtonProps extends ButtonProps {
-	name: string;
+	name?: string;
 }
 type ItemType =
 	| 'none'
