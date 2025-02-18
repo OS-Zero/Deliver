@@ -29,14 +29,14 @@ const useTemplateData = (props: { proTableRef: MutableRefObject<ActionType | und
   };
 
   /**
-   * 新增模版
+   * 新增
    * @param data
    */
   const saveTemplate = async (params: MessageTemplate) =>
     params?.templateId ? await updateMessageTemplate(params) : await saveMessageTemplate(params);
 
   /**
-   * 更新模板状态
+   * 更新状态
    * @param data
    */
   const changeStatus = async (templateId: number, templateStatus: number) => {

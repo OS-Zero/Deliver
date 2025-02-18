@@ -28,14 +28,14 @@ const useChannelData = (props: { proTableRef: MutableRefObject<ActionType | unde
   };
 
   /**
-   * 新增模版
+   * 新增
    * @param data
    */
   const saveChannelData = async (params: ChannelApp) =>
     params?.appId ? await updateChannelApp(params) : await saveChannelApp(params);
 
   /**
-   * 更新模板状态
+   * 更新状态
    * @param data
    */
   const changeStatus = async (appId: number, appStatus: number) => {
