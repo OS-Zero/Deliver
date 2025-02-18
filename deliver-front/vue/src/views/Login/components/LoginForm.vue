@@ -25,7 +25,7 @@ const validateEmail = () => {
 const isTest = import.meta.env.MODE === 'test'
 const loginForm = reactive<Schema<LoginForm>>({
 	userEmail: {
-		value: isTest && 'oszero@qq.com',
+		value: isTest ? 'oszero@qq.com' : '',
 		type: 'input',
 		fieldName: 'userEmail',
 		inputConfig: {
@@ -34,7 +34,7 @@ const loginForm = reactive<Schema<LoginForm>>({
 		rules: [{ validator: validateEmail, trigger: 'change' }]
 	},
 	userPassword: {
-		value: isTest && 'oszero',
+		value: isTest ? 'oszero' : '',
 		type: 'inputPassword',
 		fieldName: 'userPassword',
 		inputConfig: {
