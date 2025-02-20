@@ -1,0 +1,19 @@
+version: '3'
+services:
+  backend:
+    build:
+      context: ..
+      dockerfile: deploy/dockerfile/combine.Dockerfile
+    ports:
+      - "9090:9090"
+    restart: always
+
+  frontend:
+    build:
+      context: ..
+      dockerfile: deploy/dockerfile/vue.Dockerfile
+    ports:
+      - "6060:6060"
+    restart: always
+    depends_on:
+      - backend
