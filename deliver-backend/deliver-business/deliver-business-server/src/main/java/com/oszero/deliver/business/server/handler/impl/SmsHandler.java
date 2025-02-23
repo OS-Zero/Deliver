@@ -58,7 +58,7 @@ public class SmsHandler extends BaseHandler {
             if (Objects.isNull(channelProviderTypeEnum)) {
                 throw new MessageException("没有指定的短信服务");
             }
-            SmsApp smsApp = getSmsApp(channelProviderTypeEnum.getName(), appConfig);
+            SmsApp smsApp = getSmsApp(channelProviderTypeEnum.getCode(), appConfig);
             SmsClient smsClient = smsFactory.getClient(channelProviderTypeEnum.getName());
             smsClient.sendSms(smsApp, sendTaskDto.getMessageParam(), sendTaskDto.getUsers());
         } catch (Exception e) {
