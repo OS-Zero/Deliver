@@ -59,7 +59,7 @@ public class CallHandler extends BaseHandler {
             if (Objects.isNull(channelProviderTypeEnum)) {
                 throw new MessageException("没有指定的电话服务");
             }
-            CallApp callApp = getCallApp(channelProviderTypeEnum.getName(), appConfig);
+            CallApp callApp = getCallApp(channelProviderTypeEnum.getCode(), appConfig);
             CallClient callClient = callFactory.getClient(channelProviderTypeEnum.getName());
             callClient.sendCall(callApp, messageParam, sendTaskDto.getUsers());
         } catch (Exception e) {

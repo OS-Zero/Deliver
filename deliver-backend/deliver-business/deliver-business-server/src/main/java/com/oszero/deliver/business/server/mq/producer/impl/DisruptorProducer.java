@@ -60,6 +60,9 @@ public class DisruptorProducer implements Producer {
     @Autowired
     @Qualifier(MQConstant.FEI_SHU_DISRUPTOR)
     private Disruptor<DisruptorBaseEvent.FeiShuEventDisruptor> feiShuEventDisruptor;
+    @Autowired
+    @Qualifier(MQConstant.OFFICIAL_ACCOUNT_DISRUPTOR)
+    private Disruptor<DisruptorBaseEvent.OfficialAccountEventDisruptor> officialAccountEventDisruptor;
 
     @PostConstruct
     public void initializer() {
@@ -79,6 +82,7 @@ public class DisruptorProducer implements Producer {
             case DING -> DisruptorUtils.publishEvent(sendTaskDto, dingEventDisruptor.getRingBuffer());
             case WECHAT -> DisruptorUtils.publishEvent(sendTaskDto, wechatEventDisruptor.getRingBuffer());
             case FEI_SHU -> DisruptorUtils.publishEvent(sendTaskDto, feiShuEventDisruptor.getRingBuffer());
+            case OFFICIAL_ACCOUNT -> DisruptorUtils.publishEvent(sendTaskDto, officialAccountEventDisruptor.getRingBuffer());
             default -> {
             }
         }

@@ -119,6 +119,12 @@ public class SystemParamServiceImpl implements SystemParamService {
                         .channelTypeName(ChannelTypeEnum.FEI_SHU.getName())
                         .build());
             }
+            case OFFICIAL_ACCOUNT_USER_ID -> {
+                return Collections.singletonList(GetChannelTypeResponseDto.builder()
+                        .channelType(Integer.valueOf(ChannelTypeEnum.OFFICIAL_ACCOUNT.getCode()))
+                        .channelTypeName(ChannelTypeEnum.OFFICIAL_ACCOUNT.getName())
+                        .build());
+            }
         }
         return List.of();
     }
@@ -208,6 +214,9 @@ public class SystemParamServiceImpl implements SystemParamService {
             }
             case FEI_SHU -> {
                 return AppConfigConstant.FEI_SHU_CONFIG;
+            }
+            case OFFICIAL_ACCOUNT -> {
+                return AppConfigConstant.OFFICIAL_ACCOUNT_CONFIG;
             }
         }
         return AppConfigConstant.NO_CONFIG;

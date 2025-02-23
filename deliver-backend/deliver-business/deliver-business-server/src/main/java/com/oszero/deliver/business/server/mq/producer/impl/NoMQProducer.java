@@ -72,6 +72,10 @@ public class NoMQProducer implements Producer {
                 FeiShuEventSpring feiShuEvent = new FeiShuEventSpring(this, sendTaskDto);
                 applicationEventUtils.publishCustomEvent(feiShuEvent);
             }
+            case OFFICIAL_ACCOUNT -> {
+                OfficialAccountEventSpring officialAccountEvent = new OfficialAccountEventSpring(this, sendTaskDto);
+                applicationEventUtils.publishCustomEvent(officialAccountEvent);
+            }
             default -> {
             }
         }

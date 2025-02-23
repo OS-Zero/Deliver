@@ -36,7 +36,8 @@ public enum ChannelTypeEnum {
     MAIL(newIndex(), "邮件"),
     DING(newIndex(), "钉钉"),
     WECHAT(newIndex(), "企业微信"),
-    FEI_SHU(newIndex(), "飞书");
+    FEI_SHU(newIndex(), "飞书"),
+    OFFICIAL_ACCOUNT(newIndex(), "微信公众号");
 
     private static int index = 0;
 
@@ -48,7 +49,7 @@ public enum ChannelTypeEnum {
     private final String name;
 
     public static final int MIN_INDEX = CommonConstant.MIN_INDEX;
-    public static final int MAX_INDEX = 6;
+    public static final int MAX_INDEX = 7;
 
     public static ChannelTypeEnum getInstanceByCode(Integer code) {
         for (ChannelTypeEnum typeEnum : values()) {

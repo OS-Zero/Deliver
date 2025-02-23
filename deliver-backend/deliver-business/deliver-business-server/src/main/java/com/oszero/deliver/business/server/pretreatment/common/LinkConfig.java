@@ -28,6 +28,8 @@ import com.oszero.deliver.business.server.pretreatment.link.paramhandle.feishu.F
 import com.oszero.deliver.business.server.pretreatment.link.paramhandle.feishu.FeiShuParamSetting;
 import com.oszero.deliver.business.server.pretreatment.link.paramhandle.mail.MailParamCheck;
 import com.oszero.deliver.business.server.pretreatment.link.paramhandle.sms.SmsParamCheck;
+import com.oszero.deliver.business.server.pretreatment.link.paramhandle.wechat.OfficialAccountParamCheck;
+import com.oszero.deliver.business.server.pretreatment.link.paramhandle.wechat.OfficialAccountParamSetting;
 import com.oszero.deliver.business.server.pretreatment.link.paramhandle.wechat.WeChatParamCheck;
 import com.oszero.deliver.business.server.pretreatment.link.paramhandle.wechat.WeChatParamSetting;
 import com.oszero.deliver.business.server.pretreatment.link.send.*;
@@ -63,6 +65,8 @@ public class LinkConfig {
     private final DingParamSetting dingParamSetting;
     private final WeChatParamSetting weChatParamSetting;
     private final FeiShuParamSetting feiShuParamSetting;
+    private final OfficialAccountParamCheck officialAccountParamCheck;
+    private final OfficialAccountParamSetting officialAccountParamSetting;
 
     /********** send 渠道发送 **********/
     private final CallSend callSend;
@@ -71,6 +75,7 @@ public class LinkConfig {
     private final WeChatSend weChatSend;
     private final DingSend dingSend;
     private final FeiShuSend feiShuSend;
+    private final OfficialAccountSend officialAccountSend;
 
     /**
      * @return 前置处理责任链处理器
@@ -165,5 +170,12 @@ public class LinkConfig {
                 feiShuParamCheck, feiShuParamSetting, feiShuSend
         ));
         map.put(PretreatmentCodeConstant.USERID_FEI_SHU, userId2FeiShuTemplate);
+
+        // 平台userId-微信公众号
+        LinkTemplate userId2OfficialAccountTemplate = new LinkTemplate();
+        userId2OfficialAccountTemplate.setProcessList(Arrays.asList(
+                officialAccountParamCheck, officialAccountParamSetting, officialAccountSend
+        ));
+        map.put(PretreatmentCodeConstant.USERID_OFFICIAL_ACCOUNT, userId2OfficialAccountTemplate);
     }
 }

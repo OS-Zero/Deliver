@@ -15,26 +15,22 @@
  * limitations under the License.
  */
 
-package com.oszero.deliver.business.server.model.event.disruptor;
+package com.oszero.deliver.platformclient.model.app;
 
-import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
+ * 企业微信 APP 配置
+ *
  * @author oszero
  * @version 1.0.0
  */
-@Getter
-@Setter
-public abstract class DisruptorBaseEvent {
-    private SendTaskDto sendTaskDto;
-
-    public static class CallEventDisruptor extends DisruptorBaseEvent {}
-    public static class SmsEventDisruptor extends DisruptorBaseEvent {}
-    public static class MailEventDisruptor extends DisruptorBaseEvent {}
-    public static class DingEventDisruptor extends DisruptorBaseEvent {}
-    public static class WeChatEventDisruptor extends DisruptorBaseEvent {}
-    public static class FeiShuEventDisruptor extends DisruptorBaseEvent {}
-    public static class OfficialAccountEventDisruptor extends DisruptorBaseEvent {}
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+public class OfficialAccountApp extends AppConfig {
+    private String appid;
+    private String secret;
 }

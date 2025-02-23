@@ -41,6 +41,7 @@ public class PretreatmentCodeConstant {
     public static final String USERID_DING = getPretreatmentCode(UsersTypeEnum.DING_USER_ID, ChannelTypeEnum.DING);
     public static final String USERID_WECHAT = getPretreatmentCode(UsersTypeEnum.WECHAT_USER_ID, ChannelTypeEnum.WECHAT);
     public static final String USERID_FEI_SHU = getPretreatmentCode(UsersTypeEnum.FEI_SHU_USER_ID, ChannelTypeEnum.FEI_SHU);
+    public static final String USERID_OFFICIAL_ACCOUNT = getPretreatmentCode(UsersTypeEnum.OFFICIAL_ACCOUNT_USER_ID, ChannelTypeEnum.OFFICIAL_ACCOUNT);
 
     private static String getPretreatmentCode(UsersTypeEnum usersTypeEnum, ChannelTypeEnum channelTypeEnum) {
         return usersTypeEnum.getCode() + CommonConstant.CODE_SEPARATE + channelTypeEnum.getCode();

@@ -15,26 +15,32 @@
  * limitations under the License.
  */
 
-package com.oszero.deliver.business.server.model.event.disruptor;
+package com.oszero.deliver.business.server.pretreatment.link.send;
 
 import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
-import lombok.Getter;
-import lombok.Setter;
+import com.oszero.deliver.business.server.mq.producer.Producer;
+import com.oszero.deliver.business.server.pretreatment.common.LinkContext;
+import com.oszero.deliver.business.server.pretreatment.common.MessageLink;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 /**
  * @author oszero
  * @version 1.0.0
  */
-@Getter
-@Setter
-public abstract class DisruptorBaseEvent {
-    private SendTaskDto sendTaskDto;
+@Service
+@RequiredArgsConstructor
+public class OfficialAccountSend extends CommonSend implements MessageLink<SendTaskDto> {
 
-    public static class CallEventDisruptor extends DisruptorBaseEvent {}
-    public static class SmsEventDisruptor extends DisruptorBaseEvent {}
-    public static class MailEventDisruptor extends DisruptorBaseEvent {}
-    public static class DingEventDisruptor extends DisruptorBaseEvent {}
-    public static class WeChatEventDisruptor extends DisruptorBaseEvent {}
-    public static class FeiShuEventDisruptor extends DisruptorBaseEvent {}
-    public static class OfficialAccountEventDisruptor extends DisruptorBaseEvent {}
+    private final Producer producer;
+
+    @Override
+    public void process(LinkContext<SendTaskDto> context) {
+        sendToMq(context.getProcessModel());
+    }
+
+    @Override
+    void send(SendTaskDto sendTaskDto) {
+        producer.sendMessage(sendTaskDto);
+    }
 }

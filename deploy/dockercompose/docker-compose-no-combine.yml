@@ -1,0 +1,29 @@
+version: '3'
+services:
+  admin:
+    build:
+      context: ..
+      dockerfile: deploy/dockerfile/admin.Dockerfile
+    ports:
+      - "7070:7070"
+    restart: always
+    depends_on:
+      - server
+
+  server:
+    build:
+      context: ..
+      dockerfile: deploy/dockerfile/server.Dockerfile
+    ports:
+      - "8080:8080"
+    restart: always
+
+  frontend:
+    build:
+      context: ..
+      dockerfile: deploy/dockerfile/vue.Dockerfile
+    ports:
+      - "6060:6060"
+    restart: always
+    depends_on:
+      - admin

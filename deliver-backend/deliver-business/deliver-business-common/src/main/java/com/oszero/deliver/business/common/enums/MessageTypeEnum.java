@@ -117,7 +117,10 @@ public enum MessageTypeEnum {
     FEI_SHU_AUDIO(getMessageTypeEnumCode(ChannelTypeEnum.FEI_SHU, ChannelProviderTypeEnum.DEFAULT, newIndex()), "audio", "飞书-语音audio消息", ChannelTypeEnum.FEI_SHU.getCode(), ChannelProviderTypeEnum.DEFAULT.getCode(), PushSubjectEnum.FEI_SHU.getCode()),
     FEI_SHU_MEDIA(getMessageTypeEnumCode(ChannelTypeEnum.FEI_SHU, ChannelProviderTypeEnum.DEFAULT, newIndex()), "media", "飞书-视频media消息", ChannelTypeEnum.FEI_SHU.getCode(), ChannelProviderTypeEnum.DEFAULT.getCode(), PushSubjectEnum.FEI_SHU.getCode()),
     FEI_SHU_FILE(getMessageTypeEnumCode(ChannelTypeEnum.FEI_SHU, ChannelProviderTypeEnum.DEFAULT, newIndex()), "file", "飞书-文件file消息", ChannelTypeEnum.FEI_SHU.getCode(), ChannelProviderTypeEnum.DEFAULT.getCode(), PushSubjectEnum.FEI_SHU.getCode()),
-    FEI_SHU_STICKER(getMessageTypeEnumCode(ChannelTypeEnum.FEI_SHU, ChannelProviderTypeEnum.DEFAULT, newIndex()), "sticker", "飞书-表情包sticker消息", ChannelTypeEnum.FEI_SHU.getCode(), ChannelProviderTypeEnum.DEFAULT.getCode(), PushSubjectEnum.FEI_SHU.getCode());
+    FEI_SHU_STICKER(getMessageTypeEnumCode(ChannelTypeEnum.FEI_SHU, ChannelProviderTypeEnum.DEFAULT, newIndex()), "sticker", "飞书-表情包sticker消息", ChannelTypeEnum.FEI_SHU.getCode(), ChannelProviderTypeEnum.DEFAULT.getCode(), PushSubjectEnum.FEI_SHU.getCode()),
+    /******************** 微信公众号消息 ********************/
+    OFFICIAL_ACCOUNT_TEMPLATE(getMessageTypeEnumCode(ChannelTypeEnum.OFFICIAL_ACCOUNT, ChannelProviderTypeEnum.DEFAULT, newIndex()), "template", "微信公众号-模板消息", ChannelTypeEnum.OFFICIAL_ACCOUNT.getCode(), ChannelProviderTypeEnum.DEFAULT.getCode(), PushSubjectEnum.OFFICIAL_ACCOUNT_TEMPLATE.getCode())
+    ;
 
     private static int index = 0;
 

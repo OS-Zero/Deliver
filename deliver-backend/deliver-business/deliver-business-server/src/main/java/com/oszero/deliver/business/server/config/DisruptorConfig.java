@@ -45,9 +45,10 @@ public class DisruptorConfig {
     private final DingHandler dingHandler;
     private final WeChatHandler weChatHandler;
     private final FeiShuHandler feiShuHandler;
+    private final OfficialAccountHandler officialAccountHandler;
 
     @Bean(MQConstant.CALL_DISRUPTOR)
-    public Disruptor<DisruptorBaseEvent.CallEventDisruptor> callEventDisruptorDisruptor() {
+    public Disruptor<DisruptorBaseEvent.CallEventDisruptor> callEventDisruptor() {
         EventFactory<DisruptorBaseEvent.CallEventDisruptor> eventFactory = DisruptorBaseEvent.CallEventDisruptor::new;
         int bufferSize = MQConstant.DISRUPTOR_BUFFER_SIZE;
         ThreadFactory threadFactory = r -> new Thread(r, MQConstant.DISRUPTOR_THREAD_NAME);
@@ -58,7 +59,7 @@ public class DisruptorConfig {
     }
 
     @Bean(MQConstant.SMS_DISRUPTOR)
-    public Disruptor<DisruptorBaseEvent.SmsEventDisruptor> smsEventDisruptorDisruptor() {
+    public Disruptor<DisruptorBaseEvent.SmsEventDisruptor> smsEventDisruptor() {
         EventFactory<DisruptorBaseEvent.SmsEventDisruptor> eventFactory = DisruptorBaseEvent.SmsEventDisruptor::new;
         int bufferSize = MQConstant.DISRUPTOR_BUFFER_SIZE;
         ThreadFactory threadFactory = r -> new Thread(r, MQConstant.DISRUPTOR_THREAD_NAME);
@@ -69,7 +70,7 @@ public class DisruptorConfig {
     }
 
     @Bean(MQConstant.MAIL_DISRUPTOR)
-    public Disruptor<DisruptorBaseEvent.MailEventDisruptor> mailEventDisruptorDisruptor() {
+    public Disruptor<DisruptorBaseEvent.MailEventDisruptor> mailEventDisruptor() {
         EventFactory<DisruptorBaseEvent.MailEventDisruptor> eventFactory = DisruptorBaseEvent.MailEventDisruptor::new;
         int bufferSize = MQConstant.DISRUPTOR_BUFFER_SIZE;
         ThreadFactory threadFactory = r -> new Thread(r, MQConstant.DISRUPTOR_THREAD_NAME);
@@ -80,7 +81,7 @@ public class DisruptorConfig {
     }
 
     @Bean(MQConstant.DING_DISRUPTOR)
-    public Disruptor<DisruptorBaseEvent.DingEventDisruptor> dingEventDisruptorDisruptor() {
+    public Disruptor<DisruptorBaseEvent.DingEventDisruptor> dingEventDisruptor() {
         EventFactory<DisruptorBaseEvent.DingEventDisruptor> eventFactory = DisruptorBaseEvent.DingEventDisruptor::new;
         int bufferSize = MQConstant.DISRUPTOR_BUFFER_SIZE;
         ThreadFactory threadFactory = r -> new Thread(r, MQConstant.DISRUPTOR_THREAD_NAME);
@@ -91,7 +92,7 @@ public class DisruptorConfig {
     }
 
     @Bean(MQConstant.WECHAT_DISRUPTOR)
-    public Disruptor<DisruptorBaseEvent.WeChatEventDisruptor> weChatEventDisruptorDisruptor() {
+    public Disruptor<DisruptorBaseEvent.WeChatEventDisruptor> weChatEventDisruptor() {
         EventFactory<DisruptorBaseEvent.WeChatEventDisruptor> eventFactory = DisruptorBaseEvent.WeChatEventDisruptor::new;
         int bufferSize = MQConstant.DISRUPTOR_BUFFER_SIZE;
         ThreadFactory threadFactory = r -> new Thread(r, MQConstant.DISRUPTOR_THREAD_NAME);
@@ -102,12 +103,23 @@ public class DisruptorConfig {
     }
 
     @Bean(MQConstant.FEI_SHU_DISRUPTOR)
-    public Disruptor<DisruptorBaseEvent.FeiShuEventDisruptor> feiShuEventDisruptorDisruptor() {
+    public Disruptor<DisruptorBaseEvent.FeiShuEventDisruptor> feiShuEventDisruptor() {
         EventFactory<DisruptorBaseEvent.FeiShuEventDisruptor> eventFactory = DisruptorBaseEvent.FeiShuEventDisruptor::new;
         int bufferSize = MQConstant.DISRUPTOR_BUFFER_SIZE;
         ThreadFactory threadFactory = r -> new Thread(r, MQConstant.DISRUPTOR_THREAD_NAME);
         Disruptor<DisruptorBaseEvent.FeiShuEventDisruptor> disruptor = new Disruptor<>(eventFactory, bufferSize, threadFactory);
         disruptor.handleEventsWith(new DisruptorHandler.DisruptorFeiShuEventHandler(feiShuHandler));
+        disruptor.start();
+        return disruptor;
+    }
+
+    @Bean(MQConstant.OFFICIAL_ACCOUNT_DISRUPTOR)
+    public Disruptor<DisruptorBaseEvent.OfficialAccountEventDisruptor> officialAccountEventDisruptor() {
+        EventFactory<DisruptorBaseEvent.OfficialAccountEventDisruptor> eventFactory = DisruptorBaseEvent.OfficialAccountEventDisruptor::new;
+        int bufferSize = MQConstant.DISRUPTOR_BUFFER_SIZE;
+        ThreadFactory threadFactory = r -> new Thread(r, MQConstant.DISRUPTOR_THREAD_NAME);
+        Disruptor<DisruptorBaseEvent.OfficialAccountEventDisruptor> disruptor = new Disruptor<>(eventFactory, bufferSize, threadFactory);
+        disruptor.handleEventsWith(new DisruptorHandler.DisruptorOfficialAccountEventHandler(officialAccountHandler));
         disruptor.start();
         return disruptor;
     }
