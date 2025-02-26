@@ -29,7 +29,7 @@ import com.oszero.deliver.business.server.mq.producer.Producer;
  * @author oszero
  * @version 1.0.0
  */
-public class MQCommonConsumer {
+public class MQCommonConsumerHandler {
 
     public static void tryHandle(SendTaskDto sendTaskDto, BaseHandler handler) throws Exception {
         String traceId = sendTaskDto.getTraceId();

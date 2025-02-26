@@ -22,7 +22,7 @@ import com.oszero.deliver.business.server.handler.BaseHandler;
 import com.oszero.deliver.business.server.handler.impl.*;
 import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.business.server.model.event.disruptor.DisruptorBaseEvent;
-import com.oszero.deliver.business.server.mq.consumer.common.MQCommonConsumer;
+import com.oszero.deliver.business.server.mq.consumer.common.MQCommonConsumerHandler;
 import com.oszero.deliver.business.server.mq.producer.Producer;
 import lombok.AllArgsConstructor;
 
@@ -37,9 +37,9 @@ public class DisruptorHandler {
     private static void onMessageAck(DisruptorBaseEvent event, BaseHandler handler) {
         SendTaskDto sendTaskDto = event.getSendTaskDto();
         try {
-            MQCommonConsumer.tryHandle(sendTaskDto, handler);
+            MQCommonConsumerHandler.tryHandle(sendTaskDto, handler);
         } catch (Exception exception) {
-            MQCommonConsumer.catchHandle(sendTaskDto, exception, PRODUCER);
+            MQCommonConsumerHandler.catchHandle(sendTaskDto, exception, PRODUCER);
         }
     }
 

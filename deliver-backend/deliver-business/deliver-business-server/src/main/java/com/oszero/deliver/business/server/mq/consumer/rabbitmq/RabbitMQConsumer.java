@@ -22,7 +22,7 @@ import com.oszero.deliver.business.server.constant.MQConstant;
 import com.oszero.deliver.business.server.handler.BaseHandler;
 import com.oszero.deliver.business.server.handler.impl.*;
 import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
-import com.oszero.deliver.business.server.mq.consumer.common.MQCommonConsumer;
+import com.oszero.deliver.business.server.mq.consumer.common.MQCommonConsumerHandler;
 import com.oszero.deliver.business.server.mq.producer.Producer;
 import com.rabbitmq.client.Channel;
 import lombok.RequiredArgsConstructor;
@@ -51,59 +51,58 @@ public class RabbitMQConsumer {
 
     private final Producer producer;
 
-    @RabbitListener(queues = MQConstant.CALL_QUEUE, ackMode = "MANUAL")
+    private void onMessageAck(long deliveryTag, Channel channel, String message, BaseHandler handler) throws Exception {
+        SendTaskDto sendTaskDto = null;
+        try {
+            sendTaskDto = JSONUtil.toBean(message, SendTaskDto.class);
+            MQCommonConsumerHandler.tryHandle(sendTaskDto, handler);
+            channel.basicAck(deliveryTag, false);
+        } catch (Exception exception) {
+            channel.basicAck(deliveryTag, false);
+            // 报错重试
+            MQCommonConsumerHandler.catchHandle(sendTaskDto, exception, producer);
+        }
+    }
+
+    @RabbitListener(queues = MQConstant.CALL_QUEUE, ackMode = MQConstant.ACK_MODE)
     public void onCallMessage(String message,
                               @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel channel) throws Exception {
         onMessageAck(deliveryTag, channel, message, callHandler);
     }
 
-    @RabbitListener(queues = MQConstant.SMS_QUEUE, ackMode = "MANUAL")
+    @RabbitListener(queues = MQConstant.SMS_QUEUE, ackMode = MQConstant.ACK_MODE)
     public void onSmsMessage(String message,
                              @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel channel) throws Exception {
         onMessageAck(deliveryTag, channel, message, smsHandler);
     }
 
-    @RabbitListener(queues = MQConstant.MAIL_QUEUE, ackMode = "MANUAL")
+    @RabbitListener(queues = MQConstant.MAIL_QUEUE, ackMode = MQConstant.ACK_MODE)
     public void onMailMessage(String message,
                               @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel channel) throws Exception {
         onMessageAck(deliveryTag, channel, message, mailHandler);
     }
 
-    @RabbitListener(queues = MQConstant.DING_QUEUE, ackMode = "MANUAL")
+    @RabbitListener(queues = MQConstant.DING_QUEUE, ackMode = MQConstant.ACK_MODE)
     public void onDingMessage(String message,
                               @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel channel) throws Exception {
         onMessageAck(deliveryTag, channel, message, dingHandler);
     }
 
-    @RabbitListener(queues = MQConstant.WECHAT_QUEUE, ackMode = "MANUAL")
+    @RabbitListener(queues = MQConstant.WECHAT_QUEUE, ackMode = MQConstant.ACK_MODE)
     public void onWeChatMessage(String message,
                                 @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel channel) throws Exception {
         onMessageAck(deliveryTag, channel, message, weChatHandler);
     }
 
-    @RabbitListener(queues = MQConstant.FEI_SHU_QUEUE, ackMode = "MANUAL")
+    @RabbitListener(queues = MQConstant.FEI_SHU_QUEUE, ackMode = MQConstant.ACK_MODE)
     public void onFeiShuMessage(String message,
                                 @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel channel) throws Exception {
         onMessageAck(deliveryTag, channel, message, feiShuHandler);
     }
 
-    @RabbitListener(queues = MQConstant.OFFICIAL_ACCOUNT_QUEUE, ackMode = "MANUAL")
+    @RabbitListener(queues = MQConstant.OFFICIAL_ACCOUNT_QUEUE, ackMode = MQConstant.ACK_MODE)
     public void onOfficialAccountMessage(String message,
                                 @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel channel) throws Exception {
         onMessageAck(deliveryTag, channel, message, officialAccountHandler);
     }
-
-    private void onMessageAck(long deliveryTag, Channel channel, String message, BaseHandler handler) throws Exception {
-        SendTaskDto sendTaskDto = null;
-        try {
-            sendTaskDto = JSONUtil.toBean(message, SendTaskDto.class);
-            MQCommonConsumer.tryHandle(sendTaskDto, handler);
-            channel.basicAck(deliveryTag, false);
-        } catch (Exception exception) {
-            channel.basicAck(deliveryTag, false);
-            // 报错重试
-            MQCommonConsumer.catchHandle(sendTaskDto, exception, producer);
-        }
-    }
-
 }

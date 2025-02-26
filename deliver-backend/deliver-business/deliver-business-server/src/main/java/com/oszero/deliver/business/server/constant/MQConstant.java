@@ -64,6 +64,8 @@ public interface MQConstant {
     String WECHAT_KEY_NAME = "key_msg_wechat";
     String OFFICIAL_ACCOUNT_KEY_NAME = "key_msg_officialAccount";
 
+    String ACK_MODE = "MANUAL";
+
     /********** Disruptor **********/
     int DISRUPTOR_BUFFER_SIZE = 102400;
     String DISRUPTOR_THREAD_NAME = "disruptor_thread_name";
