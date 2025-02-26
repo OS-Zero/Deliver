@@ -47,7 +47,7 @@ public class RocketMQProducer implements Producer, MessageCallback {
     @Override
     public void sendMessage(SendTaskDto sendTaskDto) {
         String messageId = sendTaskDto.getMessageId();
-        String message = SendTaskUtils.toMessage(sendTaskDto);
+        String message = SendTaskUtils.toMessageByEncrypt(sendTaskDto);
         switch (getChannelTypeEnum(sendTaskDto)) {
             case CALL -> rocketMQUtils.sendMessage(MQConstant.CALL_TOPIC, messageId, message);
             case SMS -> rocketMQUtils.sendMessage(MQConstant.SMS_TOPIC, messageId, message);
@@ -63,7 +63,7 @@ public class RocketMQProducer implements Producer, MessageCallback {
 
     @Override
     public void messageCallback(String messageId, Object message, boolean success) {
-        SendTaskDto sendTaskDto = SendTaskUtils.fromMessage((String) message);
+        SendTaskDto sendTaskDto = SendTaskUtils.fromMessageByDecrypt((String) message);
         messageCallback(sendTaskDto, success);
     }
 }

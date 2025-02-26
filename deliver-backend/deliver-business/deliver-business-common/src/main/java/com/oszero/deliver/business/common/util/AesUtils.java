@@ -34,6 +34,15 @@ public class AesUtils {
     @Value("${aes.key}")
     private String aesKey;
 
+    public static AesUtils newInstance(String aesKey) {
+        if (aesKey == null || aesKey.isEmpty()) {
+            throw new IllegalArgumentException("aesKey is null or empty");
+        }
+        AesUtils aesUtils = new AesUtils();
+        aesUtils.aesKey = aesKey;
+        return aesUtils;
+    }
+
     public String encrypt(String content) {
         byte[] key = adjustKeyLength(aesKey.getBytes(StandardCharsets.UTF_8), 24);
         AES aes = new AES(key);

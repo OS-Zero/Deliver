@@ -17,13 +17,13 @@
 
 package com.oszero.deliver.business.server.mq.consumer.rabbitmq;
 
-import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.business.server.constant.MQConstant;
 import com.oszero.deliver.business.server.handler.BaseHandler;
 import com.oszero.deliver.business.server.handler.impl.*;
 import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.business.server.mq.consumer.common.MQCommonConsumerHandler;
 import com.oszero.deliver.business.server.mq.producer.Producer;
+import com.oszero.deliver.business.server.util.SendTaskUtils;
 import com.rabbitmq.client.Channel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -54,7 +54,7 @@ public class RabbitMQConsumer {
     private void onMessageAck(long deliveryTag, Channel channel, String message, BaseHandler handler) throws Exception {
         SendTaskDto sendTaskDto = null;
         try {
-            sendTaskDto = JSONUtil.toBean(message, SendTaskDto.class);
+            sendTaskDto = SendTaskUtils.fromMessageByDecrypt(message);
             MQCommonConsumerHandler.tryHandle(sendTaskDto, handler);
             channel.basicAck(deliveryTag, false);
         } catch (Exception exception) {

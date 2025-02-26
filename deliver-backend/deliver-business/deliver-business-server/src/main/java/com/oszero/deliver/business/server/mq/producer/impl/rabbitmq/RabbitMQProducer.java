@@ -47,8 +47,8 @@ public class RabbitMQProducer implements Producer, MessageCallback {
 
     @Override
     public void sendMessage(SendTaskDto sendTaskDto) {
-        String message = SendTaskUtils.toMessage(sendTaskDto);
         String messageId = sendTaskDto.getMessageId();
+        String message = SendTaskUtils.toMessageByEncrypt(sendTaskDto);
         switch (getChannelTypeEnum(sendTaskDto)) {
             case CALL ->
                     rabbitMQUtils.sendMessage(MQConstant.DELIVER_EXCHANGE, MQConstant.CALL_KEY_NAME, messageId, message);
@@ -71,7 +71,7 @@ public class RabbitMQProducer implements Producer, MessageCallback {
 
     @Override
     public void messageCallback(String messageId, Object message, boolean success) {
-        SendTaskDto sendTaskDto = SendTaskUtils.fromMessage((String) message);
+        SendTaskDto sendTaskDto = SendTaskUtils.fromMessageByDecrypt((String) message);
         messageCallback(sendTaskDto, success);
     }
 }

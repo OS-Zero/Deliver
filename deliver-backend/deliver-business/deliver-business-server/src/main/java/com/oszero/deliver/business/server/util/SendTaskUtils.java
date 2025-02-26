@@ -19,6 +19,7 @@ package com.oszero.deliver.business.server.util;
 
 import cn.hutool.core.lang.UUID;
 import cn.hutool.json.JSONUtil;
+import com.oszero.deliver.business.common.util.AesUtils;
 import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
 
 /**
@@ -44,11 +45,16 @@ public class SendTaskUtils {
         return ThreadLocalUtils.getSendTaskDto();
     }
 
-    public static String toMessage(SendTaskDto sendTaskDto) {
-        return JSONUtil.toJsonStr(sendTaskDto);
+    public static String toMessageByEncrypt(SendTaskDto sendTaskDto) {
+        String message = JSONUtil.toJsonStr(sendTaskDto);
+        AesUtils aesUtils = AesUtils.newInstance("oszero");
+        message = aesUtils.encrypt(message);
+        return message;
     }
 
-    public static SendTaskDto fromMessage(String message) {
+    public static SendTaskDto fromMessageByDecrypt(String message) {
+        AesUtils aesUtils = AesUtils.newInstance("oszero");
+        message = aesUtils.decrypt(message);
         return JSONUtil.toBean(message, SendTaskDto.class);
     }
 

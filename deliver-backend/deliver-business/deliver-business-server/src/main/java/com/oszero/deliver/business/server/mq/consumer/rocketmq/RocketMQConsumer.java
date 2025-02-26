@@ -17,13 +17,13 @@
 
 package com.oszero.deliver.business.server.mq.consumer.rocketmq;
 
-import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.business.server.constant.MQConstant;
 import com.oszero.deliver.business.server.handler.BaseHandler;
 import com.oszero.deliver.business.server.handler.impl.*;
 import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.business.server.mq.consumer.common.MQCommonConsumerHandler;
 import com.oszero.deliver.business.server.mq.producer.Producer;
+import com.oszero.deliver.business.server.util.SendTaskUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
@@ -47,7 +47,8 @@ public class RocketMQConsumer {
     public void omMessageAck(MessageExt messageExt, BaseHandler handler) {
         SendTaskDto sendTaskDto = null;
         try {
-            sendTaskDto = JSONUtil.toBean(new String(messageExt.getBody(), StandardCharsets.UTF_8), SendTaskDto.class);
+            String message = new String(messageExt.getBody(), StandardCharsets.UTF_8);
+            sendTaskDto = SendTaskUtils.fromMessageByDecrypt(message);
             MQCommonConsumerHandler.tryHandle(sendTaskDto, handler);
         } catch (Exception exception) {
             MQCommonConsumerHandler.catchHandle(sendTaskDto, exception, producer);
