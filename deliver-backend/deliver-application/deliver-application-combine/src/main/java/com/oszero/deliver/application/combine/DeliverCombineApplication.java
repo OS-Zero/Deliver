@@ -17,15 +17,18 @@
 
 package com.oszero.deliver.application.combine;
 
+import org.apache.rocketmq.spring.autoconfigure.RocketMQAutoConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 
 /**
  * @author oszero
  * @version 1.0.0
  */
 @SpringBootApplication
+@Import({RocketMQAutoConfiguration.class})
 @ComponentScan("com.oszero.deliver")
 public class DeliverCombineApplication {
     public static void main(String[] args) {

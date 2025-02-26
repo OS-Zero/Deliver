@@ -19,9 +19,6 @@ package com.oszero.deliver.business.common.util;
 
 import cn.hutool.json.JSONUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.connection.stream.Record;
-import org.springframework.data.redis.connection.stream.RecordId;
-import org.springframework.data.redis.core.StreamOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 

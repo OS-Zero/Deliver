@@ -23,7 +23,6 @@ import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.platformclient.common.ClientConstant;
 import com.oszero.deliver.platformclient.exception.ClientException;
 import com.oszero.deliver.platformclient.model.app.OfficialAccountApp;
-import com.oszero.deliver.platformclient.model.dto.PlatformFileDto;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -31,7 +30,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * @author oszero

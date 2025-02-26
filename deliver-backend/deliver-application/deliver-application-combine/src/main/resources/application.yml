@@ -65,6 +65,13 @@ spring:
             useProperties: false
             isClustered: true
             clusterCheckinInterval: 15000
+rocketmq:
+  # RocketMQ NameServer 地址，多个地址使用分号分隔
+  name-server: localhost:9876
+  # 生产者配置
+  producer:
+    # 生产者组名，用于标识一组生产者实例
+    group: deliver-producer-group
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #开启 sql 日志
@@ -73,7 +80,7 @@ mybatis-plus:
 aes:
   key: oszero
 # 队列类型 参考 MQConstant#MQ_TYPE
-mq-type: none
+mq-type: disruptor
 # 服务端发送接口地址
 deliver-server:
   url: http://localhost:9090/backend/open/sendMessage

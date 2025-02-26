@@ -47,7 +47,13 @@ public class RocketMQUtils {
 
     @Async
     public void sendMessage(String topic, String messageId, String message) {
-        SendResult sendResult = rocketMQTemplate.syncSend(topic, message, 3000);
-        messageCallback.messageCallback(messageId, message, sendResult.getSendStatus() == SendStatus.SEND_OK);
+        boolean success;
+        try {
+            SendResult sendResult = rocketMQTemplate.syncSend(topic, message, 3000);
+            success = sendResult.getSendStatus() == SendStatus.SEND_OK;
+        } catch (Exception e) {
+            success = false;
+        }
+        messageCallback.messageCallback(messageId, message, success);
     }
 }

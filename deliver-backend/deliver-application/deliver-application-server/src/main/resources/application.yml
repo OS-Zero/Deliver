@@ -36,4 +36,4 @@ mybatis-plus:
 aes:
   key: oszero
 # 队列类型 参考 MQConstant#MQ_TYPE
-mq-type: none
+mq-type: disruptor
