@@ -28,12 +28,12 @@ import org.springframework.context.annotation.Configuration;
  * @version 1.0.0
  */
 @Configuration
-@ConditionalOnProperty(value = "mq-type", havingValue = "rabbitmq")
+@ConditionalOnProperty(value = MQConstant.MQ_TYPE, havingValue = MQConstant.MQ_TYPE_RABBITMQ)
 public class RabbitMQConfig {
 
     @Bean
     public Exchange getExchange() {
-        return ExchangeBuilder.directExchange(MQConstant.DELIVER_EXCHANGE).build();
+        return ExchangeBuilder.directExchange(MQConstant.DELIVER_EXCHANGE).durable(true).build();
     }
 
     @Bean
@@ -67,6 +67,11 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue getOfficialAccountQueue() {
+        return QueueBuilder.durable(MQConstant.OFFICIAL_ACCOUNT_QUEUE).build();
+    }
+
+    @Bean
     public Binding getCallBinding() {
         return BindingBuilder.bind(getCallQueue()).to(getExchange()).with(MQConstant.CALL_KEY_NAME).noargs();
     }
@@ -94,5 +99,10 @@ public class RabbitMQConfig {
     @Bean
     public Binding getFeiShuBinding() {
         return BindingBuilder.bind(getFeiShuQueue()).to(getExchange()).with(MQConstant.FEI_SHU_KEY_NAME).noargs();
+    }
+
+    @Bean
+    public Binding getOfficialAccountBinding() {
+        return BindingBuilder.bind(getOfficialAccountQueue()).to(getExchange()).with(MQConstant.OFFICIAL_ACCOUNT_KEY_NAME).noargs();
     }
 }

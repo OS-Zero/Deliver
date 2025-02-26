@@ -18,18 +18,16 @@
 package com.oszero.deliver.business.server.handler.impl;
 
 import cn.hutool.json.JSONUtil;
-import com.oszero.deliver.business.common.enums.MessageTypeEnum;
 import com.oszero.deliver.business.common.util.AppConfigUtils;
 import com.oszero.deliver.business.server.handler.BaseHandler;
 import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
-import com.oszero.deliver.platformclient.client.feishu.FeiShuClient;
 import com.oszero.deliver.platformclient.client.wechat.OfficialAccountClient;
 import com.oszero.deliver.platformclient.common.ClientConstant;
-import com.oszero.deliver.platformclient.model.app.FeiShuApp;
 import com.oszero.deliver.platformclient.model.app.OfficialAccountApp;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author oszero

@@ -70,11 +70,4 @@ public class RedisUtils {
         String jsonStr = JSONUtil.toJsonStr(value);
         stringRedisTemplate.opsForValue().set(key, jsonStr);
     }
-
-    public RecordId sendMessage(String streamKey, String messageValue) {
-        // 使用 StringRedisTemplate 获取 StreamOperations 对象
-        StreamOperations<String, Object, Object> streamOperations = stringRedisTemplate.opsForStream();
-        // 创建 Stream 并发布消息
-        return streamOperations.add(Record.of(messageValue).withStreamKey(streamKey));
-    }
 }

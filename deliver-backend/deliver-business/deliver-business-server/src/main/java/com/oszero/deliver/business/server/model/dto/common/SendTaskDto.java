@@ -34,6 +34,7 @@ import java.util.Map;
 @EqualsAndHashCode(callSuper = true)
 public class SendTaskDto extends LinkModel {
     private String traceId;
+    private String messageId;
     private Long templateId;
     private Long appId;
     private Long groupId;
@@ -45,9 +46,9 @@ public class SendTaskDto extends LinkModel {
     private Integer channelProviderType;
     private String messageType;
     private String clientIp;
-    private Integer sendStatus = 0;
-    private Integer retried = 0;
-    private Integer retryCount = 0;
+    private Integer sendStatus;
+    private Integer retryMaxCount;
+    private Integer retryCount;
 }
 
 

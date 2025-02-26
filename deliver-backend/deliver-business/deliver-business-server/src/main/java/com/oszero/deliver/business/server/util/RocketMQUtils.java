@@ -18,10 +18,12 @@
 package com.oszero.deliver.business.server.util;
 
 import com.oszero.deliver.business.server.constant.MQConstant;
-import lombok.RequiredArgsConstructor;
+import com.oszero.deliver.business.server.mq.producer.MessageCallback;
 import org.apache.rocketmq.client.producer.SendResult;
+import org.apache.rocketmq.client.producer.SendStatus;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
@@ -29,13 +31,23 @@ import org.springframework.stereotype.Component;
  * @version 1.0.0
  */
 @Component
-@RequiredArgsConstructor
 @ConditionalOnProperty(value = MQConstant.MQ_TYPE, havingValue = MQConstant.MQ_TYPE_ROCKETMQ)
 public class RocketMQUtils {
 
     private final RocketMQTemplate rocketMQTemplate;
+    private MessageCallback messageCallback;
 
-    public SendResult sendMessage(String topic, String message) {
-        return rocketMQTemplate.syncSend(topic, message);
+    public RocketMQUtils(RocketMQTemplate rocketMQTemplate) {
+        this.rocketMQTemplate = rocketMQTemplate;
+    }
+
+    public void initMessageCallback(MessageCallback messageCallback) {
+        this.messageCallback = messageCallback;
+    }
+
+    @Async
+    public void sendMessage(String topic, String messageId, String message) {
+        SendResult sendResult = rocketMQTemplate.syncSend(topic, message, 3000);
+        messageCallback.messageCallback(messageId, message, sendResult.getSendStatus() == SendStatus.SEND_OK);
     }
 }

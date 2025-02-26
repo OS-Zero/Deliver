@@ -15,15 +15,14 @@
  * limitations under the License.
  */
 
-package com.oszero.deliver.business.server.mq.producer.impl;
+package com.oszero.deliver.business.server.mq.producer.impl.disruptor;
 
 import com.lmax.disruptor.dsl.Disruptor;
-import com.oszero.deliver.business.common.enums.ChannelTypeEnum;
 import com.oszero.deliver.business.server.constant.MQConstant;
-import com.oszero.deliver.business.server.exception.MessageException;
 import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.business.server.model.event.disruptor.DisruptorBaseEvent;
 import com.oszero.deliver.business.server.mq.consumer.disruptor.DisruptorHandler;
+import com.oszero.deliver.business.server.mq.producer.MessageCallback;
 import com.oszero.deliver.business.server.mq.producer.Producer;
 import com.oszero.deliver.business.server.util.DisruptorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +31,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.Objects;
 
 /**
  * @author oszero
@@ -40,7 +38,7 @@ import java.util.Objects;
  */
 @Component
 @ConditionalOnProperty(value = MQConstant.MQ_TYPE, havingValue = MQConstant.MQ_TYPE_DISRUPTOR)
-public class DisruptorProducer implements Producer {
+public class DisruptorProducer implements Producer, MessageCallback {
 
     @Autowired
     @Qualifier(MQConstant.CALL_DISRUPTOR)
@@ -66,16 +64,13 @@ public class DisruptorProducer implements Producer {
 
     @PostConstruct
     public void initializer() {
+        DisruptorUtils.messageCallback = this;
         DisruptorHandler.PRODUCER = this;
     }
 
     @Override
     public void sendMessage(SendTaskDto sendTaskDto) {
-        ChannelTypeEnum channelTypeEnum = ChannelTypeEnum.getInstanceByCode(sendTaskDto.getChannelType());
-        if (Objects.isNull(channelTypeEnum)) {
-            throw new MessageException("[DisruptorProducer#sendMessage] 渠道类型配置错误");
-        }
-        switch (channelTypeEnum) {
+        switch (getChannelTypeEnum(sendTaskDto)) {
             case CALL -> DisruptorUtils.publishEvent(sendTaskDto, callEventDisruptor.getRingBuffer());
             case SMS -> DisruptorUtils.publishEvent(sendTaskDto, smsEventDisruptor.getRingBuffer());
             case MAIL -> DisruptorUtils.publishEvent(sendTaskDto, mailEventDisruptor.getRingBuffer());
@@ -86,5 +81,11 @@ public class DisruptorProducer implements Producer {
             default -> {
             }
         }
+    }
+
+    @Override
+    public void messageCallback(String messageId, Object message, boolean success) {
+        SendTaskDto sendTaskDto = (SendTaskDto) message;
+        messageCallback(sendTaskDto, success);
     }
 }

@@ -41,6 +41,7 @@ public class MQCommonConsumer {
     }
 
     public static void catchHandle(SendTaskDto sendTaskDto, Exception exception, Producer producer) {
+        producer.retrySendMessage(sendTaskDto);
         MDCUtils.clear();
     }
 }

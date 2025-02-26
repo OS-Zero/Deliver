@@ -59,17 +59,18 @@ public class SendServiceImpl implements SendService {
         Long templateId = sendRequestDto.getTemplateId();
         List<String> users = sendRequestDto.getUsers();
         Map<String, Object> messageParam = sendRequestDto.getMessageParam();
-        Integer retryCount = sendRequestDto.getRetryCount();
+        Integer retryMaxCount = sendRequestDto.getRetryMaxCount();
 
         SendTaskDto sendTaskDto = new SendTaskDto();
         SendTaskUtils.setSendTaskDto(sendTaskDto);
         sendTaskDto.setTemplateId(templateId);
         sendTaskDto.setMessageParam(messageParam);
+        sendTaskDto.setMessageId(SendTaskUtils.generateMessageId());
         sendTaskDto.setTraceId(TraceIdUtils.getTraceId());
         sendTaskDto.setClientIp(IpUtils.getClientIp());
         sendTaskDto.setUsers(users);
-        sendTaskDto.setRetried(0);
-        sendTaskDto.setRetryCount(retryCount);
+        sendTaskDto.setRetryMaxCount(retryMaxCount);
+        sendTaskDto.setRetryCount(0);
 
         MessageTemplate template = messageTemplateMapper.selectById(templateId);
         if (Objects.isNull(template)) {

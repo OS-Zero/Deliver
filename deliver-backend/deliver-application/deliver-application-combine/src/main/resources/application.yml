@@ -30,6 +30,14 @@ spring:
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: oszero
+    password: oszero666
+    virtual-host: /deliver
+    # 生产者配置
+    publisher-confirm-type: correlated  # 开启Confirm确认
   quartz:
     job-store-type: jdbc
     # 默认为false， 用于设定是否等待任务执行完毕后容器才会关闭。

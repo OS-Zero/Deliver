@@ -18,7 +18,6 @@
 package com.oszero.deliver.business.server.mq.consumer.rocketmq;
 
 import com.oszero.deliver.business.server.constant.MQConstant;
-import com.oszero.deliver.business.server.handler.impl.FeiShuHandler;
 import com.oszero.deliver.business.server.handler.impl.OfficialAccountHandler;
 import lombok.RequiredArgsConstructor;
 import org.apache.rocketmq.common.message.MessageExt;

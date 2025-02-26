@@ -17,9 +17,7 @@
 
 package com.oszero.deliver.business.server.util;
 
-import com.oszero.deliver.business.server.constant.MQConstant;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.stereotype.Component;
@@ -30,7 +28,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-@ConditionalOnProperty(value = MQConstant.MQ_TYPE, havingValue = MQConstant.MQ_TYPE_NONE)
 public class ApplicationEventUtils {
 
     private final ApplicationContext applicationContext;

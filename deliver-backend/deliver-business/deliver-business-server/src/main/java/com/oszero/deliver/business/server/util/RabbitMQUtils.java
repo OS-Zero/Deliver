@@ -17,19 +17,13 @@
 
 package com.oszero.deliver.business.server.util;
 
-import cn.hutool.core.lang.UUID;
-import cn.hutool.json.JSONUtil;
-import com.oszero.deliver.business.common.util.MDCUtils;
-import com.oszero.deliver.business.common.util.TraceIdUtils;
 import com.oszero.deliver.business.server.constant.MQConstant;
-import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
-import org.springframework.amqp.core.ReturnedMessage;
+import com.oszero.deliver.business.server.mq.producer.MessageCallback;
+import lombok.Getter;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
-
-import java.util.Objects;
 
 /**
  * @author oszero
@@ -37,53 +31,40 @@ import java.util.Objects;
  */
 @Component
 @ConditionalOnProperty(value = MQConstant.MQ_TYPE, havingValue = MQConstant.MQ_TYPE_RABBITMQ)
-public class RabbitMQUtils {
+public class RabbitMQUtils implements RabbitTemplate.ConfirmCallback {
     private final RabbitTemplate rabbitTemplate;
+    private MessageCallback messageCallback;
 
     public RabbitMQUtils(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
-        // 设置 ConfirmCallback 以处理确认和退回
-        this.rabbitTemplate.setConfirmCallback((CorrelationData correlationData, boolean ack, String cause) -> {
-            SendTaskDto sendTaskDto = null;
-            if (correlationData != null) {
-                String[] split = correlationData.getId().split("&&&");
-                TraceIdUtils.setTraceId(split[0]);
-                ReturnedMessage returned = correlationData.getReturned();
-                if (!Objects.isNull(returned)) { // 不为 null 代表发送失败
-                    sendTaskDto = JSONUtil.toBean(new String(returned.getMessage().getBody()), SendTaskDto.class);
-                }
-                if (ack && Objects.isNull(sendTaskDto)) {
-
-                    // 消息已成功发送到交换机
-                    sendTaskDto = new SendTaskDto();
-                    sendTaskDto.setTraceId(split[0]);
-                    sendTaskDto.setTemplateId(Long.valueOf(split[1]));
-                } else {
-                    // 处理消息发送失败的情况
-                    if (sendTaskDto != null) {
-                        String exchange = correlationData.getReturned().getExchange();
-                        String routingKey = correlationData.getReturned().getRoutingKey();
-                        retry(exchange, routingKey, sendTaskDto);
-                    }
-                }
-                MDCUtils.clear();
-            }
-        });
+        rabbitTemplate.setConfirmCallback(this);
     }
 
-    public void sendMessage(String exchange, String routingKey, String message, CorrelationData correlationData) {
+    public void initMessageCallback(MessageCallback messageCallback) {
+        this.messageCallback = messageCallback;
+    }
+
+    public void sendMessage(String exchange, String routingKey, String messageId, String message) {
         // 使用关联数据发送消息
+        CorrelationData correlationData = new CustomCorrelationData(messageId, message);
         rabbitTemplate.convertAndSend(exchange, routingKey, message, correlationData);
     }
 
-    public void retry(String exchange, String routingKey, SendTaskDto sendTaskDto) {
-        if (sendTaskDto.getRetryCount() > 0) {
-            sendTaskDto.setRetryCount(sendTaskDto.getRetryCount() - 1);
-            sendTaskDto.setRetried(1);
-            String message = JSONUtil.toJsonStr(sendTaskDto);
-            // 指定关联数据（消息的唯一标识符），这里发送一条新的数据，所以与之前的不一样
-            CorrelationData correlationData = new CorrelationData(sendTaskDto.getTraceId() + "&&&" + sendTaskDto.getTemplateId() + "&&&" + UUID.randomUUID());
-            sendMessage(exchange, routingKey, message, correlationData);
+    // 消息成功到达Exchange时触发
+    @Override
+    public void confirm(CorrelationData correlationData, boolean ack, String cause) {
+        if (correlationData instanceof CustomCorrelationData) {
+            messageCallback.messageCallback(correlationData.getId(), ((CustomCorrelationData) correlationData).getOriginalMessage(), ack);
+        }
+    }
+
+    // 自定义 CorrelationData 扩展类，用于存储原始消息
+    @Getter
+    public static class CustomCorrelationData extends CorrelationData {
+        private final String originalMessage;
+        public CustomCorrelationData(String messageId, String originalMessage) {
+            super(messageId);
+            this.originalMessage = originalMessage;
         }
     }
 }

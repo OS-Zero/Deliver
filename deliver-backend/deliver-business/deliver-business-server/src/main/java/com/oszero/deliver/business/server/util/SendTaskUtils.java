@@ -17,6 +17,8 @@
 
 package com.oszero.deliver.business.server.util;
 
+import cn.hutool.core.lang.UUID;
+import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
 
 /**
@@ -24,12 +26,30 @@ import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
  * @version 1.0.0
  */
 public class SendTaskUtils {
+
+    public static String generateMessageId() {
+        return UUID.randomUUID().toString();
+    }
+
+    public static void retryHandle(SendTaskDto sendTaskDto) {
+        sendTaskDto.setMessageId(generateMessageId());
+        sendTaskDto.setRetryCount(sendTaskDto.getRetryCount() + 1);
+    }
+
     public static void setSendTaskDto(SendTaskDto sendTaskDto) {
         ThreadLocalUtils.setSendTaskDto(sendTaskDto);
     }
 
     public static SendTaskDto getSendTaskDto() {
         return ThreadLocalUtils.getSendTaskDto();
+    }
+
+    public static String toMessage(SendTaskDto sendTaskDto) {
+        return JSONUtil.toJsonStr(sendTaskDto);
+    }
+
+    public static SendTaskDto fromMessage(String message) {
+        return JSONUtil.toBean(message, SendTaskDto.class);
     }
 
     public static void clear() {

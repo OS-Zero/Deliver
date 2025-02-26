@@ -24,11 +24,9 @@ package com.oszero.deliver.business.server.constant;
 public interface MQConstant {
 
     String MQ_TYPE = "mq-type";
-    String MQ_TYPE_NONE = "none";
     String MQ_TYPE_DISRUPTOR = "disruptor";
     String MQ_TYPE_RABBITMQ = "rabbitmq";
     String MQ_TYPE_ROCKETMQ = "rocketmq";
-    String MQ_TYPE_REDIS = "redis";
 
     /********** RocketMQ **********/
     String CALL_TOPIC = "topic_msg_call";
@@ -66,31 +64,8 @@ public interface MQConstant {
     String WECHAT_KEY_NAME = "key_msg_wechat";
     String OFFICIAL_ACCOUNT_KEY_NAME = "key_msg_officialAccount";
 
-    /********** Redis Stream **********/
-    String CALL_STREAM = "call_stream";
-    String SMS_STREAM = "sms_stream";
-    String MAIL_STREAM = "mail_stream";
-    String DING_STREAM = "ding_stream";
-    String WECHAT_STREAM = "wechat_stream";
-    String FEI_SHU_STREAM = "feiShu_stream";
-    String OFFICIAL_ACCOUNT_STREAM = "officialAccount_stream";
-
-    String CALL_STREAM_CONSUMER_GROUP = "stream_consumer_group_msg_call";
-    String SMS_STREAM_CONSUMER_GROUP = "stream_consumer_group_msg_sms";
-    String MAIL_STREAM_CONSUMER_GROUP = "stream_consumer_group_msg_mail";
-    String DING_STREAM_CONSUMER_GROUP = "stream_consumer_group_msg_ding";
-    String WECHAT_STREAM_CONSUMER_GROUP = "stream_consumer_group_msg_wechat";
-    String FEI_SHU_STREAM_CONSUMER_GROUP = "stream_consumer_group_msg_feiShu";
-
-    String CALL_STREAM_CONSUMER_NAME = "stream_consumer_name_msg_call";
-    String SMS_STREAM_CONSUMER_NAME = "stream_consumer_name_msg_sms";
-    String MAIL_STREAM_CONSUMER_NAME = "stream_consumer_name_msg_mail";
-    String DING_STREAM_CONSUMER_NAME = "stream_consumer_name_msg_ding";
-    String WECHAT_STREAM_CONSUMER_NAME = "stream_consumer_name_msg_wechat";
-    String FEI_SHU_STREAM_CONSUMER_NAME = "stream_consumer_name_msg_feiShu";
-
     /********** Disruptor **********/
-    int DISRUPTOR_BUFFER_SIZE = 1024;
+    int DISRUPTOR_BUFFER_SIZE = 102400;
     String DISRUPTOR_THREAD_NAME = "disruptor_thread_name";
     // Disruptor
     String CALL_DISRUPTOR = "call_disruptor";

@@ -24,7 +24,6 @@ import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.business.server.model.event.disruptor.DisruptorBaseEvent;
 import com.oszero.deliver.business.server.mq.consumer.common.MQCommonConsumer;
 import com.oszero.deliver.business.server.mq.producer.Producer;
-import com.oszero.deliver.platformclient.client.wechat.OfficialAccountClient;
 import lombok.AllArgsConstructor;
 
 /**
