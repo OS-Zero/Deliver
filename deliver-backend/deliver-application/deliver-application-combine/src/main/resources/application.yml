@@ -61,7 +61,7 @@ spring:
             threadPriority: 5
             threadsInheritContextClassLoaderOfInitializingThread: true
           jobStore:
-            tablePrefix: qrtz_
+            tablePrefix: DELIVER_QRTZ_
             useProperties: false
             isClustered: true
             clusterCheckinInterval: 15000
@@ -84,3 +84,51 @@ mq-type: disruptor
 # 服务端发送接口地址
 deliver-server:
   url: http://localhost:9090/backend/open/sendMessage
+# 二级缓存配置
+l2cache:
+  config:
+    # Redisson 的yaml配置文件
+    redissonYamlConfig: redisson.yaml
+    # 默认缓存配置
+    defaultConfig:
+      # 是否存储空值，默认true，防止缓存穿透
+      allowNullValues: true
+      # 空值过期时间，单位秒
+      nullValueExpireTimeSeconds: 30
+      # 是否使用一级缓存的过期时间来替换二级缓存的过期时间，默认true，简化缓存配置
+      useL1ReplaceL2ExpireTime: false
+      # 缓存类型
+      cacheType: COMPOSITE
+      # 组合缓存配置
+      composite:
+        # 一级缓存类型
+        l1CacheType: caffeine
+        # 二级缓存类型
+        l2CacheType: redis
+        # 是否全部启用一级缓存，默认false
+        l1AllOpen: true
+      # 一级缓存
+      caffeine:
+        # 设置指定缓存名的创建缓存配置
+        specs:
+          # cacheName中含有: / * 等特殊字符，需要加 "[ ]"
+          "[Cache::Deliver::MessageTemplate::]": initialCapacity=64,maximumSize=10000,refreshAfterWrite=6h,recordStats
+          "[Cache::Deliver::ChannelApp::]": initialCapacity=64,maximumSize=1000,refreshAfterWrite=18h,recordStats
+          "[Cache::Deliver::TemplateApp::]": initialCapacity=64,maximumSize=10000,refreshAfterWrite=6h,recordStats
+      # 二级缓存
+      redis:
+        # 加载数据时，是否加锁，默认false
+        lock: true
+        # 加锁时，true调用tryLock()，false调用lock()
+        tryLock: true
+        # 针对cacheName维度的过期时间集合，单位ms
+        expireTimeCacheNameMap:
+          "[Cache::Deliver::MessageTemplate::]": 86400000
+          "[Cache::Deliver::ChannelApp::]": 259200000
+          "[Cache::Deliver::TemplateApp::]": 86400000
+    # 缓存同步策略配置
+    cacheSyncPolicy:
+      # 策略类型 kafka / redis，推荐使用redis
+      type: redis
+      # 缓存更新时通知其他节点的topic名称
+      topic: deliver-cache-sync

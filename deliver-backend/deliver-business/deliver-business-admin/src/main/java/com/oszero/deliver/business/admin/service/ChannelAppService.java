@@ -23,7 +23,7 @@ import com.oszero.deliver.business.admin.model.dto.request.common.DeleteIdsReque
 import com.oszero.deliver.business.admin.model.dto.response.channelapp.ChannelAppByChannelResponseDto;
 import com.oszero.deliver.business.admin.model.dto.response.channelapp.ChannelAppSearchResponseDto;
 import com.oszero.deliver.business.admin.model.dto.response.common.SearchResponseDto;
-import com.oszero.deliver.business.common.model.entity.ChannelApp;
+import com.oszero.deliver.business.common.model.entity.database.ChannelApp;
 
 import java.util.List;
 

@@ -41,8 +41,8 @@ import com.oszero.deliver.business.admin.service.GroupService;
 import com.oszero.deliver.business.admin.util.UserUtils;
 import com.oszero.deliver.business.common.mapper.ChannelAppMapper;
 import com.oszero.deliver.business.common.mapper.MessageTemplateMapper;
-import com.oszero.deliver.business.common.model.entity.ChannelApp;
-import com.oszero.deliver.business.common.model.entity.MessageTemplate;
+import com.oszero.deliver.business.common.model.entity.database.ChannelApp;
+import com.oszero.deliver.business.common.model.entity.database.MessageTemplate;
 import com.oszero.deliver.business.common.util.DataBaseUtils;
 import com.oszero.deliver.business.common.util.DoubleStatusUtils;
 import lombok.RequiredArgsConstructor;
@@ -88,6 +88,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupInfo>
             if (DataBaseUtils.isSingleDataModifyFail(insert1) || DataBaseUtils.isSingleDataModifyFail(insert2)) {
                 throw new BusinessException("获取分组数据失败");
             }
+            defaultGroupInfo.setUpdateTime(LocalDateTime.now());
             defaultGroupList.add(buildGroupItemFromGroup(defaultGroupInfo));
         } else {
             topUpGroupList.addAll(userGroups.stream()

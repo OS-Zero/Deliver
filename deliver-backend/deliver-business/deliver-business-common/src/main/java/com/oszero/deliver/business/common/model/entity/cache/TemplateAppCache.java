@@ -15,32 +15,15 @@
  * limitations under the License.
  */
 
-package com.oszero.deliver.business.common.model.entity;
+package com.oszero.deliver.business.common.model.entity.cache;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.oszero.deliver.business.common.model.common.BaseGroupIdEntity;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 /**
  * @author oszero
- * @version 1.0.0
+ * @version 1.0.2
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-public class MessageTemplate extends BaseGroupIdEntity {
-    @TableId(type = IdType.AUTO)
-    private Long templateId;
-    private String templateName;
-    private String templateDescription;
-    private Integer usersType;
-    private Integer channelType;
-    private Integer channelProviderType;
-    private String messageType;
-    private Integer templateStatus;
+public class TemplateAppCache {
+    private Long appId;
 }

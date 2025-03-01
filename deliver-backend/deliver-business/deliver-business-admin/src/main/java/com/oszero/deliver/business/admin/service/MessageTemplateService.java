@@ -23,7 +23,7 @@ import com.oszero.deliver.business.admin.model.dto.request.messagetemplate.*;
 import com.oszero.deliver.business.admin.model.dto.response.common.SearchResponseDto;
 import com.oszero.deliver.business.admin.model.dto.response.messagetemplate.MessageTemplateSearchByNameResponseDto;
 import com.oszero.deliver.business.admin.model.dto.response.messagetemplate.MessageTemplateSearchResponseDto;
-import com.oszero.deliver.business.common.model.entity.MessageTemplate;
+import com.oszero.deliver.business.common.model.entity.database.MessageTemplate;
 import jakarta.validation.Valid;
 
 import java.util.List;

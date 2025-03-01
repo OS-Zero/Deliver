@@ -23,6 +23,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.oszero.deliver.business.admin.cache.AdminCacheManager;
 import com.oszero.deliver.business.admin.exception.BusinessException;
 import com.oszero.deliver.business.admin.model.dto.request.channelapp.*;
 import com.oszero.deliver.business.admin.model.dto.request.common.DeleteIdsRequestDto;
@@ -35,8 +36,8 @@ import com.oszero.deliver.business.common.enums.ChannelProviderTypeEnum;
 import com.oszero.deliver.business.common.enums.ChannelTypeEnum;
 import com.oszero.deliver.business.common.mapper.ChannelAppMapper;
 import com.oszero.deliver.business.common.mapper.TemplateAppMapper;
-import com.oszero.deliver.business.common.model.entity.ChannelApp;
-import com.oszero.deliver.business.common.model.entity.TemplateApp;
+import com.oszero.deliver.business.common.model.entity.database.ChannelApp;
+import com.oszero.deliver.business.common.model.entity.database.TemplateApp;
 import com.oszero.deliver.business.common.util.AppConfigUtils;
 import com.oszero.deliver.business.common.util.DataBaseUtils;
 import lombok.RequiredArgsConstructor;
@@ -60,6 +61,7 @@ public class ChannelAppServiceImpl extends ServiceImpl<ChannelAppMapper, Channel
     private final AppConfigUtils appConfigUtils;
     private final ChannelAppMapper channelAppMapper;
     private final TemplateAppMapper templateAppMapper;
+    private final AdminCacheManager adminCacheManager;
 
     @Override
     public SearchResponseDto<ChannelAppSearchResponseDto> search(ChannelAppSearchRequestDto dto) {
@@ -121,6 +123,7 @@ public class ChannelAppServiceImpl extends ServiceImpl<ChannelAppMapper, Channel
         if (DataBaseUtils.isSingleDataModifyFail(updateById)) {
             throw new BusinessException("应用更新失败");
         }
+        adminCacheManager.evictChannelAppCache(dto.getAppId());
     }
 
     @Override
@@ -131,6 +134,7 @@ public class ChannelAppServiceImpl extends ServiceImpl<ChannelAppMapper, Channel
         if (DataBaseUtils.isSingleDataModifyFail(updateById)) {
             throw new BusinessException("应用状态更新失败");
         }
+        adminCacheManager.evictChannelAppCache(dto.getAppId());
     }
 
     @Override
@@ -152,6 +156,7 @@ public class ChannelAppServiceImpl extends ServiceImpl<ChannelAppMapper, Channel
         if (DataBaseUtils.isBatchDataModifyFail(deleted, dto.getIds().size())) {
             throw new BusinessException("删除应用失败");
         }
+        adminCacheManager.evictBatchChannelAppCache(dto.getIds());
     }
 
     @Override

@@ -15,16 +15,31 @@
  * limitations under the License.
  */
 
-package com.oszero.deliver.business.common.mapper;
+package com.oszero.deliver.business.common.model.entity.database;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.oszero.deliver.business.common.model.entity.database.TemplateApp;
-import org.apache.ibatis.annotations.Mapper;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.oszero.deliver.business.common.model.common.BaseGroupIdEntity;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * @author oszero
  * @version 1.0.0
  */
-@Mapper
-public interface TemplateAppMapper extends BaseMapper<TemplateApp> {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+public class ChannelApp extends BaseGroupIdEntity {
+    @TableId(type = IdType.AUTO)
+    private Long appId;
+    private String appName;
+    private String appDescription;
+    private Integer channelType;
+    private Integer channelProviderType;
+    private String appConfig;
+    private Integer appStatus;
 }

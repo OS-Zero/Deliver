@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 
-package com.oszero.deliver.business.common.model.entity;
+package com.oszero.deliver.business.common.model.entity.database;
 
-import com.oszero.deliver.business.common.model.common.BaseIdEntity;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.oszero.deliver.business.common.model.common.BaseGroupIdEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -31,7 +33,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class TemplateApp extends BaseIdEntity {
+public class MessageTemplate extends BaseGroupIdEntity {
+    @TableId(type = IdType.AUTO)
     private Long templateId;
-    private Long appId;
+    private String templateName;
+    private String templateDescription;
+    private Integer usersType;
+    private Integer channelType;
+    private Integer channelProviderType;
+    private String messageType;
+    private Integer templateStatus;
 }

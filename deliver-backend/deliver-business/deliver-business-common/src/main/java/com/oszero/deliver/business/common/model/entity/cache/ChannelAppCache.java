@@ -15,31 +15,16 @@
  * limitations under the License.
  */
 
-package com.oszero.deliver.business.common.model.entity;
+package com.oszero.deliver.business.common.model.entity.cache;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.oszero.deliver.business.common.model.common.BaseGroupIdEntity;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 /**
  * @author oszero
- * @version 1.0.0
+ * @version 1.0.2
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-public class ChannelApp extends BaseGroupIdEntity {
-    @TableId(type = IdType.AUTO)
-    private Long appId;
-    private String appName;
-    private String appDescription;
-    private Integer channelType;
-    private Integer channelProviderType;
+public class ChannelAppCache {
     private String appConfig;
     private Integer appStatus;
 }

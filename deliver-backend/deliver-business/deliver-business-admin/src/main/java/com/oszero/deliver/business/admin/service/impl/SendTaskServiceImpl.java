@@ -41,7 +41,7 @@ import com.oszero.deliver.business.admin.util.SendMessageUtils;
 import com.oszero.deliver.business.admin.util.SendTaskUtils;
 import com.oszero.deliver.business.common.constant.CommonConstant;
 import com.oszero.deliver.business.common.mapper.MessageTemplateMapper;
-import com.oszero.deliver.business.common.model.entity.MessageTemplate;
+import com.oszero.deliver.business.common.model.entity.database.MessageTemplate;
 import com.oszero.deliver.business.common.util.DataBaseUtils;
 import com.oszero.deliver.business.common.util.DoubleStatusUtils;
 import lombok.RequiredArgsConstructor;

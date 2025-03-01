@@ -51,7 +51,7 @@ spring:
             threadPriority: 5
             threadsInheritContextClassLoaderOfInitializingThread: true
           jobStore:
-            tablePrefix: qrtz_
+            tablePrefix: DELIVER_QRTZ_
             useProperties: false
             isClustered: true
             clusterCheckinInterval: 15000

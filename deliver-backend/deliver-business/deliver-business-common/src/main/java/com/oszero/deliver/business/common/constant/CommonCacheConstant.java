@@ -24,4 +24,11 @@ package com.oszero.deliver.business.common.constant;
 public interface CommonCacheConstant {
     String SPLIT = "::";
     String REDIS_CACHE_PREFIX = "Cache" + SPLIT + "Deliver" + SPLIT;
+
+    /********** 消息模板缓存常量 **********/
+    String MESSAGE_TEMPLATE_CACHE_NAME = REDIS_CACHE_PREFIX + "MessageTemplate" + SPLIT;
+    /********** 渠道应用缓存常量 **********/
+    String CHANNEL_APP_CACHE_NAME = REDIS_CACHE_PREFIX + "ChannelApp" + SPLIT;
+    /********** 模板与应用关联缓存常量 **********/
+    String TEMPLATE_APP_CACHE_NAME = REDIS_CACHE_PREFIX + "TemplateApp" + SPLIT;
 }

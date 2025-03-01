@@ -18,7 +18,7 @@
 package com.oszero.deliver.business.common.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.oszero.deliver.business.common.model.entity.ChannelApp;
+import com.oszero.deliver.business.common.model.entity.database.ChannelApp;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

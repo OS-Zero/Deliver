@@ -37,7 +37,7 @@ import com.oszero.deliver.business.common.constant.CommonConstant;
 import com.oszero.deliver.business.common.enums.ChannelTypeEnum;
 import com.oszero.deliver.business.common.enums.PlatformFileTypeEnum;
 import com.oszero.deliver.business.common.mapper.ChannelAppMapper;
-import com.oszero.deliver.business.common.model.entity.ChannelApp;
+import com.oszero.deliver.business.common.model.entity.database.ChannelApp;
 import com.oszero.deliver.business.common.util.AesUtils;
 import com.oszero.deliver.platformclient.client.ding.DingClient;
 import com.oszero.deliver.platformclient.client.feishu.FeiShuClient;

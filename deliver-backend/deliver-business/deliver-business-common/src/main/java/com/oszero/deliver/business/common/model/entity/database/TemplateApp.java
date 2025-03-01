@@ -15,15 +15,23 @@
  * limitations under the License.
  */
 
-package com.oszero.deliver.business.admin.cache;
+package com.oszero.deliver.business.common.model.entity.database;
 
-import com.oszero.deliver.business.common.constant.CommonCacheConstant;
+import com.oszero.deliver.business.common.model.common.BaseIdEntity;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * @author oszero
  * @version 1.0.0
  */
-public interface AdminCacheConstant {
-    String LOGIN_USER_PREFIX = CommonCacheConstant.REDIS_CACHE_PREFIX + "LoginUser" + CommonCacheConstant.SPLIT;
-    String VERIFICATION_CODE_PREFIX = CommonCacheConstant.REDIS_CACHE_PREFIX + "VerificationCode" + CommonCacheConstant.SPLIT;
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+public class TemplateApp extends BaseIdEntity {
+    private Long templateId;
+    private Long appId;
 }

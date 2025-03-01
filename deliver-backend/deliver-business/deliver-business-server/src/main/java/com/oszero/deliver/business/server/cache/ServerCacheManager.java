@@ -17,6 +17,12 @@
 
 package com.oszero.deliver.business.server.cache;
 
+import com.oszero.deliver.business.common.cache.ChannelAppCacheService;
+import com.oszero.deliver.business.common.cache.MessageTemplateCacheService;
+import com.oszero.deliver.business.common.cache.TemplateAppCacheService;
+import com.oszero.deliver.business.common.model.entity.cache.ChannelAppCache;
+import com.oszero.deliver.business.common.model.entity.cache.MessageTemplateCache;
+import com.oszero.deliver.business.common.model.entity.cache.TemplateAppCache;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,4 +33,19 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ServerCacheManager {
+    private final MessageTemplateCacheService messageTemplateCacheService;
+    private final ChannelAppCacheService channelAppCacheService;
+    private final TemplateAppCacheService templateAppCacheService;
+
+    public MessageTemplateCache getMessageTemplate(Long templateId) {
+        return messageTemplateCacheService.getOrLoad(templateId);
+    }
+
+    public ChannelAppCache getChannelApp(Long channelAppId) {
+        return channelAppCacheService.getOrLoad(channelAppId);
+    }
+
+    public TemplateAppCache getTemplateApp(Long templateAppId) {
+        return templateAppCacheService.getOrLoad(templateAppId);
+    }
 }

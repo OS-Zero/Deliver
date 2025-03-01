@@ -17,11 +17,16 @@
 
 package com.oszero.deliver.business.admin.cache;
 
+import com.oszero.deliver.business.admin.constant.AdminCacheConstant;
 import com.oszero.deliver.business.admin.model.entity.cache.CacheUserInfo;
+import com.oszero.deliver.business.common.cache.ChannelAppCacheService;
+import com.oszero.deliver.business.common.cache.MessageTemplateCacheService;
+import com.oszero.deliver.business.common.cache.TemplateAppCacheService;
 import com.oszero.deliver.business.common.util.RedisUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -33,6 +38,9 @@ import java.util.concurrent.TimeUnit;
 public class AdminCacheManager {
 
     private final RedisUtils adminRedisUtils;
+    private final MessageTemplateCacheService messageTemplateCacheService;
+    private final ChannelAppCacheService channelAppCacheService;
+    private final TemplateAppCacheService templateAppCacheService;
 
     /********** 用户相关业务 **********/
     public void saveLoginUser(String token, CacheUserInfo loginUser) {
@@ -55,5 +63,27 @@ public class AdminCacheManager {
     public void saveVerificationCode(String userEmail, String verificationCode) {
         adminRedisUtils.savaStringByKeyAndExpireTime(AdminCacheConstant.VERIFICATION_CODE_PREFIX + userEmail,
                 verificationCode, 10L, TimeUnit.MINUTES);
+    }
+
+    /********** 消息模板相关业务 **********/
+    public void evictMessageTemplateCache(Long messageTemplateId) {
+        messageTemplateCacheService.evict(messageTemplateId);
+    }
+    public void evictBatchMessageTemplateCache(List<Long> messageTemplateIdList) {
+        messageTemplateCacheService.batchEvict(messageTemplateIdList);
+    }
+    /********** 渠道应用相关业务 **********/
+    public void evictChannelAppCache(Long channelAppId) {
+        channelAppCacheService.evict(channelAppId);
+    }
+    public void evictBatchChannelAppCache(List<Long> channelAppIdList) {
+        channelAppCacheService.batchEvict(channelAppIdList);
+    }
+    /********** 模板与应用关联相关业务 **********/
+    public void evictTemplateAppCache(Long templateId) {
+        templateAppCacheService.evict(templateId);
+    }
+    public void evictBatchTemplateAppCache(List<Long> templateIdList) {
+        templateAppCacheService.batchEvict(templateIdList);
     }
 }

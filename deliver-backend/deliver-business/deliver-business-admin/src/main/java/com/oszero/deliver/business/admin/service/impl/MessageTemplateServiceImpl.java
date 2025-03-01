@@ -23,6 +23,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.oszero.deliver.business.admin.cache.AdminCacheManager;
 import com.oszero.deliver.business.admin.constant.MessageParamConstant;
 import com.oszero.deliver.business.admin.exception.BusinessException;
 import com.oszero.deliver.business.admin.model.dto.request.common.DeleteIdsRequestDto;
@@ -40,9 +41,9 @@ import com.oszero.deliver.business.common.enums.UsersTypeEnum;
 import com.oszero.deliver.business.common.mapper.ChannelAppMapper;
 import com.oszero.deliver.business.common.mapper.MessageTemplateMapper;
 import com.oszero.deliver.business.common.mapper.TemplateAppMapper;
-import com.oszero.deliver.business.common.model.entity.ChannelApp;
-import com.oszero.deliver.business.common.model.entity.MessageTemplate;
-import com.oszero.deliver.business.common.model.entity.TemplateApp;
+import com.oszero.deliver.business.common.model.entity.database.ChannelApp;
+import com.oszero.deliver.business.common.model.entity.database.MessageTemplate;
+import com.oszero.deliver.business.common.model.entity.database.TemplateApp;
 import com.oszero.deliver.business.common.util.DataBaseUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -64,6 +65,7 @@ public class MessageTemplateServiceImpl extends ServiceImpl<MessageTemplateMappe
     private final ChannelAppMapper channelAppMapper;
     private final TemplateAppMapper templateAppMapper;
     private final SendMessageUtils sendMessageUtils;
+    private final AdminCacheManager adminCacheManager;
 
     @Override
     public SearchResponseDto<MessageTemplateSearchResponseDto> search(MessageTemplateSearchRequestDto dto) {
@@ -128,6 +130,8 @@ public class MessageTemplateServiceImpl extends ServiceImpl<MessageTemplateMappe
                 throw new BusinessException("批量删除模板失败");
             }
         });
+        adminCacheManager.evictBatchMessageTemplateCache(dto.getIds());
+        adminCacheManager.evictBatchTemplateAppCache(dto.getIds());
     }
 
     @Override
@@ -148,6 +152,8 @@ public class MessageTemplateServiceImpl extends ServiceImpl<MessageTemplateMappe
         if (DataBaseUtils.isSingleDataModifyFail(update)) {
             throw new BusinessException("更新模板失败");
         }
+        adminCacheManager.evictMessageTemplateCache(dto.getTemplateId());
+        adminCacheManager.evictTemplateAppCache(dto.getTemplateId());
     }
 
     @Override
@@ -158,6 +164,7 @@ public class MessageTemplateServiceImpl extends ServiceImpl<MessageTemplateMappe
         if (DataBaseUtils.isSingleDataModifyFail(updateById)) {
             throw new BusinessException("更新模板失败");
         }
+        adminCacheManager.evictMessageTemplateCache(dto.getTemplateId());
     }
 
     @Override

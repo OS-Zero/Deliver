@@ -17,16 +17,13 @@
 
 package com.oszero.deliver.business.server.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.oszero.deliver.business.common.mapper.ChannelAppMapper;
-import com.oszero.deliver.business.common.mapper.MessageTemplateMapper;
-import com.oszero.deliver.business.common.mapper.TemplateAppMapper;
-import com.oszero.deliver.business.common.model.entity.ChannelApp;
-import com.oszero.deliver.business.common.model.entity.MessageTemplate;
-import com.oszero.deliver.business.common.model.entity.TemplateApp;
+import com.oszero.deliver.business.common.model.entity.cache.ChannelAppCache;
+import com.oszero.deliver.business.common.model.entity.cache.MessageTemplateCache;
+import com.oszero.deliver.business.common.model.entity.cache.TemplateAppCache;
 import com.oszero.deliver.business.common.util.DoubleStatusUtils;
 import com.oszero.deliver.business.common.util.IpUtils;
 import com.oszero.deliver.business.common.util.TraceIdUtils;
+import com.oszero.deliver.business.server.cache.ServerCacheManager;
 import com.oszero.deliver.business.server.exception.MessageException;
 import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.business.server.model.dto.request.SendRequestDto;
@@ -49,9 +46,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class SendServiceImpl implements SendService {
 
-    private final MessageTemplateMapper messageTemplateMapper;
-    private final ChannelAppMapper channelAppMapper;
-    private final TemplateAppMapper templateAppMapper;
+    private final ServerCacheManager serverCacheManager;
     private final LinkHandler linkHandler;
 
     @Override
@@ -72,7 +67,7 @@ public class SendServiceImpl implements SendService {
         sendTaskDto.setRetryMaxCount(retryMaxCount);
         sendTaskDto.setRetryCount(0);
 
-        MessageTemplate template = messageTemplateMapper.selectById(templateId);
+        MessageTemplateCache template = serverCacheManager.getMessageTemplate(templateId);
         if (Objects.isNull(template)) {
             throw new MessageException("传入的模板ID非法，请输入正确的templateId");
         }
@@ -80,25 +75,25 @@ public class SendServiceImpl implements SendService {
         Integer channelProviderType = template.getChannelProviderType();
         String messageType = template.getMessageType();
         Integer usersType = template.getUsersType();
+        Long groupId = template.getGroupId();
         sendTaskDto.setUsersType(usersType);
         sendTaskDto.setChannelType(channelType);
         sendTaskDto.setChannelProviderType(channelProviderType);
         sendTaskDto.setMessageType(messageType);
+        sendTaskDto.setGroupId(groupId);
 
         if (DoubleStatusUtils.disable(template.getTemplateStatus())) {
             throw new MessageException("此模板已禁用，再次使用请启用此模板");
         }
 
-        LambdaQueryWrapper<TemplateApp> templateAppLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        templateAppLambdaQueryWrapper.eq(TemplateApp::getTemplateId, templateId);
-        TemplateApp templateApp = templateAppMapper.selectOne(templateAppLambdaQueryWrapper);
+        TemplateAppCache templateApp = serverCacheManager.getTemplateApp(templateId);
         if (Objects.isNull(templateApp)) {
             throw new MessageException("未获取到模板所关联的应用，请检查关联的应用是否存在");
         }
         Long appId = templateApp.getAppId();
         sendTaskDto.setAppId(appId);
 
-        ChannelApp channelApp = channelAppMapper.selectById(appId);
+        ChannelAppCache channelApp = serverCacheManager.getChannelApp(appId);
         if (Objects.isNull(channelApp)) {
             throw new MessageException("未获取到模板所关联的应用，请检查关联的应用是否存在");
         }

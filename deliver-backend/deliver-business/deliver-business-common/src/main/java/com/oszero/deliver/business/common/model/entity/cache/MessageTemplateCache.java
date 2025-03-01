@@ -15,16 +15,20 @@
  * limitations under the License.
  */
 
-package com.oszero.deliver.business.common.mapper;
+package com.oszero.deliver.business.common.model.entity.cache;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.oszero.deliver.business.common.model.entity.database.TemplateApp;
-import org.apache.ibatis.annotations.Mapper;
+import lombok.Data;
 
 /**
  * @author oszero
- * @version 1.0.0
+ * @version 1.0.2
  */
-@Mapper
-public interface TemplateAppMapper extends BaseMapper<TemplateApp> {
+@Data
+public class MessageTemplateCache {
+    private Integer usersType;
+    private Integer channelType;
+    private Integer channelProviderType;
+    private String messageType;
+    private Integer templateStatus;
+    private Long groupId;
 }

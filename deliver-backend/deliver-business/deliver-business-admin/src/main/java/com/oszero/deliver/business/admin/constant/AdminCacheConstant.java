@@ -15,16 +15,15 @@
  * limitations under the License.
  */
 
-package com.oszero.deliver.business.common.mapper;
+package com.oszero.deliver.business.admin.constant;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.oszero.deliver.business.common.model.entity.database.TemplateApp;
-import org.apache.ibatis.annotations.Mapper;
+import com.oszero.deliver.business.common.constant.CommonCacheConstant;
 
 /**
  * @author oszero
  * @version 1.0.0
  */
-@Mapper
-public interface TemplateAppMapper extends BaseMapper<TemplateApp> {
+public interface AdminCacheConstant {
+    String LOGIN_USER_PREFIX = CommonCacheConstant.REDIS_CACHE_PREFIX + "LoginUser" + CommonCacheConstant.SPLIT;
+    String VERIFICATION_CODE_PREFIX = CommonCacheConstant.REDIS_CACHE_PREFIX + "VerificationCode" + CommonCacheConstant.SPLIT;
 }

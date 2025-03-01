@@ -46,6 +46,8 @@
         <easyexcel.version>4.0.3</easyexcel.version>
         <spotless-maven-plugin.version>2.22.1</spotless-maven-plugin.version>
         <disruptor.version>3.4.4</disruptor.version>
+        <redisson.version>3.23.4</redisson.version>
+        <l2cache.version>2.0.0</l2cache.version>
     </properties>
 
     <dependencyManagement>
@@ -89,6 +91,16 @@
                 <groupId>com.lmax</groupId>
                 <artifactId>disruptor</artifactId>
                 <version>${disruptor.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson-spring-boot-starter</artifactId>
+                <version>${redisson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.ck-jesse</groupId>
+                <artifactId>l2cache-spring-boot-starter</artifactId>
+                <version>${l2cache.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
