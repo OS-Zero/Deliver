@@ -28,7 +28,6 @@ import com.oszero.deliver.platformclient.exception.ClientException;
 import com.oszero.deliver.platformclient.model.app.sms.AliYunSmsApp;
 import com.oszero.deliver.platformclient.model.app.sms.SmsApp;
 import darabonba.core.client.ClientOverrideConfiguration;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
@@ -40,7 +39,6 @@ import java.util.concurrent.CompletableFuture;
  * @author oszero
  * @version 1.0.0
  */
-@Service
 public class AliYunSmsClient implements SmsClient {
 
     private static final String ENDPOINT_OVERRIDE = "dysmsapi.aliyuncs.com";

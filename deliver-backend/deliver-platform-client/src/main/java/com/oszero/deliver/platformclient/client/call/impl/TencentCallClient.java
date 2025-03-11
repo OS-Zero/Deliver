@@ -30,7 +30,6 @@ import com.tencentcloudapi.vms.v20200902.VmsClient;
 import com.tencentcloudapi.vms.v20200902.models.SendStatus;
 import com.tencentcloudapi.vms.v20200902.models.SendTtsVoiceRequest;
 import com.tencentcloudapi.vms.v20200902.models.SendTtsVoiceResponse;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +42,6 @@ import java.util.Objects;
  * @author oszero
  * @version 1.0.0
  */
-@Component
 public class TencentCallClient implements CallClient {
     @Override
     public void sendCall(CallApp callApp, Map<String, Object> paramMap, List<String> users) throws Exception {

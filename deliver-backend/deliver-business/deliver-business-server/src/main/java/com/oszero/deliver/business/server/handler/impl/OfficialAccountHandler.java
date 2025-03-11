@@ -55,7 +55,15 @@ public class OfficialAccountHandler extends BaseHandler {
         List<String> users = sendTaskDto.getUsers();
         if (ClientConstant.OFFICIAL_ACCOUNT_USER_ID.equals(officialAccountUserIdType)) {
             // 发送公众号模板消息
-            officialAccountClient.sendMessage(accessToken, messageParam, users);
+            sendMessageToBatch(accessToken, messageParam, users);
         }
+    }
+
+    public void sendMessageToBatch(String accessToken, Map<String, Object> paramMap, List<String> users) {
+        paramMap.remove(ClientConstant.OFFICIAL_ACCOUNT_USER_ID);
+        users.forEach(user -> {
+            paramMap.put(ClientConstant.OFFICIAL_ACCOUNT_USER_ID, user);
+            officialAccountClient.sendMessage(accessToken, paramMap);
+        });
     }
 }

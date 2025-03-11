@@ -24,8 +24,6 @@ import com.oszero.deliver.platformclient.exception.ClientException;
 import com.oszero.deliver.platformclient.model.app.WeChatApp;
 import com.oszero.deliver.platformclient.model.dto.PlatformFileDto;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -36,8 +34,6 @@ import java.util.stream.Collectors;
  * @author oszero
  * @version 1.0.0
  */
-@Slf4j
-@Component
 public class WeChatClient {
 
     public String getAccessToken(WeChatApp weChatApp) {
@@ -215,7 +211,6 @@ public class WeChatClient {
             if (!Objects.equals(wechatResponse.getErrcode(), 0)) {
                 throw new ClientException(wechatResponse.getErrmsg());
             }
-            log.info("上传企微平台文件成功");
             return wechatResponse.getMedia_id();
         } catch (Exception e) {
             throw new ClientException("上传企业微信平台文件失败，" + e.getMessage() + "！！！");

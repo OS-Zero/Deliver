@@ -65,6 +65,12 @@ public class AdminCacheManager {
                 verificationCode, 10L, TimeUnit.MINUTES);
     }
 
+    /********** 缓存清理相关业务 **********/
+    public void evictAllCache() {
+        messageTemplateCacheService.clear();
+        channelAppCacheService.clear();
+        templateAppCacheService.clear();
+    }
     /********** 消息模板相关业务 **********/
     public void evictMessageTemplateCache(Long messageTemplateId) {
         messageTemplateCacheService.evict(messageTemplateId);

@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.oszero</groupId>
         <artifactId>deliver-web</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0.2-SNAPSHOT</version>
     </parent>
 
     <artifactId>deliver-web-admin</artifactId>

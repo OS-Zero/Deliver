@@ -29,8 +29,6 @@ import com.tencentcloudapi.common.profile.HttpProfile;
 import com.tencentcloudapi.sms.v20210111.models.SendSmsRequest;
 import com.tencentcloudapi.sms.v20210111.models.SendSmsResponse;
 import com.tencentcloudapi.sms.v20210111.models.SendStatus;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,8 +41,6 @@ import java.util.Objects;
  * @author oszero
  * @version 1.0.0
  */
-@Slf4j
-@Service
 public class TencentSmsClient implements SmsClient {
     @Override
     public void sendSms(SmsApp smsApp, Map<String, Object> paramMap, List<String> users) {

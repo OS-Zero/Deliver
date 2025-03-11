@@ -22,7 +22,6 @@ import com.oszero.deliver.platformclient.model.app.MailApp;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -32,7 +31,6 @@ import java.util.Properties;
  * @author oszero
  * @version 1.0.0
  */
-@Component
 public class MailClient {
 
     public void sendMail(MailApp mailApp, Map<String, Object> paramMap, List<String> users) {

@@ -24,8 +24,6 @@ import com.oszero.deliver.platformclient.exception.ClientException;
 import com.oszero.deliver.platformclient.model.app.DingApp;
 import com.oszero.deliver.platformclient.model.dto.PlatformFileDto;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -35,8 +33,6 @@ import java.util.Objects;
  * @author oszero
  * @version 1.0.0
  */
-@Slf4j
-@Component
 public class DingClient {
 
     public String getAccessToken(DingApp dingApp) {
@@ -166,7 +162,6 @@ public class DingClient {
         } catch (Exception e) {
             throw new ClientException("上传钉钉文件失败，" + e.getMessage());
         }
-        log.info("上传钉钉文件成功");
         return dingBody.getMediaId();
     }
 }

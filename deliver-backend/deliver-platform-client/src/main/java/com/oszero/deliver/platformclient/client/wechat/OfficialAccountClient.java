@@ -20,14 +20,10 @@ package com.oszero.deliver.platformclient.client.wechat;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONUtil;
-import com.oszero.deliver.platformclient.common.ClientConstant;
 import com.oszero.deliver.platformclient.exception.ClientException;
 import com.oszero.deliver.platformclient.model.app.OfficialAccountApp;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -35,8 +31,6 @@ import java.util.Objects;
  * @author oszero
  * @version 1.0.0
  */
-@Slf4j
-@Component
 public class OfficialAccountClient {
 
     public String getAccessToken(OfficialAccountApp officialAccountApp) {
@@ -60,14 +54,6 @@ public class OfficialAccountClient {
             throw new ClientException("微信公众号获取Token接口调用失败，" + e.getMessage());
         }
         return officialAccountResponse.getAccess_token();
-    }
-
-    public void sendMessage(String accessToken, Map<String, Object> paramMap, List<String> users) {
-        paramMap.remove(ClientConstant.OFFICIAL_ACCOUNT_USER_ID);
-        users.forEach(user -> {
-            paramMap.put(ClientConstant.OFFICIAL_ACCOUNT_USER_ID, user);
-            sendMessage(accessToken, paramMap);
-        });
     }
 
     public void sendMessage(String accessToken, Map<String, Object> paramMap) {

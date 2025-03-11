@@ -27,8 +27,6 @@ import com.oszero.deliver.platformclient.model.app.FeiShuApp;
 import com.oszero.deliver.platformclient.model.dto.PlatformFileDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.List;
@@ -42,8 +40,6 @@ import java.util.stream.Collectors;
  * @author oszero
  * @version 1.0.0
  */
-@Slf4j
-@Component
 public class FeiShuClient {
 
     public String getTenantAccessToken(FeiShuApp feiShuApp) {
@@ -78,18 +74,7 @@ public class FeiShuClient {
         }
     }
 
-    public void sendMessage(String tenantAccessToken, List<String> users, Map<String, Object> paramMap, String feiShuUserIdType) {
-        try {
-            Object content = paramMap.get("content");
-            String msgType = paramMap.get("msg_type").toString();
-            String contentJson = JSONUtil.toJsonStr(content);
-            users.forEach(userId -> this.sendMessage(tenantAccessToken, userId, contentJson, msgType, feiShuUserIdType));
-        } catch (Exception e) {
-            throw new ClientException("飞书消息发送失败，" + e.getMessage());
-        }
-    }
-
-    private void sendMessage(String tenantAccessToken, String userId, String contentJson, String msgType, String feiShuUserIdType) {
+    public void sendMessage(String tenantAccessToken, String userId, String contentJson, String msgType, String feiShuUserIdType) {
         @Data
         class SendMessageResponse {
             private Integer code;

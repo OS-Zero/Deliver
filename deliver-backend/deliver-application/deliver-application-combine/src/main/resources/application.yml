@@ -84,6 +84,8 @@ mq-type: disruptor
 # 服务端发送接口地址
 deliver-server:
   url: http://localhost:9090/backend/open/sendMessage
+# 是否开启限流降级
+enable-limit: false
 # 二级缓存配置
 l2cache:
   config:

@@ -20,6 +20,7 @@ package com.oszero.deliver.business.server.handler.impl;
 import cn.hutool.json.JSONUtil;
 import com.oszero.deliver.business.common.enums.MessageTypeEnum;
 import com.oszero.deliver.business.common.util.AppConfigUtils;
+import com.oszero.deliver.business.server.exception.MessageException;
 import com.oszero.deliver.business.server.handler.BaseHandler;
 import com.oszero.deliver.business.server.model.dto.common.SendTaskDto;
 import com.oszero.deliver.platformclient.client.feishu.FeiShuClient;
@@ -69,17 +70,28 @@ public class FeiShuHandler extends BaseHandler {
             if (BATCH_MESSAGE_TYPE.contains(msgType)) {
                 feiShuClient.sendMessageBatch(tenantAccessToken, messageParam);
             } else { // 否则单个发送
-                feiShuClient.sendMessage(tenantAccessToken, users, messageParam, feiShuUserIdType);
+                sendMessageToBatch(tenantAccessToken, users, messageParam, feiShuUserIdType);
             }
         } else if (ClientConstant.FEI_SHU_EMAIL.equals(feiShuUserIdType)) {
             // 邮箱类型只支持单个发送
-            feiShuClient.sendMessage(tenantAccessToken, users, messageParam, feiShuUserIdType);
+            sendMessageToBatch(tenantAccessToken, users, messageParam, feiShuUserIdType);
         } else if (ClientConstant.FEI_SHU_CHAT_ID.equals((feiShuUserIdType))) {
             // 群聊类型只支持单个发送
-            feiShuClient.sendMessage(tenantAccessToken, users, messageParam, feiShuUserIdType);
+            sendMessageToBatch(tenantAccessToken, users, messageParam, feiShuUserIdType);
         } else if (ClientConstant.FEI_SHU_DEPT_ID.equals((feiShuUserIdType))) {
             // 部门只能批量
             feiShuClient.sendMessageBatch(tenantAccessToken, messageParam);
+        }
+    }
+
+    public void sendMessageToBatch(String tenantAccessToken, List<String> users, Map<String, Object> paramMap, String feiShuUserIdType) {
+        try {
+            Object content = paramMap.get("content");
+            String msgType = paramMap.get("msg_type").toString();
+            String contentJson = JSONUtil.toJsonStr(content);
+            users.forEach(userId -> feiShuClient.sendMessage(tenantAccessToken, userId, contentJson, msgType, feiShuUserIdType));
+        } catch (Exception e) {
+            throw new MessageException("飞书消息发送失败，" + e.getMessage());
         }
     }
 }

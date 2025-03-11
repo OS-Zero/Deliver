@@ -87,4 +87,7 @@ public interface AdminPathConstant {
     String PEOPLE_GROUP_GET_EXCEL_TEMPLATE_FILE = PEOPLE_GROUP_PREFIX_PATH + "/getExcelTemplateFile";
     String PEOPLE_GROUP_ANALYSIS_EXCEL_TEMPLATE_FILE = PEOPLE_GROUP_PREFIX_PATH + "/analysisExcelTemplateFile";
     String PEOPLE_GROUP_SEARCH_BY_NAME = PEOPLE_GROUP_PREFIX_PATH + "/searchByName";
+    /********** 缓存模块 **********/
+    String CACHE_PREFIX_PATH = "/cache";
+    String CACHE_EVICT_ALL = CACHE_PREFIX_PATH + "/evictAll";
 }
