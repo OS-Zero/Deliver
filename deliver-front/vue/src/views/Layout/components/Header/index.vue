@@ -66,7 +66,7 @@ const exitGroup = () => {
 								<AppstoreOutlined />
 								分组管理
 							</span>
-							<template #overlay>
+							<template v-if="route.path.includes('/groupManage/')" #overlay>
 								<a-menu>
 									<a-menu-item>
 										<div @click="exitGroup">退出分组</div>
@@ -102,7 +102,7 @@ const exitGroup = () => {
 						</div>
 						<div style="margin-left: 60px">
 							<p>产品：Deliver 企业消息推送平台</p>
-							<p>版本：v1.0.0</p>
+							<p>版本：v1.2.0</p>
 							<a target="_blank" href="https://oszero.cn">https://oszero.cn</a>
 						</div>
 					</div>
