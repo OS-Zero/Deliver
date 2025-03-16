@@ -17,6 +17,9 @@
 
 package com.oszero.deliver.business.admin.service.impl;
 
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
+import com.oszero.deliver.business.admin.constant.UserMenuConstant;
 import com.oszero.deliver.business.admin.model.dto.response.startup.StartupResponseDto;
 import com.oszero.deliver.business.admin.service.StartupService;
 import com.oszero.deliver.business.admin.util.UserUtils;
@@ -39,15 +42,13 @@ public class StartupServiceImpl implements StartupService {
     @Override
     public StartupResponseDto startup() {
         StartupResponseDto startupResponseDto = new StartupResponseDto();
+        String currentLoginUserMenu = "{}";
         if (UserUtils.isAdminUser()) {
-            List<StartupResponseDto.CurrentLoginUserMenu> currentLoginUserMenuList = Stream.of("分组管理", "系统管理")
-                    .map(menuName -> StartupResponseDto.CurrentLoginUserMenu.builder().menuName(menuName).build()).toList();
-            startupResponseDto.setCurrentLoginUserMenuList(currentLoginUserMenuList);
+            currentLoginUserMenu = UserMenuConstant.USER_MENU_ADMIN;
         } else {
-            List<StartupResponseDto.CurrentLoginUserMenu> currentLoginUserMenuList = Stream.of("分组管理", "系统管理")
-                    .map(menuName -> StartupResponseDto.CurrentLoginUserMenu.builder().menuName(menuName).build()).toList();
-            startupResponseDto.setCurrentLoginUserMenuList(currentLoginUserMenuList);
+            currentLoginUserMenu = UserMenuConstant.USER_MENU_ORDINARY;
         }
+        startupResponseDto.setCurrentLoginUserMenu(JSONUtil.toBean(currentLoginUserMenu, JSONObject.class));
         startupResponseDto.setUsersTypeParamList(Arrays.stream(UsersTypeEnum.values()).map(usersTypeEnum -> StartupResponseDto.UsersTypeParam.builder()
                 .usersType(Integer.valueOf(usersTypeEnum.getCode()))
                 .usersTypeName(usersTypeEnum.getName())

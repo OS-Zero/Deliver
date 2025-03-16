@@ -17,6 +17,7 @@
 
 package com.oszero.deliver.business.admin.model.dto.response.startup;
 
+import cn.hutool.json.JSONObject;
 import lombok.Builder;
 import lombok.Data;
 
@@ -29,14 +30,8 @@ import java.util.List;
 @Data
 public class StartupResponseDto {
 
-    List<CurrentLoginUserMenu>  currentLoginUserMenuList;
+    JSONObject currentLoginUserMenu;
     List<UsersTypeParam> usersTypeParamList;
-
-    @Data
-    @Builder
-    public static class CurrentLoginUserMenu {
-        private String menuName;
-    }
 
     @Data
     @Builder
