@@ -10,10 +10,14 @@ import 'highlight.js/styles/stackoverflow-light.css';
 import hljs from 'highlight.js/lib/core';
 import hljsVuePlugin from '@highlightjs/vue-plugin';
 import json from 'highlight.js/lib/languages/json';
+import Form from './components/Form/index.vue';
+import Drawer from './components/Drawer/index.vue';
 if (import.meta.env.MODE === 'test') {
 	import('./mock/index.ts');
 }
 hljs.registerLanguage('json', json);
 const pinia = createPinia();
-
-createApp(App).use(router).use(pinia).use(hljsVuePlugin).mount('#app');
+const app = createApp(App);
+app.component('Form', Form);
+app.component('Drawer', Drawer);
+app.use(router).use(pinia).use(hljsVuePlugin).mount('#app');

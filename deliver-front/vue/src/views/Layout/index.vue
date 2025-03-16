@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onUnmounted, ref, watch } from 'vue'
+import { onBeforeMount, ref, watch } from 'vue'
 import Header from './components/Header/index.vue'
 import Banner from './components/Banner/index.vue'
 import Breadcrumb from './components/Breadcrumb/index.vue'
@@ -7,11 +7,12 @@ import SideBar from './components/SideBar/index.vue'
 import {
 	GithubOutlined
 } from '@ant-design/icons-vue'
-import { menuConfig } from "@/config/menu"
 import { ItemType } from 'ant-design-vue'
-import emitter from '@/utils/mitt'
 import { useRouter } from 'vue-router'
+import type { CSSProperties } from 'vue';
+import { useMenuConfig } from '@/hooks/menu'
 const router = useRouter()
+const { menuConfig, updateMenuConfig } = useMenuConfig()
 let items = ref<ItemType[] | null>(null)
 const onTabChange = (tab: string) => {
 	const groupId = localStorage.getItem("group_id");
@@ -20,7 +21,6 @@ const onTabChange = (tab: string) => {
 const onCardSelected = (_card: string) => {
 	items.value = menuConfig["groupManage"]
 }
-emitter.on("card", onCardSelected)
 const showBreadcrumb = ref(false)
 watch(() => router.currentRoute.value.path, (to: string) => {
 	showBreadcrumb.value = false
@@ -30,10 +30,9 @@ watch(() => router.currentRoute.value.path, (to: string) => {
 }, {
 	immediate: true
 })
-onUnmounted(() => {
-	emitter.off("card", onCardSelected)
+onBeforeMount(() => {
+	updateMenuConfig()
 })
-import type { CSSProperties } from 'vue';
 const headerStyle: CSSProperties = {
 	paddingInline: 0,
 	backgroundColor: '#fff',
