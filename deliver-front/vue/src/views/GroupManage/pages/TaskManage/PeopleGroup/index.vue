@@ -1,63 +1,53 @@
 <script lang="ts" setup>
 import { ref, onBeforeMount, reactive, h, watch, onUnmounted } from 'vue'
 import { deletePeopleGroup, getExcelTemplateFile, getPeopleGroup } from '@/api/peopleGroup'
-import { filterForm, peopleGroupColumns } from "@/config/peopleGroup"
+import { filterFormSchema, peopleGroupColumns } from "@/config/peopleGroup"
 import { CopyOutlined, DownOutlined, ExclamationCircleOutlined, FilterOutlined, CloseOutlined } from '@ant-design/icons-vue';
-import { copyToClipboard, getDataFromSchema } from '@/utils/utils';
-import { FormInstance, message, Modal, TableProps } from 'ant-design-vue';
+import { message, Modal, TableProps } from 'ant-design-vue';
 import SearchInput from '@/components/SearchInput/index.vue'
-import { debounce } from 'lodash'
 import { usePagination } from '@/hooks/table';
 import { Key } from 'ant-design-vue/lib/_util/type';
-import { PeopleGroup } from '@/types/peopleGroup';
 import PeopleGroupDrawer from './components/PeopleGroupDrawer.vue';
 import { getColor } from '@/utils/table';
+import { useForm } from '@/hooks/form';
+import useRequest from '@/hooks/request';
+import { useClipboard } from '@/hooks/clipboard';
+import { PeopleGroup } from '@/types/peopleGroup';
 
 type Operation = 'add' | 'edit' | 'delete' | 'more' | 'download'
-const dataSource = ref<PeopleGroup[]>([])
-const loading = ref(false)
 const searchValue = ref('')
-const handleSearch = async () => {
-	try {
-		loading.value = true
-		const { records, total } = await getPeopleGroup({ peopleGroupName: searchValue.value, ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
-		dataSource.value = records
-		pagination.total = total
-		loading.value = false
-	} catch (error) {
-		loading.value = false
-	}
 
-}
-const debounceSearch = debounce(handleSearch, 200)
+const { formRef, formData: filterForm } = useForm(filterFormSchema)
+const { loading, data: tableData, run: handleSearch } = useRequest(
+	getPeopleGroup,
+	() => ({ peopleGroupName: searchValue.value, ...filterForm.value, pageSize: pagination.pageSize, currentPage: pagination.current }),
+	{
+		debounce: true,
+		onFinish(data) {
+			pagination.total = data.total
+		},
+		cacheTime: 1000 * 60
+	}
+)
 const { pagination, resetPagination } = usePagination(handleSearch)
 watch(filterForm, () => {
 	resetPagination()
-	debounceSearch()
+	handleSearch()
 })
-const copyId = async (text: string) => {
-	try {
-		await copyToClipboard(text)
-		message.success('复制成功')
-	} catch (error) {
-		message.error('复制失败')
-	}
-}
+const { copy } = useClipboard()
 const drawerState = reactive<{
 	open: boolean
 	operation: 'add' | 'edit' | 'more'
-	record: Record<string, any>
+	record: PeopleGroup
 }>({
 	open: false,
 	operation: 'add',
-	record: {}
+	record: {} as PeopleGroup
 })
 const filterState = reactive({
 	open: false
 })
 
-
-const formRef = ref<FormInstance>();
 const rowSelection: TableProps['rowSelection'] = reactive({
 	selectedRowKeys: [],
 	onChange: (selectedRowKeys: Key[]) => {
@@ -84,7 +74,7 @@ const operationDispatch = {
 		getExcelTemplateFile()
 	}
 }
-const handleActions = async (operation: Operation, record: Record<string, any> = {}) => {
+const handleActions = async (operation: Operation, record: PeopleGroup = (drawerState.record = {} as PeopleGroup)) => {
 	(operation === 'add' || operation === 'edit' || operation === 'more') && (drawerState.operation = operation, drawerState.open = true);
 	(operation === 'edit' || operation === 'more') && (drawerState.record = record);
 	(operation === 'delete') && operationDispatch[operation](record);
@@ -128,7 +118,7 @@ onUnmounted(() => {
 	<div class="container">
 		<div class="container-table">
 			<div class="table-header">
-				<SearchInput class="search_input" placeholder="请输入人群名" v-model="searchValue" @search="debounceSearch()">
+				<SearchInput class="search_input" placeholder="请输入人群名" v-model="searchValue" @search="handleSearch()">
 				</SearchInput>
 				<div class="operation">
 					<a-button class="btn--add" @click="handleActions('download')">下载人群模板文件</a-button>
@@ -143,12 +133,12 @@ onUnmounted(() => {
 					<a-button type="link" danger @click="handleBatchDelete">批量删除</a-button>
 				</div>
 			</div>
-			<a-table row-key="peopleGroupId" :dataSource="dataSource" :columns="peopleGroupColumns"
+			<a-table row-key="peopleGroupId" :dataSource="tableData?.records" :columns="peopleGroupColumns"
 				:row-selection="rowSelection" :pagination="pagination" :scroll="{ x: 1400 }" :loading="loading">
 				<template #bodyCell="{ column, text, record }">
 					<template v-if="column.key === 'peopleGroupId'">
 						{{ text }}
-						<CopyOutlined class="id--copy" @click="copyId(text)" />
+						<CopyOutlined class="id--copy" @click="copy(text)" />
 					</template>
 					<template v-else-if="column.key === 'usersTypeName'">
 						<a-tag :color="getColor(text)">{{ text }}</a-tag>
@@ -175,7 +165,7 @@ onUnmounted(() => {
 		</div>
 		<a-card size="small" class="filter-form" :class="{ open: filterState.open }" title="筛选">
 			<template #extra><a-button type="text" :icon="h(CloseOutlined)" @click="handleFilterClose"></a-button></template>
-			<Form ref="formRef" :form-schema="filterForm" />
+			<Form ref="formRef" :form-schema="filterFormSchema" />
 		</a-card>
 		<PeopleGroupDrawer v-bind="drawerState" @close="handleDrawerClose">
 		</PeopleGroupDrawer>

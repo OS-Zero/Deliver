@@ -79,9 +79,10 @@ const forgotOk = () => {
 	padding: var(--spacing-lg);
 	border-radius: 6px;
 	box-shadow: 0px 0px 24px 0px rgba(0, 0, 0, 0.1);
+	transition: all 100ms;
 
 	&.forgot {
-		min-height: auto;
+		min-height: 300px;
 	}
 }
 

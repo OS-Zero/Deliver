@@ -1,7 +1,7 @@
 import type { ColumnsType } from 'ant-design-vue/es/table/interface';
 import { getRangeRule, getRequiredRule } from '@/utils/validate';
-import { SearchParams, UploadPlatformFile } from '@/types/platformFile';
-import { getChannelProviderType, getChannelType, getMessageType, getPlatformFileType } from '@/api/system';
+import { PlatformFile, SearchParams, UploadPlatformFile } from '@/types/platformFile';
+import { getChannelProviderType, getChannelType, getPlatformFileType } from '@/api/system';
 import { getAppByChannel } from '@/api/channelApp';
 import { notUndefined } from '@/utils/utils';
 import { reactive } from 'vue';
@@ -81,15 +81,6 @@ const generateDispatch = (form: Schema<any>) => {
 					(form.channelProviderType.value = undefined);
 			}
 		},
-		messageType: async (data: { channelType: Channel['channelType']; channelProviderType: ChannelProvider['channelProviderType'] }) => {
-			if (notUndefined(data.channelType) && notUndefined(data.channelProviderType)) {
-				form.messageType.selectConfig!.options = (await getMessageType(data)).map((item) => ({
-					value: item.messageType,
-					label: item.messageTypeName,
-				}));
-				!form.messageType.selectConfig!.options.some((item) => item.value === form.messageType.value) && (form.messageType.value = undefined);
-			}
-		},
 		platformFileType: async (data: { channelType: Channel['channelType'] }) => {
 			form.platformFileType.selectConfig!.options = (await getPlatformFileType(data)).map((item) => ({
 				value: item.platformFileType,
@@ -110,7 +101,7 @@ const generateDispatch = (form: Schema<any>) => {
 	};
 };
 
-export const platformFileForm: Schema<UploadPlatformFile> = reactive({
+export const platformFileFormSchema: Schema<UploadPlatformFile> = reactive({
 	platformFile: {
 		value: [],
 		type: 'upload',
@@ -148,9 +139,11 @@ export const platformFileForm: Schema<UploadPlatformFile> = reactive({
 			onChange: (value: any) => {
 				setOptionsDispatch['channelProviderType']({ channelType: value });
 				setOptionsDispatch['platformFileType']({ channelType: value });
-				setOptionsDispatch['messageType']({ channelType: value, channelProviderType: platformFileForm.channelProviderType.value });
-				setOptionsDispatch['appId']({ channelType: value, channelProviderType: platformFileForm.channelProviderType.value });
+				setOptionsDispatch['appId']({ channelType: value, channelProviderType: platformFileFormSchema.channelProviderType.value });
 			},
+		},
+		init: async () => {
+			await setOptionsDispatch['channelType']();
 		},
 	},
 	channelProviderType: {
@@ -161,9 +154,11 @@ export const platformFileForm: Schema<UploadPlatformFile> = reactive({
 		selectConfig: {
 			options: [],
 			onChange: (value: any) => {
-				setOptionsDispatch['messageType']({ channelType: platformFileForm.channelType.value, channelProviderType: value });
-				setOptionsDispatch['appId']({ channelType: platformFileForm.channelType.value, channelProviderType: value });
+				setOptionsDispatch['appId']({ channelType: platformFileFormSchema.channelType.value, channelProviderType: value });
 			},
+		},
+		init: async ({ channelType }: PlatformFile) => {
+			await setOptionsDispatch['channelProviderType']({ channelType });
 		},
 	},
 	platformFileType: {
@@ -174,6 +169,9 @@ export const platformFileForm: Schema<UploadPlatformFile> = reactive({
 		selectConfig: {
 			options: [],
 		},
+		init: async ({ channelType }: PlatformFile) => {
+			await setOptionsDispatch['platformFileType']({ channelType });
+		},
 	},
 	appId: {
 		type: 'select',
@@ -183,10 +181,13 @@ export const platformFileForm: Schema<UploadPlatformFile> = reactive({
 		selectConfig: {
 			options: [],
 		},
+		init: async ({ channelType, channelProviderType }: PlatformFile) => {
+			setOptionsDispatch['appId']({ channelType, channelProviderType: channelProviderType });
+		},
 	},
 });
-export const setOptionsDispatch = generateDispatch(platformFileForm);
-export const filterForm: Schema<SearchParams> = reactive({
+export const setOptionsDispatch = generateDispatch(platformFileFormSchema);
+export const filterFormSchema: Schema<SearchParams> = reactive({
 	platformFileKey: {
 		type: 'input',
 		fieldName: 'platformFileKey',
@@ -201,9 +202,11 @@ export const filterForm: Schema<SearchParams> = reactive({
 			onChange: (value: any) => {
 				setFilterOptionsDispatch['channelProviderType']({ channelType: value });
 				setFilterOptionsDispatch['platformFileType']({ channelType: value });
-				setFilterOptionsDispatch['messageType']({ channelType: value, channelProviderType: filterForm.channelProviderType.value });
-				setFilterOptionsDispatch['appId']({ channelType: value, channelProviderType: filterForm.channelProviderType.value });
+				setFilterOptionsDispatch['appId']({ channelType: value, channelProviderType: filterFormSchema.channelProviderType.value });
 			},
+		},
+		init: async () => {
+			await setFilterOptionsDispatch['channelType']();
 		},
 	},
 	channelProviderType: {
@@ -213,8 +216,7 @@ export const filterForm: Schema<SearchParams> = reactive({
 		selectConfig: {
 			options: [],
 			onChange: (value: any) => {
-				setFilterOptionsDispatch['messageType']({ channelType: filterForm.channelType.value, channelProviderType: value });
-				setFilterOptionsDispatch['appId']({ channelType: filterForm.channelType.value, channelProviderType: value });
+				setFilterOptionsDispatch['appId']({ channelType: filterFormSchema.channelType.value, channelProviderType: value });
 			},
 		},
 	},
@@ -245,4 +247,4 @@ export const filterForm: Schema<SearchParams> = reactive({
 		label: '结束时间',
 	},
 });
-export const setFilterOptionsDispatch = generateDispatch(filterForm);
+export const setFilterOptionsDispatch = generateDispatch(filterFormSchema);

@@ -1,60 +1,48 @@
 <script lang="ts" setup>
 import { ref, onBeforeMount, reactive, h, watch } from 'vue'
 import { CopyOutlined, DownOutlined, FilterOutlined, CloseOutlined } from '@ant-design/icons-vue';
-import { copyToClipboard, getDataFromSchema } from '@/utils/utils';
-import { FormInstance, message } from 'ant-design-vue';
 import SearchInput from '@/components/SearchInput/index.vue'
-import { debounce } from 'lodash'
 import { usePagination } from '@/hooks/table';
 import { getPlatformFile } from '@/api/platformFile';
-import { PlatformFile } from '@/types/platformFile';
-import { filterForm, platformFileColumns, setFilterOptionsDispatch } from '@/config/platformFile';
+import { filterFormSchema, platformFileColumns } from '@/config/platformFile';
 import PlatformFileDrawer from './components/PlatformFileDrawer.vue';
 import { getColor } from '@/utils/table';
+import useRequest from '@/hooks/request';
+import { useForm } from '@/hooks/form';
+import { useClipboard } from '@/hooks/clipboard';
+import { PlatformFile } from '@/types/platformFile';
 type Operation = 'upload' | 'more'
-const dataSource = ref<PlatformFile[]>([])
-const loading = ref(false)
 const searchValue = ref('')
-const handleSearch = async () => {
-	try {
-		loading.value = true
-		const { records, total } = await getPlatformFile({ platformFileName: searchValue.value, ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
-		dataSource.value = records
-		pagination.total = total
-		loading.value = false
-	} catch (error) {
-		loading.value = false
-	}
 
-}
-const debounceSearch = debounce(handleSearch, 200)
+const { loading, run: handleSearch, data: tableData } = useRequest(
+	getPlatformFile,
+	() => ({ platformFileName: searchValue.value, ...filterForm.value, pageSize: pagination.pageSize, currentPage: pagination.current }), {
+	debounce: true,
+	onFinish(data) {
+		pagination.total = data.total
+	},
+	cacheTime: 1000 * 60
+})
+const { formRef, formData: filterForm } = useForm(filterFormSchema)
 const { pagination, resetPagination } = usePagination(handleSearch)
 watch(filterForm, () => {
 	resetPagination()
-	debounceSearch()
+	handleSearch()
 })
-const copyId = async (text: string) => {
-	try {
-		await copyToClipboard(text)
-		message.success('复制成功')
-	} catch (error) {
-		message.error('复制失败')
-	}
-}
+const { copy } = useClipboard()
 const drawerState = reactive<{
 	open: boolean
 	operation: 'upload' | 'more'
-	record: Record<string, any>
+	record: PlatformFile
 }>({
 	open: false,
 	operation: 'upload',
-	record: {}
+	record: {} as PlatformFile
 })
 const filterState = reactive({
 	open: false
 })
-const formRef = ref<FormInstance>();
-const handleActions = async (operation: Operation, record: Record<string, any> = {}) => {
+const handleActions = async (operation: Operation, record: PlatformFile = {} as PlatformFile) => {
 	(operation === 'upload' || operation === 'more') && (drawerState.operation = operation, drawerState.open = true);
 	(operation === 'more') && (drawerState.record = record);
 }
@@ -67,7 +55,6 @@ const handleDrawerClose = (flash: boolean = false) => {
 	flash && (resetPagination(), handleSearch());
 }
 onBeforeMount(() => {
-	setFilterOptionsDispatch['channelType']()
 	handleSearch()
 })
 </script>
@@ -76,19 +63,19 @@ onBeforeMount(() => {
 	<div class="container">
 		<div class="container-table">
 			<div class="table-header">
-				<SearchInput class="search_input" placeholder="请输入文件名" v-model="searchValue" @search="debounceSearch()">
+				<SearchInput class="search_input" placeholder="请输入文件名" v-model="searchValue" @search="handleSearch()">
 				</SearchInput>
 				<div class="operation">
 					<a-button class="btn--add" @click="handleActions('upload')" type="primary">上传</a-button>
 					<a-button :icon="h(FilterOutlined)" @click="filterState.open = !filterState.open"></a-button>
 				</div>
 			</div>
-			<a-table row-key="platformFileId" :dataSource="dataSource" :columns="platformFileColumns" :pagination="pagination"
-				:scroll="{ x: 1400 }" :loading="loading">
+			<a-table row-key="platformFileId" :dataSource="tableData?.records" :columns="platformFileColumns"
+				:pagination="pagination" :scroll="{ x: 1400 }" :loading="loading">
 				<template #bodyCell="{ column, text, record }">
 					<template v-if="column.key === 'platformFileId'">
 						{{ text }}
-						<CopyOutlined class="id--copy" @click="copyId(text)" />
+						<CopyOutlined class="id--copy" @click="copy(text)" />
 					</template>
 					<template v-else-if="column.key === 'platformFileStatus'">
 						<a-tag v-if="record[column.key]" color="success">生效中</a-tag>
@@ -120,7 +107,7 @@ onBeforeMount(() => {
 		</div>
 		<a-card size="small" class="filter-form" :class="{ open: filterState.open }" title="筛选">
 			<template #extra><a-button type="text" :icon="h(CloseOutlined)" @click="handleFilterClose"></a-button></template>
-			<Form ref="formRef" :form-schema="filterForm" />
+			<Form ref="formRef" :form-schema="filterFormSchema" />
 		</a-card>
 		<PlatformFileDrawer v-bind="drawerState" @close="handleDrawerClose"></PlatformFileDrawer>
 	</div>

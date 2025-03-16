@@ -1,4 +1,5 @@
 import { createRouter, type RouteRecordRaw, createWebHistory } from 'vue-router';
+import { start, close } from '@/utils/nprogreess.ts';
 const routes: RouteRecordRaw[] = [
 	{
 		path: '/login',
@@ -81,6 +82,14 @@ const routes: RouteRecordRaw[] = [
 							title: '我的账户 - Deliver 企业消息推送平台',
 						},
 					},
+					{
+						path: 'sentinel',
+						name: 'Sentinel控制台',
+						component: () => import('@/views/SystemManage/pages/Sentinel/index.vue'),
+						meta: {
+							title: 'Sentinel控制台 - Deliver 企业消息推送平台',
+						},
+					},
 				],
 			},
 			{
@@ -108,6 +117,7 @@ const router = createRouter({
 	routes,
 });
 router.beforeEach(function (to, from, next) {
+	start();
 	if (!localStorage.getItem('access_token') && to.path !== '/login') return next('/login');
 	//如果想访问groupManage子目录必须要有group_id
 	const arr_to = to.path.split('/').slice(1);
@@ -122,4 +132,8 @@ router.beforeEach(function (to, from, next) {
 	}
 	next();
 });
+router.afterEach(() => {
+	close();
+});
+
 export default router;

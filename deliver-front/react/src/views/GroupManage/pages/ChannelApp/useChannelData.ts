@@ -11,8 +11,15 @@ import { ChannelApp, SearchParams } from './type';
 import { transformParams } from '@/utils/omitProperty';
 import { ActionType } from '@ant-design/pro-components';
 
-const useChannelData = (props: { proTableRef: MutableRefObject<ActionType | undefined> }) => {
-  const { proTableRef } = props;
+const useChannelData = (props: {
+  proTableRef: MutableRefObject<ActionType | undefined>;
+  handlePageChange: (params: { current: number; pageSize: number }) => void;
+}) => {
+  const { proTableRef, handlePageChange } = props;
+  const defaultParams = {
+    current: 1,
+    pageSize: 10
+  };
   /**
    * 搜索请求表单数据
    * @param data
@@ -31,8 +38,14 @@ const useChannelData = (props: { proTableRef: MutableRefObject<ActionType | unde
    * 新增
    * @param data
    */
-  const saveChannelData = async (params: ChannelApp) =>
-    params?.appId ? await updateChannelApp(params) : await saveChannelApp(params);
+  const saveChannelData = async (params: ChannelApp) => {
+    if (params?.appId) {
+      await updateChannelApp(params);
+    } else {
+      await saveChannelApp(params);
+    }
+    handlePageChange(defaultParams);
+  };
 
   /**
    * 更新状态
@@ -48,6 +61,7 @@ const useChannelData = (props: { proTableRef: MutableRefObject<ActionType | unde
    */
   const resetProTable = () => {
     (proTableRef as MutableRefObject<ActionType>)?.current?.reset?.();
+    handlePageChange(defaultParams);
   };
 
   const deleteChannelData = useCallback((ids: number[], isBatchDelete: boolean = false) => {

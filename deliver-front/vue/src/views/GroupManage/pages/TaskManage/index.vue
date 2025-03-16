@@ -1,64 +1,54 @@
 <script lang="ts" setup>
 import { ref, onBeforeMount, reactive, h, watch } from 'vue'
 import { deleteTask, updateTaskStatus, getTask, sendRealTimeMessage } from '@/api/task'
-import { taskColumns, filterForm } from "@/config/task"
+import { taskColumns, filterFormSchema } from "@/config/task"
 import { CopyOutlined, DownOutlined, ExclamationCircleOutlined, FilterOutlined, CloseOutlined } from '@ant-design/icons-vue';
-import { copyToClipboard, getDataFromSchema } from '@/utils/utils';
-import { FormInstance, message, Modal, TableProps } from 'ant-design-vue';
+import { message, Modal, TableProps } from 'ant-design-vue';
 import SearchInput from '@/components/SearchInput/index.vue'
 import { debounce } from 'lodash'
 import { usePagination } from '@/hooks/table';
 import { Key } from 'ant-design-vue/lib/_util/type';
-import { Task } from '@/types/task';
 import TaskGroupDrawer from './components/TaskGroupDrawer.vue';
 import { getColor } from '@/utils/table';
+import useRequest from '@/hooks/request';
+import { useForm } from '@/hooks/form';
+import { useClipboard } from '@/hooks/clipboard';
+import { Task } from '@/types/task';
 
 type Operation = 'add' | 'edit' | 'delete' | 'more' | 'sendTask'
-const dataSource = ref<Task[]>([])
-const loading = ref(false)
 const searchValue = ref('')
-const handleSearch = async () => {
-	try {
-		loading.value = true
-		console.log(searchValue.value);
-
-		const { records, total } = await getTask({ taskName: searchValue.value, ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
-		dataSource.value = records
-		pagination.total = total
-		loading.value = false
-	} catch (error) {
-		loading.value = false
+const { formRef, formData: filterForm } = useForm(filterFormSchema)
+const { loading, data: tableData, run: handleSearch } = useRequest(
+	getTask,
+	() => ({ taskName: searchValue.value, ...filterForm.value, pageSize: pagination.pageSize, currentPage: pagination.current }),
+	{
+		debounce: true,
+		onFinish(data) {
+			pagination.total = data.total
+		},
+		cacheTime: 1000 * 60
 	}
-
-}
+)
 const debounceSearch = debounce(handleSearch, 200)
 const { pagination, resetPagination } = usePagination(handleSearch)
 watch(filterForm, () => {
 	resetPagination()
 	debounceSearch()
 })
-const copyId = async (text: string) => {
-	try {
-		await copyToClipboard(text)
-		message.success('复制成功')
-	} catch (error) {
-		message.error('复制失败')
-	}
-}
+const { copy } = useClipboard()
 const drawerState = reactive<{
 	open: boolean
 	operation: 'add' | 'edit' | 'more'
-	record: Record<string, any>
+	record: Task
 }>({
 	open: false,
 	operation: 'add',
-	record: {}
+	record: {} as Task
 })
 const filterState = reactive({
 	open: false
 })
 
-const formRef = ref<FormInstance>();
 const rowSelection: TableProps['rowSelection'] = reactive({
 	selectedRowKeys: [],
 	onChange: (selectedRowKeys: Key[]) => {
@@ -84,7 +74,7 @@ const operationDispatch = {
 		message.success('发送成功')
 	}
 }
-const handleActions = async (operation: Operation, record: Record<string, any> = {}) => {
+const handleActions = async (operation: Operation, record: Task = (drawerState.record = {} as Task)) => {
 	(operation === 'add' || operation === 'edit' || operation === 'more') && (drawerState.operation = operation, drawerState.open = true);
 	(operation === 'edit' || operation === 'more') && (drawerState.record = record);
 	(operation === 'delete' || operation === 'sendTask') && operationDispatch[operation](record);
@@ -143,12 +133,12 @@ onBeforeMount(() => {
 					<a-button type="link" danger @click="handleBatchDelete">批量删除</a-button>
 				</div>
 			</div>
-			<a-table row-key="taskId" :dataSource="dataSource" :columns="taskColumns" :row-selection="rowSelection"
+			<a-table row-key="taskId" :dataSource="tableData?.records" :columns="taskColumns" :row-selection="rowSelection"
 				:pagination="pagination" :scroll="{ x: 1400 }" :loading="loading">
 				<template #bodyCell="{ column, text, record }">
 					<template v-if="column.key === 'taskId'">
 						{{ text }}
-						<CopyOutlined class="id--copy" @click="copyId(text)" />
+						<CopyOutlined class="id--copy" @click="copy(text)" />
 					</template>
 					<template v-else-if="column.key === 'taskStatus'">
 						<a-switch :checked="Boolean(record[column.key])" checked-children="开启" un-checked-children="关闭"
@@ -191,7 +181,7 @@ onBeforeMount(() => {
 		</div>
 		<a-card size="small" class="filter-form" :class="{ open: filterState.open }" title="筛选">
 			<template #extra><a-button type="text" :icon="h(CloseOutlined)" @click="handleFilterClose"></a-button></template>
-			<Form ref="formRef" :form-schema="filterForm" />
+			<Form ref="formRef" :form-schema="filterFormSchema" />
 		</a-card>
 		<TaskGroupDrawer v-bind="drawerState" @close="handleDrawerClose"></TaskGroupDrawer>
 	</div>

@@ -3,7 +3,6 @@ import './styles/index.scss';
 import App from './App.vue';
 import router from './router';
 import { createPinia } from 'pinia';
-import './permisson.ts';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';
 dayjs.locale('zh-cn');

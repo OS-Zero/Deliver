@@ -1,8 +1,8 @@
 import { FormItem } from '@/types/form';
 import type { ColumnsType } from 'ant-design-vue/es/table/interface';
 import { SelectProps } from 'ant-design-vue';
-import { MessageTemplateForm, SearchParams, TestSendMessage, User } from '@/types/messageTemplate';
-import { getChannelType, getChannelProviderType, getMessageType } from '@/api/system';
+import { MessageTemplate, MessageTemplateForm, SearchParams, TestSendMessage, User } from '@/types/messageTemplate';
+import { getChannelType, getChannelProviderType, getMessageType, getMessageParam } from '@/api/system';
 import { getAppByChannel } from '@/api/channelApp';
 import { notUndefined } from '@/utils/utils';
 import { getRangeRule, getRequiredRule } from '@/utils/validate';
@@ -135,7 +135,7 @@ const generateDispatch = (form: Schema<any>) => {
 };
 
 type MessageTemplateSchema = Record<keyof MessageTemplateForm, FormItem<keyof MessageTemplateForm>>;
-export const messageTemplateForm = reactive<MessageTemplateSchema>({
+export const messageTemplateFormSchema = reactive<MessageTemplateSchema>({
 	templateId: {
 		type: 'none',
 		fieldName: 'templateId',
@@ -159,7 +159,7 @@ export const messageTemplateForm = reactive<MessageTemplateSchema>({
 		rules: [getRequiredRule('请选择用户类型')],
 		selectConfig: {
 			options: userTypes,
-			onChange: async (value: any) => {
+			onChange: (value: any) => {
 				setOptionsDispatch['channelType']({ usersType: value });
 			},
 		},
@@ -171,11 +171,14 @@ export const messageTemplateForm = reactive<MessageTemplateSchema>({
 		rules: [getRequiredRule('请选择渠道类型')],
 		selectConfig: {
 			options: [],
-			onChange: async (value: any) => {
+			onChange: (value: any) => {
 				setOptionsDispatch['channelProviderType']({ channelType: value });
-				setOptionsDispatch['messageType']({ channelType: value, channelProviderType: messageTemplateForm.channelProviderType.value });
-				setOptionsDispatch['appId']({ channelType: value, channelProviderType: messageTemplateForm.channelProviderType.value });
+				setOptionsDispatch['messageType']({ channelType: value, channelProviderType: messageTemplateFormSchema.channelProviderType.value });
+				setOptionsDispatch['appId']({ channelType: value, channelProviderType: messageTemplateFormSchema.channelProviderType.value });
 			},
+		},
+		init: async ({ usersType }: MessageTemplate) => {
+			await setOptionsDispatch['channelType']({ usersType });
 		},
 	},
 	channelProviderType: {
@@ -185,10 +188,13 @@ export const messageTemplateForm = reactive<MessageTemplateSchema>({
 		rules: [getRequiredRule('请选择渠道供应商类型')],
 		selectConfig: {
 			options: [],
-			onChange: async (value: any) => {
-				setOptionsDispatch['messageType']({ channelType: messageTemplateForm.channelType.value, channelProviderType: value });
-				setOptionsDispatch['appId']({ channelType: messageTemplateForm.channelType.value, channelProviderType: value });
+			onChange: (value: any) => {
+				setOptionsDispatch['messageType']({ channelType: messageTemplateFormSchema.channelType.value, channelProviderType: value });
+				setOptionsDispatch['appId']({ channelType: messageTemplateFormSchema.channelType.value, channelProviderType: value });
 			},
+		},
+		init: async ({ channelType }: MessageTemplate) => {
+			await setOptionsDispatch['channelProviderType']({ channelType });
 		},
 	},
 	messageType: {
@@ -199,6 +205,9 @@ export const messageTemplateForm = reactive<MessageTemplateSchema>({
 		selectConfig: {
 			options: [],
 		},
+		init: async ({ channelType, channelProviderType }: MessageTemplate) => {
+			await setOptionsDispatch['messageType']({ channelType, channelProviderType });
+		},
 	},
 	appId: {
 		type: 'select',
@@ -208,10 +217,13 @@ export const messageTemplateForm = reactive<MessageTemplateSchema>({
 		selectConfig: {
 			options: [],
 		},
+		init: async ({ channelType, channelProviderType }: MessageTemplate) => {
+			await setOptionsDispatch['appId']({ channelType, channelProviderType });
+		},
 	},
 });
-export const setOptionsDispatch = generateDispatch(messageTemplateForm);
-export const filterForm = reactive<Record<string, FormItem<keyof SearchParams>>>({
+export const setOptionsDispatch = generateDispatch(messageTemplateFormSchema);
+export const filterFormSchema = reactive<Schema<SearchParams>>({
 	usersType: {
 		type: 'select',
 		fieldName: 'usersType',
@@ -231,7 +243,7 @@ export const filterForm = reactive<Record<string, FormItem<keyof SearchParams>>>
 			options: [],
 			onChange: async (value: any) => {
 				setFilterOptionsDispatch['channelProviderType']({ channelType: value });
-				setFilterOptionsDispatch['messageType']({ channelType: value, channelProviderType: filterForm.channelProviderType.value });
+				setFilterOptionsDispatch['messageType']({ channelType: value, channelProviderType: filterFormSchema.channelProviderType.value });
 			},
 		},
 	},
@@ -242,7 +254,7 @@ export const filterForm = reactive<Record<string, FormItem<keyof SearchParams>>>
 		selectConfig: {
 			options: [],
 			onChange: async (value: any) => {
-				setFilterOptionsDispatch['messageType']({ channelType: filterForm.channelType.value, channelProviderType: value });
+				setFilterOptionsDispatch['messageType']({ channelType: filterFormSchema.channelType.value, channelProviderType: value });
 			},
 		},
 	},
@@ -282,8 +294,8 @@ export const filterForm = reactive<Record<string, FormItem<keyof SearchParams>>>
 		label: '结束时间',
 	},
 });
-export const setFilterOptionsDispatch = generateDispatch(filterForm);
-export const testMessageForm = reactive<Schema<TestSendMessage>>({
+const setFilterOptionsDispatch = generateDispatch(filterFormSchema);
+export const testMessageFormSchema = reactive<Schema<TestSendMessage>>({
 	templateId: {
 		type: 'none',
 		fieldName: 'templateId',
@@ -301,16 +313,17 @@ export const testMessageForm = reactive<Schema<TestSendMessage>>({
 				type: 'text',
 				shape: 'circle',
 				click: (id: string) => {
-					const list = testMessageForm.users.value;
+					const list = testMessageFormSchema.users.value;
 					const index = list.indexOf(id);
 					list.splice(index, 1);
 				},
 			},
 			addConfig: {
+				disabled: computed(() => testMessageFormSchema.users.value.length >= 2),
 				icon: h(PlusOutlined),
 				type: 'dashed',
 				onClick: () => {
-					const list = testMessageForm.users.value;
+					const list = testMessageFormSchema.users.value;
 					list.push('');
 				},
 			},
@@ -324,7 +337,13 @@ export const testMessageForm = reactive<Schema<TestSendMessage>>({
 		editorConfig: {
 			modeList: ['code'],
 			lang: 'zh',
+			onChange: () => {
+				console.log('test');
+			},
+		},
+		init: async ({ messageType }: MessageTemplate) => {
+			const res = await getMessageParam({ messageType });
+			testMessageFormSchema.messageParam.value = JSON.parse(res || '{}');
 		},
 	},
 });
-testMessageForm.users.customConfig!.addConfig.disabled = computed(() => testMessageForm.users.value.length >= 2);

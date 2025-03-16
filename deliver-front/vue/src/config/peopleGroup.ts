@@ -1,6 +1,5 @@
-import { FormItem } from '@/types/form';
 import type { ColumnsType } from 'ant-design-vue/es/table/interface';
-import { SearchParams, PeopleGroupForm } from '@/types/peopleGroup';
+import { SearchParams, PeopleGroupForm, PeopleGroup } from '@/types/peopleGroup';
 import { SelectProps } from 'ant-design-vue';
 import { analysisExcelTemplateFile } from '@/api/peopleGroup';
 import { getRangeRule, getRequiredRule } from '@/utils/validate';
@@ -69,12 +68,12 @@ const getTextareaDescription = (num: number) => {
 };
 export const setPeopleGroupListTip = (list: string) => {
 	if (list) {
-		peopleGroupForm.peopleGroupList.customConfig!.tip = getTextareaDescription(list.split(',').length);
+		peopleGroupFormSchema.peopleGroupList.customConfig!.tip = getTextareaDescription(list.split(',').length);
 	} else {
-		peopleGroupForm.peopleGroupList.customConfig!.tip = getTextareaDescription(0);
+		peopleGroupFormSchema.peopleGroupList.customConfig!.tip = getTextareaDescription(0);
 	}
 };
-export const peopleGroupForm: Schema<PeopleGroupSchema> = reactive({
+export const peopleGroupFormSchema: Schema<PeopleGroupSchema> = reactive({
 	peopleGroupId: {
 		type: 'none',
 		fieldName: 'peopleGroupId',
@@ -118,13 +117,21 @@ export const peopleGroupForm: Schema<PeopleGroupSchema> = reactive({
 			onChange: ({ target }) => {
 				const value = target.value;
 				if (value === 0) {
-					peopleGroupForm.peopleGroupList.type = 'none';
-					peopleGroupForm.$excelTemplateFile.type = 'upload';
+					peopleGroupFormSchema.peopleGroupList.type = 'none';
+					peopleGroupFormSchema.$excelTemplateFile.type = 'upload';
 				} else if (value === 1) {
-					peopleGroupForm.$excelTemplateFile.type = 'none';
-					peopleGroupForm.peopleGroupList.type = 'textarea';
+					peopleGroupFormSchema.$excelTemplateFile.type = 'none';
+					peopleGroupFormSchema.peopleGroupList.type = 'textarea';
 				}
 			},
+		},
+		init: async ({ peopleGroupList }: PeopleGroup) => {
+			peopleGroupFormSchema.$radioGroup.value = peopleGroupList.length ? 1 : 0;
+			if (peopleGroupFormSchema.$radioGroup.value === 1) {
+				peopleGroupFormSchema.$excelTemplateFile.type = 'none';
+				peopleGroupFormSchema.peopleGroupList.type = 'textarea';
+				setPeopleGroupListTip(peopleGroupList);
+			}
 		},
 	},
 	$excelTemplateFile: {
@@ -134,10 +141,10 @@ export const peopleGroupForm: Schema<PeopleGroupSchema> = reactive({
 		uploadConifg: {
 			maxCount: 1,
 			customRequest: (options) => {
-				peopleGroupForm.peopleGroupList.value = undefined;
+				peopleGroupFormSchema.peopleGroupList.value = undefined;
 				analysisExcelTemplateFile({ file: options.file as File })
 					.then((res) => {
-						peopleGroupForm.peopleGroupList.value = res;
+						peopleGroupFormSchema.peopleGroupList.value = res;
 						options.onSuccess && options.onSuccess(res);
 						setPeopleGroupListTip(res);
 					})
@@ -167,7 +174,7 @@ export const peopleGroupForm: Schema<PeopleGroupSchema> = reactive({
 		},
 	},
 });
-export const filterForm: Record<string, FormItem<keyof SearchParams>> = reactive({
+export const filterFormSchema: Schema<Omit<SearchParams, 'peopleGroupName'>> = reactive({
 	usersType: {
 		type: 'select',
 		fieldName: 'usersType',

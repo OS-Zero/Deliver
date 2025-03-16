@@ -1,32 +1,61 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { FormItem } from '@/types/form';
 import { FormInstance } from 'ant-design-vue/es/form';
 import JsonEditor from "json-editor-vue3"
-import { useVerify } from '@/hooks/verify';
 import { InboxOutlined } from '@ant-design/icons-vue';
-withDefaults(defineProps<{
+import { cloneDeep, assign } from 'lodash'
+import { Schema } from '@/types';
+const props = withDefaults(defineProps<{
 	formSchema: Record<string, FormItem<string>>;
 	name?: (field: FormItem<string>) => string | number | (string | number)[];
 	labelCol?: { span: number };
-	layout?: 'horizontal' | 'vertical' | 'inline'
+	layout?: 'horizontal' | 'vertical' | 'inline';
+	record?: Record<string, any>
 }>(), {
 	name: (field: FormItem<string>) => [field.fieldName, 'value'],
 	layout: 'vertical'
 })
 const formRef = ref<FormInstance>()
-const validate = async () => { await formRef.value?.validate() }
-const validateFields = async (...args: any) => {
-	await formRef.value?.validateFields(...args)
+
+const expose = {
+	validate: async () => { await formRef.value?.validate() },
+	validateFields: async (...args: any) => {
+		await formRef.value?.validateFields(...args)
+	},
+	resetFields: () => { assign(props.formSchema, cloneDeep(cloneSchema)) },
+	clearValidate: () => { formRef.value?.clearValidate() }
 }
-const resetFields = () => { formRef.value?.resetFields() }
-const clearValidate = () => { formRef.value?.clearValidate() }
-const { state, handleVarify } = useVerify()
 defineExpose({
-	validate,
-	resetFields,
-	clearValidate,
-	validateFields
+	...expose
+})
+let originSchema: Schema<any>
+let cloneSchema: Schema<any>
+onMounted(async () => {
+	const { formSchema, record } = props
+	//让所有表单项有value属性
+	for (const key in formSchema) {
+		formSchema[key].value = formSchema[key].value;
+		const init = formSchema[key].init
+		const watch = formSchema[key].watch
+		typeof init === 'function' && !init.length && await init();
+		typeof watch === 'function' && watch(expose);
+	}
+	originSchema = cloneDeep(formSchema)
+
+	//数据回显
+	if (record && Object.keys(record).length !== 0) {
+		for (const key in formSchema) {
+			formSchema[key].value = Reflect.has(record, key) ? record[key] : formSchema[key].value
+			const init = formSchema[key].init
+			typeof init === 'function' && init.length && await init(record, formRef);
+		}
+	}
+	cloneSchema = cloneDeep(formSchema)
+})
+onBeforeUnmount(() => {
+	//恢复原始数据
+	assign(props.formSchema, cloneDeep(originSchema));
 })
 </script>
 
@@ -41,7 +70,7 @@ defineExpose({
 					field.buttonConfig?.name
 				}}</a-button>
 			</a-form-item>
-			<a-form-item v-if="field.type !== 'none'" :label="field.label" :name="name(field)" :rules="field.rules">
+			<a-form-item v-else :label="field.label" :name="name(field)" :rules="field.rules">
 				<template v-if="field.type === 'input'">
 					<a-input v-model:value="formSchema[field.fieldName!].value" v-bind="field.inputConfig" />
 					<p class="input-desc" v-html="field.customConfig?.tip"></p>
@@ -91,14 +120,8 @@ defineExpose({
 				<template v-else-if="field.type === 'radioGroup'">
 					<a-radio-group v-model:value="formSchema[field.fieldName].value" v-bind="field.radioGroupConfig" />
 				</template>
-				<template v-else-if="field.type === 'verificationCode'">
-					<div class="verify">
-						<a-input v-model:value.trim="formSchema[field.fieldName].value" v-bind="field.inputConfig" />
-						<a-button class="verify_btn" :disabled="state.loading || field.buttonConfig?.disabled"
-							@click="handleVarify(field.buttonConfig?.onClick as Function)">
-							{{ state.verifyContent }}
-						</a-button>
-					</div>
+				<template v-else-if="field.type === 'verifyCode'">
+					<VerifyCode v-model:value="formSchema[field.fieldName].value" v-bind="field.verifyCodeConfig" />
 				</template>
 			</a-form-item>
 		</template>

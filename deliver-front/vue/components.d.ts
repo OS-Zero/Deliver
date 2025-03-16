@@ -52,5 +52,6 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     SearchInput: typeof import('./src/components/SearchInput/index.vue')['default']
     Status: typeof import('./src/components/Status/index.vue')['default']
+    VerifyCode: typeof import('./src/components/VerifyCode/index.vue')['default']
   }
 }

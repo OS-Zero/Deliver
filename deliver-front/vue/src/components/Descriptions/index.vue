@@ -2,10 +2,12 @@
 import { CardProps } from 'ant-design-vue';
 interface Group {
 	config: CardProps
-	data: Array<{ label: string, value: any, extra?: Record<string, any> }>
+	data: string[]
 }
 defineProps<{
 	groups: Group[]
+	local: Record<string, any>
+	record: Record<string, any>
 }>()
 </script>
 
@@ -13,13 +15,13 @@ defineProps<{
 	<a-card size="small" v-for="item in groups" v-bind="item.config">
 		<div class="item" v-for="_item in item.data">
 			<div class="item--label">
-				<slot name="label" :item="_item">
-					{{ _item.label }}
+				<slot name="label" :item="{ key: _item, label: local[_item], value: record[_item] }">
+					{{ local[_item] }}
 				</slot>
 			</div>
 			<div class="item--value">
-				<slot name="value" :item="_item">
-					{{ _item.value }}
+				<slot name="value" :item="{ key: _item, label: local[_item], value: record[_item], extra: {} }">
+					{{ record[_item] }}
 				</slot>
 			</div>
 		</div>

@@ -1,63 +1,55 @@
 <script lang="ts" setup>
 import { ref, onBeforeMount, reactive, h, watch } from 'vue'
-import { channelAppColumns, filterForm, setFilterOptionsDispatch } from "@/config/channelApp"
+import { channelAppColumns, filterFormSchema } from "@/config/channelApp"
 import { CopyOutlined, DownOutlined, ExclamationCircleOutlined, FilterOutlined, CloseOutlined, AppstoreOutlined, MenuOutlined } from '@ant-design/icons-vue';
-import { copyToClipboard, getDataFromSchema } from '@/utils/utils';
-import { FormInstance, message, Modal, TableProps, Empty } from 'ant-design-vue';
+import { message, Modal, TableProps, Empty } from 'ant-design-vue';
 import SearchInput from '@/components/SearchInput/index.vue'
-import { debounce } from 'lodash'
 import { usePagination } from '@/hooks/table';
 import { Key } from 'ant-design-vue/lib/_util/type';
 import { deleteChannelApp, getChannelApp, updateChannelAppStatus } from '@/api/channelApp';
-import { ChannelApp } from '@/types/channelApp';
+import { ChannelApp, SearchParams } from '@/types/channelApp';
 import ChannelAppDrawer from './components/ChannelAppDrawer.vue';
 import { getColor } from '@/utils/table';
 import Card from './components/Card.vue'
-const simpleImage = Empty.PRESENTED_IMAGE_SIMPLE;
+import useRequest from '@/hooks/request';
+import { TableData } from '@/types';
+import { useForm } from '@/hooks/form';
+import { useClipboard } from '@/hooks/clipboard';
 type Operation = 'add' | 'edit' | 'delete' | 'more'
-const dataSource = ref<ChannelApp[]>([])
-const loading = ref(false)
+const simpleImage = Empty.PRESENTED_IMAGE_SIMPLE;
 const searchValue = ref('')
-const handleSearch = async () => {
-	try {
-		loading.value = true
-		const { records, total } = await getChannelApp({ appName: searchValue.value, ...getDataFromSchema(filterForm), pageSize: pagination.pageSize, currentPage: pagination.current })
-		dataSource.value = records
-		pagination.total = total
-		loading.value = false
-	} catch (error) {
-		loading.value = false
+const { formRef, formData: filterForm } = useForm(filterFormSchema)
+
+const { loading, data: tableData, run: handleSearch } = useRequest<SearchParams, TableData<ChannelApp>>(
+	getChannelApp,
+	() => ({ appName: searchValue.value, ...filterForm.value, pageSize: pagination.pageSize, currentPage: pagination.current }),
+	{
+		debounce: true,
+		onFinish(data) {
+			pagination.total = data.total
+		},
+		cacheTime: 1000 * 60
 	}
-}
-const debounceSearch = debounce(handleSearch, 200)
+)
 const { pagination, resetPagination } = usePagination(handleSearch)
 watch(filterForm, () => {
 	resetPagination()
-	debounceSearch()
+	handleSearch()
 })
-const copyId = async (text: string) => {
-	try {
-		await copyToClipboard(text)
-		message.success('复制成功')
-	} catch (error) {
-		message.error('复制失败')
-	}
-}
+const { copy } = useClipboard()
 const drawerState = reactive<{
 	open: boolean
 	operation: 'add' | 'edit' | 'more'
-	record: Record<string, any>
+	record: ChannelApp
 }>({
 	open: false,
 	operation: 'add',
-	record: {}
+	record: {} as ChannelApp
 })
 const filterState = reactive({
 	open: false
 })
 
-
-const formRef = ref<FormInstance>();
 const rowSelection: TableProps['rowSelection'] = reactive({
 	selectedRowKeys: [],
 	onChange: (selectedRowKeys: Key[]) => {
@@ -80,7 +72,7 @@ const operationDispatch = {
 		});
 	}
 }
-const handleActions = async (operation: Operation, record: Record<string, any> = {}) => {
+const handleActions = async (operation: Operation, record: ChannelApp = (drawerState.record = {} as ChannelApp)) => {
 	(operation === 'add' || operation === 'edit' || operation === 'more') && (drawerState.operation = operation, drawerState.open = true);
 	(operation === 'edit' || operation === 'more') && (drawerState.record = record);
 	(operation === 'delete') && operationDispatch[operation](record);
@@ -118,7 +110,6 @@ const changeStatus = async (record: Record<string, any>) => {
 }
 const tableView = ref(true)
 onBeforeMount(() => {
-	setFilterOptionsDispatch['channelType']()
 	handleSearch()
 })
 </script>
@@ -127,7 +118,7 @@ onBeforeMount(() => {
 	<div class="container">
 		<div class="container-table">
 			<div class="table-header">
-				<SearchInput class="search_input" placeholder="请输入应用名" v-model="searchValue" @search="debounceSearch()">
+				<SearchInput class="search_input" placeholder="请输入应用名" v-model="searchValue" @search="handleSearch()">
 				</SearchInput>
 				<div class="operation">
 					<a-button class="btn--add" @click="handleActions('add')" type="primary">新增</a-button>
@@ -157,12 +148,12 @@ onBeforeMount(() => {
 					<a-button type="link" danger @click="handleBatchDelete">批量删除</a-button>
 				</div>
 			</div>
-			<a-table v-show="tableView" row-key="appId" :dataSource="dataSource" :columns="channelAppColumns"
+			<a-table v-show="tableView" row-key="appId" :dataSource="tableData?.records" :columns="channelAppColumns"
 				:row-selection="rowSelection" :pagination="false" :scroll="{ x: 1400 }" :loading="loading">
 				<template #bodyCell="{ column, text, record }">
 					<template v-if="column.key === 'appId'">
 						{{ text }}
-						<CopyOutlined class="id--copy" @click="copyId(text)" />
+						<CopyOutlined class="id--copy" @click="copy(text)" />
 					</template>
 					<template v-else-if="column.key === 'appStatus'">
 						<a-switch :checked="Boolean(record[column.key])" @change="changeStatus(record)" checked-children="开启"
@@ -191,16 +182,16 @@ onBeforeMount(() => {
 				</template>
 			</a-table>
 			<div class="card-list" v-show="!tableView">
-				<Card v-for="item in dataSource" :key="item.appId" :data="item" @change-status="changeStatus"
+				<Card v-for="item in tableData?.records" :key="item.appId" :data="item" @change-status="changeStatus"
 					@handleActions="handleActions">
 				</Card>
 			</div>
-			<a-empty v-show="!tableView" class="empty" v-if="!dataSource.length" :image="simpleImage" />
+			<a-empty v-show="!tableView" class="empty" v-if="!tableData?.records.length" :image="simpleImage" />
 			<a-pagination class="pagination" v-bind="pagination" />
 		</div>
 		<a-card size="small" class="filter-form" :class="{ open: filterState.open }" title="筛选">
 			<template #extra><a-button type="text" :icon="h(CloseOutlined)" @click="handleFilterClose"></a-button></template>
-			<Form ref="formRef" :form-schema="filterForm" />
+			<Form ref="formRef" :form-schema="filterFormSchema" />
 		</a-card>
 		<ChannelAppDrawer v-bind="drawerState" @close="handleDrawerClose">
 		</ChannelAppDrawer>

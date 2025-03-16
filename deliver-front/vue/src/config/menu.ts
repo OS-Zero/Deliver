@@ -1,54 +1,55 @@
 import { h } from 'vue';
-import { MessageOutlined, FileTextOutlined, AppstoreOutlined, UserOutlined, SoundOutlined } from '@ant-design/icons-vue';
 import { ItemType } from 'ant-design-vue';
 import ItemLink from '@/views/Layout/components/ItemLink/index.vue';
-export const menuConfig: Record<string, ItemType[]> = {
+import { createIcon } from '@/utils/createIcon';
+
+const data = {
 	groupManage: [
 		{
 			key: 'MC',
-			icon: h(MessageOutlined),
+			icon: 'MessageOutlined',
 			label: '模板配置',
 			children: [
 				{
 					key: '/groupManage/template',
-					label: h(ItemLink, { label: '消息模板配置', to: '/groupManage/template' }),
+					label: ['消息模板配置', '/groupManage/template'],
 				},
 			],
 		},
 		{
 			key: 'AC',
-			icon: h(AppstoreOutlined),
+			icon: 'AppstoreOutlined',
 			label: '应用配置',
 			children: [
 				{
 					key: '/groupManage/app',
-					label: h(ItemLink, { label: '渠道应用配置', to: '/groupManage/app' }),
+					label: ['渠道应用配置', '/groupManage/app'],
 				},
 			],
 		},
 		{
 			key: 'FM',
-			icon: h(FileTextOutlined),
+			icon: 'FileTextOutlined',
 			label: '文件管理',
 			children: [
 				{
 					key: '/groupManage/file',
-					label: h(ItemLink, { label: '平台文件管理', to: '/groupManage/file' }),
+					label: ['平台文件管理', '/groupManage/file'],
 				},
 			],
 		},
 		{
 			key: 'MST',
-			icon: h(SoundOutlined),
+			icon: 'SoundOutlined',
 			label: '群发任务',
 			children: [
 				{
 					key: '/groupManage/task',
-					label: h(ItemLink, { label: '群发任务配置', to: '/groupManage/task' }),
+					label: ['群发任务配置', '/groupManage/task'],
 				},
 				{
 					key: '/groupManage/peopleGroup',
-					label: h(ItemLink, { label: '人群模板配置', to: '/groupManage/peopleGroup' }),
+					label: ['人群模板配置', '/groupManage/peopleGroup'],
 				},
 			],
 		},
@@ -56,8 +57,28 @@ export const menuConfig: Record<string, ItemType[]> = {
 	systemManage: [
 		{
 			key: '/systemManage/myAccount',
-			icon: h(UserOutlined),
-			label: h(ItemLink, { label: '我的账户', to: '/systemManage/myAccount' }),
+			icon: 'UserOutlined',
+			label: ['我的账户', '/systemManage/myAccount'],
+		},
+		{
+			key: '/systemManage/sentinel',
+			icon: 'DashboardOutlined',
+			label: ['Sentinel控制台', '/systemManage/sentinel'],
 		},
 	],
+};
+const generateMenuConfig = (menuList: any) => {
+	return menuList.map((item: any) => {
+		const obj = {
+			...item,
+			icon: createIcon({ name: item.icon }),
+			label: Array.isArray(item.label) ? h(ItemLink, { label: item.label[0], to: item.label[1] }) : item.label,
+		};
+		obj.children && (obj.children = generateMenuConfig(item.children));
+		return obj;
+	});
+};
+export const menuConfig: Record<string, ItemType[]> = {
+	groupManage: generateMenuConfig(data.groupManage),
+	systemManage: generateMenuConfig(data.systemManage),
 };

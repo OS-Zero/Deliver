@@ -6,24 +6,32 @@ import { useRouter } from 'vue-router';
 import { message } from 'ant-design-vue'
 import { startup } from '@/api/startup';
 import { Schema } from '@/types';
-import { getDataFromSchema } from '@/utils/utils';
 import { getRangeRule, getRequiredRule } from '@/utils/validate';
-const router = useRouter()
-const formRef = ref()
+import { useForm } from '@/hooks/form';
 interface LoginForm extends UserInfo {
 	$login: string
 }
+const router = useRouter()
+const isTest = import.meta.env.MODE === 'test'
 const validateEmail = () => {
 	const regExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-	if (!loginForm.userEmail.value) {
+	if (!loginFormSchema.userEmail.value) {
 		return Promise.reject('请输入邮箱');
-	} else if (regExp.test(loginForm.userEmail.value)) {
+	} else if (regExp.test(loginFormSchema.userEmail.value)) {
 		return Promise.resolve()
 	}
 	return Promise.reject('邮箱格式错误')
 }
-const isTest = import.meta.env.MODE === 'test'
-const loginForm = reactive<Schema<LoginForm>>({
+const handleValidate = () => {
+	if (code.value === 'oszero666') {
+		localStorage.setItem('qrcode', 'oszero666')
+		open.value = false
+		if (typeof loginFormSchema.$login.buttonConfig?.onClick === 'function') loginFormSchema.$login.buttonConfig.onClick(new MouseEvent('click'))
+	} else {
+		message.error('验证码错误')
+	}
+}
+const loginFormSchema = reactive<Schema<LoginForm>>({
 	userEmail: {
 		value: isTest ? 'oszero@qq.com' : '',
 		type: 'input',
@@ -39,7 +47,8 @@ const loginForm = reactive<Schema<LoginForm>>({
 		fieldName: 'userPassword',
 		inputConfig: {
 			placeholder: '请输入用户密码',
-			maxlength: 16
+			maxlength: 16,
+			autocomplete: 'off'
 		},
 		rules: [getRequiredRule('请输入用户密码'), ...getRangeRule(6, 16, '密码长度范围为6-16位', 'change')],
 	},
@@ -53,8 +62,8 @@ const loginForm = reactive<Schema<LoginForm>>({
 				if (import.meta.env.MODE === 'test' && localStorage.getItem('qrcode') !== 'oszero666') {
 					open.value = true
 				} else {
-					await formRef.value.validate()
-					let res: any = await login(getDataFromSchema(loginForm))
+					await formRef.value?.validate()
+					let res: any = await login(loginForm.value)
 					localStorage.setItem('access_token', res)
 					message.success('登录成功')
 					res = await startup()
@@ -67,21 +76,14 @@ const loginForm = reactive<Schema<LoginForm>>({
 		}
 	},
 })
+const { formRef, formData: loginForm } = useForm(loginFormSchema)
 const open = ref(false)
 const code = ref('')
-const handleValidate = () => {
-	if (code.value === 'oszero666') {
-		localStorage.setItem('qrcode', 'oszero666')
-		open.value = false
-		if (typeof loginForm.$login.buttonConfig?.onClick === 'function') loginForm.$login.buttonConfig.onClick(new MouseEvent('click'))
-	} else {
-		message.error('验证码错误')
-	}
-}
+
 </script>
 
 <template>
-	<Form ref="formRef" :form-schema="loginForm"></Form>
+	<Form ref="formRef" :form-schema="loginFormSchema"></Form>
 	<a-modal width="600px" class="modal" v-model:open="open" title="人机验证" centered @ok="handleValidate">
 		<p>扫描下方二维码，关注后回复：deliver，获取Deliver企业消息推送平台人机验证码</p>
 		<img style="width: 100%;margin: 12px 0;" src="../../../../public/qrcode.jpg" alt="" srcset="">
@@ -89,8 +91,4 @@ const handleValidate = () => {
 	</a-modal>
 </template>
 
-<style lang="scss" scoped>
-.submit_btn {
-	width: 100%
-}
-</style>
+<style lang="scss" scoped></style>

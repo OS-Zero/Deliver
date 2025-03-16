@@ -18,11 +18,13 @@ type ItemType =
 	| 'datePicker'
 	| 'upload'
 	| 'button'
-	| 'verificationCode'
+	| 'verifyCode'
 	| 'radioGroup';
 
 export interface FormItem<T> {
 	value?: any;
+	init?: (...args: any[]) => Promise<void>;
+	watch?: (...args: any[]) => void;
 	type: ItemType;
 	fieldName: T;
 	label?: string;
@@ -35,5 +37,9 @@ export interface FormItem<T> {
 	radioGroupConfig?: RadioGroupProps;
 	inputConfig?: InputProps;
 	selectConfig?: SelectProps;
+	verifyCodeConfig?: {
+		disabled?: boolean;
+		submit?: () => void;
+	};
 	customConfig?: Record<string, any>;
 }

@@ -13,6 +13,7 @@ const TaskManagePage = lazy(() => import('../views/GroupManage/pages/TaskManage'
 const PeopleGroupPage = lazy(() => import('../views/GroupManage/pages/PeopleGroup'));
 const SystemManagePage = lazy(() => import('../views/SystemManage'));
 const MyAccountPage = lazy(() => import('../views/SystemManage/pages/MyAccount'));
+const SentinelPage = lazy(() => import('../views/SystemManage/pages/Sentinel'));
 const WelcomePage = lazy(() => import('../views/Welcome'));
 const NotFoundPage = lazy(() => import('../views/NotFoundPage'));
 
@@ -127,6 +128,15 @@ const routes = [
                   </Suspense>
                 ),
                 name: '我的账户'
+              },
+              {
+                path: 'sentinel',
+                name: 'Sentinel控制台',
+                element: (
+                  <Suspense fallback={<LoadingPage />}>
+                    <SentinelPage />
+                  </Suspense>
+                )
               }
             ]
           }

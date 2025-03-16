@@ -1,13 +1,13 @@
-import { FormItem } from '@/types/form';
 import type { ColumnsType } from 'ant-design-vue/es/table/interface';
 import { getRangeRule, getRequiredRule } from '@/utils/validate';
-import { SearchParams, TaskForm } from '@/types/task';
+import { SearchParams, Task, TaskForm } from '@/types/task';
 import { getMessageParam, searchTemplateByName } from '@/api/messageTemplate';
 import { searchPeopleGroupByName } from '@/api/peopleGroup';
-import { h, reactive } from 'vue';
+import { h, reactive, watch } from 'vue';
 import { debounce } from 'lodash';
 import { Spin } from 'ant-design-vue';
 import { isValidCron } from 'cron-validator';
+import { Schema } from '@/types';
 export const taskLocale = {
 	taskId: '任务 Id',
 	taskDescription: '任务描述',
@@ -77,8 +77,7 @@ export const validateCronExpression = (_rule: any, value: any) => {
 	}
 	return Promise.reject('请提供正确的 Cron 表达式');
 };
-type Schema<T> = Record<string, FormItem<keyof T>>;
-export const taskForm: Schema<TaskForm> = reactive({
+export const taskFormSchema: Schema<TaskForm> = reactive({
 	taskId: {
 		type: 'none',
 		fieldName: 'taskId',
@@ -116,19 +115,22 @@ export const taskForm: Schema<TaskForm> = reactive({
 				},
 			],
 			onChange: ({ target }) => {
-				taskForm.taskTimeExpression.value = undefined;
+				taskFormSchema.taskTimeExpression.value = undefined;
 				if (target.value === 1) {
-					taskForm.taskTimeExpression.type = 'none';
+					taskFormSchema.taskTimeExpression.type = 'none';
 				} else if (target.value === 2) {
-					taskForm.taskTimeExpression.type = 'input';
-					taskForm.taskTimeExpression.rules = [{ validator: validateCronExpression }];
-					taskForm.taskTimeExpression.customConfig!.tip =
+					taskFormSchema.taskTimeExpression.type = 'input';
+					taskFormSchema.taskTimeExpression.rules = [{ validator: validateCronExpression }];
+					taskFormSchema.taskTimeExpression.customConfig!.tip =
 						'Cron 表达式格式：秒(0-59) 分钟(0-59) 小时(0-23) 日(1-31) 月(1-12) 星期(0-6或SUN-SAT) 年(可选,1970-2099)。例如：20 3 * * * ? 表示每天 3:20 执行任务；20 3 8 * * ? 表示每月 8 号 3:20 执行任务；* 表示任意值；? 用于表示不指定某个字段的值。';
 				} else if (target.value === 3) {
-					taskForm.taskTimeExpression.rules = [getRequiredRule('请选择日期')];
-					taskForm.taskTimeExpression.type = 'datePicker';
+					taskFormSchema.taskTimeExpression.rules = [getRequiredRule('请选择日期')];
+					taskFormSchema.taskTimeExpression.type = 'datePicker';
 				}
 			},
+		},
+		init: async ({ taskType }: Task) => {
+			taskFormSchema.taskType.value = taskType;
 		},
 	},
 	taskTimeExpression: {
@@ -137,6 +139,27 @@ export const taskForm: Schema<TaskForm> = reactive({
 		label: '任务时间表达式',
 		customConfig: {
 			tip: '',
+		},
+		init: async ({ taskType }: Task) => {
+			if (taskType === 1) {
+				taskFormSchema.taskTimeExpression.type = 'none';
+			} else if (taskType === 2) {
+				taskFormSchema.taskTimeExpression.type = 'input';
+				taskFormSchema.taskTimeExpression.rules = [{ validator: validateCronExpression }];
+				taskFormSchema.taskTimeExpression.customConfig!.tip =
+					'Cron 表达式格式：秒(0-59) 分钟(0-59) 小时(0-23) 日(1-31) 月(1-12) 星期(0-6或SUN-SAT) 年(可选,1970-2099)。例如：20 3 * * * ? 表示每天 3:20 执行任务；20 3 8 * * ? 表示每月 8 号 3:20 执行任务；* 表示任意值；? 用于表示不指定某个字段的值。';
+			} else if (taskType === 3) {
+				taskFormSchema.taskTimeExpression.rules = [getRequiredRule('请选择日期')];
+				taskFormSchema.taskTimeExpression.type = 'datePicker';
+			}
+		},
+		watch: ({ clearValidate }) => {
+			watch(
+				() => taskFormSchema.taskTimeExpression.type,
+				() => {
+					clearValidate(['taskTimeExpression', 'value']);
+				},
+			);
 		},
 	},
 	templateId: {
@@ -150,20 +173,23 @@ export const taskForm: Schema<TaskForm> = reactive({
 			filterOption: false,
 			onSearch: debounce((value: string) => {
 				if (!value) return;
-				taskForm.templateId.selectConfig!.notFoundContent = h(Spin);
+				taskFormSchema.templateId.selectConfig!.notFoundContent = h(Spin);
 				searchTemplateByName({ templateName: value }).then((res) => {
-					taskForm.templateId.selectConfig!.options = res.map((item) => ({
+					taskFormSchema.templateId.selectConfig!.options = res.map((item) => ({
 						value: item.templateId,
 						label: item.templateName,
 					}));
-					taskForm.templateId.selectConfig!.notFoundContent = undefined;
+					taskFormSchema.templateId.selectConfig!.notFoundContent = undefined;
 				});
 			}, 200),
 			onChange: (value: any) => {
 				getMessageParam({ templateId: Number(value) }).then((res) => {
-					taskForm.taskMessageParam.value = JSON.parse(res || '{}');
+					taskFormSchema.taskMessageParam.value = JSON.parse(res || '{}');
 				});
 			},
+		},
+		init: async ({ templateName }: Task) => {
+			taskFormSchema.templateId.value = templateName;
 		},
 	},
 	peopleGroupId: {
@@ -176,15 +202,18 @@ export const taskForm: Schema<TaskForm> = reactive({
 			filterOption: false,
 			onSearch: debounce((value: string) => {
 				if (!value) return;
-				taskForm.peopleGroupId.selectConfig!.notFoundContent = h(Spin);
+				taskFormSchema.peopleGroupId.selectConfig!.notFoundContent = h(Spin);
 				searchPeopleGroupByName({ peopleGroupName: value }).then((res) => {
-					taskForm.peopleGroupId.selectConfig!.options = res.map((item) => ({
+					taskFormSchema.peopleGroupId.selectConfig!.options = res.map((item) => ({
 						value: item.peopleGroupId,
 						label: item.peopleGroupName,
 					}));
-					taskForm.peopleGroupId.selectConfig!.notFoundContent = undefined;
+					taskFormSchema.peopleGroupId.selectConfig!.notFoundContent = undefined;
 				});
 			}, 200),
+		},
+		init: async ({ peopleGroupName }: Task) => {
+			taskFormSchema.peopleGroupId.value = peopleGroupName;
 		},
 	},
 	taskMessageParam: {
@@ -192,9 +221,12 @@ export const taskForm: Schema<TaskForm> = reactive({
 		type: 'jsonEditor',
 		fieldName: 'taskMessageParam',
 		label: '任务消息参数',
+		init: async ({ taskMessageParam }: Task) => {
+			taskFormSchema.taskMessageParam.value = JSON.parse(taskMessageParam || '{}');
+		},
 	},
 });
-export const filterForm: Record<string, FormItem<keyof SearchParams>> = reactive({
+export const filterFormSchema: Schema<Omit<SearchParams, 'taskName'>> = reactive({
 	taskType: {
 		type: 'select',
 		fieldName: 'taskType',

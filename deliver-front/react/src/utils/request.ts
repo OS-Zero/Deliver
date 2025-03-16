@@ -33,8 +33,8 @@ service.interceptors.response.use(
       const contentType = res.headers['content-type']; // 获取返回的 Content-Type
       const { code, data, errorMessage } = res.data;
       if (import.meta.env.MODE === 'test') {
-				return data;
-			}
+        return data;
+      }
       if (contentType && contentType.includes('application/json')) {
         // 如果是 JSON 响应，按照 code 进行处理
         if (code === 0) return data;
@@ -72,7 +72,7 @@ service.interceptors.response.use(
   },
   (err) => {
     if (err.response.status === 401) {
-      localStorage.clear()
+      localStorage.clear();
       window.location.href = '/login';
     }
     console.log(err);

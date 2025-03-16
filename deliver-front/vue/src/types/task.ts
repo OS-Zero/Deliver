@@ -9,7 +9,9 @@ export interface Task extends Pick<PeopleGroup, 'peopleGroupId' | 'peopleGroupNa
 	taskType: number;
 	taskTimeExpression: string;
 	templateId: number;
+	templateName: string;
 	peopleGroupId: number;
+	peopleGroupName: string;
 	taskStatus: number;
 	createUser: string;
 	createTime: string;

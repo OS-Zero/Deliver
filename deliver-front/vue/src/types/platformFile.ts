@@ -1,7 +1,7 @@
 import { TableSearchParams } from '.';
-import { App, ChannelProvider } from './channelApp';
+import { App, Channel, ChannelProvider } from './channelApp';
 
-export interface PlatformFile extends App {
+export interface PlatformFile extends App, ChannelProvider, Channel {
 	platformFileId: number;
 	platformFileName: string;
 	platformFileDescription: string;
@@ -9,19 +9,16 @@ export interface PlatformFile extends App {
 	platformFileTypeName: string;
 	platformFileKey: string;
 	platformFileStatus: number;
-	channelType: number;
 	createUser: string;
 	createTime: string;
 }
 export interface UploadPlatformFile
-	extends Pick<PlatformFile, 'platformFileName' | 'platformFileDescription' | 'platformFileType' | 'channelType' | 'appId'> {
+	extends Pick<PlatformFile, 'platformFileName' | 'platformFileDescription' | 'platformFileType' | 'channelType' | 'appId' | 'channelProviderType'> {
 	platformFile: File;
-	channelProviderType: ChannelProvider['channelProviderType'];
 }
 export interface SearchParams
 	extends TableSearchParams,
-		Pick<Partial<PlatformFile>, 'platformFileType' | 'platformFileKey' | 'channelType' | 'appId' | 'platformFileName'> {
-	channelProviderType?: ChannelProvider['channelProviderType'];
+		Pick<Partial<PlatformFile>, 'platformFileType' | 'platformFileKey' | 'channelType' | 'appId' | 'platformFileName' | 'channelProviderType'> {
 	startTime?: string;
 	endTime?: string;
 }

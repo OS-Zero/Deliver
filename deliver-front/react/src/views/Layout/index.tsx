@@ -7,12 +7,13 @@ import Header from './components/Header';
 import SideBar from './components/SideBar';
 import Breadcrumb from './components/Breadcrumb';
 import styles from './index.module.scss';
-import { menuConfig } from './constant';
+import { useMenuConfig } from './constant';
 
 const { Content, Footer } = Layout;
 
 const AppLayout: React.FC = () => {
   const location = useLocation();
+  const menuConfig = useMenuConfig();
   const [menuItems, setMenuItems] = useState<
     { key: string; label: string | React.ReactElement; icon?: React.ReactElement }[]
   >([]);

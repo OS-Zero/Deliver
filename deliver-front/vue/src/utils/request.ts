@@ -9,7 +9,7 @@ const service = axios.create({
 
 service.interceptors.request.use(
 	(config) => {
-		config.headers['FrontPlatform'] = 'vue';
+		config.headers['FrontPlatform'] = 'Vue';
 		config.headers['Language'] = 'zh_CN';
 		config.headers['GroupId'] = localStorage.getItem('group_id') || -1;
 		!authorizationBlackList.includes(config.url || '') && (config.headers['Authorization'] = localStorage.getItem('access_token'));

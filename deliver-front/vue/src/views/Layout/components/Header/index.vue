@@ -42,7 +42,10 @@ watch(route, (newRoute) => {
 	immediate: true
 })
 const userName = ref(JSON.parse(localStorage.getItem("user_info") || '{}').userRealName)
-
+const exitGroup = () => {
+	localStorage.removeItem('group_id')
+	router.push('/groupManage')
+}
 </script>
 <template>
 	<a-layout-header class="header">
@@ -58,10 +61,19 @@ const userName = ref(JSON.parse(localStorage.getItem("user_info") || '{}').userR
 			<a-tabs v-model:activeKey="activeKey" @change="handleClickTabs" size="small">
 				<a-tab-pane key="groupManage">
 					<template #tab>
-						<span>
-							<AppstoreOutlined />
-							分组管理
-						</span>
+						<a-dropdown>
+							<span>
+								<AppstoreOutlined />
+								分组管理
+							</span>
+							<template #overlay>
+								<a-menu>
+									<a-menu-item>
+										<div @click="exitGroup">退出分组</div>
+									</a-menu-item>
+								</a-menu>
+							</template>
+						</a-dropdown>
 					</template>
 				</a-tab-pane>
 				<a-tab-pane key="systemManage">

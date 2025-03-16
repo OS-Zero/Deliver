@@ -6,7 +6,7 @@ withDefaults(defineProps<DrawerProps>(), {
 	placement: 'right',
 	extra: true,
 	okText: '确认',
-	cancelText: '取消',
+	cancelText: '重置',
 })
 
 const emit = defineEmits(['close', 'ok'])
@@ -18,7 +18,9 @@ const emit = defineEmits(['close', 'ok'])
 			<a-button style="margin-right: 8px" @click="emit('close')">{{ cancelText }}</a-button>
 			<a-button type="primary" @click="emit('ok')">{{ okText }}</a-button>
 		</template>
-		<slot></slot>
+		<template v-if="open">
+			<slot></slot>
+		</template>
 	</a-drawer>
 </template>
 

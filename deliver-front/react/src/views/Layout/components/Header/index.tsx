@@ -21,34 +21,38 @@ const Header: React.FC = () => {
 
   const { userInfo } = useGlobalContext();
   const hasGroupId = localStorage.getItem('group_id');
+  const isGroupManage = window.location.pathname.includes('/groupManage');
 
   const items = [
     {
       icon: <AppstoreOutlined />,
-      label: hasGroupId ? (
-        <Dropdown
-          menu={{
-            items: [
-              {
-                key: 'exitGroup',
-                label: '退出分组',
-                onClick: () => {
-                  localStorage.removeItem('group_id');
-                  navigate('/groupManage', { replace: true });
+      label:
+        hasGroupId && isGroupManage ? (
+          <Dropdown
+            menu={{
+              items: [
+                {
+                  key: 'exitGroup',
+                  label: '退出分组',
+                  onClick: () => {
+                    localStorage.removeItem('group_id');
+                    navigate('/groupManage', { replace: true });
+                  }
                 }
-              }
-            ]
-          }}
-          placement="bottom"
-          autoAdjustOverflow
-          arrow
-          dropdownRender={(menu) => <div style={{ marginLeft: '-20px', marginTop: '-1px' }}>{menu}</div>}
-        >
-          <span>分组管理</span>
-        </Dropdown>
-      ) : (
-        '分组管理'
-      ),
+              ]
+            }}
+            placement="bottom"
+            autoAdjustOverflow
+            arrow
+            dropdownRender={(menu) => (
+              <div style={{ marginLeft: '-20px', marginTop: '-1px' }}>{menu}</div>
+            )}
+          >
+            <span>分组管理</span>
+          </Dropdown>
+        ) : (
+          '分组管理'
+        ),
       key: 'groupManage'
     },
     {
@@ -133,7 +137,7 @@ const Header: React.FC = () => {
               </div>
               <div style={{ marginLeft: '60px' }}>
                 <p>产品：Deliver 企业消息推送平台</p>
-                <p>版本：v1.0.0</p>
+                <p>版本：v1.0.2</p>
                 <a target="_blank" href="https://oszero.cn" rel="noreferrer">
                   https://oszero.cn
                 </a>

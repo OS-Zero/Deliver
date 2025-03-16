@@ -34,8 +34,18 @@ const Channel: React.FC = () => {
   const [isTableView, setIsTableView] = useState(true);
   const [keys, setKeys] = useState<number>(0);
 
+  // 处理分页
+  const handlePageChange = (params: { current: number; pageSize: number }) => {
+    setTableParams((prev: any) => ({
+      ...prev,
+      current: params.current,
+      pageSize: params.pageSize
+    }));
+  };
+
   const { fetchChannelData, deleteChannelData, saveChannelData, changeStatus } = useChannelData({
-    proTableRef
+    proTableRef,
+    handlePageChange
   });
 
   // 新增状态用于存储和共享数据
@@ -129,15 +139,6 @@ const Channel: React.FC = () => {
   // 筛选处理函数
   const handleFilter = (filters: any) => {
     setTableParams(filters);
-  };
-
-  // 处理分页
-  const handlePageChange = (params: { current: number; pageSize: number }) => {
-    setTableParams((prev: any) => ({
-      ...prev,
-      current: params.current,
-      pageSize: params.pageSize
-    }));
   };
 
   // 表格上方按钮hook

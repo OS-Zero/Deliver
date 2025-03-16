@@ -1,6 +1,6 @@
 import request from '@/utils/request.ts';
 import { TableData } from '@/types';
-import type { MessageTemplate, SearchParams, Template, TestSendMessage } from '@/types/messageTemplate';
+import type { MessageTemplate, MessageTemplateForm, SearchParams, Template, TestSendMessage } from '@/types/messageTemplate';
 
 /**
  * 模版分页查询
@@ -20,7 +20,7 @@ export async function getMessageTemplates(data: SearchParams): Promise<TableData
  * @param data 新增模板数据
  * @returns
  */
-export async function addMessageTemplate(data: MessageTemplate): Promise<never> {
+export async function addMessageTemplate(data: MessageTemplateForm): Promise<never> {
 	return await request({
 		url: '/messageTemplate/save',
 		method: 'post',
@@ -46,7 +46,7 @@ export async function updateMessageTemplateStatus(data: Pick<MessageTemplate, 't
  * @param data
  * @returns
  */
-export async function updateMessageTemplate(data: MessageTemplate): Promise<never> {
+export async function updateMessageTemplate(data: MessageTemplateForm): Promise<never> {
 	return await request({
 		url: '/messageTemplate/update',
 		method: 'post',

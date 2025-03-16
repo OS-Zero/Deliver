@@ -1,5 +1,5 @@
 import type { ColumnsType } from 'ant-design-vue/es/table/interface';
-import { Channel, ChannelAppForm, ChannelProvider, SearchParams } from '@/types/channelApp';
+import { Channel, ChannelApp, ChannelAppForm, ChannelProvider, SearchParams } from '@/types/channelApp';
 import { getAppConfig, getChannelProviderType, getChannelType } from '@/api/system';
 import { notUndefined } from '@/utils/utils';
 import { getRangeRule, getRequiredRule } from '@/utils/validate';
@@ -84,7 +84,7 @@ const generateDispatch = (form: Schema<any>) => {
 	};
 };
 
-export const channelAppForm = reactive<Schema<ChannelAppForm>>({
+export const channelAppFormSchema = reactive<Schema<ChannelAppForm>>({
 	appId: {
 		type: 'none',
 		fieldName: 'appId',
@@ -108,10 +108,13 @@ export const channelAppForm = reactive<Schema<ChannelAppForm>>({
 		rules: [getRequiredRule('请选择渠道类型')],
 		selectConfig: {
 			options: [],
-			onChange: async (value: any) => {
-				await setOptionsDispatch['channelProviderType']({ channelType: value });
-				await setOptionsDispatch['appConfig']({ channelType: value, channelProviderType: channelAppForm.channelProviderType.value });
+			onChange: (value: any) => {
+				setOptionsDispatch['channelProviderType']({ channelType: value });
+				setOptionsDispatch['appConfig']({ channelType: value, channelProviderType: channelAppFormSchema.channelProviderType.value });
 			},
+		},
+		init: async () => {
+			await setOptionsDispatch['channelType']();
 		},
 	},
 	channelProviderType: {
@@ -121,9 +124,12 @@ export const channelAppForm = reactive<Schema<ChannelAppForm>>({
 		rules: [getRequiredRule('请选择渠道供应商类型')],
 		selectConfig: {
 			options: [],
-			onChange: async (value: any) => {
-				setOptionsDispatch['appConfig']({ channelType: channelAppForm.channelType.value, channelProviderType: value });
+			onChange: (value: any) => {
+				setOptionsDispatch['appConfig']({ channelType: channelAppFormSchema.channelType.value, channelProviderType: value });
 			},
+		},
+		init: async ({ channelType }: ChannelApp) => {
+			await setOptionsDispatch['channelProviderType']({ channelType });
 		},
 	},
 	appConfig: {
@@ -131,10 +137,13 @@ export const channelAppForm = reactive<Schema<ChannelAppForm>>({
 		type: 'jsonEditor',
 		fieldName: 'appConfig',
 		label: '应用配置',
+		init: async ({ appConfig }: ChannelApp) => {
+			channelAppFormSchema.appConfig.value = JSON.parse(appConfig || '{}');
+		},
 	},
 });
-export const setOptionsDispatch = generateDispatch(channelAppForm);
-export const filterForm = reactive<Schema<SearchParams>>({
+export const setOptionsDispatch = generateDispatch(channelAppFormSchema);
+export const filterFormSchema = reactive<Schema<SearchParams>>({
 	channelType: {
 		type: 'select',
 		fieldName: 'channelType',
@@ -144,6 +153,9 @@ export const filterForm = reactive<Schema<SearchParams>>({
 			onChange: (value: any) => {
 				setFilterOptionsDispatch['channelProviderType']({ channelType: value });
 			},
+		},
+		init: async () => {
+			await setFilterOptionsDispatch['channelType']();
 		},
 	},
 	channelProviderType: {
@@ -165,4 +177,4 @@ export const filterForm = reactive<Schema<SearchParams>>({
 		label: '结束时间',
 	},
 });
-export const setFilterOptionsDispatch = generateDispatch(filterForm);
+export const setFilterOptionsDispatch = generateDispatch(filterFormSchema);

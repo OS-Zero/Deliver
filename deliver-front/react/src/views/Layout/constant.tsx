@@ -1,68 +1,69 @@
+import { ReactNode } from 'react';
 import {
   MessageOutlined,
   FileTextOutlined,
   AppstoreOutlined,
   UserOutlined,
-  SoundOutlined
+  SoundOutlined,
+  DashboardOutlined
 } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
+import { useGlobalContext } from '@/context/GlobalContext';
 
-export const menuConfig = {
-  groupManage: [
-    {
-      key: 'MC',
-      icon: <MessageOutlined />,
-      label: '模版配置',
-      children: [
-        {
-          key: '/groupManage/template',
-          label: <Link to="/groupManage/template">消息模板配置</Link>
-        }
-      ]
-    },
-    {
-      key: 'AC',
-      icon: <AppstoreOutlined />,
-      label: '应用配置',
-      children: [
-        {
-          key: '/groupManage/app',
-          label: <Link to="/groupManage/app">渠道应用配置</Link>
-        }
-      ]
-    },
-    {
-      key: 'FM',
-      icon: <FileTextOutlined />,
-      label: '文件管理',
-      children: [
-        {
-          key: '/groupManage/file',
-          label: <Link to="/groupManage/file">平台文件管理</Link>
-        }
-      ]
-    },
-    {
-      key: 'TM',
-      icon: <SoundOutlined />,
-      label: '群发任务',
-      children: [
-        {
-          key: '/groupManage/task',
-          label: <Link to="/groupManage/task">群发任务配置</Link>
-        },
-        {
-          key: '/groupManage/peopleGroup',
-          label: <Link to="/groupManage/peopleGroup">人群模版配置</Link>
-        }
-      ]
-    }
-  ],
-  systemManage: [
-    {
-      key: '/systemManage/myAccount',
-      icon: <UserOutlined />,
-      label: <Link to="/systemManage/myAccount">我的账户</Link>
-    }
-  ]
+interface RouteItem {
+  key: string;
+  icon: string;
+  label?: string;
+  children?: RouteItem[];
+}
+
+// 定义菜单项类型
+interface MenuItem {
+  key: string;
+  icon: ReactNode | null;
+  label: ReactNode | string;
+  children?: MenuItem[];
+}
+
+// 图标映射表
+const iconMap = {
+  MessageOutlined: <MessageOutlined />,
+  FileTextOutlined: <FileTextOutlined />,
+  AppstoreOutlined: <AppstoreOutlined />,
+  UserOutlined: <UserOutlined />,
+  SoundOutlined: <SoundOutlined />,
+  DashboardOutlined: <DashboardOutlined />
+};
+
+// 渲染菜单项
+const renderMenuItem = (item: RouteItem): MenuItem => {
+  const icon = item.icon ? iconMap[item.icon as keyof typeof iconMap] : null;
+
+  if (item.children && item.children.length > 0) {
+    return {
+      key: item.key,
+      icon: icon,
+      label: item.label,
+      children: item.children.map((child) => renderMenuItem(child))
+    };
+  }
+
+  return {
+    key: item.key,
+    icon: icon,
+    label: <Link to={item.key}>{item.label}</Link>
+  };
+};
+
+// 获取菜单配置的钩子
+export const useMenuConfig = () => {
+  const { routers } = useGlobalContext();
+
+  // 处理路由数据，转换为菜单配置格式
+  const menuConfig = {
+    groupManage: (routers?.groupManage || []).map((item) => renderMenuItem(item)),
+    systemManage: (routers?.systemManage || []).map((item) => renderMenuItem(item))
+  };
+
+  return menuConfig;
 };
