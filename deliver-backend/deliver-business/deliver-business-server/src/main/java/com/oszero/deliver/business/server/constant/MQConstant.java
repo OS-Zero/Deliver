@@ -67,7 +67,7 @@ public interface MQConstant {
     String ACK_MODE = "MANUAL";
 
     /********** Disruptor **********/
-    int DISRUPTOR_BUFFER_SIZE = 102400;
+    int DISRUPTOR_BUFFER_SIZE = 2048;
     String DISRUPTOR_THREAD_NAME = "disruptor_thread_name";
     // Disruptor
     String CALL_DISRUPTOR = "call_disruptor";
