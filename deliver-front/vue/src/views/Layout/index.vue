@@ -18,9 +18,6 @@ const onTabChange = (tab: string) => {
 	const groupId = localStorage.getItem("group_id");
 	(tab === 'systemManage' || groupId) && (items.value = menuConfig[tab])
 }
-const onCardSelected = (_card: string) => {
-	items.value = menuConfig["groupManage"]
-}
 const showBreadcrumb = ref(false)
 watch(() => router.currentRoute.value.path, (to: string) => {
 	showBreadcrumb.value = false
@@ -31,6 +28,8 @@ watch(() => router.currentRoute.value.path, (to: string) => {
 	immediate: true
 })
 onBeforeMount(() => {
+	console.log('onBeforeMount');
+
 	updateMenuConfig()
 })
 const headerStyle: CSSProperties = {
