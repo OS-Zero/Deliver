@@ -6,6 +6,7 @@ import JsonEditor from "json-editor-vue3"
 import { InboxOutlined } from '@ant-design/icons-vue';
 import { cloneDeep, assign } from 'lodash'
 import { Schema } from '@/types';
+import VerifyCode from '@/components/VerifyCode/index.vue'
 const props = withDefaults(defineProps<{
 	formSchema: Record<string, FormItem<string>>;
 	name?: (field: FormItem<string>) => string | number | (string | number)[];

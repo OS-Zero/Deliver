@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 
-const iframeSrc = ref('https://www.baidu.com');
+const iframeSrc = ref('https://oszero.cn/');
 </script>
 
 <template>

@@ -8,6 +8,7 @@ import { message, Modal } from 'ant-design-vue';
 import GroupForm from './components/GroupForm.vue';
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import { debounce } from 'lodash';
+import SearchInput from '@/components/SearchInput/index.vue';
 
 type Operation = 'add' | 'edit' | 'delete' | 'top'
 const router = useRouter()
